@@ -1,0 +1,73 @@
+@import '../../styles/color.variables.scss';
+@import '../../styles/null.scss';
+@import '../../styles/fonts.scss';
+
+.wrapper {
+  padding: 30px 0px 0px 0px;
+}
+
+.img {
+  padding: 34px 0px 18px 0px;
+  width: 390px;
+  height: 390px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+.textNft {
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+  color: $MainGrey;
+  padding: 0px 0px 23px 0px;
+}
+
+.distributeDrop {
+  display: flex;
+  flex-direction: column;
+  padding: 0px 0px 30px 0px;
+}
+.distributeDropRadio {
+  display: flex;
+  justify-content: space-between;
+}
+
+.payBlock {
+  padding: 0px 0px 30px 0px;
+}
+
+.payInfo {
+  padding: 0px 0px 33px 0px;
+}
+
+.payBtn {
+  display: flex;
+  flex-direction: column;
+
+  // justify-content: center;
+}
+.payBtn_block {
+  display: flex;
+  align-items: center;
+  width: 326px;
+  justify-content: space-between;
+  padding: 0px 0px 23px 0px;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 14px 20px 14px;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    background: $WebBG;
+    width: 100%;
+    height: 4px;
+    top: 0;
+    left: 0;
+  }
+}

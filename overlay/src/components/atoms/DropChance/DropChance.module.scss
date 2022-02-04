@@ -1,0 +1,55 @@
+@import '../../../styles/color.variables.scss';
+@import '../../../styles/null.scss';
+@import '../../../styles/fonts.scss';
+
+.inputPanel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+}
+
+.inputInfo {
+  width: 211px;
+  height: 40px;
+  padding: 10px 13px;
+
+  color: $MainBlack;
+  border: 1px solid $StrokeColor;
+  border-radius: 5px;
+  background: $PureWhite;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 149%;
+  &::placeholder {
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: $StrokeColor;
+  }
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  }
+}
+
+.buttonPanel {
+  display: flex;
+  justify-content: space-between;
+  width: 44px;
+}
+
+.inputMore {
+  width: 20px;
+  height: 20px;
+  background: url('../../../icons/Input/more.svg') no-repeat;
+}
+.inputLess {
+  width: 20px;
+  height: 20px;
+  background: url('../../../icons/Input/less.svg') no-repeat;
+}

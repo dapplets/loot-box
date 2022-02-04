@@ -1,0 +1,53 @@
+@import '../../styles/color.variables.scss';
+@import '../../styles/null.scss';
+@import '../../styles/fonts.scss';
+
+.wrapper {
+  display: flex;
+  padding: 0px 0px 0px 0px;
+  // height: 100vh;
+  flex: 1 0 auto;
+  width: 100%;
+
+  flex-direction: column;
+}
+
+.wrapperStatistics {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.Chart {
+  display: flex;
+  justify-content: space-between;
+  padding: 21px 0px 0px 0px;
+}
+.ChartAmount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0px 0px 0px;
+}
+
+.ChartBalance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0px 0px 0px;
+}
+
+.statisticInfo {
+  width: 339px;
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: space-between;
+  align-items: start;
+  padding: 10px 0px 21px 0px;
+}
+
+.link {
+  padding: 0px 0px 23px 0px;
+}

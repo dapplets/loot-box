@@ -1,0 +1,40 @@
+@import '../../../styles/color.variables.scss';
+@import '../../../styles/null.scss';
+@import '../../../styles/fonts.scss';
+
+.wrapper {
+  display: flex;
+}
+.default {
+}
+.big {
+  width: 285px;
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+
+  font-family: Roboto, sans-serif;
+
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+
+  color: $TitlePayInfo;
+}
+
+.value {
+  position: relative;
+
+  padding-left: 5px;
+
+  color: $ContentBlack;
+
+  font-family: Roboto, sans-serif;
+
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 19px;
+}

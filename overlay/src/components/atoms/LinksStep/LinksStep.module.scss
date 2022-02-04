@@ -1,0 +1,26 @@
+@import '../../../styles/color.variables.scss';
+@import '../../../styles/null.scss';
+@import '../../../styles/fonts.scss';
+
+.linksNavigation {
+  font-family: Roboto, sans-serif;
+  font-size: 400;
+  position: relative;
+}
+.next {
+  color: $Primary;
+  img {
+    position: absolute;
+    top: 0;
+    left: 110%;
+  }
+}
+
+.prev {
+  color: $StrokeColor;
+  img {
+    position: absolute;
+    top: 0;
+    right: 110%;
+  }
+}

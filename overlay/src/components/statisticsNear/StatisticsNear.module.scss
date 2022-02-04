@@ -1,0 +1,37 @@
+@import '../../styles/color.variables.scss';
+@import '../../styles/null.scss';
+@import '../../styles/fonts.scss';
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 33px 0px 0px 0px;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.titleLinks {
+  display: flex;
+  width: 300px;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 0px 0px 40px 0px;
+  position: relative;
+  // &:active {
+  //   background: red;
+  // }
+  &::before {
+    content: '';
+    position: absolute;
+    width: 395px;
+    height: 3px;
+    background: $WebBG;
+    top: 33%;
+    right: -15%;
+    // z-index: 1;
+  }
+}
+
+.link {
+}

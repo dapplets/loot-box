@@ -1,0 +1,11 @@
+@import './styles/color.variables.scss';
+@import './styles/null.scss';
+.app {
+  display: flex;
+  flex-direction: column;
+  padding: 17px 9px 0 9px;
+  width: 100%;
+  margin: 0 auto;
+  background: $OverlayBG;
+  height: 100vh;
+}

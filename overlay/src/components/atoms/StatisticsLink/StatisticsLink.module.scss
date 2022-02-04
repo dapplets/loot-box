@@ -1,0 +1,31 @@
+@import '../../../styles/color.variables.scss';
+@import '../../../styles/null.scss';
+@import '../../../styles/fonts.scss';
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 14px 0px 14px;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    background: $WebBG;
+    width: 100%;
+    height: 4px;
+    top: 0;
+    left: 0;
+  }
+}
+
+.linksNavigation {
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  text-transform: uppercase;
+  color: $Secondary;
+  cursor: pointer;
+  margin: 0 auto;
+}

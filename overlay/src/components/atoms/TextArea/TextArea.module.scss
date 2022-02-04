@@ -1,0 +1,28 @@
+@import '../../../styles/color.variables.scss';
+@import '../../../styles/null.scss';
+@import '../../../styles/fonts.scss';
+
+.inputPanel {
+  text-align: start;
+}
+.inputInfo {
+  width: 400px;
+  height: 171px;
+  background: $PureWhite;
+  border: 1px solid $StrokeColor;
+  border-radius: 8px;
+  position: relative;
+  padding: 10px 0px 0px 10px;
+  text-align: start;
+  resize: none;
+  &::placeholder {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: $StrokeColor;
+  }
+}

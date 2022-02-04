@@ -1,0 +1,22 @@
+@import '../../styles/color.variables.scss';
+@import '../../styles/null.scss';
+@import '../../styles/fonts.scss';
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.firstLine {
+  display: flex;
+  width: 100%;
+  padding: 33px 0px 30px 0px;
+}
+
+.secondLine {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}

@@ -1,0 +1,57 @@
+@import '../../../styles/color.variables.scss';
+@import '../../../styles/null.scss';
+@import '../../../styles/fonts.scss';
+
+.inputRadioTitle {
+  font-family: Roboto, sans-serif;
+  padding: 0px 0px 0px 2px;
+  font-size: 14px;
+  line-height: 100%;
+  color: $MainBlack;
+}
+
+.form_radio {
+  // margin-bottom: 10px;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 100%;
+  color: $MainBlack;
+}
+.form_radio input[type='radio'] {
+  display: none;
+}
+.form_radio label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 20px;
+  margin-right: 0;
+  line-height: 18px;
+  user-select: none;
+
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 100%;
+  color: $MainBlack;
+}
+.form_radio label:before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: $PureWhite;
+  position: absolute;
+  border-radius: 50%;
+  left: 0;
+  border: 1px solid $MainGrey;
+
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 100%;
+  color: $MainBlack;
+}
+
+.form_radio input[type='radio']:checked + label::before {
+  background: $Primary url('../../../icons/Radiobutton/dot.svg') 50% 50% no-repeat;
+  border: none;
+}

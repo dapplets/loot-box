@@ -1,0 +1,39 @@
+@import '../../../styles/color.variables.scss';
+@import '../../../styles/null.scss';
+@import '../../../styles/fonts.scss';
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  min-width: 100px;
+  cursor: pointer;
+  border: none;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid $Primary;
+  background: transparent;
+  color: $Primary;
+  &:active {
+    background: $Primary;
+    color: $PureWhite;
+  }
+}
+.small {
+  width: 55px;
+  height: 14px;
+}
+.big {
+  width: 395px;
+  background: $Primary;
+  color: $PureWhite;
+  font-weight: 400;
+}
+.medium {
+  width: 200px;
+}
+.active {
+}
+.disable {
+}

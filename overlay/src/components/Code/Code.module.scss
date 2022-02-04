@@ -1,0 +1,40 @@
+@import '../../styles/color.variables.scss';
+@import '../../styles/null.scss';
+@import '../../styles/fonts.scss';
+
+.wrapper {
+}
+
+.code {
+  padding: 0px 0px 20px 0px;
+}
+
+.boxName {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  position: relative;
+  // height: 63px;
+  padding: 0px 0px 46px 0px;
+  &::before {
+    content: '';
+    height: 3px;
+    width: 100%;
+    top: 95px;
+    left: 0;
+    position: absolute;
+    background: $WebBG;
+    border-radius: 2px;
+  }
+}
+
+.boxMessage {
+  padding: 0px 0px 50px 0px;
+}
+
+.lootboxCode {
+}
+
+.link {
+  padding: 0px 0px 20px 0px;
+}

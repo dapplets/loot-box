@@ -1,0 +1,39 @@
+@import '../../../styles/color.variables.scss';
+@import '../../../styles/null.scss';
+@import '../../../styles/fonts.scss';
+
+.wrapper {
+}
+.lootboxCode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.message {
+  width: 400px;
+  display: flex;
+  align-items: start;
+  padding: 20px 30px;
+  background: $PureWhite;
+  border-radius: 10px;
+  border: 1px solid $WebBG;
+}
+.messageBlock {
+  display: flex;
+  flex-direction: column;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: $MainGrey;
+}
+.messageInput {
+}
+.link {
+}
+.instruction {
+}
+.button {
+  background: $PureWhite;
+  width: auto;
+}
