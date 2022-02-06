@@ -15,7 +15,7 @@ import { FillBox } from './components/fillBox';
 import { useToggle } from './hooks/useToggle';
 import { Routes, Route, Link } from 'react-router-dom';
 import { FillBox_Nft } from './components/FillBoxNFT';
-
+import { ChildComponent } from './components/createNewBox';
 interface ICtx {
   authorFullname: string;
   authorUsername?: string;
@@ -38,10 +38,15 @@ export default () => {
     setValue(e.target.value);
   };
   const [valueIMG, setValueIMG] = useState('');
-  const onChange_IMG = () => {
-    setValueIMG(valueIMG);
-    console.log(valueIMG);
+
+  const [numChildren, onCount] = useState(0);
+  const onAddChild = () => {
+    onCount(numChildren + 1);
   };
+  const children = [];
+  for (let i = 0; i < numChildren; i += 1) {
+    children.push(<ChildComponent imgVal={valueIMG} label={value} key={i} number={i} />);
+  }
 
   useEffect(() => {
     bridge.onData((data?: ICtx) => {
@@ -98,7 +103,6 @@ export default () => {
               let tweets: string[] | undefined = undefined;
               if (accountName) tweets = await bridge.getTweets(accountName);
               setSavedTweets(tweets);
-              console.log(valueIMG);
             }}
           />
         ) : (
@@ -124,13 +128,29 @@ export default () => {
       </header>
 
       <Routes>
-        <Route path="/" element={<CreateNewBox label={value} />} />
-        <Route path="/select_box" element={<SelectBox onChange_IMG={onChange_IMG} />} />
+        <Route
+          path="/"
+          element={<CreateNewBox children={children} imgVal={valueIMG} label={value} />}
+        />
+        <Route
+          path="/select_box"
+          element={
+            <SelectBox
+              onChange_IMG={(x: string) => {
+                setValueIMG(x);
+                console.log(x, 'hello');
+              }}
+            />
+          }
+        />
         <Route path="/box_settings_value" element={<BoxSettings />} />
         <Route path="/fill_your_box" element={<FillBox imgVal={valueIMG} />} />
         {/* <Route path="/winners" element={<StatisticsWinners />} /> */}
-        <Route path="/fill_your_box_nft" element={<FillBox_Nft />} />
-        <Route path="/deploy_your_box" element={<DeployBox onChange={onChange_Input} />} />
+        <Route path="/fill_your_box_nft" element={<FillBox_Nft imgVal={valueIMG} />} />
+        <Route
+          path="/deploy_your_box"
+          element={<DeployBox onAddChild={onAddChild} onChange={onChange_Input} />}
+        />
         <Route path="/statistics" element={<StatisticsNear />} />
         <Route path="/winners" element={<StatisticsWinners />} />
         <Route path="/code" element={<StatisticsCode />} />

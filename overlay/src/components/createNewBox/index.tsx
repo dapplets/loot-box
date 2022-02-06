@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import cn from 'classnames';
 import copy from '../../icons/createNewBox/copy.svg';
 import Box1 from '../../icons/createNewBox/box1.png';
@@ -13,12 +13,14 @@ import { useToggle } from '../../hooks/useToggle';
 import SelectBox from '../selectBox';
 import { labels } from '../Statistics';
 export interface CreateNewBoxProps {
-  children?: ReactNode;
+  children: ReactNode;
   label: string;
+  imgVal: string;
 }
 
 export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) => {
-  const { label } = props;
+  const { label, imgVal, children } = props;
+
   const [isShowDescription, onShowDescription] = useToggle(false);
   return (
     <div className={cn(styles.wrapper)}>
@@ -30,14 +32,19 @@ export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) =>
           btnText="Create new box"
         />
       </Link>
-
-      <div className={cn(styles.secondLine)}>
-        <CreatedBox label={label} imageBox={Box1} status="Created" />
-        {/* <CreatedBox label="BoxName" imageBox={Box2} status="Created" />
-        <CreatedBox label="BoxName" imageBox={Box3} status="Created" />
-        <CreatedBox label="BoxName" imageBox={Box4} status="Created" /> */}
-      </div>
+      <div className={cn(styles.secondLine)}>{children}</div>
     </div>
   );
 };
 export default CreateNewBox;
+
+export interface ChildComponentProps {
+  number: number;
+  label: string;
+  imgVal: string;
+}
+
+export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
+  const { number, label, imgVal } = props;
+  return <CreatedBox id={number} label={label} imageBox={imgVal} status="Created" />;
+};

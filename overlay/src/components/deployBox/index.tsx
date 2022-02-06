@@ -23,10 +23,11 @@ import { Link } from 'react-router-dom';
 export interface DeployBoxProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   // onChange_input: () => void;
+  onAddChild: () => void;
 }
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
-  const { onChange } = props;
+  const { onChange, onAddChild } = props;
   const [value, setValue] = useState('');
   const onChange_Area: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setValue(e.target.value);
@@ -54,7 +55,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       </div>
 
       <div className={cn(styles.navigation)}>
-        <Link to="/" className={cn(styles.link)}>
+        <Link to="/" className={cn(styles.link)} onClick={onAddChild}>
           Done
         </Link>
       </div>

@@ -36,20 +36,29 @@
   }
 }
 
+.small_mini {
+  width: 100px;
+}
+.small {
+  width: 125px;
+}
+.small_medium {
+  width: 196px;
+}
 .default {
   width: 211px;
 }
-.small {
-  width: 131px;
-}
-.small_medium {
-  width: 191px;
-}
-.big {
-  width: 100%;
-}
 .medium {
   width: 276px;
+}
+.medium_big {
+  width: 300px;
+}
+.big {
+  width: 356px;
+}
+.biggest {
+  width: 100%;
 }
 
 .buttonPanel {

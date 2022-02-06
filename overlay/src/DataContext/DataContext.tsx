@@ -8,11 +8,13 @@ import React, {
   ReactNode,
   FC,
 } from 'react';
-// export interface ContextProps {
-//   children?: ReactNode | undefined;
-//   data?: {};
-// }
-const DataContext = React.createContext({} as any);
+export interface ContextProps {
+  // children?: ReactNode | undefined;
+  // data?: {};
+  inputPanel: string;
+  dropChance: number;
+}
+const DataContext = React.createContext<ContextProps>({ inputPanel: '', dropChance: 20 });
 {
   /* <Partial<ContextProps>>({}); */
 }
@@ -33,7 +35,11 @@ export const DataProvider: FC = ({ children }) => {
     }));
   };
   // value - объект с полями дата и сетvalues
-  return <DataContext.Provider value={{ data, setValues }}>{children}</DataContext.Provider>;
+  return (
+    <DataContext.Provider value={{ inputPanel: '', dropChance: 20 }}>
+      {children}
+    </DataContext.Provider>
+  );
 };
 
 // делаем  кастомный хук = создаем функцию которая будет оберткой

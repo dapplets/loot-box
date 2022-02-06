@@ -25,7 +25,7 @@
   height: 14px;
 }
 .big {
-  width: 395px;
+  width: 100%;
   background: $Primary;
   color: $PureWhite;
   font-weight: 400;
@@ -36,4 +36,14 @@
 .active {
 }
 .disable {
+}
+
+.remove {
+  width: 55px;
+  height: 14px;
+  background: $AppBG;
+  border: 1px solid $StrokeColor;
+  border-radius: 4px;
+  text-align: center;
+  color: $StrokeColor;
 }

@@ -17,7 +17,15 @@ export interface InputProps
   value?: string | number;
   placeholder?: string;
   isButton?: true;
-  appearance: 'small' | 'medium' | 'big' | 'default' | 'small_medium';
+  appearance:
+    | 'small_mini'
+    | 'small'
+    | 'small_medium'
+    | 'default'
+    | 'medium'
+    | 'medium_big'
+    | 'big'
+    | 'biggest';
   className?: 'string';
   type: string;
 }
@@ -50,11 +58,14 @@ export const InputPanel: FC<InputProps> = (props) => {
         className={cn(
           styles.inputInfo,
           {
-            [styles.default]: appearance === 'default',
+            [styles.small_mini]: appearance === 'small_mini',
             [styles.small]: appearance === 'small',
-            [styles.big]: appearance === 'big',
-            [styles.medium]: appearance === 'medium',
             [styles.small_medium]: appearance === 'small_medium',
+            [styles.default]: appearance === 'default',
+            [styles.medium]: appearance === 'medium',
+            [styles.medium_big]: appearance === 'medium_big',
+            [styles.big]: appearance === 'big',
+            [styles.biggest]: appearance === 'biggest',
           },
           className,
         )}

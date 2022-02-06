@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export interface ButtonProps
   extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   disabled?: boolean;
-  appearance: 'small' | 'big' | 'medium';
+  appearance: 'small' | 'big' | 'medium' | 'remove';
   btnText: string;
   isShowDescription: boolean;
 }
@@ -27,6 +27,7 @@ export const Button: FC<ButtonProps> = (props: ButtonProps) => {
           [styles.small]: appearance === 'small',
           [styles.big]: appearance === 'big',
           [styles.medium]: appearance === 'medium',
+          [styles.remove]: appearance === 'remove',
         },
         className,
       )}

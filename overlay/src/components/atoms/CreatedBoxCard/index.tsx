@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import cn from 'classnames';
 import styles from './CreatedBoxCard.module.scss';
 import { Link } from 'react-router-dom';
@@ -8,10 +8,11 @@ export interface CreatedBoxProps {
   // iconCopy: string;
   imageBox: string;
   status: string;
+  id: number;
 }
 
 export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
-  const { label, imageBox, status } = props;
+  const { label, imageBox, status, id } = props;
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.img)}>

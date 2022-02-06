@@ -17,10 +17,12 @@ import { IMG } from '../selectBox';
 export interface FillBoxProps_Nft {
   // imageBox: string;
   onSetId?: any;
+  imgVal: string;
   // id_img?: any;
 }
 export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   // const { onSetId, id_img } = props;
+  const { imgVal } = props;
   const [id, setId] = useState(0);
 
   // const {imageBox} = props
@@ -29,7 +31,7 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
       <SettingTitle title="Fill your box" isActive />
       <div className={cn(styles.img)}>
         <img
-          src={IMG[id]}
+          src={imgVal}
           // alt={IMG[id]}
           // id={id}
         />
