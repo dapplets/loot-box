@@ -28,7 +28,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   // const {imageBox} = props
   return (
     <div className={cn(styles.wrapper)}>
-      <SettingTitle title="Fill your box" isActive />
+      <SettingTitle title="Fill your box" isActive={true} />
       <div
         className={cn(styles.img)}
         onClick={() => {
