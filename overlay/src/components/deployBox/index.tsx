@@ -38,7 +38,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <SettingTitle title="Deploy your box" isActive />
       <div className={cn(styles.boxName)}>
         <LabelSettings title="Box name" />
-        <InputPanel onChange={onChange} type="text" appearance="big" />
+        <InputPanel onChange={onChange} type="text" appearance="biggest" />
       </div>
 
       <div className={cn(styles.textArea)}>

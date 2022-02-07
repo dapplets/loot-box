@@ -23,7 +23,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
       <div className={cn(styles.code)}>
         <div className={styles.boxName}>
           <LabelSettings title="Box name" />
-          <InputPanel type="text" appearance="big" />
+          <InputPanel type="text" appearance="biggest" />
         </div>
         <div className={styles.boxMessage}>
           <LabelSettings title="Box Message" />
