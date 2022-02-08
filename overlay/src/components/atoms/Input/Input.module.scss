@@ -37,25 +37,28 @@
 }
 
 .small_mini {
-  width: 100px;
+  max-width: 105px;
 }
 .small {
-  width: 125px;
+  max-width: 131px;
 }
 .small_medium {
-  width: 196px;
+  max-width: 196px;
+  min-width: 190px;
 }
 .default {
-  width: 211px;
+  max-width: 211px;
 }
 .medium {
-  width: 276px;
+  max-width: 276px;
+  min-width: 250px;
 }
 .medium_big {
-  width: 300px;
+  max-width: 300px;
+  min-width: 270px;
 }
 .big {
-  width: 356px;
+  max-width: 356px;
 }
 .biggest {
   width: 100%;

@@ -8,6 +8,8 @@ import React, {
   ChangeEvent,
   ReactNode,
   ReactChild,
+  Component,
+  MutableRefObject,
 } from 'react';
 import { useToggle } from '../../../hooks/useToggle';
 import { InputPanel, InputProps } from '../Input';
@@ -20,120 +22,146 @@ import box1 from '../../../icons/createNewBox/box1.png';
 import box2 from '../../../icons/createNewBox/box2.png';
 import box3 from '../../../icons/createNewBox/box3.png';
 import box4 from '../../../icons/createNewBox/box4.png';
+import left from '../../../icons/selectBox/sliderLeft.svg';
+import right from '../../../icons/selectBox/sliderRight.svg';
 import { RadioButton } from '../RadioButton';
-import styles from '../../boxSettings/BoxSettings.module.scss';
+import './Test.module.scss';
+import cn from 'classnames';
+import 'keen-slider/keen-slider.min.css';
+import { useKeenSlider, KeenSliderPlugin, KeenSliderInstance } from 'keen-slider/react';
 export interface TestProps {
   // prop?: '20';
   // numChildren: number;
 }
-// export const IMG = [box1, box2, box3, box4];
+export const IMG = [box1, box2, box3, box4];
+export const Imges: FC<SliderProps> = (props: SliderProps) => {
+  // const { id, onSetId, imgs, onChange_IMG } = props;
+  return (
+    <>
+      {IMG.map((item, index) => (
+        <img className={'keen-slider__slide number-slide1'} src={item} key={index} />
+      ))}
+    </>
+  );
+};
+interface SliderProps {}
+export function ThumbnailPlugin(
+  mainRef: MutableRefObject<KeenSliderInstance | null>,
+): KeenSliderPlugin {
+  return (slider) => {
+    function removeActive() {
+      slider.slides.forEach((slide) => {
+        slide.classList.remove('active');
+      });
+    }
+    function addActive(idx: number) {
+      slider.slides[idx].classList.add('active');
+    }
 
-// export const Test: FC<TestProps> = (props) => {
-//   const [fullSize, setFullSIze] = useState();
+    function addClickEvents() {
+      slider.slides.forEach((slide, idx) => {
+        slide.addEventListener('click', () => {
+          if (mainRef.current) mainRef.current.moveToIdx(idx);
+        });
+      });
+    }
 
-//   const getImage = (IMG: any) => {
-//     console.log(IMG);
-//   };
-
-//   return (
-//     <div className="container">
-//       <img
-//         className="api-image"
-//         src={IMG[0]}
-//         onClick={() => {
-//           getImage(IMG);
-//         }}
-//       ></img>
-//       <div className="full-size-image">
-//         <img src={fullSize} />
-//       </div>
-//     </div>
-//   );
-// };
+    slider.on('created', () => {
+      if (!mainRef.current) return;
+      addActive(slider.track.details.rel);
+      addClickEvents();
+      mainRef.current.on('animationStarted', (main) => {
+        removeActive();
+        const next = main.animator.targetIdx || 0;
+        addActive(main.track.absToRel(next));
+        slider.moveToIdx(next);
+      });
+    });
+  };
+}
 
 export const Test: FC<TestProps> = (props: TestProps) => {
-  // const { numChildren } = props;
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
+    initial: 0,
+    // slideChanged(slider) {
+    //   setCurrentSlide(slider.track.details.rel);
+    // },
+    // created() {
+    //   setLoaded(true);
+    // },
+  });
+  const [thumbnailRef] = useKeenSlider<HTMLDivElement>(
+    {
+      initial: 0,
+      slides: {
+        perView: 4,
+        spacing: 10,
+      },
+      slideChanged(slider) {
+        setCurrentSlide(slider.track.details.rel);
+      },
+      created() {
+        setLoaded(true);
+      },
+    },
 
-  // const onAddChild = () => {
-  //   useState(numChildren + 1);
-  // };
-  // const [state, setState] = useState([])
-
-  //   const removeItem = (id:number) => {
-  //      setState(prevState => prevState.filter((el, id) => el.id !== id))
-  //   }
-  const [numChildren, onCount] = useState(0);
-  const onAddChild = () => {
-    onCount(numChildren + 1);
-  };
-  const onDel = () => {
-    onCount(numChildren - 1);
-  };
-
-  const children = [];
-
-  for (let i = 0; i < numChildren; i += 1) {
-    children.push(<ChildComponent onDel={onDel} key={i} number={i} />);
-  }
+    [ThumbnailPlugin(instanceRef)],
+  );
 
   return (
     <div>
-      {children}
-      <Button appearance="small" btnText="lala" isShowDescription={false} onClick={onAddChild} />
-    </div>
-  );
-};
-export interface ParentProps {
-  addChild: () => void;
-  // children: ReactNode;
-}
-// export const ParentComponent: FC<ParentProps> = (props: ParentProps) => {
-//   const { addChild } = props;
-
-//   return (
-//     <div className="card calculator">
-//       <p>
-//         <a href="#" onClick={addChild}>
-//           Add Another Child Component
-//         </a>
-//       </p>
-//       {/* <div id="children-pane">{children}</div> */}
-//     </div>
-//   );
-// };
-export interface ChildComponentProps {
-  number: number;
-  onDel: () => void;
-}
-
-export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, onDel } = props;
-  return (
-    <div className={styles.addNftBlock}>
-      <LabelSettings title="Marketplace" />
-      <div className={styles.radiobtnMarketplace}>
-        <RadioButton id={`1_marketplace${number}`} value="Paras" name={`Marketplace${number}`} />
-        <RadioButton id={`2_marketplace${number}`} value="Minbase" name={`Marketplace${number}`} />
-        <RadioButton
-          id={`3_marketplace${number}`}
-          value="Custom NFT"
-          name={`Marketplace${number}`}
-          // onChange={onShowDescription_CustomNFT}
-          // key={item}
-        />
+      <div ref={sliderRef} className="keen-slider">
+        <Imges />
       </div>
-      <div className={styles.addNFT}>
-        <div className={styles.inputCustomNFT}>
-          <InputPanel type="string" appearance="medium" placeholder="Token ID" />
-          <InputPanel type="string" appearance="small" placeholder="Quantity" />
+      <div className="navigation-wrapper">
+        <div ref={thumbnailRef} className="keen-slider">
+          <Imges />
+          {loaded && instanceRef.current && (
+            <>
+              <Arrow
+                left
+                onClick={(e: any) => e.stopPropagation() || instanceRef.current?.prev()}
+                disabled={currentSlide === 0}
+              />
+
+              <Arrow
+                onClick={(e: any) => e.stopPropagation() || instanceRef.current?.next()}
+                disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
+              />
+            </>
+          )}
         </div>
-        <Button
-          onClick={onDel}
-          isShowDescription={false}
-          btnText="Remove NFT"
-          appearance="remove"
-        />
       </div>
     </div>
   );
 };
+
+export function Arrow(props: { disabled: boolean; left?: boolean; onClick: (e: any) => void }) {
+  const disabeld = props.disabled ? ' arrow--disabled' : '';
+  return (
+    <svg
+      onClick={props.onClick}
+      className={`arrow ${props.left ? 'arrow--left' : 'arrow--right'} ${disabeld}`}
+      xmlns="http://www.w3.org/2000/svg"
+      width="21"
+      height="20"
+      viewBox="0 0 21 20"
+      fill="none"
+    >
+      {props.left && (
+        <path
+          d="M10.6605 0.283061C16.0246 0.288953 20.3716 4.63594 20.3774 10L20.3774 10.1944C20.2706 15.5343 15.874 19.787 10.5335 19.7162C5.19295 19.6453 0.910733 15.2774 0.94563 9.93655C0.980527 4.59566 5.31945 0.284129 10.6605 0.283061ZM12.6039 14.3727L12.6039 5.6274L6.77367 10L12.6039 14.3727Z"
+          fill="#2E3A59"
+        />
+      )}
+      {!props.left && (
+        <path
+          d="M9.98114 19.7169C4.61704 19.711 0.270051 15.3641 0.26416 9.99996V9.80562C0.37098 4.46568 4.76758 0.212972 10.1081 0.283832C15.4487 0.354692 19.7309 4.72255 19.696 10.0634C19.6611 15.4043 15.3221 19.7159 9.98114 19.7169ZM8.03775 5.62732L8.03775 14.3726L13.8679 9.99996L8.03775 5.62732Z"
+          fill="#2E3A59"
+        />
+      )}
+    </svg>
+  );
+}

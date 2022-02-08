@@ -10,28 +10,37 @@
 
 .winners {
   display: flex;
+  flex-direction: column;
   width: 100%;
   justify-content: space-between;
   flex: 1 0 auto;
   align-items: flex-start;
-  position: relative;
+
   padding: 0px 0px 68px 0px;
-  &::before {
+}
+.winnersList {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 41px;
+  justify-content: space-between;
+  position: relative;
+  &::after {
     content: '';
     position: absolute;
     width: 100%;
     height: 3px;
-    top: 25px;
+    top: 100%;
     left: 0;
     background: $WebBG;
   }
 }
-.winnersList {
+.winnersLink {
   display: flex;
-  width: 300px;
+  width: 71%;
   justify-content: space-between;
+  align-items: center;
 }
-
 .label {
   font-family: Roboto;
   font-style: normal;

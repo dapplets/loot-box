@@ -16,10 +16,16 @@ export interface CreateNewBoxProps {
   children: ReactNode;
   label: string;
   imgVal: string;
+  // onClick: () => void;
 }
 
 export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) => {
-  const { label, imgVal, children } = props;
+  const {
+    label,
+    imgVal,
+    children,
+    // onClick,
+  } = props;
 
   const [isShowDescription, onShowDescription] = useToggle(false);
   return (
@@ -32,6 +38,7 @@ export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) =>
           btnText="Create new box"
         />
       </Link>
+
       <div className={cn(styles.secondLine)}>{children}</div>
     </div>
   );
@@ -42,6 +49,7 @@ export interface ChildComponentProps {
   number: number;
   label: string;
   imgVal: string;
+  // id: number;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {

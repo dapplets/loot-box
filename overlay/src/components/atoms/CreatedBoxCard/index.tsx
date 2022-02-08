@@ -22,7 +22,7 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
         <span className={cn(styles.label)}>
           {label}
           <a href="#" className={cn(styles.link)}>
-            <img src={copy} />
+            <span></span>
           </a>
         </span>
 

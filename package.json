@@ -24,6 +24,7 @@
   "author": "Dapplets Project",
   "license": "MIT",
   "devDependencies": {
+    "@types/react-slick": "^0.23.8",
     "concurrently": "^6.0.2",
     "prettier": "2.2.1"
   },
@@ -38,13 +39,18 @@
     "apexcharts": "^3.33.0",
     "chart.js": "^3.7.0",
     "classnames": "^2.3.1",
+    "keen-slider": "^6.6.3",
     "node-sass": "^7.0.1",
     "react-apexcharts": "^1.3.9",
     "react-apexcharts-2": "^1.0.0",
     "react-chartjs-2": "^4.0.1",
+    "react-id-swiper": "^4.0.0",
+    "react-slick": "^0.28.1",
     "sass": "^1.49.0",
     "sass-loader": "^12.4.0",
+    "slick-carousel": "^1.8.1",
     "svg-react-loader": "^0.4.6",
+    "swiper": "^8.0.3",
     "webpack": "^5.67.0"
   }
 }

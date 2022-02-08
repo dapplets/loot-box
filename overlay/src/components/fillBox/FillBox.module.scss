@@ -4,12 +4,10 @@
 
 .wrapper {
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
+  width: 100%;
   padding: 30px 0px 0px 0px;
-  &:first-child {
-    display: flex;
-    width: 100%;
-  }
 }
 
 .img {
@@ -24,6 +22,7 @@
 
 .distributeDrop {
   display: flex;
+  width: 100%;
   flex-direction: column;
   padding: 0px 0px 30px 0px;
 }
@@ -37,16 +36,19 @@
 }
 
 .payInfo {
-  padding: 0px 0px 33px 0px;
+  // padding: 0px 0px 33px 0px;
 }
 
 .payBtn {
   display: flex;
+  width: 100%;
   justify-content: center;
+  padding: 0px 0px 30px 0px;
 }
 
 .navigation {
   display: flex;
+  // flex: 0 0 auto;
   justify-content: space-between;
   padding: 24px 14px 20px 14px;
   position: relative;
@@ -59,4 +61,16 @@
     top: 0;
     left: 0;
   }
+}
+
+.wrapperInfo {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: flex-start;
+  // :first-child {
+  //   display: flex;
+  //   width: 100%;
+  // }
 }

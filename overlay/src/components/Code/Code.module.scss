@@ -3,9 +3,15 @@
 @import '../../styles/fonts.scss';
 
 .wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
 }
 
 .code {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
   padding: 0px 0px 20px 0px;
 }
 

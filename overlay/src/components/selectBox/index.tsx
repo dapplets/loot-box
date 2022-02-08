@@ -12,7 +12,7 @@ import { LinksStep } from '../atoms/LinksStep';
 import NextStep from '../../icons/selectBox/NextStep.svg';
 import PrevStep from '../../icons/selectBox/prevStep.svg';
 import { Link } from 'react-router-dom';
-// import { Test } from '../atoms/test';
+import { Test } from '../atoms/test';
 
 export interface SelectBoxProps {
   children?: ReactNode;
@@ -68,6 +68,7 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
 export interface CetBoxProps {
   onClick?: any;
   icon?: string;
+  // onChange_IMG: (x: string) => void;
   onChange_IMG: (x: string) => void;
 }
 
@@ -124,4 +125,5 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
     </div>
   );
 };
+
 export default SelectBox;

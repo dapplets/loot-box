@@ -1,24 +1,29 @@
 {
   "name": "overlay",
-  "version": "0.1.1",
+  "version": "0.4.5",
   "private": true,
   "dependencies": {
-    "@dapplets/dapplet-overlay-bridge": "^0.1.0",
+    "@dapplets/dapplet-overlay-bridge": "^0.1.1",
     "apexcharts": "^3.33.0",
     "chart.js": "^3.7.0",
     "ethers": "^5.0.14",
     "immutability-helper": "^3.1.1",
     "javascript-time-ago": "^2.3.8",
+    "keen-slider": "^6.6.3",
     "react": "^17.0.2",
     "react-apexcharts": "^1.3.9",
     "react-apexcharts-2": "^1.0.0",
     "react-chartjs-2": "^4.0.1",
     "react-dom": "^17.0.2",
+    "react-id-swiper": "^4.0.0",
     "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "6",
+    "react-slick": "^0.28.1",
     "react-time-ago": "^7.0.0",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.0.3"
+    "semantic-ui-react": "^2.0.3",
+    "slick-carousel": "^1.8.1",
+    "swiper": "^8.0.3"
   },
   "scripts": {
     "start": "webpack serve",

@@ -22,9 +22,7 @@ export const Message: FC<MessageProps> = (props: MessageProps) => {
             <p className={cn(styles.link)}>{link}</p>
             <p className={cn(styles.instruction)}>{instruction}</p>
           </div>
-          <button className={cn(styles.button)}>
-            <img src={Copy} alt="" />
-          </button>
+          <button className={cn(styles.button)}></button>
         </div>
       </div>
     </div>
