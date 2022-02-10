@@ -13,19 +13,26 @@ import { InputPanel } from '../atoms/Input';
 import { RadioButton } from '../atoms/RadioButton';
 // import { Test } from '../atoms/test';
 import { DropChance } from '../atoms/DropChance';
+import { Lootbox } from '../../../../common/interfaces';
+
 export interface BoxSettingsProps {
   children?: ReactNode;
   onChange?: () => void;
   onSubmit?: () => void;
   dataType?: string;
+  creationForm: Lootbox;
+  onCreationFormUpdate: (x: Lootbox) => void;
 }
+
 export interface ChildComponentProps {
   number?: number;
   onDeleteChild?: () => void;
+  creationForm: Lootbox;
+  onCreationFormUpdate: (x: Lootbox) => void;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, onDeleteChild } = props;
+  const { number, onDeleteChild, creationForm, onCreationFormUpdate } = props;
   return (
     <div className={styles.addNftBlock}>
       <LabelSettings title="Marketplace" />
@@ -42,8 +49,20 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
       </div>
       <div className={styles.addNFT}>
         <div className={styles.inputCustomNFT}>
-          <InputPanel type="string" appearance="medium_big" placeholder="Token ID" />
-          <InputPanel type="string" appearance="small_mini" placeholder="Quantity" />
+          <InputPanel
+            creationForm={creationForm}
+            onCreationFormUpdate={onCreationFormUpdate}
+            type="string"
+            appearance="medium_big"
+            placeholder="Token ID"
+          />
+          <InputPanel
+            creationForm={creationForm}
+            onCreationFormUpdate={onCreationFormUpdate}
+            type="string"
+            appearance="small_mini"
+            placeholder="Quantity"
+          />
         </div>
         <Button
           onClick={onDeleteChild}
@@ -57,6 +76,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
 };
 
 export const SettingDef: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
+  const { creationForm, onCreationFormUpdate } = props;
   return (
     <div className={cn(styles.wrapper)}>
       <SettingTitle isActive={true} title="Box settings" />
@@ -78,6 +98,7 @@ export const SettingDef: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 };
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
+  const { creationForm, onCreationFormUpdate } = props;
   const [value, setValue] = useState(20);
   const [isShowDescription_CustomNFT, onShowDescription_CustomNFT] = useToggle(false);
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -94,7 +115,15 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const children = [];
   const children_btn = [];
   for (let i = 0; i < numChildren; i += 1) {
-    children.push(<ChildComponent onDeleteChild={onDeleteChild} key={i} number={i} />);
+    children.push(
+      <ChildComponent
+        creationForm={creationForm}
+        onCreationFormUpdate={onCreationFormUpdate}
+        onDeleteChild={onDeleteChild}
+        key={i}
+        number={i}
+      />,
+    );
   }
   for (let i = 0; i < numChildren; i += 1) {
     children_btn.push(
@@ -177,8 +206,20 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                 <div className={styles.customNFT}>
                   <div className={styles.addNFT}>
                     <div className={styles.inputCustomNFT}>
-                      <InputPanel type="string" appearance="medium_big" placeholder="Token ID" />
-                      <InputPanel type="string" appearance="small_mini" placeholder="Quantity" />
+                      <InputPanel
+                        creationForm={creationForm}
+                        onCreationFormUpdate={onCreationFormUpdate}
+                        type="string"
+                        appearance="medium_big"
+                        placeholder="Token ID"
+                      />
+                      <InputPanel
+                        creationForm={creationForm}
+                        onCreationFormUpdate={onCreationFormUpdate}
+                        type="string"
+                        appearance="small_mini"
+                        placeholder="Quantity"
+                      />
                     </div>
                     {children_btn}
                     <Button
@@ -201,8 +242,20 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                 <div className={styles.customNFT}>
                   <div className={styles.addNFT}>
                     <div className={styles.inputCustomNFT}>
-                      <InputPanel type="string" appearance="medium_big" placeholder="Token ID" />
-                      <InputPanel type="string" appearance="small_mini" placeholder="Quantity" />
+                      <InputPanel
+                        creationForm={creationForm}
+                        onCreationFormUpdate={onCreationFormUpdate}
+                        type="string"
+                        appearance="medium_big"
+                        placeholder="Token ID"
+                      />
+                      <InputPanel
+                        creationForm={creationForm}
+                        onCreationFormUpdate={onCreationFormUpdate}
+                        type="string"
+                        appearance="small_mini"
+                        placeholder="Quantity"
+                      />
                     </div>
                     {children_btn}
                     <Button
@@ -237,6 +290,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 };
 
 export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
+  const { creationForm, onCreationFormUpdate } = props;
   const [isShowDescription_tokenAmount, onShowDescription_tokenAmount] = useToggle(false);
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
   const [value, setValue] = useState(20);
@@ -271,7 +325,13 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           <div className={cn(styles.tokenAmount)}>
             <LabelSettings title="Token amount" />
             <div className={cn(styles.tokenInput)}>
-              <InputPanel type="text" appearance="default" placeholder="Token amount" />
+              <InputPanel
+                creationForm={creationForm}
+                onCreationFormUpdate={onCreationFormUpdate}
+                type="text"
+                appearance="default"
+                placeholder="Token amount"
+              />
               <RadioButton
                 value="$NEAR"
                 title="$NEAR"
@@ -293,8 +353,20 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           {(isShowDescription_tokenAmount && (
             <div className={cn(styles.dropAmount)}>
               <div className={cn(styles.inputDropAmount)}>
-                <InputPanel type="text" appearance="medium" placeholder="Token contract" />
-                <InputPanel type="text" appearance="small" placeholder="Token ticker " />
+                <InputPanel
+                  creationForm={creationForm}
+                  onCreationFormUpdate={onCreationFormUpdate}
+                  type="text"
+                  appearance="medium"
+                  placeholder="Token contract"
+                />
+                <InputPanel
+                  creationForm={creationForm}
+                  onCreationFormUpdate={onCreationFormUpdate}
+                  type="text"
+                  appearance="small"
+                  placeholder="Token ticker "
+                />
               </div>
               <div className={cn(styles.LabelSettings)}>
                 <LabelSettings title="Drop amount" />
@@ -319,10 +391,30 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
               </div>
               {(isShowDescription_dropAmount && (
                 <div className={cn(styles.dropAmountInput)}>
-                  <InputPanel type="text" appearance="small_medium" placeholder="From" />
-                  <InputPanel type="text" appearance="small_medium" placeholder="To" />
+                  <InputPanel
+                    creationForm={creationForm}
+                    onCreationFormUpdate={onCreationFormUpdate}
+                    type="text"
+                    appearance="small_medium"
+                    placeholder="From"
+                  />
+                  <InputPanel
+                    creationForm={creationForm}
+                    onCreationFormUpdate={onCreationFormUpdate}
+                    type="text"
+                    appearance="small_medium"
+                    placeholder="To"
+                  />
                 </div>
-              )) || <InputPanel type="text" appearance="biggest" placeholder="Drop amount" />}
+              )) || (
+                <InputPanel
+                  creationForm={creationForm}
+                  onCreationFormUpdate={onCreationFormUpdate}
+                  type="text"
+                  appearance="biggest"
+                  placeholder="Drop amount"
+                />
+              )}
             </div>
           )) || (
             <div className={cn(styles.dropAmount)}>
@@ -349,10 +441,30 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
               </div>
               {(isShowDescription_dropAmount && (
                 <div className={cn(styles.dropAmountInput)}>
-                  <InputPanel type="text" appearance="small_medium" placeholder="From" />
-                  <InputPanel type="text" appearance="small_medium" placeholder="To" />
+                  <InputPanel
+                    creationForm={creationForm}
+                    onCreationFormUpdate={onCreationFormUpdate}
+                    type="text"
+                    appearance="small_medium"
+                    placeholder="From"
+                  />
+                  <InputPanel
+                    creationForm={creationForm}
+                    onCreationFormUpdate={onCreationFormUpdate}
+                    type="text"
+                    appearance="small_medium"
+                    placeholder="To"
+                  />
                 </div>
-              )) || <InputPanel type="text" appearance="biggest" placeholder="Drop amount" />}
+              )) || (
+                <InputPanel
+                  creationForm={creationForm}
+                  onCreationFormUpdate={onCreationFormUpdate}
+                  type="text"
+                  appearance="biggest"
+                  placeholder="Drop amount"
+                />
+              )}
             </div>
           )}
 

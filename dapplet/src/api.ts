@@ -83,10 +83,10 @@ export class DappletApi implements IDappletApi {
 
   async getLootboxStat(lootboxId: number): Promise<LootboxStat> {
     return {
-      totalAmount: 100,
-      winAmount: 20,
-      currentBalance: 80,
-      totalViews: 17,
+      totalAmount: lootboxId * 10,
+      winAmount: lootboxId * 2,
+      currentBalance: lootboxId * 8,
+      totalViews: lootboxId * 17,
     };
   }
 

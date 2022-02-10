@@ -20,14 +20,14 @@ export type NearContentItem = {
 };
 
 export type Lootbox = {
-  id: number;
+  id?: number;
   name: string;
   pictureId: number;
   dropChance: number;
   nearContentItems: NearContentItem[];
   nftContentItems: NftContentItem[];
   ftContentItems: FtContentItem[];
-  status: 'created' | 'filled' | 'payed' | 'dropping' | 'dropped' | undefined;
+  status?: 'created' | 'filled' | 'payed' | 'dropping' | 'dropped';
 };
 
 export type BoxCreationPrice = {

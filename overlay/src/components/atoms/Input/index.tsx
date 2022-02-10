@@ -11,6 +11,7 @@ import styles from './Input.module.scss';
 import { useToggle } from '../../../hooks/useToggle';
 import less from '../../../icons/Input/less.svg';
 import more from '../../../icons/Input/more.svg';
+import { Lootbox } from '../../../../../common/interfaces';
 export interface InputProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   onSubmit?: () => void;
@@ -28,6 +29,8 @@ export interface InputProps
     | 'biggest';
   className?: 'string';
   type: string;
+  creationForm: Lootbox;
+  onCreationFormUpdate: (x: Lootbox) => void;
 }
 
 export const InputPanel: FC<InputProps> = (props) => {
@@ -39,14 +42,18 @@ export const InputPanel: FC<InputProps> = (props) => {
     appearance,
     className,
     type,
+    creationForm,
+    onCreationFormUpdate,
     ...anotherProps
   } = props;
   const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {
     // const formData = new FormData(event.currentTarget);
     event.preventDefault();
     const { name, value } = event.currentTarget;
-    console.log(name, value);
-    console.log(event);
+
+    // creationForm.name = value;
+
+    // onCreationFormUpdate(creationForm);
   };
 
   return (

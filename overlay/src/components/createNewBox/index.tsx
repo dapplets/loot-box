@@ -12,21 +12,24 @@ import { Link } from 'react-router-dom';
 import { useToggle } from '../../hooks/useToggle';
 import SelectBox from '../selectBox';
 import { labels } from '../Statistics';
+import { Lootbox } from '../../../../common/interfaces';
 export interface CreateNewBoxProps {
   children: ReactNode;
   label: string;
   imgVal: string;
   // onClick: () => void;
+  // creationForm: Lootbox;
 }
-
+export const IMG = [Box1, Box2, Box3, Box4];
 export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) => {
   const {
     label,
     imgVal,
     children,
+    // creationForm,
     // onClick,
   } = props;
-
+  // creationForm.name;
   const [isShowDescription, onShowDescription] = useToggle(false);
   return (
     <div className={cn(styles.wrapper)}>
@@ -49,10 +52,21 @@ export interface ChildComponentProps {
   number: number;
   label: string;
   imgVal: string;
-  // id: number;
+  onClick: () => void;
+  id: number;
+  creationForm: Lootbox;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, label, imgVal } = props;
-  return <CreatedBox id={number} label={label} imageBox={imgVal} status="Created" />;
+  const { number, label, imgVal, onClick, id, creationForm } = props;
+  return (
+    // <CreatedBox id={number} label={label} imageBox={imgVal} status="Created" onClick={onClick} />
+    <CreatedBox
+      id={creationForm.id!}
+      label={creationForm.name}
+      imageBox={IMG[creationForm.pictureId]}
+      status="Created"
+      onClick={onClick}
+    />
+  );
 };

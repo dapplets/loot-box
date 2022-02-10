@@ -8,12 +8,16 @@ import { useToggle } from '../../hooks/useToggle';
 import { InputPanel } from '../atoms/Input';
 import { TextArea } from '../atoms/TextArea';
 import { Message } from '../atoms/Message';
+import { Lootbox } from '../../../../common/interfaces';
 
 export interface CodeProps {
   onChange?: () => void;
   onSubmit?: () => void;
+  creationForm: Lootbox;
+  onCreationFormUpdate: (x: Lootbox) => void;
 }
 export const Code: FC<CodeProps> = (props: CodeProps) => {
+  const { creationForm, onCreationFormUpdate } = props;
   const [value, setValue] = useState('');
   const onChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setValue(e.target.value);
@@ -23,7 +27,12 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
       <div className={cn(styles.code)}>
         <div className={styles.boxName}>
           <LabelSettings title="Box name" />
-          <InputPanel type="text" appearance="biggest" />
+          <InputPanel
+            creationForm={creationForm}
+            onCreationFormUpdate={onCreationFormUpdate}
+            type="text"
+            appearance="biggest"
+          />
         </div>
         <div className={styles.boxMessage}>
           <LabelSettings title="Box Message" />

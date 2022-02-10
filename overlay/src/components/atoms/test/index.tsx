@@ -10,6 +10,9 @@ import React, {
   ReactChild,
   Component,
   MutableRefObject,
+  ChangeEventHandler,
+  useMemo,
+  useEffect,
 } from 'react';
 import { useToggle } from '../../../hooks/useToggle';
 import { InputPanel, InputProps } from '../Input';
@@ -25,125 +28,197 @@ import box4 from '../../../icons/createNewBox/box4.png';
 import left from '../../../icons/selectBox/sliderLeft.svg';
 import right from '../../../icons/selectBox/sliderRight.svg';
 import { RadioButton } from '../RadioButton';
-import './Test.module.scss';
+
 import cn from 'classnames';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider, KeenSliderPlugin, KeenSliderInstance } from 'keen-slider/react';
+import './Test.module.scss';
+
+import classNames from 'classnames';
+import { Lootbox } from '../../../../../common/interfaces';
+import styles from './Test.module.scss';
 export interface TestProps {
   // prop?: '20';
   // numChildren: number;
 }
+
+export interface ImageProps {
+  onClick: any;
+  item: string;
+  index: number;
+  clicked: number | null;
+}
+
+const Image = ({ onClick, item, index, clicked }: ImageProps) => {
+  // useEffect(() => {
+  //   console.log({ onClick, item, index, clicked }, 'props');
+  // }, [onClick, item, index, clicked]);
+  // useEffect(() => {
+  //   console.log({ onClick });
+  // }, [onClick]);
+  // useEffect(() => {
+  //   console.log({ item });
+  // }, [item]);
+  // useEffect(() => {
+  //   console.log({ index });
+  // }, [index]);
+  // useEffect(() => {
+  //   console.log({ clicked });
+  // }, [clicked]);
+  const imgClassName = useMemo(
+    () => `keen-slider__slide number-slide1 ${clicked === index && 'clicked'}`,
+    [clicked, index],
+  );
+  // useEffect(() => {
+  //   console.log({
+  //     imgClassName,
+  //     clicked,
+  //     typeclicked: typeof clicked,
+  //     index: index,
+  //     typeindex: typeof index,
+  //   });
+  // }, [imgClassName]);
+  return <img onClick={() => onClick(index)} className={imgClassName} src={item} id={item} />;
+};
+
+interface SliderProps {
+  id: number;
+  imgs: any;
+  onChange_IMG: () => void;
+  clicked: number | null;
+  setClicked: any;
+  // creationForm: Lootbox;
+  onCreationFormUpdate: (id: number) => void;
+  // onClick: () => void;
+}
 export const IMG = [box1, box2, box3, box4];
 export const Imges: FC<SliderProps> = (props: SliderProps) => {
-  // const { id, onSetId, imgs, onChange_IMG } = props;
+  // const [clicked, setClicked] = useState<number | null>(null);
+  // const handleClick = useMemo(
+  //   () => (index: number | null) => {
+  //     console.log('hello world', index);
+  //     setClicked(index);
+  //   },
+  //   [setClicked],
+  // );
+  const { clicked, setClicked } = props;
+  const { id, imgs, onCreationFormUpdate } = props;
+
+  const onSetId = useMemo(
+    () => (index: number) => {
+      setClicked(index);
+      onCreationFormUpdate(index);
+    },
+    [onCreationFormUpdate, setClicked],
+  );
+
+  useEffect(() => {
+    console.log({ setClicked });
+  }, [setClicked]);
+  useEffect(() => {
+    console.log({ onCreationFormUpdate });
+  }, [onCreationFormUpdate]);
+
+  //  { const imgClassName = useMemo(
+  //   () => `keen-slider__slide number-slide1 ${clicked === `${index}` && 'clicked'}`,
+  //   [clicked, ],
+  // ) }
   return (
     <>
-      {IMG.map((item, index) => (
-        <img className={'keen-slider__slide number-slide1'} src={item} key={index} />
+      {imgs.map((item: string, index: number) => (
+        <Image
+          key={item}
+          onClick={(index: number) => {
+            setClicked(index);
+            onCreationFormUpdate(index);
+          }}
+          item={item}
+          index={index}
+          clicked={clicked}
+        />
       ))}
     </>
   );
 };
-interface SliderProps {}
-export function ThumbnailPlugin(
-  mainRef: MutableRefObject<KeenSliderInstance | null>,
-): KeenSliderPlugin {
-  return (slider) => {
-    function removeActive() {
-      slider.slides.forEach((slide) => {
-        slide.classList.remove('active');
-      });
-    }
-    function addActive(idx: number) {
-      slider.slides[idx].classList.add('active');
-    }
 
-    function addClickEvents() {
-      slider.slides.forEach((slide, idx) => {
-        slide.addEventListener('click', () => {
-          if (mainRef.current) mainRef.current.moveToIdx(idx);
-        });
-      });
-    }
+export const Slider: FC<SliderProps> = (props: SliderProps) => {
+  const { onChange_IMG, onCreationFormUpdate, id, clicked, setClicked } = props;
+  // const id = useMemo(() => creationForm.pictureId, [creationForm]);
 
-    slider.on('created', () => {
-      if (!mainRef.current) return;
-      addActive(slider.track.details.rel);
-      addClickEvents();
-      mainRef.current.on('animationStarted', (main) => {
-        removeActive();
-        const next = main.animator.targetIdx || 0;
-        addActive(main.track.absToRel(next));
-        slider.moveToIdx(next);
-      });
-    });
-  };
-}
+  // const [imges] = useState(IMG);
 
-export const Test: FC<TestProps> = (props: TestProps) => {
-  const [currentSlide, setCurrentSlide] = React.useState(0);
+  // const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
-    // slideChanged(slider) {
-    //   setCurrentSlide(slider.track.details.rel);
-    // },
-    // created() {
-    //   setLoaded(true);
-    // },
-  });
-  const [thumbnailRef] = useKeenSlider<HTMLDivElement>(
-    {
-      initial: 0,
-      slides: {
-        perView: 4,
-        spacing: 10,
-      },
-      slideChanged(slider) {
-        setCurrentSlide(slider.track.details.rel);
-      },
-      created() {
-        setLoaded(true);
-      },
+    loop: true,
+    slides: {
+      perView: 4,
+      spacing: 5,
     },
-
-    [ThumbnailPlugin(instanceRef)],
-  );
+    slideChanged(slider) {
+      // setCurrentSlide(slider.track.details.rel);
+    },
+    created() {
+      setLoaded(true);
+    },
+  });
 
   return (
-    <div>
-      <div ref={sliderRef} className="keen-slider">
-        <Imges />
-      </div>
-      <div className="navigation-wrapper">
-        <div ref={thumbnailRef} className="keen-slider">
-          <Imges />
-          {loaded && instanceRef.current && (
-            <>
-              <Arrow
-                left
-                onClick={(e: any) => e.stopPropagation() || instanceRef.current?.prev()}
-                disabled={currentSlide === 0}
-              />
-
-              <Arrow
-                onClick={(e: any) => e.stopPropagation() || instanceRef.current?.next()}
-                disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
-              />
-            </>
-          )}
+    <>
+      <div className={cn(styles.navigationWrapper)}>
+        <div ref={sliderRef} className={cn(styles.keenSlider)}>
+          <Imges
+            clicked={clicked}
+            setClicked={setClicked}
+            key={id}
+            id={id}
+            imgs={IMG}
+            onChange_IMG={IMG[id]}
+            onCreationFormUpdate={onCreationFormUpdate}
+            // onClick={() => onChange_IMG}
+          />
         </div>
+        {loaded && instanceRef.current && (
+          <>
+            <Arrow
+              left
+              onClick={(e: any) => e.stopPropagation() || instanceRef.current?.prev()}
+              disabled={false}
+              style={{
+                position: 'absolute',
+                top: '0px',
+                left: '0px',
+              }}
+            />
+
+            <Arrow
+              onClick={(e: any) => e.stopPropagation() || instanceRef.current?.next()}
+              disabled={false}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                left: '20px',
+              }}
+            />
+          </>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
-export function Arrow(props: { disabled: boolean; left?: boolean; onClick: (e: any) => void }) {
+function Arrow(props: {
+  disabled: boolean;
+  left?: boolean;
+  onClick: (e: any) => void;
+  style: React.CSSProperties;
+}) {
   const disabeld = props.disabled ? ' arrow--disabled' : '';
   return (
     <svg
       onClick={props.onClick}
-      className={`arrow ${props.left ? 'arrow--left' : 'arrow--right'} ${disabeld}`}
+      className={cn(`arrow ${props.left ? 'arrow--left' : 'arrow--right'} ${disabeld}`)}
       xmlns="http://www.w3.org/2000/svg"
       width="21"
       height="20"

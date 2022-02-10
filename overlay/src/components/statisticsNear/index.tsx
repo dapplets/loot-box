@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import styles from './StatisticsNear.module.scss';
 import cn from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { StatisticsTitle } from '../atoms/StatisticsTitle';
 import { LabelSettings } from '../atoms/LabelSettings';
 import { Progress } from '../atoms/Progress';
@@ -24,7 +24,11 @@ import { Message } from '../atoms/Message';
 import { Code } from '../Code';
 import { Winner } from '../Winners';
 import { Statistics } from '../Statistics';
-export interface StatisticsNearProps {}
+import { Lootbox } from '../../../../common/interfaces';
+export interface StatisticsNearProps {
+  creationForm: Lootbox;
+  onCreationFormUpdate: (x: Lootbox) => void;
+}
 
 const titleList = [
   { id: 0, title: 'Statistics' },
@@ -33,10 +37,20 @@ const titleList = [
 ];
 
 export interface StatisticsNearPropsStat {
-  stat: any;
+  stat?: any;
+  creationForm: Lootbox;
+  onCreationFormUpdate: (x: Lootbox) => void;
 }
+
 export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) => {
+  const { creationForm, onCreationFormUpdate } = props;
+  const { lootboxId } = useParams();
   const { stat } = props;
+
+  if (stat === null) {
+    return <div>Loading</div>;
+  }
+
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.titleLinks)}>
@@ -71,7 +85,7 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
   // console.log(winners, 'llaa');
   return (
     <div className={cn(styles.wrapper)}>
-      <div className={cn(styles.titleLinks)}>
+      <div className={cn(styles.titleLinksWinners)}>
         {/* {titleList.map(({ id, title }) => (
           <StatisticsTitle
             onClick={onDappletActive}
@@ -104,6 +118,7 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
 };
 
 export const StatisticsCode: FC<StatisticsNearProps> = (props: StatisticsNearProps) => {
+  const { creationForm, onCreationFormUpdate } = props;
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.titleLinks)}>
@@ -131,7 +146,7 @@ export const StatisticsCode: FC<StatisticsNearProps> = (props: StatisticsNearPro
           </Link>
         </div>
       </div>
-      <Code />
+      <Code creationForm={creationForm} onCreationFormUpdate={onCreationFormUpdate} />
       {/* <Winner /> <Statistics /> */}
     </div>
   );

@@ -9,12 +9,13 @@ export interface CreatedBoxProps {
   imageBox: string;
   status: string;
   id: number;
+  onClick: () => void;
 }
 
 export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
-  const { label, imageBox, status, id } = props;
+  const { label, imageBox, status, id, onClick } = props;
   return (
-    <div className={cn(styles.wrapper)}>
+    <div className={cn(styles.wrapper)} onClick={onClick}>
       <div className={cn(styles.img)}>
         <img src={imageBox} />
       </div>

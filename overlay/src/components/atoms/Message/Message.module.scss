@@ -3,6 +3,7 @@
 @import '../../../styles/fonts.scss';
 
 .wrapper {
+  width: 100%;
 }
 .lootboxCode {
   display: flex;
@@ -11,7 +12,7 @@
   width: 100%;
 }
 .message {
-  max-width: 410px;
+  width: 100%;
   display: flex;
   align-items: start;
   padding: 20px 30px;

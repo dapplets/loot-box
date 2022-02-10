@@ -1,4 +1,12 @@
-import React, { CSSProperties, ReactElement, ReactNode, FC, useState } from 'react';
+import React, {
+  CSSProperties,
+  ReactElement,
+  ReactNode,
+  FC,
+  useState,
+  useMemo,
+  useEffect,
+} from 'react';
 import { SettingTitle } from '../atoms/SettingTitle';
 import styles from './SelectBox.module.scss';
 import cn from 'classnames';
@@ -12,7 +20,8 @@ import { LinksStep } from '../atoms/LinksStep';
 import NextStep from '../../icons/selectBox/NextStep.svg';
 import PrevStep from '../../icons/selectBox/prevStep.svg';
 import { Link } from 'react-router-dom';
-import { Test } from '../atoms/test';
+import { Slider } from '../atoms/test';
+import { Lootbox } from '../../../../common/interfaces';
 
 export interface SelectBoxProps {
   children?: ReactNode;
@@ -23,97 +32,132 @@ export interface SelectBoxProps {
   image?: string;
   onChange_IMG: (x: string) => void;
   valueIMG?: string;
+  creationFormId: number;
+  onCreationFormUpdate: (id: number) => void;
+  clicked: number | null;
+  setClicked: any;
 }
 export const IMG = [box1, box2, box3, box4];
-interface SliderProps {
-  id: number;
-  onSetId: any;
-  imgs: any;
-  // onClick: () => void;
-  onChange_IMG: () => void;
-}
-export const Slider: FC<SliderProps> = (props: SliderProps) => {
-  const { id, onSetId, imgs, onChange_IMG } = props;
 
+// export const Imges: FC<SelectBoxProps> = (props: SelectBoxProps) => {
+//   const [clicked, useClicked] = useState('');
+//   const handleClick = (id: string) => useClicked(id);
+
+//   const { id, creationForm, onCreationFormUpdate } = props;
+
+//   const onSetId = (index: number) => {
+//     creationForm.pictureId = index;
+//     onCreationFormUpdate(creationForm);
+//   };
+//   return (
+//     <>
+//       {IMG.map((item: any, index: any) => (
+//         <img
+//           onClick={(e) => {
+//             // e.stopPropagation();
+//             handleClick(`${index}`);
+//             onSetId(index);
+//           }}
+//           className={`keen-slider__slide number-slide1 ${clicked === `${index}` && 'clicked'}`}
+//           src={item}
+//           key={index}
+//           id={index}
+//         />
+//       ))}
+//     </>
+//   );
+// };
+
+export interface CetBoxProps {
+  onClick?: any;
+  icon?: string;
+  clicked: number | null;
+  setClicked: any;
+  onChange_IMG: (x: string) => void;
+  id: any;
+  // creationForm: Lootbox;
+  onCreationFormUpdate: (id: number) => void;
+}
+
+export const GetBox: FC<CetBoxProps> = (props: CetBoxProps) => {
+  const { icon, onChange_IMG, id, onCreationFormUpdate, clicked, setClicked } = props;
   return (
-    <div className={cn(styles.wrapperSlider)}>
-      <div className={cn(styles.left)} onClick={() => onSetId(Math.max(id - 1, 0))}>
-        <img src={left} />
+    <div className={cn(styles.wrapperImage)}>
+      <div className={cn(styles.firstLine)}>
+        <img className={cn(styles.selectedImage)} id={IMG[id]} src={IMG[id]} />
       </div>
-      {imgs.map((img: any, index: any) => (
-        <img
-          src={img}
-          onClick={() => {
-            onSetId(index);
-            // onChange_IMG();
-            // console.log(IMG[id]);
-          }}
-          alt={img}
-          key={index}
-          className={cn(styles.choiseImage)}
-          id={index}
-          // onChange={onChange_IMG()}
-        />
-      ))}
+      <SettingTitle title="Box skin" />
       <div
-        className={cn(styles.right)}
-        onClick={() => onSetId(Math.min(id + 1, imgs.length - 1))}
-        // onChange_IMG={}
+        className={cn(styles.secondLine)}
+        onClick={(e) => {
+          // e.stopPropagation();
+          // handleClick(`${id}`);
+          onChange_IMG(IMG[id]);
+        }}
       >
-        <img src={right} />
+        <Slider
+          clicked={clicked}
+          setClicked={setClicked}
+          key={id}
+          id={id}
+          imgs={IMG}
+          onChange_IMG={IMG[id]}
+          onCreationFormUpdate={onCreationFormUpdate}
+        />
       </div>
     </div>
   );
 };
-export interface CetBoxProps {
-  onClick?: any;
-  icon?: string;
-  // onChange_IMG: (x: string) => void;
-  onChange_IMG: (x: string) => void;
-}
 
 const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
-  const { onClick, onChange_IMG, imgLink } = props;
+  const {
+    onClick,
+    onChange_IMG,
+    imgLink,
+    creationFormId,
+    onCreationFormUpdate,
+    clicked,
+    setClicked,
+  } = props;
 
-  const [id, setId] = useState(0);
+  // const id = creationForm.pictureId;
+  // const id = useMemo(() => creationForm.pictureId, [creationForm]);
+  // const [imges] = useState(IMG);
 
-  const [imges] = useState(IMG);
-
-  const GetBox: FC<CetBoxProps> = (props: CetBoxProps) => {
-    const { icon, onChange_IMG } = props;
-    return (
-      <div className={cn(styles.wrapperImage)}>
-        <div className={cn(styles.firstLine)} onClick={() => onChange_IMG(IMG[id])}>
-          <img className={cn(styles.selectedImage)} id={IMG[id]} src={IMG[id]} alt={IMG[id]} />
-        </div>
-        <SettingTitle title="Box skin" />
-        <div className={cn(styles.secondLine)}>
-          <Slider
-            key={id}
-            id={id}
-            onSetId={setId}
-            imgs={IMG}
-            onChange_IMG={IMG[id]}
-            // onChange_IMG={IMG[id]}
-          />
-        </div>
-      </div>
-    );
-  };
+  // const [clicked, useClicked] = useState('');
+  // const handleClick = (id: string) => useClicked(id);
+  // useEffect(() => {
+  //   console.log({ creationForm });
+  // }, [creationForm]);
 
   return (
-    <div className={cn(styles.wrapper)} onClick={() => console.log(imges[id])}>
+    <div className={cn(styles.wrapper)} onClick={() => console.log(IMG[creationFormId])}>
       <SettingTitle isActive={true} title="Select box" />
       <GetBox
-        // onClick={console.log(imgas[id])}
-        // onClick={console.log(onChange_IMG(imgas[id]))}
+        clicked={clicked}
+        setClicked={setClicked}
         onChange_IMG={onChange_IMG}
-        // onClick={console.log(onChange_IMG()=>imgas[id])}
-        // console.log(IMG[id]);
-        // console.log(onChange_IMG());
+        id={creationFormId}
+        // creationForm={creationForm}
+        onCreationFormUpdate={onCreationFormUpdate}
       />
+      {/* <Slider
+        key={id}
+        id={id}
+        imgs={IMG}
+        onChange_IMG={IMG[id]}
+        creationForm={creationForm}
+        onCreationFormUpdate={onCreationFormUpdate}
+      /> */}
 
-      {/* <Test /> */}
+      {/* <Slider
+        onChange_IMG={IMG[id]}
+        // onChange_IMG={IMG[id]}
+        creationForm={creationForm}
+        onCreationFormUpdate={onCreationFormUpdate}
+        imgs={IMG}
+        id={id}
+      /> */}
       <div className={styles.navigation}>
         <Link to="/" className={cn(styles.prevStep)}>
           <LinksStep step="prev" label="Back" icon={PrevStep} />

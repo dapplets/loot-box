@@ -19,18 +19,43 @@ import { Message } from '../atoms/Message';
 import { TextArea } from '../atoms/TextArea';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
+import { Lootbox } from '../../../../common/interfaces';
 
 export interface DeployBoxProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   // onChange_input: () => void;
-  onAddChild: () => void;
+  // onAddChild: () => void;
+  onDoneClick: () => void;
+  creationForm: Lootbox;
+  onCreationFormUpdate: (x: Lootbox) => void;
 }
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
-  const { onChange, onAddChild } = props;
+  const { onChange, onDoneClick, creationForm, onCreationFormUpdate } = props;
   const [value, setValue] = useState('');
   const onChange_Area: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setValue(e.target.value);
+  };
+  const name = creationForm.name;
+  //   const onSetId: ChangeEventHandler<HTMLInputElement> = (event) => {
+  //  creationForm.name = event.target;
+  //     onCreationFormUpdate(creationForm);
+  //   };
+  // console.log(name);
+  const onSetName = (x: string) => {
+    creationForm.name = x;
+    onCreationFormUpdate(creationForm);
+  };
+
+  const onChange_name: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.preventDefault();
+    const { name, value } = event.currentTarget;
+
+    creationForm.name = value;
+
+    console.log(value);
+
+    onCreationFormUpdate(creationForm);
   };
 
   return (
@@ -38,7 +63,13 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <SettingTitle title="Deploy your box" isActive />
       <div className={cn(styles.boxName)}>
         <LabelSettings title="Box name" />
-        <InputPanel onChange={onChange} type="text" appearance="biggest" />
+        <InputPanel
+          creationForm={creationForm}
+          onCreationFormUpdate={onCreationFormUpdate}
+          onChange={onChange_name}
+          type="text"
+          appearance="biggest"
+        />
       </div>
 
       <div className={cn(styles.textArea)}>
@@ -55,7 +86,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       </div>
 
       <div className={cn(styles.navigation)}>
-        <Link to="/" className={cn(styles.link)} onClick={onAddChild}>
+        <Link to="/" className={cn(styles.link)} onClick={onDoneClick}>
           Done
         </Link>
       </div>

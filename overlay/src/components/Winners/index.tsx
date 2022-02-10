@@ -21,7 +21,6 @@ export interface WinnerProps {
 export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   const { winners } = props;
 
-  // console.log(winners, 'lalala');
   const Num = () => {
     return winners.map((item: any, index: number) => (
       <div className={cn(styles.winnersList)} key={index}>
@@ -40,14 +39,7 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
 
   return (
     <div className={styles.wrapper}>
-      {/* <div className={cn(styles.winners)}> */}
-      {/* <div className={cn(styles.winnersList)}> */}
-      {/* <WinnersInfo title="Twitter" value="@dilman" />
-          <WinnersInfo title="Near" value="vasya.near" />
-          <WinnersInfo title="Amount" value="@9 999 999" /> */}
-      {/* </div> */}
       <Num />
-      {/* <span className={styles.label}>Transition</span> */}
 
       <div className={cn(styles.link)}>
         <StatisticsLink label="Copy winners" />
