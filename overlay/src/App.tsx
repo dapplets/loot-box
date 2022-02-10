@@ -103,6 +103,8 @@ export default () => {
   const [creationForm, setCreationForm] = useState<Lootbox>(EMPTY_FORM);
   const [clicked, setClicked] = useState<number | null>(null);
 
+  const [lootboxId, setLootboxId] = useState<Lootbox>();
+
   const onChange_Input: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setValue(e.target.value);
   };
@@ -177,10 +179,11 @@ export default () => {
     // move to homepage
     dappletApi.getBoxesByAccount('dapplets_lootbox.testnet');
     console.log(creationForm);
+    console.log(dappletApi.createNewBox(creationForm));
   };
 
   useEffect(() => {
-    console.log({ creationForm });
+    // console.log({ creationForm });
   }, [creationForm]);
 
   return (

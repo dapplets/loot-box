@@ -39,35 +39,6 @@ export interface SelectBoxProps {
 }
 export const IMG = [box1, box2, box3, box4];
 
-// export const Imges: FC<SelectBoxProps> = (props: SelectBoxProps) => {
-//   const [clicked, useClicked] = useState('');
-//   const handleClick = (id: string) => useClicked(id);
-
-//   const { id, creationForm, onCreationFormUpdate } = props;
-
-//   const onSetId = (index: number) => {
-//     creationForm.pictureId = index;
-//     onCreationFormUpdate(creationForm);
-//   };
-//   return (
-//     <>
-//       {IMG.map((item: any, index: any) => (
-//         <img
-//           onClick={(e) => {
-//             // e.stopPropagation();
-//             handleClick(`${index}`);
-//             onSetId(index);
-//           }}
-//           className={`keen-slider__slide number-slide1 ${clicked === `${index}` && 'clicked'}`}
-//           src={item}
-//           key={index}
-//           id={index}
-//         />
-//       ))}
-//     </>
-//   );
-// };
-
 export interface CetBoxProps {
   onClick?: any;
   icon?: string;
@@ -120,16 +91,6 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
     setClicked,
   } = props;
 
-  // const id = creationForm.pictureId;
-  // const id = useMemo(() => creationForm.pictureId, [creationForm]);
-  // const [imges] = useState(IMG);
-
-  // const [clicked, useClicked] = useState('');
-  // const handleClick = (id: string) => useClicked(id);
-  // useEffect(() => {
-  //   console.log({ creationForm });
-  // }, [creationForm]);
-
   return (
     <div className={cn(styles.wrapper)} onClick={() => console.log(IMG[creationFormId])}>
       <SettingTitle isActive={true} title="Select box" />
@@ -141,23 +102,7 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
         // creationForm={creationForm}
         onCreationFormUpdate={onCreationFormUpdate}
       />
-      {/* <Slider
-        key={id}
-        id={id}
-        imgs={IMG}
-        onChange_IMG={IMG[id]}
-        creationForm={creationForm}
-        onCreationFormUpdate={onCreationFormUpdate}
-      /> */}
 
-      {/* <Slider
-        onChange_IMG={IMG[id]}
-        // onChange_IMG={IMG[id]}
-        creationForm={creationForm}
-        onCreationFormUpdate={onCreationFormUpdate}
-        imgs={IMG}
-        id={id}
-      /> */}
       <div className={styles.navigation}>
         <Link to="/" className={cn(styles.prevStep)}>
           <LinksStep step="prev" label="Back" icon={PrevStep} />

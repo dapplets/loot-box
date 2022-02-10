@@ -147,7 +147,7 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
 
   // const [imges] = useState(IMG);
 
-  // const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
@@ -157,7 +157,7 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
       spacing: 5,
     },
     slideChanged(slider) {
-      // setCurrentSlide(slider.track.details.rel);
+      setCurrentSlide(slider.track.details.rel);
     },
     created() {
       setLoaded(true);

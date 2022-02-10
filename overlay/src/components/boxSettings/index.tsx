@@ -1,4 +1,12 @@
-import React, { CSSProperties, ReactElement, ReactNode, FC, useState } from 'react';
+import React, {
+  CSSProperties,
+  ReactElement,
+  ReactNode,
+  FC,
+  useState,
+  ChangeEventHandler,
+  useMemo,
+} from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 import { SettingTitle } from '../atoms/SettingTitle';
@@ -101,6 +109,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
   const [value, setValue] = useState(20);
   const [isShowDescription_CustomNFT, onShowDescription_CustomNFT] = useToggle(false);
+  const [objArr, setVal] = useState(creationForm.nftContentItems);
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setValue(Number(e.target.value));
     // setValue(e.target.value);
@@ -139,12 +148,28 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
       />,
     );
   }
-  // const [numChildren_btn, onCount_btn] = useState(0);
+  creationForm.nftContentItems;
+  const onChange_name: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.preventDefault();
+    const { name, value } = event.currentTarget;
 
-  // for (let i = 0; i < numChildren; i += 1) {
+    setVal(
+      objArr.map((obj) => {
+        return { ...obj, [obj.contractAddress]: value };
+      }),
+    );
 
-  //   );
-  // }
+    console.log(value, creationForm);
+    onCreationFormUpdate(creationForm);
+  };
+  const onChange_Drop: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.preventDefault();
+    const { name, value } = event.currentTarget;
+
+    creationForm.dropChance = Number(value);
+    console.log(value, creationForm);
+    onCreationFormUpdate(creationForm);
+  };
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -212,6 +237,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                         type="string"
                         appearance="medium_big"
                         placeholder="Token ID"
+                        onChange={onChange}
                       />
                       <InputPanel
                         creationForm={creationForm}
@@ -233,7 +259,13 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
                   <div className={styles.dropChance_nft}>
                     <LabelSettings title="Drop Chance" />
-                    <DropChance type="number" max="100" min="0" onChange={onChange} value={value} />
+                    <DropChance
+                      type="number"
+                      max="100"
+                      min="0"
+                      onChange={onChange_Drop}
+                      value={value}
+                    />
                   </div>
                 </div>
               </>
@@ -248,6 +280,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                         type="string"
                         appearance="medium_big"
                         placeholder="Token ID"
+                        onChange={onChange_name}
                       />
                       <InputPanel
                         creationForm={creationForm}
@@ -269,7 +302,13 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
                   <div className={styles.dropChance_nft}>
                     <LabelSettings title="Drop Chance" />
-                    <DropChance type="number" max="100" min="0" onChange={onChange} value={value} />
+                    <DropChance
+                      type="number"
+                      max="100"
+                      min="0"
+                      onChange={onChange_Drop}
+                      value={value}
+                    />
                   </div>
                 </div>
               </>
@@ -297,6 +336,14 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setValue(Number(e.target.value));
     // setValue(e.target.value);
+  };
+  const onChange_Drop: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.preventDefault();
+    const { name, value } = event.currentTarget;
+
+    creationForm.dropChance = Number(value);
+    console.log(value, creationForm);
+    onCreationFormUpdate(creationForm);
   };
   return (
     <div className={cn(styles.wrapper)}>
@@ -472,7 +519,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <LabelSettings title="Drop Chance" />
 
             <DropChance
-              onChange={onChange}
+              onChange={onChange_Drop}
               type="number"
               value={value}
               placeholder="Drop chance"

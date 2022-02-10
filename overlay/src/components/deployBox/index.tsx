@@ -37,15 +37,11 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
     setValue(e.target.value);
   };
   const name = creationForm.name;
-  //   const onSetId: ChangeEventHandler<HTMLInputElement> = (event) => {
-  //  creationForm.name = event.target;
-  //     onCreationFormUpdate(creationForm);
-  //   };
-  // console.log(name);
-  const onSetName = (x: string) => {
-    creationForm.name = x;
-    onCreationFormUpdate(creationForm);
-  };
+
+  // const onSetName = (x: string) => {
+  //   creationForm.name = x;
+  //   onCreationFormUpdate(creationForm);
+  // };
 
   const onChange_name: ChangeEventHandler<HTMLInputElement> = (event) => {
     event.preventDefault();
