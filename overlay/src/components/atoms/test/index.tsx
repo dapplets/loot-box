@@ -42,64 +42,37 @@ export interface TestProps {
 }
 
 export const Test: FC<TestProps> = (props: TestProps) => {
-  const [loader, setLoader] = useState('');
+  // The actual quantity
+  const [qty, setQty] = useState(1);
+  // The quantity string the user is editing
+  const [qtyString, setQtyString] = useState(String(qty));
 
-  //create message setter
-  const messageSetter = (message) => {
-    setLoader(message);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // Always update the string
+    setQtyString(e.target.value);
+    // Is it a valid positive number?
+    e.target.value = e.target.value.trim();
+    const value = e.target.value ? +e.target.value : NaN;
+    if (isNaN(value) || value <= 0) {
+      // No, our quantity is 1 (even though the string may
+      // not be)
+      setQty(1);
+    } else {
+      // Yes, use it
+      setQty(value);
+    }
   };
 
-  //render pre loader on whether loader message exists
-  //pass messege setter to other components
+  // Just for demo purposes:
+  // console.log(`qty = ${qty}, qtyString = ${JSON.stringify(qtyString)}`);
+
   return (
-    <div>
-      {loader && <Preloader message={loader} />}
-      <OtherComponent messageSetter={messageSetter} />
-    </div>
-  );
-};
-export interface MessageProps {
-  message: any;
-}
-export const Preloader: FC<MessageProps> = (props: MessageProps) => {
-  const { message } = props;
-  return <div>{message}</div>;
-};
-
-export interface OtherComponentProps {
-  messageSetter: any;
-}
-export const OtherComponent: FC<OtherComponentProps> = (props: OtherComponentProps) => {
-  const { messageSetter } = props;
-  const [data, setData] = useState('');
-
-  //mock api call
-  const yourFunction = async () => {
-    let mockApi = new Promise(function (resolve, reject) {
-      setTimeout(() => {
-        resolve('Your data.');
-      }, 2000);
-    });
-    //await data
-    let result = await mockApi;
-    //set data to state
-    setData(result);
-    //close loader
-    messageSetter('');
-  };
-
-  //call loader with custom message and api call on click
-  return (
-    <div>
-      <button
-        onClick={() => {
-          messageSetter('custom loading message');
-          yourFunction();
-        }}
-      >
-        Click
-      </button>
-      <div>{data ? data : 'No data called.'}</div>
-    </div>
+    <input
+      placeholder="Please provide a number > 0"
+      pattern="^[0-9]\d*$"
+      type="text"
+      value={qtyString}
+      onChange={handleChange}
+    />
   );
 };

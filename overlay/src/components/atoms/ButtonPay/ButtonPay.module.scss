@@ -16,6 +16,12 @@
   text-transform: uppercase;
 }
 .default {
+  &:hover {
+    background: $PrimaryHover;
+  }
+  &:active {
+    background: $PrimaryPressed;
+  }
 }
 
 .disable {
@@ -31,4 +37,11 @@
   text-align: center;
   text-transform: uppercase;
   color: $Primary;
+
+  &:hover {
+    border: 1px solid $PrimaryHover;
+  }
+  &:active {
+    border: 1px solid $PrimaryPressed;
+  }
 }

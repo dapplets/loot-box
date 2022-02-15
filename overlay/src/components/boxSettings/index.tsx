@@ -48,7 +48,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
     number,
     onDeleteChild,
     creationForm,
-    // onCreationFormUpdate
+    // onCreationFormUpdate,
   } = props;
 
   const [valueInp, setValueInp] = useState(0);
@@ -68,12 +68,15 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
     onShowDescription_CustomNFT();
     // setValue(e.target.value);
   };
+
   creationForm.nftContentItems.push({
     contractAddress: valueRadio,
     quantity: valueInp,
     tokenId: valueInpT,
   });
 
+  // onCreationFormUpdate(creationForm);
+  console.log(creationForm);
   return (
     <div className={styles.addNftBlock}>
       <LabelSettings title="Marketplace" />
@@ -107,12 +110,14 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
               appearance="medium_big"
               placeholder="Token ID"
               onChange={onChangeT}
+              pattern="^[0-9]\d*.{6}$"
             />
             <InputPanel
               type="string"
               appearance="small_mini"
               placeholder="Quantity"
               onChange={onChangeQ}
+              pattern="^[0-9]\d*.{6}$"
             />
           </div>
         )) || (
@@ -122,12 +127,14 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
               appearance="medium_big"
               placeholder="Token ID"
               onChange={onChangeT}
+              pattern="^[0-9]\d*.{6}$"
             />
             <InputPanel
               type="string"
               appearance="small_mini"
               placeholder="Quantity"
               onChange={onChangeQ}
+              pattern="^[0-9]\d*.{6}$"
             />
           </div>
         )}
@@ -183,13 +190,12 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const [valueInpT, setValueInpT] = useState(0);
   const [valueRadio, setValueRadio] = useState('');
   const [isShowDescription_CustomNFT, onShowDescription_CustomNFT] = useToggle(false);
-  const [objArr, setValueArr] = useState(creationForm.nftContentItems);
   const [numChildren, onCount] = useState(0);
+
   const onAddChild = () => {
     onCount(numChildren + 1);
 
     onCreationFormUpdate(creationForm);
-    console.log(creationForm);
   };
   const onDeleteChild = () => {
     onCount(numChildren - 1);
@@ -202,6 +208,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   for (let i = 0; i < numChildren; i += 1) {
     children.push(
       <ChildComponent
+        // onChangeQ={onChangeQ}
+        // onChangeRadio={onChangeRadio}
+        // onChangeT={onChangeT}
         creationForm={creationForm}
         // onCreationFormUpdate={onCreationFormUpdate}
         // onCreationFormUpdate={() => {}}
@@ -210,6 +219,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         number={i}
       />,
     );
+    // onCreationFormUpdate(creationForm);
   }
   for (let i = 0; i < numChildren && i < 1; i += 1) {
     children_btn.push(
@@ -233,10 +243,11 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
       tokenId: valueInpT,
     },
   ];
+
   creationForm.nearContentItems = [];
   creationForm.ftContentItems = [];
   creationForm.dropChance = valueDrop;
-  // onCreationFormUpdate(creationForm);
+  onCreationFormUpdate(creationForm);
   console.log(creationForm);
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -253,8 +264,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const onChangeRadio: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setValueRadio(e.target.value);
     onShowDescription_CustomNFT();
-
-    // setValue(e.target.value);
   };
 
   return (
@@ -322,6 +331,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                       appearance="medium_big"
                       placeholder="Token ID"
                       onChange={onChangeT}
+                      pattern="^[0-9]\d*.{6}$"
                     />
                     <InputPanel
                       // onChange={onChange}
@@ -330,6 +340,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                       type="string"
                       appearance="small_mini"
                       placeholder="Quantity"
+                      pattern="^[0-9]\d*.{6}$"
                       onChange={onChangeQ}
                     />
                   </div>
@@ -365,6 +376,8 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                       appearance="medium_big"
                       placeholder="Token ID"
                       onChange={onChangeT}
+                      // pattern="^[0-9]\d*$"
+                      pattern="^[0-9]\d*.{6}$"
                     />
                     <InputPanel
                       // onChange={onChange}
@@ -374,6 +387,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                       appearance="small_mini"
                       placeholder="Quantity"
                       onChange={onChangeQ}
+                      pattern="^[0-9]\d*.{6}$"
                     />
                   </div>
                   {children_btn}
@@ -398,51 +412,25 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                 </div>
               </div>
             )}
-            {/* <div className={styles.customNFT}>
-              <div className={styles.addNFT}>
-                <div className={styles.inputCustomNFT}>
-                  <InputPanel
-                    creationForm={creationForm}
-                    onCreationFormUpdate={onCreationFormUpdate}
-                    type="string"
-                    appearance="medium_big"
-                    placeholder="Token ID"
-                    onChange={onChangeT}
-                  />
-                  <InputPanel
-                    // onChange={onChange}
-                    creationForm={creationForm}
-                    onCreationFormUpdate={onCreationFormUpdate}
-                    type="string"
-                    appearance="small_mini"
-                    placeholder="Quantity"
-                    onChange={onChangeQ}
-                  />
-                </div>
-                {children_btn}
-                <Button
-                  // onClick={clickCount}
-                  onClick={onAddChild}
-                  isShowDescription={false}
-                  btnText="Add NFT"
-                  appearance="small"
-                />
-              </div>
-
-              <div className={styles.dropChance_nft}>
-                <LabelSettings title="Drop Chance" />
-                <DropChance type="number" max="100" min="0" onChange={onChange} value={valueDrop} />
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
+
       <div className={cn(styles.navigation)}>
         <Link to="/select_box">
-          <LinksStep step="prev" label="Back" icon={PrevStep} />
+          <LinksStep
+            step="prev"
+            label="Back"
+
+            //  icon={PrevStep}
+          />
         </Link>
         <Link to="/fill_your_box_nft">
-          <LinksStep step="next" label="Next step" icon={NextStep} />
+          <LinksStep
+            step="next"
+            label="Next step"
+            // icon={NextStep}
+          />
         </Link>
       </div>
     </div>
@@ -523,28 +511,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     onShowDescription_dropAmount();
     console.log(valueRadioDropType);
   };
-
-  // creationForm.nearContentItems = [
-  //   {
-  //     tokenAmount: valueInputTokenAmount,
-  //     dropType: valueRadioDropType,
-  //     dropAmountFrom: valueInputTokenFrom,
-  //     dropAmountTo: valueInputTokenTo,
-  //   },
-  // ];
-
-  // creationForm.ftContentItems = [
-  //   {
-  //     contractAddress: valueInputTokenContract,
-  //     tokenAmount: valueInputTokenAmount,
-  //     dropType: valueRadioDropType,
-  //     dropAmountFrom: valueInputTokenFrom,
-  //     dropAmountTo: valueInputTokenFrom,
-  //   },
-  // ];
-
   creationForm.nftContentItems = [];
-
   creationForm.dropChance = value;
 
   if (isShowDescription_tokenAmount) {
@@ -605,6 +572,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 appearance="default"
                 placeholder="Token amount"
                 onChange={onChangeTokenAmount}
+                pattern="^[0-9]\d*.{6}$"
               />
               <RadioButton
                 value="$NEAR"
@@ -634,6 +602,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="medium"
                   placeholder="Token contract"
                   onChange={onChangeTokenContract}
+                  pattern="^[0-9]\d*.{6}$"
                 />
                 <InputPanel
                   // creationForm={creationForm}
@@ -642,6 +611,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="small"
                   placeholder="Token ticker "
                   onChange={onChangeTokenTicker}
+                  pattern="^[0-9]\d*.{6}$"
                 />
               </div>
               <div className={cn(styles.LabelSettings)}>
@@ -674,6 +644,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     appearance="small_medium"
                     placeholder="From"
                     onChange={onChangeTokenFrom}
+                    pattern="^[0-9]\d*.{6}$"
                   />
                   <InputPanel
                     // creationForm={creationForm}
@@ -682,6 +653,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     appearance="small_medium"
                     placeholder="To"
                     onChange={onChangeTokenTo}
+                    pattern="^[0-9]\d*.{6}$"
                   />
                 </div>
               )) || (
@@ -692,6 +664,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="biggest"
                   placeholder="Drop amount"
                   onChange={onChangeDropAmount}
+                  pattern="^[0-9]\d*.{6}$"
                 />
               )}
             </div>
@@ -727,6 +700,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     appearance="small_medium"
                     placeholder="From"
                     onChange={onChangeTokenFrom}
+                    pattern="^[0-9]\d*.{6}$"
                   />
                   <InputPanel
                     // creationForm={creationForm}
@@ -735,6 +709,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     appearance="small_medium"
                     placeholder="To"
                     onChange={onChangeTokenTo}
+                    pattern="^[0-9]\d*.{6}$"
                   />
                 </div>
               )) || (
@@ -745,6 +720,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="biggest"
                   placeholder="Drop amount"
                   onChange={onChangeDropAmount}
+                  pattern="^[0-9]\d*.{6}$"
                 />
               )}
             </div>
@@ -766,10 +742,18 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       </div>
       <div className={cn(styles.navigation)}>
         <Link to="/select_box">
-          <LinksStep step="prev" label="Back" icon={PrevStep} />
+          <LinksStep
+            step="prev"
+            label="Back"
+            // icon={PrevStep}
+          />
         </Link>
         <Link to="/fill_your_box">
-          <LinksStep step="next" label="Next step" icon={NextStep} />
+          <LinksStep
+            step="next"
+            label="Next step"
+            //  icon={NextStep}
+          />
         </Link>
       </div>
     </div>

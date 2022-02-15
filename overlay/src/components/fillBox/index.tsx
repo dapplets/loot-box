@@ -77,7 +77,11 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       </div>
       <div className={cn(styles.navigation)}>
         <Link to="/box_settings_value">
-          <LinksStep step="prev" label="Back" icon={PrevStep} />
+          <LinksStep
+            step="prev"
+            label="Back"
+            //  icon={PrevStep}
+          />
         </Link>
       </div>
     </div>

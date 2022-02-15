@@ -34,7 +34,7 @@ const Image = ({ onClick, item, index, clicked }: ImageProps) => {
   //   console.log({ clicked });
   // }, [clicked]);
   const imgClassName = useMemo(
-    () => `keen-slider__slide number-slide1 ${clicked === index && 'clicked'}`,
+    () => `keen-slider__slide number-slide1 ${index}  ${clicked === index && 'clicked'}`,
     [clicked, index],
   );
   // useEffect(() => {

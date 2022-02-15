@@ -23,6 +23,14 @@
 .small {
   width: 13%;
   height: 14px;
+  background: $Primary;
+  color: $PureWhite;
+  &:hover {
+    background: $PrimaryHover;
+  }
+  &:active {
+    background: $PrimaryPressed;
+  }
 }
 .big {
   width: 100%;
@@ -30,8 +38,26 @@
   color: $PureWhite;
   font-weight: 400;
 }
+.big:hover {
+  background: $PrimaryHover;
+  border: none;
+}
+
+.big:active {
+  background: $PrimaryPressed;
+  border: none;
+}
+
 .medium {
   width: 47%;
+  &:hover {
+    border: 1px solid $PrimaryPressed;
+    color: $PrimaryPressed;
+  }
+  // &:active{
+  //   border: 1px solid $Primary;
+  //   color: $Primary;
+  // }
 }
 .active {
 }
@@ -46,4 +72,15 @@
   border-radius: 4px;
   text-align: center;
   color: $StrokeColor;
+
+  &:hover {
+    color: $MainBlack;
+    border: 1px solid $MainBlack;
+    background: $AppBG;
+  }
+  &:active {
+    color: $ContentBlack;
+    border: 1px solid $ContentBlack;
+    background: $AppBG;
+  }
 }

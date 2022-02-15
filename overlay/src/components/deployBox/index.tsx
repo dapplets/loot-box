@@ -66,6 +66,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
           onChange={onChange_name}
           type="text"
           appearance="biggest"
+          pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})$"
         />
       </div>
 

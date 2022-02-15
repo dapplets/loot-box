@@ -59,7 +59,11 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
 
       <div className={cn(styles.navigation)}>
         <Link to="/box_settings_value">
-          <LinksStep step="prev" label="Back" icon={PrevStep} />
+          <LinksStep
+            step="prev"
+            label="Back"
+            // icon={PrevStep}
+          />
         </Link>
       </div>
     </div>

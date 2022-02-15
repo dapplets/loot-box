@@ -29,6 +29,7 @@ export interface InputProps
     | 'biggest';
   className?: 'string';
   type: string;
+  pattern?: string;
   // creationForm: Lootbox;
   // onCreationFormUpdate: (x: Lootbox) => void;
 }
@@ -42,14 +43,33 @@ export const InputPanel: FC<InputProps> = (props) => {
     appearance,
     className,
     type,
+    pattern,
     // creationForm,
     // onCreationFormUpdate,
     ...anotherProps
   } = props;
+  const [qty, setQty] = useState(1);
+  // The quantity string the user is editing
+  const [qtyString, setQtyString] = useState(String(qty));
   const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {
     // const formData = new FormData(event.currentTarget);
-    event.preventDefault();
-    const { name, value } = event.currentTarget;
+    // event.preventDefault();
+    // const { name, value } = event.currentTarget;
+
+    // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    //   // Always update the string
+    setQtyString(event.target.value);
+    // Is it a valid positive number?
+    event.target.value = event.target.value.trim();
+    const value = event.target.value ? +event.target.value : NaN;
+    if (isNaN(value) || value <= 0) {
+      // No, our quantity is 1 (even though the string may
+      // not be)
+      setQty(1);
+    } else {
+      // Yes, use it
+      setQty(value);
+    }
 
     // creationForm.name = value;
 
@@ -62,6 +82,8 @@ export const InputPanel: FC<InputProps> = (props) => {
         type={type}
         value={value}
         placeholder={placeholder}
+        // pattern="^[1-9]\d*$"
+        pattern={pattern}
         className={cn(
           styles.inputInfo,
           {

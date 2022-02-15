@@ -35,27 +35,33 @@
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
   }
 }
+.inputInfo:invalid,
+.inputInfo:invalid::placeholder {
+  border: 1px solid #ff6442;
+  color: #ff6442;
+}
 
 .small_mini {
   max-width: 105px;
 }
+
 .small {
   max-width: 131px;
 }
 .small_medium {
   max-width: 196px;
-  min-width: 190px;
+  min-width: 193px;
 }
 .default {
   max-width: 211px;
 }
 .medium {
   max-width: 276px;
-  min-width: 250px;
+  min-width: 254px;
 }
 .medium_big {
   max-width: 300px;
-  min-width: 270px;
+  min-width: 280px;
 }
 .big {
   max-width: 356px;

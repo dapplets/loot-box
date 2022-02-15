@@ -9,18 +9,59 @@
 }
 .next {
   color: $Primary;
-  img {
+  position: relative;
+
+  svg {
     position: absolute;
-    top: 0;
-    left: 110%;
+    top: 1px;
+    right: -16px;
+    transform: rotate(180deg);
+    path {
+      fill: $Primary;
+    }
+  }
+
+  &:hover {
+    color: $PrimaryHover;
+    svg {
+      path {
+        fill: $PrimaryHover;
+      }
+    }
+  }
+  &:active {
+    color: $PrimaryPressed;
+    svg {
+      path {
+        fill: $PrimaryPressed;
+      }
+    }
   }
 }
 
 .prev {
   color: $StrokeColor;
-  img {
+  position: relative;
+
+  svg {
     position: absolute;
-    top: 0;
-    right: 110%;
+    top: 1px;
+    left: -16px;
+  }
+  &:hover {
+    color: $ContentBlack;
+    svg {
+      path {
+        fill: $ContentBlack;
+      }
+    }
+  }
+  &:active {
+    color: $MainBlack;
+    svg {
+      path {
+        fill: $MainBlack;
+      }
+    }
   }
 }

@@ -14,14 +14,11 @@ import box1 from '../../icons/createNewBox/box1.png';
 import box2 from '../../icons/createNewBox/box2.png';
 import box3 from '../../icons/createNewBox/box3.png';
 import box4 from '../../icons/createNewBox/box4.png';
-import left from '../../icons/selectBox/sliderLeft.svg';
-import right from '../../icons/selectBox/sliderRight.svg';
 import { LinksStep } from '../atoms/LinksStep';
-import NextStep from '../../icons/selectBox/NextStep.svg';
-import PrevStep from '../../icons/selectBox/prevStep.svg';
 import { Link } from 'react-router-dom';
 import { Slider } from '../atoms/Slider';
-import { Lootbox } from '../../../../common/interfaces';
+
+import { Test } from '../atoms/test';
 
 export interface SelectBoxProps {
   children?: ReactNode;
@@ -102,13 +99,21 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
         // creationForm={creationForm}
         onCreationFormUpdate={onCreationFormUpdate}
       />
-
+      {/* <Test /> */}
       <div className={styles.navigation}>
         <Link to="/" className={cn(styles.prevStep)}>
-          <LinksStep step="prev" label="Back" icon={PrevStep} />
+          <LinksStep
+            step="prev"
+            label="Back"
+            //  icon={PrevStep}
+          />
         </Link>
         <Link to="/box_settings_value" className={cn(styles.nextStep)}>
-          <LinksStep step="next" label="Next step" icon={NextStep} />
+          <LinksStep
+            step="next"
+            label="Next step"
+            // icon={NextStep}
+          />
         </Link>
       </div>
     </div>
