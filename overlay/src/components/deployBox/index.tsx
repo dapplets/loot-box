@@ -9,6 +9,7 @@ import React, {
   ChangeEventHandler,
   DetailedHTMLProps,
   InputHTMLAttributes,
+  useMemo,
 } from 'react';
 
 import { SettingTitle } from '../atoms/SettingTitle';
@@ -36,7 +37,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
   const onChange_Area: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setValue(e.target.value);
   };
-  const name = creationForm.name;
+  // const name = creationForm.name;
 
   // const onSetName = (x: string) => {
   //   creationForm.name = x;
@@ -49,7 +50,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
 
     creationForm.name = value;
 
-    console.log(value);
+    console.log(value, creationForm);
 
     onCreationFormUpdate(creationForm);
   };
@@ -60,8 +61,8 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <div className={cn(styles.boxName)}>
         <LabelSettings title="Box name" />
         <InputPanel
-          creationForm={creationForm}
-          onCreationFormUpdate={onCreationFormUpdate}
+          // creationForm={creationForm}
+          // onCreationFormUpdate={onCreationFormUpdate}
           onChange={onChange_name}
           type="text"
           appearance="biggest"

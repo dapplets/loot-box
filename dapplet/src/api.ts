@@ -56,6 +56,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async getBoxesByAccount(account: string): Promise<Lootbox[]> {
+    await new Promise((r) => setTimeout(r, 300));
     const lootboxes = this._getValue('lootboxes', []);
     if (lootboxes.length === 0) {
       return [1, 2, 3, 4, 5].map((x) => _createFakeLootbox(x));
@@ -65,6 +66,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async createNewBox(lootbox: Lootbox): Promise<number> {
+    await new Promise((r) => setTimeout(r, 3000));
     const lootboxes = this._getValue('lootboxes', []);
     const id = lootboxes.length + 1;
     lootbox.id = id;
@@ -74,6 +76,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice> {
+    await new Promise((r) => setTimeout(r, 300));
     return {
       feeAmount: 0.1,
       fillAmount: 10,
@@ -82,6 +85,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async getLootboxStat(lootboxId: number): Promise<LootboxStat> {
+    await new Promise((r) => setTimeout(r, 1000));
     return {
       totalAmount: lootboxId * 10,
       winAmount: lootboxId * 2,
@@ -91,6 +95,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async getLootboxWinners(lootboxId: number): Promise<LootboxWinner[]> {
+    await new Promise((r) => setTimeout(r, 1000));
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((x) => ({
       nearAccount: `tester_${x}.testnet`,
       amount: x / 10,

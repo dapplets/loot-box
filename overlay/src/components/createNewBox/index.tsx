@@ -31,6 +31,9 @@ export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) =>
   } = props;
   // creationForm.name;
   const [isShowDescription, onShowDescription] = useToggle(false);
+  if (children === null) {
+    return <div>Loading</div>;
+  }
   return (
     <div className={cn(styles.wrapper)}>
       <Link to="/select_box" className={cn(styles.firstLine)}>
@@ -55,18 +58,22 @@ export interface ChildComponentProps {
   onClick: () => void;
   id: number;
   creationForm: Lootbox;
+  status: string;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, label, imgVal, onClick, id, creationForm } = props;
+  const { number, label, imgVal, onClick, id, creationForm, status } = props;
+  // if (imgVal === null) {
+  //   return <div>Loading</div>;
+  // }
   return (
-    // <CreatedBox id={number} label={label} imageBox={imgVal} status="Created" onClick={onClick} />
-    <CreatedBox
-      id={creationForm.id!}
-      label={creationForm.name}
-      imageBox={IMG[creationForm.pictureId]}
-      status="Created"
-      onClick={onClick}
-    />
+    <CreatedBox id={number} label={label} imageBox={imgVal} status="Created" onClick={onClick} />
+    // <CreatedBox
+    //   id={creationForm.id!}
+    //   label={label}
+    //   imageBox={IMG[creationForm.pictureId]}
+    //   status={status}
+    //   onClick={onClick}
+    // />
   );
 };

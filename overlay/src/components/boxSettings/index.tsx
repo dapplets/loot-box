@@ -6,6 +6,7 @@ import React, {
   useState,
   ChangeEventHandler,
   useMemo,
+  useEffect,
 } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
@@ -22,6 +23,8 @@ import { RadioButton } from '../atoms/RadioButton';
 // import { Test } from '../atoms/test';
 import { DropChance } from '../atoms/DropChance';
 import { Lootbox } from '../../../../common/interfaces';
+import { Item } from 'semantic-ui-react';
+import { info } from 'console';
 
 export interface BoxSettingsProps {
   children?: ReactNode;
@@ -29,49 +32,106 @@ export interface BoxSettingsProps {
   onSubmit?: () => void;
   dataType?: string;
   creationForm: Lootbox;
-  onCreationFormUpdate: (x: Lootbox) => void;
+  onCreationFormUpdate: (x: any) => void;
 }
 
 export interface ChildComponentProps {
   number?: number;
   onDeleteChild?: () => void;
   creationForm: Lootbox;
-  onCreationFormUpdate: (x: Lootbox) => void;
+  // onCreationFormUpdate: (x: Lootbox) => void;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, onDeleteChild, creationForm, onCreationFormUpdate } = props;
+  const [isShowDescription_CustomNFT, onShowDescription_CustomNFT] = useToggle(false);
+  const {
+    number,
+    onDeleteChild,
+    creationForm,
+    // onCreationFormUpdate
+  } = props;
+
+  const [valueInp, setValueInp] = useState(0);
+  const [valueInpT, setValueInpT] = useState(0);
+  const [valueRadio, setValueRadio] = useState('');
+
+  const onChangeQ: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValueInp(Number(e.target.value));
+    // setValue(e.target.value);
+  };
+  const onChangeT: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValueInpT(Number(e.target.value));
+    // setValue(e.target.value);
+  };
+  const onChangeRadio: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValueRadio(e.target.value);
+    onShowDescription_CustomNFT();
+    // setValue(e.target.value);
+  };
+  creationForm.nftContentItems.push({
+    contractAddress: valueRadio,
+    quantity: valueInp,
+    tokenId: valueInpT,
+  });
+
   return (
     <div className={styles.addNftBlock}>
       <LabelSettings title="Marketplace" />
       <div className={styles.radiobtnMarketplace}>
-        <RadioButton id={`1_marketplace${number}`} value="Paras" name={`Marketplace${number}`} />
-        <RadioButton id={`2_marketplace${number}`} value="Minbase" name={`Marketplace${number}`} />
+        <RadioButton
+          id={`1_marketplace${number}`}
+          value="Paras"
+          name={`Marketplace${number}`}
+          onChange={onChangeRadio}
+        />
+        <RadioButton
+          id={`2_marketplace${number}`}
+          value="Minbase"
+          name={`Marketplace${number}`}
+          onChange={onChangeRadio}
+        />
         <RadioButton
           id={`3_marketplace${number}`}
           value="Custom NFT"
           name={`Marketplace${number}`}
+          onChange={onChangeRadio}
           // onChange={onShowDescription_CustomNFT}
           // key={item}
         />
       </div>
       <div className={styles.addNFT}>
-        <div className={styles.inputCustomNFT}>
-          <InputPanel
-            creationForm={creationForm}
-            onCreationFormUpdate={onCreationFormUpdate}
-            type="string"
-            appearance="medium_big"
-            placeholder="Token ID"
-          />
-          <InputPanel
-            creationForm={creationForm}
-            onCreationFormUpdate={onCreationFormUpdate}
-            type="string"
-            appearance="small_mini"
-            placeholder="Quantity"
-          />
-        </div>
+        {(isShowDescription_CustomNFT && (
+          <div className={styles.inputCustomNFT}>
+            <InputPanel
+              type="string"
+              appearance="medium_big"
+              placeholder="Token ID"
+              onChange={onChangeT}
+            />
+            <InputPanel
+              type="string"
+              appearance="small_mini"
+              placeholder="Quantity"
+              onChange={onChangeQ}
+            />
+          </div>
+        )) || (
+          <div className={styles.inputCustomNFT}>
+            <InputPanel
+              type="string"
+              appearance="medium_big"
+              placeholder="Token ID"
+              onChange={onChangeT}
+            />
+            <InputPanel
+              type="string"
+              appearance="small_mini"
+              placeholder="Quantity"
+              onChange={onChangeQ}
+            />
+          </div>
+        )}
+
         <Button
           onClick={onDeleteChild}
           isShowDescription={false}
@@ -85,6 +145,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
 
 export const SettingDef: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
+
   return (
     <div className={cn(styles.wrapper)}>
       <SettingTitle isActive={true} title="Box settings" />
@@ -93,10 +154,20 @@ export const SettingDef: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
           <LabelSettings title="Loot" />
           <div className={cn(styles.buttons)}>
             <Link to="/settings_token" className={styles.btnLink}>
-              <Button appearance="medium" isShowDescription btnText="Token" />
+              <Button
+                appearance="medium"
+                isShowDescription
+                btnText="Token"
+                // onClick={UpdateFormNft}
+              />
             </Link>
             <Link to="/settings_NFT" className={styles.btnLink}>
-              <Button appearance="medium" isShowDescription btnText="NFT" />
+              <Button
+                appearance="medium"
+                isShowDescription
+                btnText="NFT"
+                // onClick={UpdateFormNear}
+              />
             </Link>
           </div>
         </div>
@@ -107,19 +178,24 @@ export const SettingDef: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
-  const [value, setValue] = useState(20);
+  const [valueDrop, setValue] = useState(20);
+  const [valueInp, setValueInp] = useState(0);
+  const [valueInpT, setValueInpT] = useState(0);
+  const [valueRadio, setValueRadio] = useState('');
   const [isShowDescription_CustomNFT, onShowDescription_CustomNFT] = useToggle(false);
-  const [objArr, setVal] = useState(creationForm.nftContentItems);
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setValue(Number(e.target.value));
-    // setValue(e.target.value);
-  };
+  const [objArr, setValueArr] = useState(creationForm.nftContentItems);
   const [numChildren, onCount] = useState(0);
   const onAddChild = () => {
     onCount(numChildren + 1);
+
+    onCreationFormUpdate(creationForm);
+    console.log(creationForm);
   };
   const onDeleteChild = () => {
     onCount(numChildren - 1);
+    // сделать filter
+
+    onCreationFormUpdate(creationForm);
   };
   const children = [];
   const children_btn = [];
@@ -127,14 +203,15 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     children.push(
       <ChildComponent
         creationForm={creationForm}
-        onCreationFormUpdate={onCreationFormUpdate}
+        // onCreationFormUpdate={onCreationFormUpdate}
+        // onCreationFormUpdate={() => {}}
         onDeleteChild={onDeleteChild}
         key={i}
         number={i}
       />,
     );
   }
-  for (let i = 0; i < numChildren; i += 1) {
+  for (let i = 0; i < numChildren && i < 1; i += 1) {
     children_btn.push(
       <Button
         onClick={onDeleteChild}
@@ -148,27 +225,36 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
       />,
     );
   }
-  creationForm.nftContentItems;
-  const onChange_name: ChangeEventHandler<HTMLInputElement> = (event) => {
-    event.preventDefault();
-    const { name, value } = event.currentTarget;
 
-    setVal(
-      objArr.map((obj) => {
-        return { ...obj, [obj.contractAddress]: value };
-      }),
-    );
+  creationForm.nftContentItems = [
+    {
+      contractAddress: valueRadio,
+      quantity: valueInp,
+      tokenId: valueInpT,
+    },
+  ];
+  creationForm.nearContentItems = [];
+  creationForm.ftContentItems = [];
+  creationForm.dropChance = valueDrop;
+  // onCreationFormUpdate(creationForm);
+  console.log(creationForm);
 
-    console.log(value, creationForm);
-    onCreationFormUpdate(creationForm);
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    setValue(Number(e.target.value));
+    // setValue(e.target.value);
   };
-  const onChange_Drop: ChangeEventHandler<HTMLInputElement> = (event) => {
-    event.preventDefault();
-    const { name, value } = event.currentTarget;
+  const onChangeQ: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValueInp(Number(e.target.value));
+  };
+  const onChangeT: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValueInpT(Number(e.target.value));
+  };
+  const onChangeRadio: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValueRadio(e.target.value);
+    onShowDescription_CustomNFT();
 
-    creationForm.dropChance = Number(value);
-    console.log(value, creationForm);
-    onCreationFormUpdate(creationForm);
+    // setValue(e.target.value);
   };
 
   return (
@@ -206,14 +292,14 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                 title="Paras"
                 value="Paras"
                 name="Marketplace"
-                onChange={onShowDescription_CustomNFT}
+                onChange={onChangeRadio}
               />
               <RadioButton
                 id="2_marketplace"
                 title="Minbase"
                 value="Minbase"
                 name="Marketplace"
-                onChange={onShowDescription_CustomNFT}
+                onChange={onChangeRadio}
               />
               <RadioButton
                 id="3_marketplace"
@@ -221,98 +307,133 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                 value="Custom NFT"
                 name="Marketplace"
                 // defaultChecked={true}
-                onChange={onShowDescription_CustomNFT}
-                defaultChecked={true}
+                onChange={onChangeRadio}
+                // defaultChecked={true}
               />
             </div>
-
             {(isShowDescription_CustomNFT && (
-              <>
-                <div className={styles.customNFT}>
-                  <div className={styles.addNFT}>
-                    <div className={styles.inputCustomNFT}>
-                      <InputPanel
-                        creationForm={creationForm}
-                        onCreationFormUpdate={onCreationFormUpdate}
-                        type="string"
-                        appearance="medium_big"
-                        placeholder="Token ID"
-                        onChange={onChange}
-                      />
-                      <InputPanel
-                        creationForm={creationForm}
-                        onCreationFormUpdate={onCreationFormUpdate}
-                        type="string"
-                        appearance="small_mini"
-                        placeholder="Quantity"
-                      />
-                    </div>
-                    {children_btn}
-                    <Button
-                      // onClick={clickCount}
-                      onClick={onAddChild}
-                      isShowDescription={false}
-                      btnText="Add NFT"
-                      appearance="small"
+              <div className={styles.customNFT}>
+                <div className={styles.addNFT}>
+                  <div className={styles.inputCustomNFT}>
+                    <InputPanel
+                      // creationForm={creationForm}
+                      // onCreationFormUpdate={onCreationFormUpdate}
+                      type="string"
+                      appearance="medium_big"
+                      placeholder="Token ID"
+                      onChange={onChangeT}
+                    />
+                    <InputPanel
+                      // onChange={onChange}
+                      // creationForm={creationForm}
+                      // onCreationFormUpdate={onCreationFormUpdate}
+                      type="string"
+                      appearance="small_mini"
+                      placeholder="Quantity"
+                      onChange={onChangeQ}
                     />
                   </div>
-
-                  <div className={styles.dropChance_nft}>
-                    <LabelSettings title="Drop Chance" />
-                    <DropChance
-                      type="number"
-                      max="100"
-                      min="0"
-                      onChange={onChange_Drop}
-                      value={value}
-                    />
-                  </div>
+                  {children_btn}
+                  <Button
+                    // onClick={clickCount}
+                    onClick={onAddChild}
+                    isShowDescription={false}
+                    btnText="Add NFT"
+                    appearance="small"
+                  />
                 </div>
-              </>
+
+                <div className={styles.dropChance_nft}>
+                  <LabelSettings title="Drop Chance" />
+                  <DropChance
+                    type="number"
+                    max="100"
+                    min="0"
+                    onChange={onChange}
+                    value={valueDrop}
+                  />
+                </div>
+              </div>
             )) || (
-              <>
-                <div className={styles.customNFT}>
-                  <div className={styles.addNFT}>
-                    <div className={styles.inputCustomNFT}>
-                      <InputPanel
-                        creationForm={creationForm}
-                        onCreationFormUpdate={onCreationFormUpdate}
-                        type="string"
-                        appearance="medium_big"
-                        placeholder="Token ID"
-                        onChange={onChange_name}
-                      />
-                      <InputPanel
-                        creationForm={creationForm}
-                        onCreationFormUpdate={onCreationFormUpdate}
-                        type="string"
-                        appearance="small_mini"
-                        placeholder="Quantity"
-                      />
-                    </div>
-                    {children_btn}
-                    <Button
-                      // onClick={clickCount}
-                      onClick={onAddChild}
-                      isShowDescription={false}
-                      btnText="Add NFT"
-                      appearance="small"
+              <div className={styles.customNFT}>
+                <div className={styles.addNFT}>
+                  <div className={styles.inputCustomNFT}>
+                    <InputPanel
+                      // creationForm={creationForm}
+                      // onCreationFormUpdate={onCreationFormUpdate}
+                      type="string"
+                      appearance="medium_big"
+                      placeholder="Token ID"
+                      onChange={onChangeT}
+                    />
+                    <InputPanel
+                      // onChange={onChange}
+                      // creationForm={creationForm}
+                      // onCreationFormUpdate={onCreationFormUpdate}
+                      type="string"
+                      appearance="small_mini"
+                      placeholder="Quantity"
+                      onChange={onChangeQ}
                     />
                   </div>
-
-                  <div className={styles.dropChance_nft}>
-                    <LabelSettings title="Drop Chance" />
-                    <DropChance
-                      type="number"
-                      max="100"
-                      min="0"
-                      onChange={onChange_Drop}
-                      value={value}
-                    />
-                  </div>
+                  {children_btn}
+                  <Button
+                    // onClick={clickCount}
+                    onClick={onAddChild}
+                    isShowDescription={false}
+                    btnText="Add NFT"
+                    appearance="small"
+                  />
                 </div>
-              </>
+
+                <div className={styles.dropChance_nft}>
+                  <LabelSettings title="Drop Chance" />
+                  <DropChance
+                    type="number"
+                    max="100"
+                    min="0"
+                    onChange={onChange}
+                    value={valueDrop}
+                  />
+                </div>
+              </div>
             )}
+            {/* <div className={styles.customNFT}>
+              <div className={styles.addNFT}>
+                <div className={styles.inputCustomNFT}>
+                  <InputPanel
+                    creationForm={creationForm}
+                    onCreationFormUpdate={onCreationFormUpdate}
+                    type="string"
+                    appearance="medium_big"
+                    placeholder="Token ID"
+                    onChange={onChangeT}
+                  />
+                  <InputPanel
+                    // onChange={onChange}
+                    creationForm={creationForm}
+                    onCreationFormUpdate={onCreationFormUpdate}
+                    type="string"
+                    appearance="small_mini"
+                    placeholder="Quantity"
+                    onChange={onChangeQ}
+                  />
+                </div>
+                {children_btn}
+                <Button
+                  // onClick={clickCount}
+                  onClick={onAddChild}
+                  isShowDescription={false}
+                  btnText="Add NFT"
+                  appearance="small"
+                />
+              </div>
+
+              <div className={styles.dropChance_nft}>
+                <LabelSettings title="Drop Chance" />
+                <DropChance type="number" max="100" min="0" onChange={onChange} value={valueDrop} />
+              </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -333,18 +454,123 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const [isShowDescription_tokenAmount, onShowDescription_tokenAmount] = useToggle(false);
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
   const [value, setValue] = useState(20);
+
+  const [valueInputTokenAmount, setValueInputTokenAmount] = useState('');
+  const [valueInputTokenContract, setValueInputTokenContract] = useState('');
+  const [valueInputTokenTicker, setValueInputTokenTicker] = useState('');
+  const [valueInputTokenFrom, setValueInputTokenFrom] = useState('');
+  const [valueInputTokenTo, setValueInputTokenTo] = useState('');
+  const [valueInputDropAmount, setValueInputDropAmount] = useState('');
+
+  const [valueRadio, setValueRadioLoot] = useState('');
+  const [valueRadioDropType, setValueRadioDropType] = useState('');
+
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setValue(Number(e.target.value));
     // setValue(e.target.value);
   };
-  const onChange_Drop: ChangeEventHandler<HTMLInputElement> = (event) => {
-    event.preventDefault();
-    const { name, value } = event.currentTarget;
+  const onChangeTokenAmount: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValueInputTokenAmount(e.target.value);
+    // setValue(e.target.value);
+  };
+  const onChangeTokenContract: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValueInputTokenContract(e.target.value);
+    // setValue(e.target.value);
+  };
+  const onChangeTokenTicker: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValueInputTokenTicker(e.target.value);
+    // setValue(e.target.value);
+  };
+  const onChangeTokenFrom: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValueInputTokenFrom(e.target.value);
+    // setValue(e.target.value);
+  };
+  const onChangeTokenTo: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValueInputTokenTo(e.target.value);
+    // setValue(e.target.value);
+  };
+  const onChangeDropAmount: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValueInputDropAmount(e.target.value);
+    // setValue(e.target.value);
+  };
 
-    creationForm.dropChance = Number(value);
-    console.log(value, creationForm);
+  const onChangeRadioLoot: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    // e.preventDefault();
+    // e.stopPropagation();
+    setValueRadioLoot(e.target.value);
+    onShowDescription_tokenAmount();
+    // setValue(e.target.value);
     onCreationFormUpdate(creationForm);
   };
+
+  const onChangeRadioDropType: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    // e.preventDefault();
+    // e.stopPropagation();
+
+    setValueRadioDropType(String(e.target.value));
+    onShowDescription_dropAmount();
+    console.log(valueRadioDropType);
+  };
+
+  // creationForm.nearContentItems = [
+  //   {
+  //     tokenAmount: valueInputTokenAmount,
+  //     dropType: valueRadioDropType,
+  //     dropAmountFrom: valueInputTokenFrom,
+  //     dropAmountTo: valueInputTokenTo,
+  //   },
+  // ];
+
+  // creationForm.ftContentItems = [
+  //   {
+  //     contractAddress: valueInputTokenContract,
+  //     tokenAmount: valueInputTokenAmount,
+  //     dropType: valueRadioDropType,
+  //     dropAmountFrom: valueInputTokenFrom,
+  //     dropAmountTo: valueInputTokenFrom,
+  //   },
+  // ];
+
+  creationForm.nftContentItems = [];
+
+  creationForm.dropChance = value;
+
+  if (isShowDescription_tokenAmount) {
+    creationForm.ftContentItems = [
+      {
+        contractAddress: valueInputTokenContract,
+        tokenAmount: valueInputTokenAmount,
+        dropType: valueRadioDropType,
+        dropAmountFrom: valueInputTokenFrom,
+        dropAmountTo: valueInputTokenFrom,
+      },
+    ];
+    creationForm.nearContentItems = [];
+  } else {
+    creationForm.nearContentItems = [
+      {
+        tokenAmount: valueInputTokenAmount,
+        dropType: valueRadioDropType,
+        dropAmountFrom: valueInputTokenFrom,
+        dropAmountTo: valueInputTokenTo,
+      },
+    ];
+    creationForm.ftContentItems = [];
+  }
+
+  console.log(isShowDescription_tokenAmount);
   return (
     <div className={cn(styles.wrapper)}>
       <SettingTitle isActive={true} title="Box settings" />
@@ -373,11 +599,12 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <LabelSettings title="Token amount" />
             <div className={cn(styles.tokenInput)}>
               <InputPanel
-                creationForm={creationForm}
-                onCreationFormUpdate={onCreationFormUpdate}
+                // creationForm={creationForm}
+                // onCreationFormUpdate={onCreationFormUpdate}
                 type="text"
                 appearance="default"
                 placeholder="Token amount"
+                onChange={onChangeTokenAmount}
               />
               <RadioButton
                 value="$NEAR"
@@ -385,14 +612,14 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 name="TokenAmount"
                 id="1_amount"
                 defaultChecked={true}
-                onChange={onShowDescription_tokenAmount}
+                onChange={onChangeRadioLoot}
               />
               <RadioButton
                 value="Custom token"
                 title="Custom token"
                 name="TokenAmount"
                 id="2_amount"
-                onChange={onShowDescription_tokenAmount}
+                onChange={onChangeRadioLoot}
                 // onChange={onShowDescription_custom}
               />
             </div>
@@ -401,18 +628,20 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <div className={cn(styles.dropAmount)}>
               <div className={cn(styles.inputDropAmount)}>
                 <InputPanel
-                  creationForm={creationForm}
-                  onCreationFormUpdate={onCreationFormUpdate}
+                  // creationForm={creationForm}
+                  // onCreationFormUpdate={onCreationFormUpdate}
                   type="text"
                   appearance="medium"
                   placeholder="Token contract"
+                  onChange={onChangeTokenContract}
                 />
                 <InputPanel
-                  creationForm={creationForm}
-                  onCreationFormUpdate={onCreationFormUpdate}
+                  // creationForm={creationForm}
+                  // onCreationFormUpdate={onCreationFormUpdate}
                   type="text"
                   appearance="small"
                   placeholder="Token ticker "
+                  onChange={onChangeTokenTicker}
                 />
               </div>
               <div className={cn(styles.LabelSettings)}>
@@ -426,40 +655,43 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   name="dropAmount"
                   id="3_Drop"
                   defaultChecked={true}
-                  onChange={onShowDescription_dropAmount}
+                  onChange={onChangeRadioDropType}
                 />
                 <RadioButton
                   value="Variable"
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
-                  onChange={onShowDescription_dropAmount}
+                  onChange={onChangeRadioDropType}
                 />
               </div>
               {(isShowDescription_dropAmount && (
                 <div className={cn(styles.dropAmountInput)}>
                   <InputPanel
-                    creationForm={creationForm}
-                    onCreationFormUpdate={onCreationFormUpdate}
+                    // creationForm={creationForm}
+                    // onCreationFormUpdate={onCreationFormUpdate}
                     type="text"
                     appearance="small_medium"
                     placeholder="From"
+                    onChange={onChangeTokenFrom}
                   />
                   <InputPanel
-                    creationForm={creationForm}
-                    onCreationFormUpdate={onCreationFormUpdate}
+                    // creationForm={creationForm}
+                    // onCreationFormUpdate={onCreationFormUpdate}
                     type="text"
                     appearance="small_medium"
                     placeholder="To"
+                    onChange={onChangeTokenTo}
                   />
                 </div>
               )) || (
                 <InputPanel
-                  creationForm={creationForm}
-                  onCreationFormUpdate={onCreationFormUpdate}
+                  // creationForm={creationForm}
+                  // onCreationFormUpdate={onCreationFormUpdate}
                   type="text"
                   appearance="biggest"
                   placeholder="Drop amount"
+                  onChange={onChangeDropAmount}
                 />
               )}
             </div>
@@ -476,40 +708,43 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   name="dropAmount"
                   id="3_Drop"
                   defaultChecked={true}
-                  onChange={onShowDescription_dropAmount}
+                  onChange={onChangeRadioDropType}
                 />
                 <RadioButton
                   value="Variable"
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
-                  onChange={onShowDescription_dropAmount}
+                  onChange={onChangeRadioDropType}
                 />
               </div>
               {(isShowDescription_dropAmount && (
                 <div className={cn(styles.dropAmountInput)}>
                   <InputPanel
-                    creationForm={creationForm}
-                    onCreationFormUpdate={onCreationFormUpdate}
+                    // creationForm={creationForm}
+                    // onCreationFormUpdate={onCreationFormUpdate}
                     type="text"
                     appearance="small_medium"
                     placeholder="From"
+                    onChange={onChangeTokenFrom}
                   />
                   <InputPanel
-                    creationForm={creationForm}
-                    onCreationFormUpdate={onCreationFormUpdate}
+                    // creationForm={creationForm}
+                    // onCreationFormUpdate={onCreationFormUpdate}
                     type="text"
                     appearance="small_medium"
                     placeholder="To"
+                    onChange={onChangeTokenTo}
                   />
                 </div>
               )) || (
                 <InputPanel
-                  creationForm={creationForm}
-                  onCreationFormUpdate={onCreationFormUpdate}
+                  // creationForm={creationForm}
+                  // onCreationFormUpdate={onCreationFormUpdate}
                   type="text"
                   appearance="biggest"
                   placeholder="Drop amount"
+                  onChange={onChangeDropAmount}
                 />
               )}
             </div>
@@ -519,7 +754,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <LabelSettings title="Drop Chance" />
 
             <DropChance
-              onChange={onChange_Drop}
+              onChange={onChange}
               type="number"
               value={value}
               placeholder="Drop chance"

@@ -20,9 +20,10 @@ export interface FillBoxProps {
   // id_img?: any;
   imgVal: string;
   onClick?: () => void;
+  price: any;
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
-  const { onSetId, imgVal, onClick } = props;
+  const { onSetId, imgVal, onClick, price } = props;
   const [id, setId] = useState(0);
 
   // const {imageBox} = props
@@ -63,7 +64,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         <div className={cn(styles.payBlock)}>
           <LabelSettings title="You need to pay" />
           <div className={cn(styles.payInfo)}>
-            <PayInfo title="Fill Amount" value="20000 NEAR" size="big" />
+            <PayInfo title="Fill Amount" value="500 NEAR" size="big" />
             <PayInfo title="Gas Amount" value="500 NEAR" size="big" />
             <PayInfo title="Service Fee" value="10 NEAR" size="big" />
           </div>

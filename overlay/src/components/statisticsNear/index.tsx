@@ -38,12 +38,12 @@ const titleList = [
 
 export interface StatisticsNearPropsStat {
   stat?: any;
-  creationForm: Lootbox;
-  onCreationFormUpdate: (x: Lootbox) => void;
+  // creationForm: Lootbox;
+  // onCreationFormUpdate: (x: Lootbox) => void;
 }
 
 export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) => {
-  const { creationForm, onCreationFormUpdate } = props;
+  // const { creationForm, onCreationFormUpdate } = props;
   const { lootboxId } = useParams();
   const { stat } = props;
 
@@ -77,11 +77,18 @@ export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNea
 };
 export interface StatisticsNearPropsWinner {
   winners: any;
+  // setSelectedLootboxId: void;
+  // creationForm: Lootbox;
+  // onCreationFormUpdate: (x: Lootbox) => void;
 }
 export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
   props: StatisticsNearPropsWinner,
 ) => {
-  const { winners } = props;
+  const {
+    winners,
+
+    //  creationForm, onCreationFormUpdate
+  } = props;
   // console.log(winners, 'llaa');
   return (
     <div className={cn(styles.wrapper)}>
@@ -116,8 +123,12 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
     </div>
   );
 };
-
-export const StatisticsCode: FC<StatisticsNearProps> = (props: StatisticsNearProps) => {
+export interface StatisticsNearPropsCode {
+  // winners: any;
+  creationForm: Lootbox;
+  onCreationFormUpdate: (x: Lootbox) => void;
+}
+export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNearPropsCode) => {
   const { creationForm, onCreationFormUpdate } = props;
   return (
     <div className={cn(styles.wrapper)}>

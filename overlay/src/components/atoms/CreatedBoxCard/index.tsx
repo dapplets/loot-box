@@ -16,9 +16,12 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
   const { label, imageBox, status, id, onClick } = props;
   return (
     <div className={cn(styles.wrapper)} onClick={onClick}>
-      <div className={cn(styles.img)}>
-        <img src={imageBox} />
-      </div>
+      <Link to="/statistics">
+        {' '}
+        <div className={cn(styles.img)}>
+          <img src={imageBox} />
+        </div>{' '}
+      </Link>
       <div className={cn(styles.description)}>
         <span className={cn(styles.label)}>
           {label}
@@ -26,10 +29,7 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
             <span></span>
           </a>
         </span>
-
-        <Link to="/statistics" className={cn(styles.created)}>
-          {status}
-        </Link>
+        <span className={cn(styles.created)}>{status}</span>
       </div>
     </div>
   );

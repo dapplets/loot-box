@@ -19,10 +19,11 @@ export interface FillBoxProps_Nft {
   onSetId?: any;
   imgVal: string;
   // id_img?: any;
+  price: any;
 }
 export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   // const { onSetId, id_img } = props;
-  const { imgVal } = props;
+  const { imgVal, price } = props;
   const [id, setId] = useState(0);
 
   // const {imageBox} = props

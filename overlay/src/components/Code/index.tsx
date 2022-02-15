@@ -28,8 +28,8 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         <div className={styles.boxName}>
           <LabelSettings title="Box name" />
           <InputPanel
-            creationForm={creationForm}
-            onCreationFormUpdate={onCreationFormUpdate}
+            // creationForm={creationForm}
+            // onCreationFormUpdate={onCreationFormUpdate}
             type="text"
             appearance="biggest"
           />

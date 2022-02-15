@@ -15,7 +15,7 @@ import { Lootbox } from '../../../../../common/interfaces';
 export interface InputProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   onSubmit?: () => void;
-  value?: string | number;
+  value?: string | number | string[];
   placeholder?: string;
   isButton?: true;
   appearance:
@@ -29,8 +29,8 @@ export interface InputProps
     | 'biggest';
   className?: 'string';
   type: string;
-  creationForm: Lootbox;
-  onCreationFormUpdate: (x: Lootbox) => void;
+  // creationForm: Lootbox;
+  // onCreationFormUpdate: (x: Lootbox) => void;
 }
 
 export const InputPanel: FC<InputProps> = (props) => {
@@ -42,8 +42,8 @@ export const InputPanel: FC<InputProps> = (props) => {
     appearance,
     className,
     type,
-    creationForm,
-    onCreationFormUpdate,
+    // creationForm,
+    // onCreationFormUpdate,
     ...anotherProps
   } = props;
   const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {

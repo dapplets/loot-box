@@ -16,7 +16,7 @@ export const StatisticsLink: FC<StatisticsLinkProps> = (props: StatisticsLinkPro
         <LinksStep icon={prev} label="Back" step="prev" />
       </Link>
 
-      <a className={cn(styles.linksNavigation)}>{label}</a>
+      <span className={cn(styles.linksNavigation)}>{label}</span>
     </div>
   );
 };

@@ -47,7 +47,7 @@ export default class TwitterFeature {
             img: EXAMPLE_IMG,
             tooltip: 'Parse Tweet',
             exec: () => {
-              console.log('parsedCtx:', ctx);
+              // console.log('parsedCtx:', ctx);
               this.openOverlay(ctx);
             },
           },

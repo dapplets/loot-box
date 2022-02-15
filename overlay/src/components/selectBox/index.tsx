@@ -20,7 +20,7 @@ import { LinksStep } from '../atoms/LinksStep';
 import NextStep from '../../icons/selectBox/NextStep.svg';
 import PrevStep from '../../icons/selectBox/prevStep.svg';
 import { Link } from 'react-router-dom';
-import { Slider } from '../atoms/test';
+import { Slider } from '../atoms/Slider';
 import { Lootbox } from '../../../../common/interfaces';
 
 export interface SelectBoxProps {
