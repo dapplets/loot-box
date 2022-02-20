@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/dapplets/dapplet-near-example#readme",
   "dependencies": {
+    "@dapplets/dapplet-extension": "^0.47.3",
     "@dapplets/dapplet-overlay-bridge": "^0.1.0",
     "@fontsource/roboto": "^4.5.1",
     "@types/classnames": "^2.3.1",

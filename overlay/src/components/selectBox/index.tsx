@@ -89,7 +89,10 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
   } = props;
 
   return (
-    <div className={cn(styles.wrapper)} onClick={() => console.log(IMG[creationFormId])}>
+    <div
+      className={cn(styles.wrapper)}
+      //  onClick={() => console.log(IMG[creationFormId])}
+    >
       <SettingTitle isActive={true} title="Select box" />
       <GetBox
         clicked={clicked}

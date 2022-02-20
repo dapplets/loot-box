@@ -1,6 +1,6 @@
 {
   "name": "loot-box",
-  "version": "0.4.9",
+  "version": "0.5.2",
   "description": "_",
   "main": "lib/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "author": "Dapplets Project",
   "license": "MIT",
   "devDependencies": {
-    "@dapplets/dapplet-extension": "latest",
+    "@dapplets/dapplet-extension": "^0.47.3",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-image": "^2.0.6",
     "@rollup/plugin-json": "^4.1.0",

@@ -1,6 +1,8 @@
 import {} from '@dapplets/dapplet-extension';
 import EXAMPLE_IMG from './icons/near_dapplet_icon.svg';
 import { DappletApi } from './api';
+import emptyBox from './icons/emptyBox.png';
+import fullBox from './icons/FullBox.png';
 
 @Injectable
 export default class TwitterFeature {
@@ -39,19 +41,60 @@ export default class TwitterFeature {
 
     Core.onAction(() => this.openOverlay());
 
-    const { button } = this.adapter.exports;
-    this.adapter.attachConfig({
-      POST: (ctx: any) =>
-        button({
+    const {
+      button,
+      box,
+      picture,
+      label,
+      caption,
+      usernameBadge,
+      avatarBadge,
+      avatar,
+    } = this.adapter.exports;
+
+    const { $ } = this.adapter.attachConfig({
+      POST: (ctx) => [
+        box({
+          id: 'picDef',
+          initial: 'DEFAULT',
           DEFAULT: {
-            img: EXAMPLE_IMG,
-            tooltip: 'Parse Tweet',
-            exec: () => {
-              // console.log('parsedCtx:', ctx);
-              this.openOverlay(ctx);
+            img: fullBox,
+            // text: '5,000 NEAR',
+            replace: 'lootbox.org',
+            hidden: false,
+            exec: (ctx, me) => {
+              $(ctx, 'pic').hidden = !$(ctx, 'pic').hidden;
             },
           },
         }),
+        box({
+          id: 'pic',
+          initial: 'DEFAULT',
+          DEFAULT: {
+            img: emptyBox,
+            hidden: true,
+            // color: 'white',
+            // textBackground: 'black',
+            // replace: 'lootbox.org',
+          },
+        }),
+        // box({
+        //   initial: 'DEFAULT',
+        //   DEFAULT: {
+        //     img: fullBox,
+        //     hidden: false,
+        //     // replace: 'lootbox.org',
+        //     exec: (_, me) => {
+        //       me.state = 'ANOTHER';
+        //       me.hidden = true;
+        //     },
+        //   },
+        //   ANOTHER: {
+        //     img: emptyBox,
+        //     replace: 'lootbox.org',
+        //   },
+        // }),
+      ],
     });
   }
 

@@ -44,7 +44,10 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
         <div className={cn(styles.payBtn)}>
           <div className={cn(styles.payBtn_block)}>
             <Link to="/deploy_your_box">
-              <ButtonPay styleBtn="default" title="PAY 20510 NEAR" />
+              <ButtonPay
+                styleBtn="default"
+                title={`PAY ${[(price.gasAmount + price.feeAmount).toFixed(3)]} NEAR`}
+              />
             </Link>
             <ButtonPay styleBtn="disable" title="NFTs transferred" />
           </div>
@@ -52,8 +55,8 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
           <LabelSettings title="You need to pay" />
         </div>
         <div className={cn(styles.payInfo)}>
-          <PayInfo title="Gas Amount" value="500 NEAR" size="big" />
-          <PayInfo title="Service Fee" value="10 NEAR" size="big" />
+          <PayInfo title="Gas Amount" value={`${[price.gasAmount]} NEAR`} size="big" />
+          <PayInfo title="Service Fee" value={`${[price.feeAmount]} NEAR`} size="big" />
         </div>
       </div>
 

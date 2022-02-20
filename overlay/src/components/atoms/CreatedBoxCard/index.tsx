@@ -14,6 +14,12 @@ export interface CreatedBoxProps {
 
 export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
   const { label, imageBox, status, id, onClick } = props;
+  const visible = (hash: string): string => {
+    const firstFourCharacters = hash.substring(0, 6);
+    const lastFourCharacters = hash.substring(hash.length - 1, hash.length - 5);
+
+    return `${firstFourCharacters}...${lastFourCharacters}`;
+  };
   return (
     <div className={cn(styles.wrapper)} onClick={onClick}>
       <Link to="/statistics">
@@ -24,7 +30,8 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
       </Link>
       <div className={cn(styles.description)}>
         <span className={cn(styles.label)}>
-          {label}
+          {visible(label)}
+
           <a href="#" className={cn(styles.link)}>
             <span></span>
           </a>

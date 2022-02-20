@@ -9,6 +9,9 @@
   flex: 1 0 auto;
   justify-content: start;
   flex-direction: column;
+  ::-webkit-scrollbar {
+    width: 0 !important;
+  }
 }
 .div {
   display: flex;
@@ -158,13 +161,13 @@
 }
 
 .addNFT {
-  padding: 14px 0px 38px 0px;
+  padding: 0px 0px 38px 0px;
 }
 
 .inputCustomNFT {
   display: flex;
   justify-content: space-between;
-  padding: 0px 0px 9px 0px;
+  // padding: 0px 0px 9px 0px;
 }
 
 .dropChance_nft {
@@ -196,7 +199,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 0px 0px 19px 0px;
+    padding: 0px 0px 0px 0px;
   }
   .radiobtnMarketplace {
     padding: 0px 0px 14px 0px;
@@ -209,6 +212,13 @@
   }
 }
 
+.addNFTBtn {
+  padding: 9px 0px 39px 0px;
+}
+
+.remove {
+  padding: 9px 0px 19px 0px;
+}
 .btnLink {
   display: inline-block;
   width: 49%;

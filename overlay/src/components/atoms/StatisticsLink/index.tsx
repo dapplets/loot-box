@@ -12,13 +12,13 @@ export const StatisticsLink: FC<StatisticsLinkProps> = (props: StatisticsLinkPro
   const { label } = props;
   return (
     <div className={cn(styles.wrapper)}>
-      <Link to="/">
-        <LinksStep
-          // icon={prev}
-          label="Back"
-          step="prev"
-        />
-      </Link>
+      {/* <Link to="/"> */}
+      <LinksStep
+        // icon={prev}
+        label="Back"
+        step="prev"
+      />
+      {/* </Link> */}
 
       <span className={cn(styles.linksNavigation)}>{label}</span>
     </div>

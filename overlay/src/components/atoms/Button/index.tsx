@@ -8,7 +8,7 @@ export interface ButtonProps
   disabled?: boolean;
   appearance: 'small' | 'big' | 'medium' | 'remove';
   btnText: string;
-  isShowDescription: boolean;
+  isShowDescription?: boolean;
 }
 export const Button: FC<ButtonProps> = (props: ButtonProps) => {
   const {

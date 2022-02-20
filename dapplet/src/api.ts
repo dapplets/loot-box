@@ -6,32 +6,34 @@ import {
   LootboxWinner,
 } from '../../common/interfaces';
 
-const _createFakeLootbox = (id: number): Lootbox => ({
-  id: id,
-  name: `Fake Lootbox (${id})`,
-  pictureId: id,
-  dropChance: 0.5,
-  status: 'created',
-  nearContentItems: [],
-  ftContentItems: [],
-  nftContentItems: [
-    {
-      contractAddress: 'nft.testnet',
-      tokenId: 1,
-      quantity: 1,
-    },
-    {
-      contractAddress: 'nft.testnet',
-      tokenId: 2,
-      quantity: 1,
-    },
-    {
-      contractAddress: 'nft.testnet',
-      tokenId: 3,
-      quantity: 1,
-    },
-  ],
-});
+function _createFakeLootbox(id: number): Lootbox {
+  return {
+    id: id,
+    name: `Fake Lootbox (${id})`,
+    pictureId: id,
+    dropChance: 0.5,
+    status: 'created',
+    nearContentItems: [],
+    ftContentItems: [],
+    nftContentItems: [
+      {
+        contractAddress: 'nft.testnet',
+        tokenId: 1,
+        quantity: 1,
+      },
+      {
+        contractAddress: 'nft.testnet',
+        tokenId: 2,
+        quantity: 1,
+      },
+      {
+        contractAddress: 'nft.testnet',
+        tokenId: 3,
+        quantity: 1,
+      },
+    ],
+  };
+}
 
 export class DappletApi implements IDappletApi {
   async connectWallet() {

@@ -50,7 +50,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
 
     creationForm.name = value;
 
-    console.log(value, creationForm);
+    // console.log(value, creationForm);
 
     onCreationFormUpdate(creationForm);
   };
@@ -77,8 +77,8 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <div className={cn(styles.message)}>
         <Message
           message={value}
-          link="https://lootbox.org/AfB8ad/
-        Don’t see the Box? https://lootbox.org/how-to/"
+          link={`https://lootbox.org/${creationForm.id}/
+        Don’t see the Box? https://lootbox.org/how-to/`}
           instruction="Gift box is made with LootBox Dapplet @lootbox by @dappletsproject."
         />
       </div>

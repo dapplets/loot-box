@@ -30,11 +30,14 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   return (
     <div className={cn(styles.wrapper)}>
       <div className={styles.wrapperInfo}>
-        <SettingTitle title="Fill your box" isActive={true} />
+        <div className={styles.title}>
+          <SettingTitle title="Fill your box" isActive={true} />
+        </div>
+
         <div
           className={cn(styles.img)}
           onClick={() => {
-            console.log(imgVal);
+            // console.log(imgVal);
           }}
         >
           <img
@@ -64,14 +67,17 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         <div className={cn(styles.payBlock)}>
           <LabelSettings title="You need to pay" />
           <div className={cn(styles.payInfo)}>
-            <PayInfo title="Fill Amount" value="500 NEAR" size="big" />
-            <PayInfo title="Gas Amount" value="500 NEAR" size="big" />
-            <PayInfo title="Service Fee" value="10 NEAR" size="big" />
+            <PayInfo title="Fill Amount" value={`${[price.fillAmount]} NEAR`} size="big" />
+            <PayInfo title="Gas Amount" value={`${[price.gasAmount]} NEAR`} size="big" />
+            <PayInfo title="Service Fee" value={`${[price.feeAmount]} NEAR`} size="big" />
           </div>
         </div>
         <div className={cn(styles.payBtn)}>
           <Link to="/deploy_your_box">
-            <ButtonPay styleBtn="default" title="PAY 20510 NEAR" />
+            <ButtonPay
+              styleBtn="default"
+              title={`PAY ${price.feeAmount + price.gasAmount + price.fillAmount} NEAR`}
+            />
           </Link>
         </div>
       </div>

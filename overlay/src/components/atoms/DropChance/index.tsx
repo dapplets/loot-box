@@ -47,7 +47,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
   const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {
     event.preventDefault();
     const { name, value } = event.currentTarget;
-    console.log(name, value);
+    // console.log(name, value);
   };
   return (
     <div className={cn(styles.inputPanel)}>

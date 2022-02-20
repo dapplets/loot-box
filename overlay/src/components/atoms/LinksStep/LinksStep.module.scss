@@ -40,13 +40,17 @@
 }
 
 .prev {
-  color: $StrokeColor;
+  background: inherit;
+  color: $TitlePayInfo;
   position: relative;
 
   svg {
     position: absolute;
     top: 1px;
     left: -16px;
+    path {
+      fill: $TitlePayInfo;
+    }
   }
   &:hover {
     color: $ContentBlack;

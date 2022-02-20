@@ -48,7 +48,8 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
               height={'174px'}
               options={options}
               series={[stat.winAmount]}
-            />
+            ></ChartProgress>
+            <span className={styles.span} />
           </div>
           <div className={cn(styles.ChartBalance)}>
             <LabelSettings title="Current Balance" />

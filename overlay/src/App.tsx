@@ -24,15 +24,10 @@ import {
   LootboxWinner,
   BoxCreationPrice,
 } from '../../common/interfaces';
-import { privateDecrypt } from 'crypto';
-import { SettingDef } from './components/boxSettings';
-import { SettingsToken } from './components/boxSettings';
-import { SettingsNFT } from './components/boxSettings';
 
-import Box1 from '../../icons/createNewBox/box1.png';
-import Box2 from '../../icons/createNewBox/box2.png';
-import Box3 from '../../icons/createNewBox/box3.png';
-import Box4 from '../../icons/createNewBox/box4.png';
+import { SettingDef } from './components/boxSettings';
+import { SettingsToken } from './components/boxSettings/settingsToken';
+import { SettingsNFT } from './components/boxSettings/settingsNft';
 
 interface ICtx {
   authorFullname: string;
@@ -49,7 +44,7 @@ const dappletApi = new GeneralBridge<IDappletApi>();
 // const IMG = [Box1, Box2, Box3, Box4];
 const EMPTY_FORM: Lootbox = {
   name: '',
-  dropChance: 0,
+  dropChance: 20,
   ftContentItems: [],
   nftContentItems: [],
   nearContentItems: [],
@@ -113,10 +108,15 @@ export default () => {
   const [selectedLootboxId, setSelectedLootboxId] = useState<number | null>(null);
   const [stat, setStat] = useState<LootboxStat | null>(null);
   const [creationForm, setCreationForm] = useState<Lootbox>(EMPTY_FORM);
-  const [clicked, setClicked] = useState<number | null>(null);
-  const [price, setPrice] = useState<BoxCreationPrice>();
+  const [clicked, setClicked] = useState<number | null>(0);
+  const [price, setPrice] = useState<BoxCreationPrice | null>(null);
 
   // const [loading] = useState<ICtx>();
+  const DEPLOY_CODE = {
+    id: selectedLootboxId,
+    boxName: creationForm.name,
+    boxMessage: '',
+  };
 
   const onChange_Input: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setValue(e.target.value);
@@ -126,23 +126,23 @@ export default () => {
   //   onCount(numChildren + 1);
   // };
 
-  useEffect(() => {
-    dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
-    dappletApi.isWalletConnected().then(async (isWalletConnected) => {
-      let accountName: string | undefined;
-      if (isWalletConnected) {
-        accountName = await dappletApi.getCurrentNearAccount();
-      }
-      setNearAccount(accountName);
-    });
-  }, []);
+  // useEffect(() => {
+  //   dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
+  //   dappletApi.isWalletConnected().then(async (isWalletConnected) => {
+  //     let accountName: string | undefined;
+  //     if (isWalletConnected) {
+  //       accountName = await dappletApi.getCurrentNearAccount();
+  //     }
+  //     setNearAccount(accountName);
+  //   });
+  // }, []);
 
   useEffect(() => {
     dappletApi
       .getBoxesByAccount('dapplets_lootbox.testnet')
       .then((x) => {
         setLootboxes(x);
-        console.log('lootboxes', x);
+        // console.log('lootboxes', x);
       })
       .catch((e) => {
         console.error(e);
@@ -217,7 +217,7 @@ export default () => {
     dappletApi
       .calcBoxCreationPrice(creationForm)
       .then((x) => {
-        console.log('getLootboxStat', x);
+        console.log('getLootboxPrice', x);
         setPrice(x);
         console.log('price of lootbox creation', price);
       })
@@ -235,7 +235,7 @@ export default () => {
   return (
     <div className={cn(styles.app)}>
       <header style={{ justifyContent: nearAccount ? 'space-between' : 'center' }}>
-        {!nearAccount ? (
+        {/* {!nearAccount ? (
           <LogInButton
             label="Log in "
             onClick={async () => {
@@ -267,7 +267,7 @@ export default () => {
               isOpen={isOpen}
             />
           </>
-        )}
+        )} */}
       </header>
 
       <Routes>
@@ -281,6 +281,7 @@ export default () => {
                     onClick={() => {
                       setLootboxes(lootboxes);
                       setSelectedLootboxId(item.id!);
+                      console.log(lootboxes, 'hello');
                     }}
                     imgVal={IMG[item.pictureId]}
                     label={item.name}

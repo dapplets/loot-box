@@ -15,12 +15,19 @@ export interface CodeProps {
   onSubmit?: () => void;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: Lootbox) => void;
+  NameContentItem?: Lootbox;
+  onNameUpdated: (x: Lootbox) => void;
 }
 export const Code: FC<CodeProps> = (props: CodeProps) => {
-  const { creationForm, onCreationFormUpdate } = props;
+  const { creationForm, onCreationFormUpdate, NameContentItem, onNameUpdated } = props;
   const [value, setValue] = useState('');
   const onChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setValue(e.target.value);
+  };
+  const changeHandler = (name: keyof Lootbox, value: any) => {
+    const newName = Object.assign({}, NameContentItem);
+    (newName as any)[name] = value;
+    onNameUpdated(newName);
   };
   return (
     <div className={styles.wrapper}>
@@ -30,6 +37,8 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
           <InputPanel
             // creationForm={creationForm}
             // onCreationFormUpdate={onCreationFormUpdate}
+            value={creationForm.name}
+            onChange={(e) => changeHandler('name', e.target.value)}
             type="text"
             appearance="biggest"
           />

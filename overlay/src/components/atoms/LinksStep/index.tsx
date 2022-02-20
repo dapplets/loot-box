@@ -13,6 +13,7 @@ interface LinksStepProps {
   step: 'next' | 'prev';
   label: string;
   className?: string;
+  disabled?: boolean;
   // icon: string;
 }
 
@@ -21,10 +22,11 @@ export const LinksStep: FC<LinksStepProps> = (props: LinksStepProps) => {
     step,
     label,
     className,
+    disabled,
     // icon
   } = props;
   return (
-    <span
+    <button
       className={cn(
         styles.linksNavigation,
         {
@@ -47,6 +49,6 @@ export const LinksStep: FC<LinksStepProps> = (props: LinksStepProps) => {
           <path d="M11 0L-6.11959e-07 7L11 14L11 0Z" fill="#E3E3E3" />
         </svg>
       </span>
-    </span>
+    </button>
   );
 };

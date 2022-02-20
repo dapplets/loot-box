@@ -126,10 +126,20 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
 export interface StatisticsNearPropsCode {
   // winners: any;
   creationForm: Lootbox;
-  onCreationFormUpdate: (x: Lootbox) => void;
+  onCreationFormUpdate: (x: any) => void;
 }
 export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNearPropsCode) => {
   const { creationForm, onCreationFormUpdate } = props;
+  const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
+    e,
+  ) => {
+    if (type === 'string') {
+      (creationForm as any)[prop] = e.target.value;
+    } else {
+      (creationForm as any)[prop] = e.target.value;
+    }
+    onCreationFormUpdate(creationForm);
+  };
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.titleLinks)}>
@@ -157,7 +167,11 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
           </Link>
         </div>
       </div>
-      <Code creationForm={creationForm} onCreationFormUpdate={onCreationFormUpdate} />
+      <Code
+        onNameUpdated={() => onFormChange}
+        creationForm={creationForm}
+        onCreationFormUpdate={onCreationFormUpdate}
+      />
       {/* <Winner /> <Statistics /> */}
     </div>
   );
