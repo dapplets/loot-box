@@ -49,6 +49,12 @@ export type LootboxWinner = {
   txLink: string;
 };
 
+export enum LootboxClaimStatus {
+  CLOSED = 0, // Not opened
+  EMPTY = 1, // Opened and empty
+  FULL = 2, // Opened and full
+}
+
 export interface IDappletApi {
   connectWallet: () => Promise<string>;
   disconnectWallet: () => Promise<void>;
@@ -60,6 +66,8 @@ export interface IDappletApi {
   calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice>;
   getLootboxStat(lootboxId: number): Promise<LootboxStat>;
   getLootboxWinners(lootboxId: number): Promise<LootboxWinner[]>;
+  getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimStatus>;
+  claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimStatus>;
 
   clearAll: () => Promise<void>;
 }

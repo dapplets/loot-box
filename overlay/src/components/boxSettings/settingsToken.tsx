@@ -23,8 +23,7 @@ import { RadioButton } from '../atoms/RadioButton';
 // import { Test } from '../atoms/test';
 import { DropChance } from '../atoms/DropChance';
 import { Lootbox } from '../../../../common/interfaces';
-import { Item } from 'semantic-ui-react';
-import { info } from 'console';
+import { NearContentItem, FtContentItem } from '../../../../common/interfaces';
 
 export interface BoxSettingsProps {
   children?: ReactNode;
@@ -324,6 +323,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
               placeholder="Drop chance"
               min="0"
               max="100"
+              pattern="^\d{1,2}|100$"
             />
           </div>
         </div>

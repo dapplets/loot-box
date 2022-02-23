@@ -30,7 +30,7 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
       </Link>
       <div className={cn(styles.description)}>
         <span className={cn(styles.label)}>
-          {visible(label)}
+          {label}
 
           <a href="#" className={cn(styles.link)}>
             <span></span>

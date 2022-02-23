@@ -56,6 +56,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
               title="1 transaction per 1 win"
               id="1_DISTRIBUTE"
             />
+            <span />
             <RadioButton
               name="distribute Drop"
               title="1 transaction for all wins"

@@ -36,64 +36,51 @@ export default class TwitterFeature {
           getLootboxStat: this._api.getLootboxStat.bind(this._api),
           getLootboxWinners: this._api.getLootboxWinners.bind(this._api),
           clearAll: this._api.clearAll.bind(this._api),
+          getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
+          claimLootbox: this._api.claimLootbox.bind(this._api),
+        })
+        .listen({
+          getBoxesByAccount: async () => {
+            try {
+              const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
+              const BoxesId = Boxes.map((item, i) => item.id);
+              console.log(BoxesId[0]);
+              const ClaimStatus = await this._api.getLootboxClaimStatus(BoxesId[0], '');
+            } catch {}
+          },
+          isLootboxClaimStatus: async () => {
+            try {
+              const ClaimStatus = await this._api.getLootboxClaimStatus(1, '');
+              // console.log(ClaimStatus);
+            } catch {}
+          },
         });
     }
 
     Core.onAction(() => this.openOverlay());
 
-    const {
-      button,
-      box,
-      picture,
-      label,
-      caption,
-      usernameBadge,
-      avatarBadge,
-      avatar,
-    } = this.adapter.exports;
+    const { box } = this.adapter.exports;
 
-    const { $ } = this.adapter.attachConfig({
+    this.adapter.attachConfig({
       POST: (ctx) => [
         box({
-          id: 'picDef',
           initial: 'DEFAULT',
           DEFAULT: {
             img: fullBox,
-            // text: '5,000 NEAR',
-            replace: 'lootbox.org',
             hidden: false,
-            exec: (ctx, me) => {
-              $(ctx, 'pic').hidden = !$(ctx, 'pic').hidden;
+            replace: 'lootbox.org',
+            exec: (_, me) => {
+              me.state = 'ANOTHER';
+              console.log(this._overlay);
+              // me.hidden = true;
             },
           },
-        }),
-        box({
-          id: 'pic',
-          initial: 'DEFAULT',
-          DEFAULT: {
+          ANOTHER: {
+            text: '5000 NEAR',
             img: emptyBox,
-            hidden: true,
-            // color: 'white',
-            // textBackground: 'black',
-            // replace: 'lootbox.org',
+            replace: 'lootbox.org',
           },
         }),
-        // box({
-        //   initial: 'DEFAULT',
-        //   DEFAULT: {
-        //     img: fullBox,
-        //     hidden: false,
-        //     // replace: 'lootbox.org',
-        //     exec: (_, me) => {
-        //       me.state = 'ANOTHER';
-        //       me.hidden = true;
-        //     },
-        //   },
-        //   ANOTHER: {
-        //     img: emptyBox,
-        //     replace: 'lootbox.org',
-        //   },
-        // }),
       ],
     });
   }

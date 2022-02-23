@@ -36,6 +36,11 @@
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
   }
 }
+.inputInfo:invalid,
+.inputInfo:invalid::placeholder {
+  border: 1px solid #ff6442;
+  color: #ff6442;
+}
 
 .buttonPanel {
   display: flex;

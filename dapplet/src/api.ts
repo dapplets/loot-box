@@ -4,6 +4,7 @@ import {
   BoxCreationPrice,
   LootboxStat,
   LootboxWinner,
+  LootboxClaimStatus,
 } from '../../common/interfaces';
 
 function _createFakeLootbox(id: number): Lootbox {
@@ -106,6 +107,36 @@ export class DappletApi implements IDappletApi {
     }));
   }
 
+  async getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimStatus> {
+    await new Promise((r) => setTimeout(r, 500));
+    const lootboxStatuses = this._getValue('lootboxes-status', []);
+    const entry = lootboxStatuses.find(
+      (x) => x.lootboxId === lootboxId && x.accountId === accountId,
+    );
+    return entry?.status ?? 0;
+  }
+
+  async claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimStatus> {
+    await new Promise((r) => setTimeout(r, 4000));
+    if ((await this.getLootboxClaimStatus(lootboxId, accountId)) !== 0) {
+      throw new Error('The lootbox is opened already.');
+    }
+
+    const lootboxStatuses = this._getValue('lootboxes-status', []);
+
+    const status: LootboxClaimStatus = getRandomIntInclusive(0, 2);
+
+    lootboxStatuses.push({
+      lootboxId,
+      accountId,
+      status,
+    });
+
+    this._setValue('lootboxes-status', lootboxStatuses);
+
+    return status;
+  }
+
   async clearAll() {
     this._setValue('lootboxes', []);
   }
@@ -117,4 +148,10 @@ export class DappletApi implements IDappletApi {
   private _setValue(key: string, value: any) {
     localStorage[key] = JSON.stringify(value);
   }
+}
+
+function getRandomIntInclusive(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }

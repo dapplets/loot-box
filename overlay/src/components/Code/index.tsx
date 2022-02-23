@@ -17,9 +17,20 @@ export interface CodeProps {
   onCreationFormUpdate: (x: Lootbox) => void;
   NameContentItem?: Lootbox;
   onNameUpdated: (x: Lootbox) => void;
+  // setCreationMessageData: (x: any) => void;
+  // MessageData: any;
+  // onMessageUpdated: (x: any) => void;
 }
 export const Code: FC<CodeProps> = (props: CodeProps) => {
-  const { creationForm, onCreationFormUpdate, NameContentItem, onNameUpdated } = props;
+  const {
+    creationForm,
+    onCreationFormUpdate,
+    NameContentItem,
+    onNameUpdated,
+    // setCreationMessageData,
+    // MessageData,
+    // onMessageUpdated,
+  } = props;
   const [value, setValue] = useState('');
   const onChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setValue(e.target.value);
@@ -29,6 +40,12 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
     (newName as any)[name] = value;
     onNameUpdated(newName);
   };
+  // const changeHandlerMessage = (name: keyof any, value: any) => {
+  //   const newMess = Object.assign({}, MessageData);
+  //   (newMess as any)[name] = value;
+  //   onMessageUpdated(newMess);
+  //   console.log(newMess);
+  // };
   return (
     <div className={styles.wrapper}>
       <div className={cn(styles.code)}>
@@ -37,7 +54,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
           <InputPanel
             // creationForm={creationForm}
             // onCreationFormUpdate={onCreationFormUpdate}
-            value={creationForm.name}
+            value={creationForm.name || ''}
             onChange={(e) => changeHandler('name', e.target.value)}
             type="text"
             appearance="biggest"
@@ -45,7 +62,12 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         </div>
         <div className={styles.boxMessage}>
           <LabelSettings title="Box Message" />
-          <TextArea onChange={onChange} placeholder="Write here a message for your followers " />
+          <TextArea
+            // value={MessageData.boxMessage}
+            // onChange={(e) => changeHandlerMessage('boxMessage', e.target.value)}
+            onChange={onChange}
+            placeholder="Write here a message for your followers "
+          />
         </div>
         <div className={styles.lootboxCode}>
           <Message

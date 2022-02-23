@@ -52,7 +52,12 @@ const EMPTY_FORM: Lootbox = {
   id: 0,
   status: 'created',
 };
-
+const MessageData = [
+  {
+    id: 0,
+    boxMessage: '',
+  },
+];
 (async () => {
   await dappletApi.clearAll();
   // console.log('cleared all lootboxes');
@@ -111,12 +116,8 @@ export default () => {
   const [clicked, setClicked] = useState<number | null>(0);
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
 
+  const [creationMessageData, setCreationMessageData] = useState(MessageData);
   // const [loading] = useState<ICtx>();
-  const DEPLOY_CODE = {
-    id: selectedLootboxId,
-    boxName: creationForm.name,
-    boxMessage: '',
-  };
 
   const onChange_Input: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setValue(e.target.value);
@@ -159,10 +160,12 @@ export default () => {
   // };
   const doneClickHandler = async () => {
     // show loader
+
     setLoader(true);
     await dappletApi.createNewBox(creationForm).then((x) => {
       console.log('created new lootbox with id: ' + x);
     });
+
     setLoader(false);
     // hide loader
     // move to homepage
@@ -171,7 +174,8 @@ export default () => {
       setLootboxes(x);
       console.log('lootboxes', x);
     });
-
+    setCreationMessageData(MessageData);
+    console.log(MessageData);
     console.log(creationForm);
   };
 
@@ -357,6 +361,8 @@ export default () => {
               onCreationFormUpdate={(x) => setCreationForm(x)}
               onDoneClick={doneClickHandler}
               onChange={onChange_Input}
+              setCreationMessageData={(x: any) => setCreationMessageData(x)}
+              MessageData={MessageData}
             />
           }
         />
@@ -389,6 +395,8 @@ export default () => {
             <StatisticsCode
               creationForm={creationForm}
               onCreationFormUpdate={(x) => setCreationForm(x)}
+              // setCreationMessageData={(x: any) => setCreationMessageData(x)}
+              // MessageData={MessageData}
             />
           }
         />

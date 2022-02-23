@@ -24,39 +24,40 @@ export interface DropChanceProps
 }
 export const DropChance: FC<DropChanceProps> = (props) => {
   const {
-    prop,
-    className,
+    // prop,
+    // className,
     max,
     min,
-    onSubmit,
+    // onSubmit,
     value,
-    placeholder,
+    // placeholder,
     type,
-    onChange,
-    ...otherProps
+    // onChange,
+    // ...otherProps
   } = props;
-  const [valueNum, setValueNum] = useState(value as number);
+
+  // ToDo: remove state and use the state from App.tsx
+  const [qty, setQty] = useState(20);
   const stateChangeDek = () => {
-    if (valueNum >= 100) return 0;
-    setValueNum(valueNum + 10);
+    if (qty >= 100) return 0;
+    setQty(qty + 10);
   };
   const stateChangeInk = () => {
-    if (valueNum <= 0) return 0;
-    setValueNum(valueNum - 10);
+    if (qty <= 0) return 10;
+    setQty(qty - 10);
   };
-  const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {
-    event.preventDefault();
-    const { name, value } = event.currentTarget;
-    // console.log(name, value);
-  };
+  // const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {
+  //   event.preventDefault();
+  //   const { name, value } = event.currentTarget;
+  // };
   return (
     <div className={cn(styles.inputPanel)}>
       <input
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
         type={type}
-        value={valueNum}
+        value={qty || ''} // ToDo: + '%'
         // defaultValue={prop}
-        onChange={onChange}
+        onChange={(e) => setQty(Number(e.target.value))} // ToDo: remove '%'
         max={max}
         min={min}
         className={cn(styles.inputInfo)}

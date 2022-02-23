@@ -128,11 +128,12 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             <div className={styles.dropChance_nft}>
               <LabelSettings title="Drop Chance" />
               <DropChance
-                type="number"
+                type="string"
                 max="100"
                 min="0"
                 onChange={onFormChange('dropChance', 'number')}
-                value={creationForm.dropChance}
+                value={creationForm.dropChance + `%`}
+                pattern="^\d{1,2}|100$"
               />
             </div>
           </div>

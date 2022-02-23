@@ -29,13 +29,26 @@ export interface DeployBoxProps
   onDoneClick: () => void;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: Lootbox) => void;
+  setCreationMessageData: (x: any) => void;
+  MessageData: any;
 }
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
-  const { onChange, onDoneClick, creationForm, onCreationFormUpdate } = props;
+  const {
+    onChange,
+    onDoneClick,
+    creationForm,
+    onCreationFormUpdate,
+    setCreationMessageData,
+    MessageData,
+  } = props;
   const [value, setValue] = useState('');
   const onChange_Area: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    const { name, value } = e.currentTarget;
     setValue(e.target.value);
+    MessageData.id = creationForm.id;
+    MessageData.boxMessage = value;
+    // setCreationMessageData(MessageData);
   };
   // const name = creationForm.name;
 
@@ -66,7 +79,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
           onChange={onChange_name}
           type="text"
           appearance="biggest"
-          pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})$"
+          // pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})$"
         />
       </div>
 

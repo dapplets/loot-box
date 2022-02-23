@@ -35,11 +35,15 @@
 
 .label {
   display: flex;
+  max-width: 50px;
   align-items: center;
   font-family: Roboto, sans-serif;
   text-transform: uppercase;
   font-size: 10px;
   color: $ContentBlack;
+  white-space: nowrap; /* Текст не переносится */
+  overflow: hidden; /* Обрезаем всё за пределами блока */
+  text-overflow: ellipsis; /* Добавляем многоточие */
 }
 
 .link {
