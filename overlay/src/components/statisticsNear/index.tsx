@@ -186,7 +186,7 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
         </div>
       </div>
       <Code
-        onNameUpdated={() => onFormChange}
+        onNameUpdated={() => onFormChange('name', 'string')}
         creationForm={creationForm}
         onCreationFormUpdate={onCreationFormUpdate}
         // setCreationMessageData={setCreationMessageData}

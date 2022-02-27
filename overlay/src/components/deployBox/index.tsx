@@ -48,7 +48,9 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
     setValue(e.target.value);
     MessageData.id = creationForm.id;
     MessageData.boxMessage = value;
-    // setCreationMessageData(MessageData);
+    console.log(MessageData.boxMessage);
+
+    setCreationMessageData(MessageData);
   };
   // const name = creationForm.name;
 

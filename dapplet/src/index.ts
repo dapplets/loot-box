@@ -42,16 +42,20 @@ export default class TwitterFeature {
         .listen({
           getBoxesByAccount: async () => {
             try {
+              const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+              this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
+              // console.log(wallet.accountId);
               const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
-              const BoxesId = Boxes.map((item, i) => item.id);
-              console.log(BoxesId[0]);
-              const ClaimStatus = await this._api.getLootboxClaimStatus(BoxesId[0], '');
-            } catch {}
-          },
-          isLootboxClaimStatus: async () => {
-            try {
-              const ClaimStatus = await this._api.getLootboxClaimStatus(1, '');
-              // console.log(ClaimStatus);
+              const BoxesId = await Boxes.map((item, i) => item.id);
+              // console.log(BoxesId, 'BoxesId');
+              const ClaimStatus = await this._api.getLootboxClaimStatus(
+                BoxesId as any,
+                wallet.accountId,
+              );
+              console.log(ClaimStatus, 'ClaimStatus');
+              const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
+
+              console.log(claimLoot, 'claimLoot');
             } catch {}
           },
         });
@@ -71,7 +75,7 @@ export default class TwitterFeature {
             replace: 'lootbox.org',
             exec: (_, me) => {
               me.state = 'ANOTHER';
-              console.log(this._overlay);
+              // console.log(this._overlay);
               // me.hidden = true;
             },
           },

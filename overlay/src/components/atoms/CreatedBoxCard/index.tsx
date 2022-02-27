@@ -29,9 +29,8 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
         </div>{' '}
       </Link>
       <div className={cn(styles.description)}>
-        <span className={cn(styles.label)}>
-          {label}
-
+        <span className={cn(styles.Blocklink)}>
+          <span className={cn(styles.label)}>{label}</span>
           <a href="#" className={cn(styles.link)}>
             <span></span>
           </a>

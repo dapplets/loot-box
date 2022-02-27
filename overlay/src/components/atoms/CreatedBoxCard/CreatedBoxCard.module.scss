@@ -32,18 +32,22 @@
   align-items: center;
   padding: 0px 12px;
 }
-
-.label {
+.Blocklink {
   display: flex;
+  align-items: center;
+}
+.label {
+  display: inline-block;
   max-width: 50px;
+
   align-items: center;
   font-family: Roboto, sans-serif;
   text-transform: uppercase;
   font-size: 10px;
   color: $ContentBlack;
-  white-space: nowrap; /* Текст не переносится */
-  overflow: hidden; /* Обрезаем всё за пределами блока */
-  text-overflow: ellipsis; /* Добавляем многоточие */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .link {

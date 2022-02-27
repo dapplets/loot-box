@@ -9,6 +9,7 @@ import { InputPanel } from '../atoms/Input';
 import { TextArea } from '../atoms/TextArea';
 import { Message } from '../atoms/Message';
 import { Lootbox } from '../../../../common/interfaces';
+import { MessageData } from '../../App';
 
 export interface CodeProps {
   onChange?: () => void;
@@ -46,6 +47,10 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
   //   onMessageUpdated(newMess);
   //   console.log(newMess);
   // };
+  const MessVal = MessageData[0].boxMessage;
+
+  console.log(MessVal);
+
   return (
     <div className={styles.wrapper}>
       <div className={cn(styles.code)}>
@@ -63,7 +68,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         <div className={styles.boxMessage}>
           <LabelSettings title="Box Message" />
           <TextArea
-            // value={MessageData.boxMessage}
+            // value={MessageData.map((x) => x.boxMessage)}
             // onChange={(e) => changeHandlerMessage('boxMessage', e.target.value)}
             onChange={onChange}
             placeholder="Write here a message for your followers "

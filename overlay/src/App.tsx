@@ -52,7 +52,7 @@ const EMPTY_FORM: Lootbox = {
   id: 0,
   status: 'created',
 };
-const MessageData = [
+export const MessageData = [
   {
     id: 0,
     boxMessage: '',
@@ -103,40 +103,60 @@ const MessageData = [
 export default () => {
   const [parsedCtx, setParsedCtx] = useState<ICtx>();
   const [nearAccount, setNearAccount] = useState<string>();
-  const [isOpen, onOpenChange] = useToggle(false);
+  const [isOpen, onOpen] = useToggle(false);
   const [value, setValue] = useState('');
-  const [valueIMG, setValueIMG] = useState('');
+  const [img, setImg] = useState('');
   // const [numChildren, onCount] = useState(0);
   const [lootboxes, setLootboxes] = useState<Lootbox[]>([]);
   // const [isOpen, openChange] = useState<ICtx>();
   const [winners, setWinners] = useState<LootboxWinner[]>([]);
   const [selectedLootboxId, setSelectedLootboxId] = useState<number | null>(null);
   const [stat, setStat] = useState<LootboxStat | null>(null);
+
+  // TODO: come up with a better name
   const [creationForm, setCreationForm] = useState<Lootbox>(EMPTY_FORM);
   const [clicked, setClicked] = useState<number | null>(0);
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
+  // const [qty, setQty] = useState(20);
+  const [loader, setLoader] = useState(false);
 
+  // console.log('CREATE: -->', creationForm);
   const [creationMessageData, setCreationMessageData] = useState(MessageData);
   // const [loading] = useState<ICtx>();
 
-  const onChange_Input: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
+  };
+  //
+  const stateChangeDek = () => {
+    //if  (qty >= 100) return 0;
+    setCreationForm({
+      ...creationForm,
+      dropChance: creationForm.dropChance + 10,
+    });
+  };
+  const stateChangeInk = () => {
+    // if (qty <= 0) return 10;
+    setCreationForm({
+      ...creationForm,
+      dropChance: creationForm.dropChance - 10,
+    });
   };
 
   // const onAddChild = () => {
   //   onCount(numChildren + 1);
   // };
 
-  // useEffect(() => {
-  //   dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
-  //   dappletApi.isWalletConnected().then(async (isWalletConnected) => {
-  //     let accountName: string | undefined;
-  //     if (isWalletConnected) {
-  //       accountName = await dappletApi.getCurrentNearAccount();
-  //     }
-  //     setNearAccount(accountName);
-  //   });
-  // }, []);
+  useEffect(() => {
+    dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
+    dappletApi.isWalletConnected().then(async (isWalletConnected) => {
+      let accountName: string | undefined;
+      if (isWalletConnected) {
+        accountName = await dappletApi.getCurrentNearAccount();
+      }
+      setNearAccount(accountName);
+    });
+  }, []);
 
   useEffect(() => {
     dappletApi
@@ -151,8 +171,6 @@ export default () => {
         // ToDo: show error to user
       });
   }, []);
-
-  const [loader, setLoader] = useState(false);
 
   //create message setter
   // const messageSetter = (message: any) => {
@@ -174,9 +192,9 @@ export default () => {
       setLootboxes(x);
       console.log('lootboxes', x);
     });
-    setCreationMessageData(MessageData);
-    console.log(MessageData);
-    console.log(creationForm);
+    // setCreationMessageData(MessageData);
+    // console.log(MessageData);
+    // console.log(creationForm);
   };
 
   useEffect(() => {
@@ -185,9 +203,9 @@ export default () => {
     dappletApi
       .getLootboxWinners(selectedLootboxId)
       .then((x) => {
-        console.log('getLootboxStat', x);
+        // console.log('getLootboxStat', x);
         setWinners(x);
-        console.log('winners of lootbox #' + selectedLootboxId, winners);
+        // console.log('winners of lootbox #' + selectedLootboxId, winners);
       })
       .catch((e) => {
         console.error('getLootboxWinners', e);
@@ -202,9 +220,9 @@ export default () => {
     dappletApi
       .getLootboxStat(selectedLootboxId)
       .then((x) => {
-        console.log('getLootboxStat', x);
+        // console.log('getLootboxStat', x);
         setStat(x);
-        console.log('statistics of lootbox #' + selectedLootboxId, stat);
+        // console.log('statistics of lootbox #' + selectedLootboxId, stat);
         setLoader(false);
       })
 
@@ -221,9 +239,9 @@ export default () => {
     dappletApi
       .calcBoxCreationPrice(creationForm)
       .then((x) => {
-        console.log('getLootboxPrice', x);
+        // console.log('getLootboxPrice', x);
         setPrice(x);
-        console.log('price of lootbox creation', price);
+        // console.log('price of lootbox creation', price);
       })
       .catch((e) => {
         console.error('getLootboxPrice', e);
@@ -231,6 +249,7 @@ export default () => {
         // ToDo: show error to user
       });
   }, []);
+
   // if (creationForm !== null) {
   //   return <div>Loading</div>;
   // }
@@ -239,7 +258,7 @@ export default () => {
   return (
     <div className={cn(styles.app)}>
       <header style={{ justifyContent: nearAccount ? 'space-between' : 'center' }}>
-        {/* {!nearAccount ? (
+        {!nearAccount ? (
           <LogInButton
             label="Log in "
             onClick={async () => {
@@ -265,27 +284,27 @@ export default () => {
                 }
                 setNearAccount(undefined);
 
-                console.log(useEffect);
+                // console.log(useEffect);
               }}
-              openChange={onOpenChange}
+              openChange={onOpen}
               isOpen={isOpen}
             />
           </>
-        )} */}
+        )}
       </header>
 
       <Routes>
         <Route
           path="/"
           element={
-            <CreateNewBox imgVal={valueIMG} label={value}>
+            <CreateNewBox imgVal={img} label={value}>
               {(loader && <div>Loading</div>) ||
                 lootboxes.map((item, index) => (
                   <ChildComponent
                     onClick={() => {
                       setLootboxes(lootboxes);
                       setSelectedLootboxId(item.id!);
-                      console.log(lootboxes, 'hello');
+                      // console.log(lootboxes, 'hello');
                     }}
                     imgVal={IMG[item.pictureId]}
                     label={item.name}
@@ -306,8 +325,8 @@ export default () => {
               setClicked={setClicked}
               clicked={clicked}
               onChange_IMG={(x: string) => {
-                setValueIMG(x);
-                console.log(x, 'hello');
+                setImg(x);
+                // console.log(x, 'hello');
               }}
               creationFormId={creationForm.pictureId}
               onCreationFormUpdate={(id: number) =>
@@ -333,6 +352,9 @@ export default () => {
           path="/settings_token"
           element={
             <SettingsToken
+              stateChangeDek={stateChangeDek}
+              stateChangeInk={stateChangeInk}
+              // qty={qty}
               creationForm={creationForm}
               onCreationFormUpdate={(x) => setCreationForm(x)}
             />
@@ -342,16 +364,34 @@ export default () => {
           path="/settings_NFT"
           element={
             <SettingsNFT
+              stateChangeDek={stateChangeDek}
+              stateChangeInk={stateChangeInk}
+              // qty={qty}
               creationForm={creationForm}
               onCreationFormUpdate={(x) => setCreationForm(x)}
             />
           }
         />
-        <Route path="/fill_your_box" element={<FillBox price={price} imgVal={valueIMG} />} />
+        <Route
+          path="/fill_your_box"
+          element={
+            <FillBox
+              price={price}
+              imgVal={img}
+              // onDoneClick={doneClickHandler}
+            />
+          }
+        />
         {/* <Route path="/winners" element={<StatisticsWinners />} /> */}
         <Route
           path="/fill_your_box_nft"
-          element={<FillBox_Nft price={price} imgVal={valueIMG} />}
+          element={
+            <FillBox_Nft
+              price={price}
+              imgVal={img}
+              // onDoneClick={doneClickHandler}
+            />
+          }
         />
         <Route
           path="/deploy_your_box"
@@ -360,7 +400,7 @@ export default () => {
               creationForm={creationForm}
               onCreationFormUpdate={(x) => setCreationForm(x)}
               onDoneClick={doneClickHandler}
-              onChange={onChange_Input}
+              onChange={onChange}
               setCreationMessageData={(x: any) => setCreationMessageData(x)}
               MessageData={MessageData}
             />

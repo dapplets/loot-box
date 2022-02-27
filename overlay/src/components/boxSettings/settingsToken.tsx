@@ -32,10 +32,19 @@ export interface BoxSettingsProps {
   dataType?: string;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
+  stateChangeDek: (x: any) => void;
+  stateChangeInk: (x: any) => void;
+  // qty: any;
 }
 
 export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { creationForm, onCreationFormUpdate } = props;
+  const {
+    creationForm,
+    onCreationFormUpdate,
+    stateChangeDek,
+    stateChangeInk,
+    //  qty
+  } = props;
   const [isShowDescription_tokenAmount, onShowDescription_tokenAmount] = useToggle(false);
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
   const [value, setValue] = useState(20);
@@ -317,6 +326,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <LabelSettings title="Drop Chance" />
 
             <DropChance
+              stateChangeDek={() => onChange}
+              stateChangeInk={() => onChange}
+              // qty={creationForm.dropChance + `%`}
               onChange={onChange}
               type="number"
               value={value}

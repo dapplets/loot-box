@@ -32,6 +32,9 @@ export interface BoxSettingsProps {
   dataType?: string;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
+  stateChangeDek: any;
+  stateChangeInk: any;
+  // qty: any;
 }
 
 const DEFAULT_NFT_ITEM: NftContentItem = {
@@ -41,7 +44,13 @@ const DEFAULT_NFT_ITEM: NftContentItem = {
 };
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { creationForm, onCreationFormUpdate } = props;
+  const {
+    creationForm,
+    onCreationFormUpdate,
+    stateChangeDek,
+    stateChangeInk,
+    //  qty
+  } = props;
   const [disable, setDisable] = useState(false);
 
   useEffect(() => {
@@ -52,6 +61,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     newForm.nearContentItems = [];
     newForm.ftContentItems = [];
     onCreationFormUpdate(newForm);
+    console.log(creationForm);
   }, []);
 
   const addButtonClickHandler = () => {
@@ -69,12 +79,19 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
     e,
   ) => {
+    // console.log(111);
+
     if (type === 'number') {
       (creationForm as any)[prop] = Number(e.target.value);
     } else {
-      (creationForm as any)[prop] = e.target.value;
+      (creationForm as any)[prop] = Number(e.target.value);
+      // stateChangeInk();
     }
+    // console.log(222);
+
+    // creationForm.dropChance = qty;
     onCreationFormUpdate(creationForm);
+    // console.log(333);
   };
 
   const nftUpdatedHandler = (id: number, nft: NftContentItem) => {
@@ -128,11 +145,15 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             <div className={styles.dropChance_nft}>
               <LabelSettings title="Drop Chance" />
               <DropChance
+                stateChangeDek={stateChangeDek}
+                stateChangeInk={stateChangeInk}
+                // qty={qty + `%`}
                 type="string"
                 max="100"
                 min="0"
+                // onClick={() => onFormChange('dropChance', 'number')}
                 onChange={onFormChange('dropChance', 'number')}
-                value={creationForm.dropChance + `%`}
+                value={creationForm.dropChance}
                 pattern="^\d{1,2}|100$"
               />
             </div>

@@ -48,33 +48,33 @@ export const InputPanel: FC<InputProps> = (props) => {
     // onCreationFormUpdate,
     ...anotherProps
   } = props;
-  const [qty, setQty] = useState(1);
+  // const [qty, setQty] = useState(1);
   // The quantity string the user is editing
-  const [qtyString, setQtyString] = useState(String(qty));
-  const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {
-    // const formData = new FormData(event.currentTarget);
-    // event.preventDefault();
-    // const { name, value } = event.currentTarget;
+  // const [qtyString, setQtyString] = useState(String(qty));
+  // const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {
+  //   // const formData = new FormData(event.currentTarget);
+  //   // event.preventDefault();
+  //   // const { name, value } = event.currentTarget;
 
-    // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    //   // Always update the string
-    setQtyString(event.target.value);
-    // Is it a valid positive number?
-    event.target.value = event.target.value.trim();
-    const value = event.target.value ? +event.target.value : NaN;
-    if (isNaN(value) || value <= 0) {
-      // No, our quantity is 1 (even though the string may
-      // not be)
-      setQty(1);
-    } else {
-      // Yes, use it
-      setQty(value);
-    }
+  //   // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   //   // Always update the string
+  //   setQtyString(event.target.value);
+  //   // Is it a valid positive number?
+  //   event.target.value = event.target.value.trim();
+  //   const value = event.target.value ? +event.target.value : NaN;
+  //   if (isNaN(value) || value <= 0) {
+  //     // No, our quantity is 1 (even though the string may
+  //     // not be)
+  //     setQty(1);
+  //   } else {
+  //     // Yes, use it
+  //     setQty(value);
+  //   }
 
-    // creationForm.name = value;
+  //   // creationForm.name = value;
 
-    // onCreationFormUpdate(creationForm);
-  };
+  //   // onCreationFormUpdate(creationForm);
+  // };
 
   return (
     <div className={cn(styles.inputPanel)}>
@@ -98,7 +98,7 @@ export const InputPanel: FC<InputProps> = (props) => {
           },
           className,
         )}
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
         onChange={onChange}
       />
     </div>
