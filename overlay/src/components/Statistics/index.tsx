@@ -68,7 +68,9 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
       </div>
 
       <div className={cn(styles.link)}>
-        <StatisticsLink label="Copy code" />
+        <Link to="/">
+          <StatisticsLink label="Copy code" />
+        </Link>
       </div>
     </div>
   );

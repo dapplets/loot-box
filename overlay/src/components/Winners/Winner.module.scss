@@ -8,6 +8,12 @@
   flex-direction: column;
 }
 
+.blockInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
 .winners {
   display: flex;
   flex-direction: column;
@@ -20,21 +26,14 @@
 }
 .winnersList {
   display: flex;
-  flex: 1 0 auto;
+  // flex: 1 0 auto;
   align-items: center;
   width: 100%;
-  height: 41px;
+  height: 10px;
   justify-content: space-between;
   position: relative;
-  &::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 3px;
-    top: 100%;
-    left: 0;
-    background: $WebBG;
-  }
+  padding: 0px 29px;
+  margin: 0px 0px 5px 0px;
 }
 .winnersLink {
   display: flex;
@@ -54,4 +53,35 @@
 
 .link {
   padding: 0px 0px 23px 0px;
+}
+
+.listTitle {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0px 29px 15px 29px;
+}
+
+.itemTitle {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 100%;
+  color: #919191;
+  padding: 0px 0px 0px 5%;
+  &:first-child {
+    padding: 0px 0px 0px 2%;
+  }
+}
+
+.itemLink {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 100%;
+  text-transform: uppercase;
+  color: #588ca3;
+  // margin: 0px 0px 5px 0px;
 }

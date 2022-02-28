@@ -79,19 +79,13 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
     e,
   ) => {
-    // console.log(111);
-
-    if (type === 'number') {
-      (creationForm as any)[prop] = Number(e.target.value);
+    if (type === 'string') {
+      (creationForm as any)[prop] = e.target.value;
     } else {
-      (creationForm as any)[prop] = Number(e.target.value);
-      // stateChangeInk();
+      (creationForm as any)[prop] = e.target.value;
     }
-    // console.log(222);
 
-    // creationForm.dropChance = qty;
     onCreationFormUpdate(creationForm);
-    // console.log(333);
   };
 
   const nftUpdatedHandler = (id: number, nft: NftContentItem) => {
@@ -152,8 +146,8 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                 max="100"
                 min="0"
                 // onClick={() => onFormChange('dropChance', 'number')}
-                onChange={onFormChange('dropChance', 'number')}
-                value={creationForm.dropChance}
+                onChange={(e) => onFormChange('dropChance', e.target.value)}
+                value={creationForm.dropChance ?? ''}
                 pattern="^\d{1,2}|100$"
               />
             </div>

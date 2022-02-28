@@ -3,6 +3,7 @@ import EXAMPLE_IMG from './icons/near_dapplet_icon.svg';
 import { DappletApi } from './api';
 import emptyBox from './icons/emptyBox.png';
 import fullBox from './icons/FullBox.png';
+import { LootboxClaimStatus } from '../../common/interfaces';
 
 @Injectable
 export default class TwitterFeature {
@@ -38,27 +39,27 @@ export default class TwitterFeature {
           clearAll: this._api.clearAll.bind(this._api),
           getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
           claimLootbox: this._api.claimLootbox.bind(this._api),
-        })
-        .listen({
-          getBoxesByAccount: async () => {
-            try {
-              const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-              this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-              // console.log(wallet.accountId);
-              const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
-              const BoxesId = await Boxes.map((item, i) => item.id);
-              // console.log(BoxesId, 'BoxesId');
-              const ClaimStatus = await this._api.getLootboxClaimStatus(
-                BoxesId as any,
-                wallet.accountId,
-              );
-              console.log(ClaimStatus, 'ClaimStatus');
-              const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
-
-              console.log(claimLoot, 'claimLoot');
-            } catch {}
-          },
         });
+      // .listen({
+      //   getBoxesByAccount: async () => {
+      //     try {
+      //       const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+      //       this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
+      //       // console.log(wallet.accountId);
+      //       const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
+      //       const BoxesId = await Boxes.map((item, i) => item.id);
+      //       // console.log(BoxesId, 'BoxesId');
+      //       const ClaimStatus = await this._api.getLootboxClaimStatus(
+      //         BoxesId as any,
+      //         wallet.accountId,
+      //       );
+      //       console.log(ClaimStatus, 'ClaimStatus');
+      //       const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
+
+      //       console.log(claimLoot, 'claimLoot');
+      //     } catch {}
+      //   },
+      // });
     }
 
     Core.onAction(() => this.openOverlay());
@@ -73,8 +74,10 @@ export default class TwitterFeature {
             img: fullBox,
             hidden: false,
             replace: 'lootbox.org',
-            exec: (_, me) => {
+            exec: async (_, me) => {
+              await this.getClaim(ctx);
               me.state = 'ANOTHER';
+
               // console.log(this._overlay);
               // me.hidden = true;
             },
@@ -88,7 +91,23 @@ export default class TwitterFeature {
       ],
     });
   }
-
+  async getClaim(props?: any): Promise<void> {
+    // this._overlay.listen(console.log('lalla'));
+    try {
+      const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+      this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
+      // console.log(wallet.accountId);
+      const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
+      const BoxesId = await Boxes.map((item, i) => item.id);
+      // console.log(BoxesId, 'BoxesId');
+      const ClaimStatus = await this._api.getLootboxClaimStatus(BoxesId as any, wallet.accountId);
+      console.log(ClaimStatus, 'ClaimStatus');
+      const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
+      // const status = await this._api.claimLootbox(BoxesId as any, 'dapplets_lootbox.testnet');
+      // console.log(status);
+      console.log(claimLoot, 'claimLoot');
+    } catch {}
+  }
   async openOverlay(props?: any): Promise<void> {
     this._overlay.send('data', props);
   }

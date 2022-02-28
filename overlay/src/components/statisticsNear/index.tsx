@@ -127,15 +127,11 @@ export interface StatisticsNearPropsCode {
   // winners: any;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
-  // setCreationMessageData: (x: any) => void;
-  // MessageData: any;
+  setCreationMessageData: (x: any) => void;
+  MessageData: any;
 }
 export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNearPropsCode) => {
-  const {
-    creationForm,
-    onCreationFormUpdate,
-    // setCreationMessageData, MessageData
-  } = props;
+  const { creationForm, onCreationFormUpdate, setCreationMessageData, MessageData } = props;
   const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
     e,
   ) => {
@@ -147,16 +143,16 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
     onCreationFormUpdate(creationForm);
   };
 
-  // const onMessageChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
-  //   e,
-  // ) => {
-  //   if (type === 'string') {
-  //     (MessageData as any)[prop] = e.target.value;
-  //   } else {
-  //     (MessageData as any)[prop] = e.target.value;
-  //   }
-  //   setCreationMessageData(MessageData);
-  // };
+  const onMessageChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
+    e,
+  ) => {
+    if (type === 'string') {
+      (MessageData as any)[prop] = e.target.value;
+    } else {
+      (MessageData as any)[prop] = e.target.value;
+    }
+    setCreationMessageData(MessageData);
+  };
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -189,9 +185,9 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
         onNameUpdated={() => onFormChange('name', 'string')}
         creationForm={creationForm}
         onCreationFormUpdate={onCreationFormUpdate}
-        // setCreationMessageData={setCreationMessageData}
-        // onMessageUpdated={() => onMessageChange}
-        // MessageData={MessageData}
+        setCreationMessageData={setCreationMessageData}
+        onMessageUpdated={() => onMessageChange}
+        MessageData={MessageData}
       />
       {/* <Winner /> <Statistics /> */}
     </div>

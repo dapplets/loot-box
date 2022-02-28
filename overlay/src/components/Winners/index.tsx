@@ -25,9 +25,10 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
     return winners.map((item: any, index: number) => (
       <div className={cn(styles.winnersList)} key={index}>
         <div className={styles.winnersLink}>
-          <WinnersInfo title="Twitter" value="@dilman" />
-          <WinnersInfo value={item.nearAccount} title="Near" />
-          <WinnersInfo title="Amount" value={item.amount} />
+          <div className={styles.itemLink}>{'@dilman'}</div>
+
+          <div className={styles.itemLink}>{item.nearAccount}</div>
+          <div className={styles.itemLink}>{item.amount}</div>
         </div>
 
         <a href={item.txLink} className={styles.label}>
@@ -39,10 +40,19 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
 
   return (
     <div className={styles.wrapper}>
-      <Num />
-
+      <div className={styles.blockInfo}>
+        <ul className={styles.listTitle}>
+          <span className={styles.itemTitle}>Twitter:</span>
+          <li className={styles.itemTitle}>Near:</li>
+          <li className={styles.itemTitle}>Amount:</li>
+          <li className={styles.itemTitle}>TX</li>
+        </ul>
+        <Num />
+      </div>
       <div className={cn(styles.link)}>
-        <StatisticsLink label="Copy winners" />
+        <Link to="/">
+          <StatisticsLink label="Copy winners" />
+        </Link>
       </div>
     </div>
   );

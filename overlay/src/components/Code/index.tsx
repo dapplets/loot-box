@@ -18,9 +18,9 @@ export interface CodeProps {
   onCreationFormUpdate: (x: Lootbox) => void;
   NameContentItem?: Lootbox;
   onNameUpdated: (x: Lootbox) => void;
-  // setCreationMessageData: (x: any) => void;
-  // MessageData: any;
-  // onMessageUpdated: (x: any) => void;
+  setCreationMessageData: (x: any) => void;
+  MessageData: any;
+  onMessageUpdated: (x: any) => void;
 }
 export const Code: FC<CodeProps> = (props: CodeProps) => {
   const {
@@ -28,9 +28,9 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
     onCreationFormUpdate,
     NameContentItem,
     onNameUpdated,
-    // setCreationMessageData,
-    // MessageData,
-    // onMessageUpdated,
+    setCreationMessageData,
+    MessageData,
+    onMessageUpdated,
   } = props;
   const [value, setValue] = useState('');
   const onChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -41,12 +41,12 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
     (newName as any)[name] = value;
     onNameUpdated(newName);
   };
-  // const changeHandlerMessage = (name: keyof any, value: any) => {
-  //   const newMess = Object.assign({}, MessageData);
-  //   (newMess as any)[name] = value;
-  //   onMessageUpdated(newMess);
-  //   console.log(newMess);
-  // };
+  const changeHandlerMessage = (name: keyof any, value: any) => {
+    const newMess = Object.assign({}, MessageData);
+    (newMess as any)[name] = value;
+    onMessageUpdated(newMess);
+    console.log(newMess);
+  };
   const MessVal = MessageData[0].boxMessage;
 
   console.log(MessVal);
@@ -59,7 +59,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
           <InputPanel
             // creationForm={creationForm}
             // onCreationFormUpdate={onCreationFormUpdate}
-            value={creationForm.name || ''}
+            value={creationForm.name ?? ''}
             onChange={(e) => changeHandler('name', e.target.value)}
             type="text"
             appearance="biggest"
@@ -68,9 +68,9 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         <div className={styles.boxMessage}>
           <LabelSettings title="Box Message" />
           <TextArea
-            // value={MessageData.map((x) => x.boxMessage)}
-            // onChange={(e) => changeHandlerMessage('boxMessage', e.target.value)}
-            onChange={onChange}
+            value={MessageData.map((x: any) => x.boxMessage)}
+            onChange={(e) => changeHandlerMessage('boxMessage', e.target.value)}
+            // onChange={onChange}
             placeholder="Write here a message for your followers "
           />
         </div>

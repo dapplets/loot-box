@@ -13,7 +13,8 @@
 
 .titleLinks {
   display: flex;
-  width: 300px;
+  width: 237px;
+  // flex: 1 1 auto;
   justify-content: space-between;
   margin: 0 auto;
   padding: 0px 0px 40px 0px;
@@ -28,13 +29,13 @@
     height: 3px;
     background: $WebBG;
     top: 50%;
-    right: -15%;
+    right: -33%;
     // z-index: 1;
   }
 }
 .titleLinksWinners {
   display: flex;
-  width: 300px;
+  width: 237px;
   justify-content: space-between;
   margin: 0 auto;
   padding: 0px 0px 30px 0px;
@@ -49,7 +50,7 @@
     height: 3px;
     background: $WebBG;
     top: 50%;
-    right: -15%;
+    right: -33%;
     // z-index: 1;
   }
 }

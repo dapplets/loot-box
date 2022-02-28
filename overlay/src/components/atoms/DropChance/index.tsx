@@ -65,10 +65,10 @@ export const DropChance: FC<DropChanceProps> = (props) => {
       <input
         // onSubmit={handleSubmit}
         type={type}
-        value={value + `%`} // ToDo: + '%'
+        value={value + '%'} // ToDo: + '%'
         // defaultValue={prop}
         onChange={onChange} // ToDo: remove '%'
-        onClick={onClick}
+        // onClick={onClick}
         max={max}
         min={min}
         className={cn(styles.inputInfo)}

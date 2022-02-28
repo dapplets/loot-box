@@ -36,7 +36,20 @@ export interface BoxSettingsProps {
   stateChangeInk: (x: any) => void;
   // qty: any;
 }
+const DEFAULT_NEAR_ITEM: NearContentItem = {
+  tokenAmount: '',
+  dropType: 'fixed',
+  dropAmountFrom: '',
+  dropAmountTo: '',
+};
 
+const DEFAULT_FT_ITEM: FtContentItem = {
+  contractAddress: '',
+  tokenAmount: '',
+  dropType: 'fixed',
+  dropAmountFrom: '',
+  dropAmountTo: '',
+};
 export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const {
     creationForm,
@@ -47,109 +60,62 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   } = props;
   const [isShowDescription_tokenAmount, onShowDescription_tokenAmount] = useToggle(false);
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
-  const [value, setValue] = useState(20);
-
-  const [valueInputTokenAmount, setValueInputTokenAmount] = useState('');
-  const [valueInputTokenContract, setValueInputTokenContract] = useState('');
-  const [valueInputTokenTicker, setValueInputTokenTicker] = useState('');
-  const [valueInputTokenFrom, setValueInputTokenFrom] = useState('');
-  const [valueInputTokenTo, setValueInputTokenTo] = useState('');
-  const [valueInputDropAmount, setValueInputDropAmount] = useState('');
 
   const [valueRadio, setValueRadioLoot] = useState('');
   const [valueRadioDropType, setValueRadioDropType] = useState('');
 
-  // useEffect(() => {
+  useEffect(() => {
+    // ToDo: move to App.tsx
+    // ToDo: how to get rid of object coping?
+    const newForm = Object.assign({}, creationForm);
+    newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
+    newForm.nftContentItems = [];
+    newForm.ftContentItems = [DEFAULT_FT_ITEM];
+    onCreationFormUpdate(newForm);
+    console.log(creationForm);
+  }, []);
 
-  //   }
-  //   console.log(creationForm, 'ещлут');
-  // }, []);
+  const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
+    e,
+  ) => {
+    // console.log(111);
 
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setValue(Number(e.target.value));
-    // setValue(e.target.value);
-  };
-  const onChangeTokenAmount: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setValueInputTokenAmount(e.target.value);
-    // setValue(e.target.value);
-  };
-  const onChangeTokenContract: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setValueInputTokenContract(e.target.value);
-    // setValue(e.target.value);
-  };
-  const onChangeTokenTicker: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setValueInputTokenTicker(e.target.value);
-    // setValue(e.target.value);
-  };
-  const onChangeTokenFrom: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setValueInputTokenFrom(e.target.value);
-    // setValue(e.target.value);
-  };
-  const onChangeTokenTo: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setValueInputTokenTo(e.target.value);
-    // setValue(e.target.value);
-  };
-  const onChangeDropAmount: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setValueInputDropAmount(e.target.value);
-    // setValue(e.target.value);
+    if (type === 'number') {
+      (creationForm as any)[prop] = Number(e.target.value);
+    } else {
+      (creationForm as any)[prop] = Number(e.target.value);
+      // stateChangeInk();
+    }
+    // console.log(222);
+
+    // creationForm.dropChance = qty;
+    onCreationFormUpdate(creationForm);
+    // console.log(333);
   };
 
   const onChangeRadioLoot: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    // e.preventDefault();
-    // e.stopPropagation();
     setValueRadioLoot(e.target.value);
     onShowDescription_tokenAmount();
-
-    // setValue(e.target.value);
-    onCreationFormUpdate(creationForm);
   };
 
   const onChangeRadioDropType: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    // e.preventDefault();
-    // e.stopPropagation();
-
     setValueRadioDropType(String(e.target.value));
     onShowDescription_dropAmount();
-    // console.log(valueRadioDropType);
   };
 
-  creationForm.nftContentItems = [];
-  creationForm.dropChance = value;
+  const changeHandler = (name: keyof NearContentItem, value: any) => {
+    const newForm = Object.assign({}, creationForm);
+    (newForm as any)[name] = value;
 
-  if (isShowDescription_tokenAmount) {
-    creationForm.ftContentItems = [
-      {
-        contractAddress: valueInputTokenContract,
-        tokenAmount: valueInputTokenAmount,
-        dropType: valueRadioDropType as any, // ToDo: fix it
-        dropAmountFrom: valueInputTokenFrom,
-        dropAmountTo: valueInputTokenFrom,
-      },
-    ];
-    creationForm.nearContentItems = [];
-  } else {
-    creationForm.nearContentItems = [
-      {
-        tokenAmount: valueInputTokenAmount,
-        dropType: valueRadioDropType as any, // ToDo: fix it
-        dropAmountFrom: valueInputTokenFrom,
-        dropAmountTo: valueInputTokenTo,
-      },
-    ];
-    creationForm.ftContentItems = [];
-  }
+    newForm.nearContentItems[0][name] = value;
+  };
+
+  const changeHandlerFT = (name: keyof FtContentItem, value: any) => {
+    const newForm = Object.assign({}, creationForm);
+    (newForm as any)[name] = value;
+
+    newForm.ftContentItems[0][name] = value;
+  };
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -181,10 +147,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <LabelSettings title="Token amount" />
             <div className={cn(styles.tokenInput)}>
               <InputPanel
-                type="text"
+                type="string"
                 appearance="default"
                 placeholder="Token amount"
-                onChange={onChangeTokenAmount}
+                onChange={(e) => changeHandler('tokenAmount', e.target.value)}
                 pattern="^[0-9]\d*.{2}$"
               />
               <RadioButton
@@ -211,14 +177,14 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   type="text"
                   appearance="medium"
                   placeholder="Token contract"
-                  onChange={onChangeTokenContract}
+                  onChange={(e) => changeHandlerFT('contractAddress', e.target.value)}
                   pattern="^[0-9]\d*.{2}$"
                 />
                 <InputPanel
                   type="text"
                   appearance="small"
                   placeholder="Token ticker "
-                  onChange={onChangeTokenTicker}
+                  onChange={(e) => changeHandlerFT('contractAddress', e.target.value)}
                   pattern="^[0-9]\d*.{2}$"
                 />
               </div>
@@ -232,15 +198,31 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Fixed"
                   name="dropAmount"
                   id="3_Drop"
-                  defaultChecked={true}
-                  onChange={onChangeRadioDropType}
+                  // defaultChecked={true}
+                  // onChange={onChangeRadioDropType}
+                  checked={DEFAULT_FT_ITEM.dropType === 'fixed'}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      changeHandlerFT('dropType', 'fixed');
+                      // onChangeRadioDropType;
+                    }
+                    onChangeRadioDropType(e);
+                  }}
                 />
                 <RadioButton
                   value="Variable"
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
-                  onChange={onChangeRadioDropType}
+                  // onChange={onChangeRadioDropType}
+                  checked={DEFAULT_FT_ITEM.dropType === 'variable'}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      changeHandlerFT('dropType', 'variable');
+                      // onChangeRadioDropType;
+                    }
+                    onChangeRadioDropType(e);
+                  }}
                 />
               </div>
               {(isShowDescription_dropAmount && (
@@ -249,14 +231,14 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     type="text"
                     appearance="small_medium"
                     placeholder="From"
-                    onChange={onChangeTokenFrom}
+                    onChange={(e) => changeHandlerFT('dropAmountFrom', e.target.value)}
                     pattern="^[0-9]\d*.{2}$"
                   />
                   <InputPanel
                     type="text"
                     appearance="small_medium"
                     placeholder="To"
-                    onChange={onChangeTokenTo}
+                    onChange={(e) => changeHandlerFT('dropAmountTo', e.target.value)}
                     pattern="^[0-9]\d*.{2}$"
                   />
                 </div>
@@ -265,7 +247,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   type="text"
                   appearance="biggest"
                   placeholder="Drop amount"
-                  onChange={onChangeDropAmount}
+                  onChange={(e) => {
+                    changeHandlerFT('dropAmountFrom', e.target.value);
+                    changeHandlerFT('dropAmountTo', e.target.value);
+                  }}
                   pattern="^[0-9]\d*.{2}$"
                 />
               )}
@@ -282,31 +267,45 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Fixed"
                   name="dropAmount"
                   id="3_Drop"
-                  defaultChecked={true}
-                  onChange={onChangeRadioDropType}
+                  // defaultChecked={true}
+                  checked={DEFAULT_NEAR_ITEM.dropType === 'fixed'}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      changeHandler('dropType', 'fixed');
+                      // onChangeRadioDropType;
+                    }
+                    onChangeRadioDropType(e);
+                  }}
                 />
                 <RadioButton
                   value="Variable"
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
-                  onChange={onChangeRadioDropType}
+                  checked={DEFAULT_NEAR_ITEM.dropType === 'variable'}
+                  // onChange={onChangeRadioDropType}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      changeHandler('dropType', 'variable');
+                    }
+                    onChangeRadioDropType(e);
+                  }}
                 />
               </div>
               {(isShowDescription_dropAmount && (
                 <div className={cn(styles.dropAmountInput)}>
                   <InputPanel
-                    type="text"
+                    type="string"
                     appearance="small_medium"
                     placeholder="From"
-                    onChange={onChangeTokenFrom}
+                    onChange={(e) => changeHandler('dropAmountFrom', e.target.value)}
                     pattern="^[0-9]\d*.{2}$"
                   />
                   <InputPanel
-                    type="text"
+                    type="string"
                     appearance="small_medium"
                     placeholder="To"
-                    onChange={onChangeTokenTo}
+                    onChange={(e) => changeHandler('dropAmountTo', e.target.value)}
                     pattern="^[0-9]\d*.{2}$"
                   />
                 </div>
@@ -315,7 +314,11 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   type="text"
                   appearance="biggest"
                   placeholder="Drop amount"
-                  onChange={onChangeDropAmount}
+                  // onChange={onChangeDropAmount}
+                  onChange={(e) => {
+                    changeHandler('dropAmountFrom', e.target.value);
+                    changeHandler('dropAmountTo', e.target.value);
+                  }}
                   pattern="^[0-9]\d*.{2}$"
                 />
               )}
@@ -326,15 +329,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <LabelSettings title="Drop Chance" />
 
             <DropChance
-              stateChangeDek={() => onChange}
-              stateChangeInk={() => onChange}
-              // qty={creationForm.dropChance + `%`}
-              onChange={onChange}
-              type="number"
-              value={value}
-              placeholder="Drop chance"
-              min="0"
+              stateChangeDek={stateChangeDek}
+              stateChangeInk={stateChangeInk}
+              // qty={qty + `%`}
+              type="string"
               max="100"
+              min="0"
+              // onClick={() => onFormChange('dropChance', 'number')}
+              onChange={onFormChange('dropChance', 'number')}
+              value={creationForm.dropChance}
               pattern="^\d{1,2}|100$"
             />
           </div>
@@ -342,18 +345,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       </div>
       <div className={cn(styles.navigation)}>
         <Link to="/select_box">
-          <LinksStep
-            step="prev"
-            label="Back"
-            // icon={PrevStep}
-          />
+          <LinksStep step="prev" label="Back" />
         </Link>
         <Link to="/fill_your_box">
-          <LinksStep
-            step="next"
-            label="Next step"
-            //  icon={NextStep}
-          />
+          <LinksStep step="next" label="Next step" />
         </Link>
       </div>
     </div>

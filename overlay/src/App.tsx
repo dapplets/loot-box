@@ -44,7 +44,7 @@ const dappletApi = new GeneralBridge<IDappletApi>();
 // const IMG = [Box1, Box2, Box3, Box4];
 const EMPTY_FORM: Lootbox = {
   name: '',
-  dropChance: 20,
+  dropChance: 20 ?? ``,
   ftContentItems: [],
   nftContentItems: [],
   nearContentItems: [],
@@ -128,15 +128,16 @@ export default () => {
     setValue(e.target.value);
   };
   //
-  const stateChangeDek = () => {
-    //if  (qty >= 100) return 0;
+  const stateChangeDek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (creationForm.dropChance >= 100) return 0;
     setCreationForm({
       ...creationForm,
       dropChance: creationForm.dropChance + 10,
     });
   };
-  const stateChangeInk = () => {
+  const stateChangeInk = (e: React.ChangeEvent<HTMLInputElement>) => {
     // if (qty <= 0) return 10;
+    if (creationForm.dropChance <= 0) return 0;
     setCreationForm({
       ...creationForm,
       dropChance: creationForm.dropChance - 10,
@@ -192,8 +193,8 @@ export default () => {
       setLootboxes(x);
       console.log('lootboxes', x);
     });
-    // setCreationMessageData(MessageData);
-    // console.log(MessageData);
+    setCreationMessageData(MessageData);
+    console.log(MessageData);
     // console.log(creationForm);
   };
 
@@ -435,8 +436,8 @@ export default () => {
             <StatisticsCode
               creationForm={creationForm}
               onCreationFormUpdate={(x) => setCreationForm(x)}
-              // setCreationMessageData={(x: any) => setCreationMessageData(x)}
-              // MessageData={MessageData}
+              setCreationMessageData={(x: any) => setCreationMessageData(x)}
+              MessageData={MessageData}
             />
           }
         />
