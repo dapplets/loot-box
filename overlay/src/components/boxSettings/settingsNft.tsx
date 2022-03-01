@@ -146,8 +146,8 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                 max="100"
                 min="0"
                 // onClick={() => onFormChange('dropChance', 'number')}
-                onChange={(e) => onFormChange('dropChance', e.target.value)}
-                value={creationForm.dropChance ?? ''}
+                onChange={onFormChange('dropChance', 'string')}
+                value={creationForm.dropChance || ''}
                 pattern="^\d{1,2}|100$"
               />
             </div>
