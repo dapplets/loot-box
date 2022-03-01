@@ -49,7 +49,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
   };
   const MessVal = MessageData[0].boxMessage;
 
-  console.log(MessVal);
+  console.log(MessageData);
 
   return (
     <div className={styles.wrapper}>
@@ -68,7 +68,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         <div className={styles.boxMessage}>
           <LabelSettings title="Box Message" />
           <TextArea
-            value={MessageData.map((x: any) => x.boxMessage)}
+            value={MessageData.boxMessage ?? ''}
             onChange={(e) => changeHandlerMessage('boxMessage', e.target.value)}
             // onChange={onChange}
             placeholder="Write here a message for your followers "
