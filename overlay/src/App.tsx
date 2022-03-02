@@ -44,7 +44,7 @@ const dappletApi = new GeneralBridge<IDappletApi>();
 // const IMG = [Box1, Box2, Box3, Box4];
 const EMPTY_FORM: Lootbox = {
   name: '',
-  dropChance: 20 ?? ``,
+  dropChance: 20,
   ftContentItems: [],
   nftContentItems: [],
   nearContentItems: [],

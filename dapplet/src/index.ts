@@ -76,6 +76,7 @@ export default class TwitterFeature {
             replace: 'lootbox.org',
             exec: async (_, me) => {
               await this.getClaim(ctx);
+
               me.state = 'ANOTHER';
 
               // console.log(this._overlay);
@@ -83,7 +84,7 @@ export default class TwitterFeature {
             },
           },
           ANOTHER: {
-            text: '5000 NEAR',
+            text: `5000 near`,
             img: emptyBox,
             replace: 'lootbox.org',
           },
@@ -105,6 +106,7 @@ export default class TwitterFeature {
       const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
       // const status = await this._api.claimLootbox(BoxesId as any, 'dapplets_lootbox.testnet');
       // console.log(status);
+
       console.log(claimLoot, 'claimLoot');
     } catch {}
   }

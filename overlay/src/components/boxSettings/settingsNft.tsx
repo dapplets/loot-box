@@ -79,6 +79,8 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
     e,
   ) => {
+    console.log({ e });
+
     if (type === 'string') {
       (creationForm as any)[prop] = e.target.value;
     } else {
