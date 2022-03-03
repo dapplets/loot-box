@@ -24,6 +24,7 @@ import { DropChance } from '../atoms/DropChance';
 import { Lootbox, NftContentItem } from '../../../../common/interfaces';
 
 import { ChildComponent } from './childComponent';
+import { Test } from '../atoms/test';
 
 export interface BoxSettingsProps {
   children?: ReactNode;
@@ -140,6 +141,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
             <div className={styles.dropChance_nft}>
               <LabelSettings title="Drop Chance" />
+              <Test />
               <DropChance
                 stateChangeDek={stateChangeDek}
                 stateChangeInk={stateChangeInk}

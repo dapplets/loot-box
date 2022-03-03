@@ -12,6 +12,7 @@ import React, {
   ChangeEventHandler,
   useMemo,
   useEffect,
+  BaseSyntheticEvent,
 } from 'react';
 import { useToggle } from '../../../hooks/useToggle';
 import { InputPanel, InputProps } from '../Input';
@@ -47,32 +48,77 @@ export const Test: FC<TestProps> = (props: TestProps) => {
   // The quantity string the user is editing
   const [qtyString, setQtyString] = useState(String(qty));
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // Always update the string
-    setQtyString(e.target.value);
-    // Is it a valid positive number?
-    e.target.value = e.target.value.trim();
-    const value = e.target.value ? +e.target.value : NaN;
-    if (isNaN(value) || value <= 0) {
-      // No, our quantity is 1 (even though the string may
-      // not be)
-      setQty(1);
-    } else {
-      // Yes, use it
-      setQty(value);
-    }
-  };
+  const [value, setValue] = React.useState(0);
+  useEffect(() => {
+    console.log({ value });
+  });
 
   // Just for demo purposes:
   // console.log(`qty = ${qty}, qtyString = ${JSON.stringify(qtyString)}`);
 
   return (
+    <div className="App">
+      <Form value={value} setValue={setValue} />
+    </div>
+  );
+};
+interface SomeInputProps {
+  _value: any;
+  _onValueChange: any;
+}
+const SomeInput: FC<SomeInputProps> = (props: SomeInputProps) => {
+  const { _value = '0', _onValueChange = () => {} } = props;
+  const valueToShow = useMemo(
+    () => () => {
+      `${_value}%`;
+    },
+    [_value],
+  );
+  //    useMemo(() => (${_value}%), [_value])
+  //  ({ _value = '0', _onValueChange = () => {} }:props)
+  return (
     <input
-      placeholder="Please provide a number > 0"
-      pattern="^[0-9]\d*$"
-      type="text"
-      value={qtyString}
-      onChange={handleChange}
+      type={'string'}
+      onChange={(e: any) => {
+        const { data, inputType } = e.nativeEvent;
+        console.log({ data, inputType, e });
+        switch (inputType) {
+          case 'insertText':
+            if (isNaN(+data) === false && data !== ' ') {
+              const newValue = _value === '0' ? data : _value + data;
+              if (+newValue > 100) _onValueChange('100');
+              else _onValueChange(newValue);
+            }
+            break;
+          case 'deleteContentBackward':
+            const newValue = _value.slice(0, -1);
+            if (newValue.length === 0) _onValueChange('0');
+            else _onValueChange(newValue);
+            break;
+
+          default:
+            break;
+        }
+      }}
+      value={`${_value}%`}
     />
+  );
+};
+
+interface FormProps {
+  value: any;
+  setValue: any;
+}
+const Form: FC<FormProps> = (props: FormProps) => {
+  const { value, setValue } = props;
+  return (
+    <>
+      <SomeInput
+        _value={`${value as string}`}
+        _onValueChange={(newValue: any) => setValue(+newValue)}
+      />
+      <button onClick={() => setValue(value - 1 < 0 ? 0 : value - 1)}>-</button>
+      <button onClick={() => setValue(value + 1 > 100 ? 100 : value + 1)}>+</button>
+    </>
   );
 };
