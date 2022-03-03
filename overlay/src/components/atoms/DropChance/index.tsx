@@ -5,6 +5,7 @@ import React, {
   ButtonHTMLAttributes,
   InputHTMLAttributes,
   ChangeEventHandler,
+  useMemo,
 } from 'react';
 import styles from './DropChance.module.scss';
 import cn from 'classnames';
@@ -16,68 +17,67 @@ export interface DropChanceProps
   prop?: string;
   className?: string;
   onSubmit?: () => void;
-  value?: string | number | string[];
+
   placeholder?: string;
   type: string;
   max: string | number;
   min: string | number;
-  stateChangeDek: any;
-  stateChangeInk: any;
-  // qty: any;
+  _value: any;
+  _onValueChange: any;
+  value: any;
+  setValue: any;
 }
 
 export const DropChance: FC<DropChanceProps> = (props) => {
-  const {
-    // prop,
-    // className,
-    max,
-    min,
-    // onSubmit,
-    value,
-    // placeholder,
-    type,
-    onChange,
-    onClick,
-    // ...otherProps
-    stateChangeDek,
-    stateChangeInk,
-    // qty,
-  } = props;
+  const { max, min, _value = '20', _onValueChange = () => {}, value, setValue, type } = props;
 
-  // ToDo: remove state and use the state from App.tsx
-  // const [qty, setQty] = useState(20);
-  // const stateChangeDek = () => {
-  //   if (qty >= 100) return 0;
-  //   setQty(qty + 10);
-  // };
-  // const stateChangeInk = () => {
-  //   if (qty <= 0) return 10;
-  //   setQty(qty - 10);
-  // };
-  const handleSubmit: ChangeEventHandler<HTMLInputElement> = (event) => {
-    event.preventDefault();
-    const { name, value } = event.currentTarget;
-  };
-  // console.log(qty);
+  const valueToShow = useMemo(
+    () => () => {
+      `${_value}%`;
+    },
+    [_value],
+  );
 
   return (
     <div className={cn(styles.inputPanel)}>
       <input
         // onSubmit={handleSubmit}
         type={type}
-        value={value + '%'} // ToDo: + '%'
-        // defaultValue={prop}
-        onChange={onChange} // ToDo: remove '%'
-        // onClick={onClick}
+        value={`${_value}%`}
+        onChange={(e: any) => {
+          const { data, inputType } = e.nativeEvent;
+          console.log({ data, inputType, e });
+          switch (inputType) {
+            case 'insertText':
+              if (isNaN(+data) === false && data !== ' ') {
+                const newValue = _value === '0' ? data : _value + data;
+                if (+newValue > 100) _onValueChange('100');
+                else _onValueChange(newValue);
+              }
+              break;
+            case 'deleteContentBackward':
+              const newValue = _value.slice(0, -1);
+              if (newValue.length === 0) _onValueChange('0');
+              else _onValueChange(newValue);
+              break;
+
+            default:
+              break;
+          }
+        }}
         max={max}
         min={min}
         className={cn(styles.inputInfo)}
       />
       <div className={cn(styles.buttonPanel)}>
-        <button onClick={stateChangeInk} type="button" className={cn(styles.default)}>
+        <button
+          onClick={() => setValue(value - 1 < 0 ? 0 : value - 1)}
+          type="button"
+          className={cn(styles.default)}
+        >
           <img src={less} alt="" />
         </button>
-        <button onClick={stateChangeDek} type="button">
+        <button onClick={() => setValue(value + 1 > 100 ? 100 : value + 1)} type="button">
           <img src={more} alt="" />
         </button>
       </div>

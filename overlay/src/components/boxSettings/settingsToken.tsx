@@ -32,9 +32,6 @@ export interface BoxSettingsProps {
   dataType?: string;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
-  stateChangeDek: (x: any) => void;
-  stateChangeInk: (x: any) => void;
-  // qty: any;
 }
 const DEFAULT_NEAR_ITEM: NearContentItem = {
   tokenAmount: '',
@@ -51,18 +48,13 @@ const DEFAULT_FT_ITEM: FtContentItem = {
   dropAmountTo: '',
 };
 export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const {
-    creationForm,
-    onCreationFormUpdate,
-    stateChangeDek,
-    stateChangeInk,
-    //  qty
-  } = props;
+  const { creationForm, onCreationFormUpdate } = props;
   const [isShowDescription_tokenAmount, onShowDescription_tokenAmount] = useToggle(false);
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
 
   const [valueRadio, setValueRadioLoot] = useState('');
   const [valueRadioDropType, setValueRadioDropType] = useState('');
+  const [value, setValue] = React.useState(20);
 
   useEffect(() => {
     // ToDo: move to App.tsx
@@ -75,23 +67,12 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     console.log(creationForm);
   }, []);
 
-  const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
-    e,
-  ) => {
-    // console.log(111);
-
-    if (type === 'number') {
-      (creationForm as any)[prop] = Number(e.target.value);
-    } else {
-      (creationForm as any)[prop] = Number(e.target.value);
-      // stateChangeInk();
-    }
-    // console.log(222);
-
-    // creationForm.dropChance = qty;
+  useEffect(() => {
+    // onCreationFormUpdate((creationForm.dropChance = value));
+    creationForm.dropChance = value;
     onCreationFormUpdate(creationForm);
-    // console.log(333);
-  };
+    console.log({ value });
+  });
 
   const onChangeRadioLoot: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setValueRadioLoot(e.target.value);
@@ -329,15 +310,13 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <LabelSettings title="Drop Chance" />
 
             <DropChance
-              stateChangeDek={stateChangeDek}
-              stateChangeInk={stateChangeInk}
-              // qty={qty + `%`}
               type="string"
               max="100"
               min="0"
-              // onClick={() => onFormChange('dropChance', 'number')}
-              onChange={onFormChange('dropChance', 'number')}
-              value={creationForm.dropChance}
+              _value={`${value}`}
+              _onValueChange={(newValue: any) => setValue(+newValue)}
+              value={value}
+              setValue={setValue}
               pattern="^\d{1,2}|100$"
             />
           </div>

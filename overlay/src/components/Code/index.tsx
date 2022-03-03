@@ -10,7 +10,8 @@ import { TextArea } from '../atoms/TextArea';
 import { Message } from '../atoms/Message';
 import { Lootbox } from '../../../../common/interfaces';
 import { MessageData } from '../../App';
-
+import { SomeInput } from '../atoms/test';
+import { Test } from '../atoms/test';
 export interface CodeProps {
   onChange?: () => void;
   onSubmit?: () => void;
@@ -60,13 +61,17 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
             // creationForm={creationForm}
             // onCreationFormUpdate={onCreationFormUpdate}
             value={creationForm.name ?? ''}
-            onChange={(e) => changeHandler('name', e.target.value)}
+            onChange={(e) => {
+              changeHandler('name', e.target.value);
+              console.log(e);
+            }}
             type="text"
             appearance="biggest"
           />
         </div>
         <div className={styles.boxMessage}>
           <LabelSettings title="Box Message" />
+          {/* <Test /> */}
           <TextArea
             value={MessageData.boxMessage ?? ''}
             onChange={(e) => changeHandlerMessage('boxMessage', e.target.value)}

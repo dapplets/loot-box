@@ -117,36 +117,15 @@ export default () => {
   const [creationForm, setCreationForm] = useState<Lootbox>(EMPTY_FORM);
   const [clicked, setClicked] = useState<number | null>(0);
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
-  // const [qty, setQty] = useState(20);
+
   const [loader, setLoader] = useState(false);
 
   // console.log('CREATE: -->', creationForm);
   const [creationMessageData, setCreationMessageData] = useState(MessageData);
-  // const [loading] = useState<ICtx>();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
-  //
-  const stateChangeDek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (creationForm.dropChance >= 100) return 0;
-    setCreationForm({
-      ...creationForm,
-      dropChance: creationForm.dropChance + 10,
-    });
-  };
-  const stateChangeInk = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // if (qty <= 0) return 10;
-    if (creationForm.dropChance <= 0) return 0;
-    setCreationForm({
-      ...creationForm,
-      dropChance: creationForm.dropChance - 10,
-    });
-  };
-
-  // const onAddChild = () => {
-  //   onCount(numChildren + 1);
-  // };
 
   useEffect(() => {
     dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
@@ -353,9 +332,6 @@ export default () => {
           path="/settings_token"
           element={
             <SettingsToken
-              stateChangeDek={stateChangeDek}
-              stateChangeInk={stateChangeInk}
-              // qty={qty}
               creationForm={creationForm}
               onCreationFormUpdate={(x) => setCreationForm(x)}
             />
@@ -365,9 +341,6 @@ export default () => {
           path="/settings_NFT"
           element={
             <SettingsNFT
-              stateChangeDek={stateChangeDek}
-              stateChangeInk={stateChangeInk}
-              // qty={qty}
               creationForm={creationForm}
               onCreationFormUpdate={(x) => setCreationForm(x)}
             />

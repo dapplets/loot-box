@@ -37,19 +37,21 @@ import './Test.module.scss';
 import classNames from 'classnames';
 import { Lootbox } from '../../../../../common/interfaces';
 import styles from './Test.module.scss';
+import { MessageData } from '../../../App';
 export interface TestProps {
+  MessageData?: any;
   // prop?: '20';
   // numChildren: number;
+  // creationForm?: Lootbox;
+  // onCreationFormUpdate?: (x: any) => void;
 }
 
 export const Test: FC<TestProps> = (props: TestProps) => {
-  // The actual quantity
-  const [qty, setQty] = useState(1);
-  // The quantity string the user is editing
-  const [qtyString, setQtyString] = useState(String(qty));
+  const { MessageData } = props;
 
   const [value, setValue] = React.useState(0);
   useEffect(() => {
+    // onCreationFormUpdate((creationForm.dropChance = value));
     console.log({ value });
   });
 
@@ -58,16 +60,23 @@ export const Test: FC<TestProps> = (props: TestProps) => {
 
   return (
     <div className="App">
-      <Form value={value} setValue={setValue} />
+      <SomeInput
+        _value={`${MessageData.boxMessage}`}
+        _onValueChange={(newValue: any) => setValue(+newValue)}
+        value={value}
+        setValue={setValue}
+      />
     </div>
   );
 };
 interface SomeInputProps {
   _value: any;
   _onValueChange: any;
+  value: any;
+  setValue: any;
 }
-const SomeInput: FC<SomeInputProps> = (props: SomeInputProps) => {
-  const { _value = '0', _onValueChange = () => {} } = props;
+export const SomeInput: FC<SomeInputProps> = (props: SomeInputProps) => {
+  const { _value = '0', _onValueChange = () => {}, value, setValue } = props;
   const valueToShow = useMemo(
     () => () => {
       `${_value}%`;
@@ -77,48 +86,51 @@ const SomeInput: FC<SomeInputProps> = (props: SomeInputProps) => {
   //    useMemo(() => (${_value}%), [_value])
   //  ({ _value = '0', _onValueChange = () => {} }:props)
   return (
-    <input
-      type={'string'}
-      onChange={(e: any) => {
-        const { data, inputType } = e.nativeEvent;
-        console.log({ data, inputType, e });
-        switch (inputType) {
-          case 'insertText':
-            if (isNaN(+data) === false && data !== ' ') {
-              const newValue = _value === '0' ? data : _value + data;
-              if (+newValue > 100) _onValueChange('100');
-              else _onValueChange(newValue);
-            }
-            break;
-          case 'deleteContentBackward':
-            const newValue = _value.slice(0, -1);
-            if (newValue.length === 0) _onValueChange('0');
-            else _onValueChange(newValue);
-            break;
-
-          default:
-            break;
-        }
-      }}
-      value={`${_value}%`}
-    />
-  );
-};
-
-interface FormProps {
-  value: any;
-  setValue: any;
-}
-const Form: FC<FormProps> = (props: FormProps) => {
-  const { value, setValue } = props;
-  return (
     <>
-      <SomeInput
-        _value={`${value as string}`}
-        _onValueChange={(newValue: any) => setValue(+newValue)}
+      <input
+        type={'string'}
+        onChange={(e: any) => {
+          const { data, inputType } = e.nativeEvent;
+          console.log({ data, inputType, e });
+          switch (inputType) {
+            case 'insertText':
+              if (isNaN(+data) === false && data !== ' ') {
+                const newValue = _value === '0' ? data : _value + data;
+                if (+newValue > 100) _onValueChange('100');
+                else _onValueChange(newValue);
+              }
+              break;
+            case 'deleteContentBackward':
+              const newValue = _value.slice(0, -1);
+              if (newValue.length === 0) _onValueChange('0');
+              else _onValueChange(newValue);
+              break;
+
+            default:
+              break;
+          }
+        }}
+        value={`${_value}%`}
       />
       <button onClick={() => setValue(value - 1 < 0 ? 0 : value - 1)}>-</button>
       <button onClick={() => setValue(value + 1 > 100 ? 100 : value + 1)}>+</button>
     </>
   );
 };
+
+// interface FormProps {
+//   value: any;
+//   setValue: any;
+// }
+// const Form: FC<FormProps> = (props: FormProps) => {
+//   const { value, setValue } = props;
+//   return (
+//     <>
+//       <SomeInput
+//         _value={`${value as string}`}
+//         _onValueChange={(newValue: any) => setValue(+newValue)}
+//       />
+
+//     </>
+//   );
+// };

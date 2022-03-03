@@ -25,6 +25,7 @@ import { Lootbox, NftContentItem } from '../../../../common/interfaces';
 
 import { ChildComponent } from './childComponent';
 import { Test } from '../atoms/test';
+import { SomeInput } from '../atoms/test';
 
 export interface BoxSettingsProps {
   children?: ReactNode;
@@ -33,8 +34,7 @@ export interface BoxSettingsProps {
   dataType?: string;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
-  stateChangeDek: any;
-  stateChangeInk: any;
+
   // qty: any;
 }
 
@@ -48,12 +48,11 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const {
     creationForm,
     onCreationFormUpdate,
-    stateChangeDek,
-    stateChangeInk,
+
     //  qty
   } = props;
-  const [disable, setDisable] = useState(false);
-
+  // const [disable, setDisable] = useState(false);
+  const [value, setValue] = React.useState(20);
   useEffect(() => {
     // ToDo: move to App.tsx
     // ToDo: how to get rid of object coping?
@@ -61,9 +60,16 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     newForm.nftContentItems = [DEFAULT_NFT_ITEM];
     newForm.nearContentItems = [];
     newForm.ftContentItems = [];
+    newForm.dropChance = value;
     onCreationFormUpdate(newForm);
     console.log(creationForm);
   }, []);
+  useEffect(() => {
+    // onCreationFormUpdate((creationForm.dropChance = value));
+    creationForm.dropChance = value;
+    onCreationFormUpdate(creationForm);
+    console.log({ value });
+  });
 
   const addButtonClickHandler = () => {
     const newForm = Object.assign({}, creationForm);
@@ -75,20 +81,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     const newForm = Object.assign({}, creationForm);
     newForm.nftContentItems.splice(id, 1);
     onCreationFormUpdate(newForm);
-  };
-
-  const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
-    e,
-  ) => {
-    console.log({ e });
-
-    if (type === 'string') {
-      (creationForm as any)[prop] = e.target.value;
-    } else {
-      (creationForm as any)[prop] = e.target.value;
-    }
-
-    onCreationFormUpdate(creationForm);
   };
 
   const nftUpdatedHandler = (id: number, nft: NftContentItem) => {
@@ -141,17 +133,21 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
             <div className={styles.dropChance_nft}>
               <LabelSettings title="Drop Chance" />
-              <Test />
+              {/* <Test /> */}
+              {/* <SomeInput
+                _value={`${value}`}
+                _onValueChange={(newValue: any) => setValue(+newValue)}
+                value={value}
+                setValue={setValue}
+              /> */}
               <DropChance
-                stateChangeDek={stateChangeDek}
-                stateChangeInk={stateChangeInk}
-                // qty={qty + `%`}
                 type="string"
                 max="100"
                 min="0"
-                // onClick={() => onFormChange('dropChance', 'number')}
-                onChange={onFormChange('dropChance', 'string')}
-                value={creationForm.dropChance || ''}
+                _value={`${value}`}
+                _onValueChange={(newValue: any) => setValue(+newValue)}
+                value={value}
+                setValue={setValue}
                 pattern="^\d{1,2}|100$"
               />
             </div>
