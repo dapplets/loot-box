@@ -6,6 +6,7 @@ import React, {
   useState,
   ChangeEvent,
   ChangeEventHandler,
+  useEffect,
 } from 'react';
 import styles from './StatisticsNear.module.scss';
 import cn from 'classnames';
@@ -153,7 +154,11 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
     }
     setCreationMessageData(MessageData);
   };
-
+  const [value, setValue] = React.useState(MessageData.boxMessage);
+  useEffect(() => {
+    // onCreationFormUpdate((creationForm.dropChance = value));
+    console.log({ value });
+  });
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.titleLinks)}>
@@ -182,11 +187,15 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
         </div>
       </div>
       <Code
+        _value={value}
+        _onValueChange={(newValue: any) => setValue(newValue)}
+        value={value}
+        setValue={setValue}
         onNameUpdated={() => onFormChange('name', 'string')}
         creationForm={creationForm}
         onCreationFormUpdate={onCreationFormUpdate}
-        setCreationMessageData={setCreationMessageData}
-        onMessageUpdated={() => onMessageChange}
+        setCreationMessageData={(MessageData.boxMessage = value)}
+        onMessageUpdated={(MessageData.boxMessage = value)}
         MessageData={MessageData}
       />
       {/* <Winner /> <Statistics /> */}

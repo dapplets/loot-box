@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useMemo } from 'react';
 import styles from './Code.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
@@ -22,6 +22,11 @@ export interface CodeProps {
   setCreationMessageData: (x: any) => void;
   MessageData: any;
   onMessageUpdated: (x: any) => void;
+  // --
+  _value: any;
+  _onValueChange: any;
+  value: any;
+  setValue: any;
 }
 export const Code: FC<CodeProps> = (props: CodeProps) => {
   const {
@@ -32,23 +37,25 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
     setCreationMessageData,
     MessageData,
     onMessageUpdated,
+    // --
+    _value,
+    _onValueChange = () => {},
+    value,
+    setValue,
   } = props;
-  const [value, setValue] = useState('');
-  const onChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    setValue(e.target.value);
-  };
+  // const [value, setValue] = useState('');
+  const valueToShow = useMemo(
+    () => () => {
+      _value;
+    },
+    [_value],
+  );
+
   const changeHandler = (name: keyof Lootbox, value: any) => {
     const newName = Object.assign({}, NameContentItem);
     (newName as any)[name] = value;
     onNameUpdated(newName);
   };
-  const changeHandlerMessage = (name: keyof any, value: any) => {
-    const newMess = Object.assign({}, MessageData);
-    (newMess as any)[name] = value;
-    onMessageUpdated(newMess);
-    console.log(newMess);
-  };
-  const MessVal = MessageData[0].boxMessage;
 
   console.log(MessageData);
 
@@ -57,6 +64,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
       <div className={cn(styles.code)}>
         <div className={styles.boxName}>
           <LabelSettings title="Box name" />
+
           <InputPanel
             // creationForm={creationForm}
             // onCreationFormUpdate={onCreationFormUpdate}
@@ -73,9 +81,28 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
           <LabelSettings title="Box Message" />
           {/* <Test /> */}
           <TextArea
-            value={MessageData.boxMessage ?? ''}
-            onChange={(e) => changeHandlerMessage('boxMessage', e.target.value)}
-            // onChange={onChange}
+            onChange={(e: any) => {
+              const { data, inputType } = e.nativeEvent;
+              console.log({ data, inputType, e });
+              switch (inputType) {
+                case 'insertText':
+                  if (data !== null && data !== undefined) {
+                    const newValue = _value === ' ' ? data : _value + data;
+
+                    _onValueChange(newValue);
+                  }
+                  break;
+                case 'deleteContentBackward':
+                  const newValue = _value.slice(0, -1);
+                  if (newValue.length === 0) _onValueChange('');
+                  else _onValueChange(newValue);
+                  break;
+
+                default:
+                  break;
+              }
+            }}
+            value={_value}
             placeholder="Write here a message for your followers "
           />
         </div>
