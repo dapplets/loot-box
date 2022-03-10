@@ -3,6 +3,9 @@ import EXAMPLE_IMG from './icons/near_dapplet_icon.svg';
 import { DappletApi } from './api';
 import emptyBox from './icons/emptyBox.png';
 import fullBox from './icons/FullBox.png';
+import BigBox from './icons/box.png';
+import boxDef from './icons/box.gif';
+
 import { LootboxClaimStatus } from '../../common/interfaces';
 
 @Injectable
@@ -40,26 +43,6 @@ export default class TwitterFeature {
           getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
           claimLootbox: this._api.claimLootbox.bind(this._api),
         });
-      // .listen({
-      //   getBoxesByAccount: async () => {
-      //     try {
-      //       const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-      //       this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-      //       // console.log(wallet.accountId);
-      //       const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
-      //       const BoxesId = await Boxes.map((item, i) => item.id);
-      //       // console.log(BoxesId, 'BoxesId');
-      //       const ClaimStatus = await this._api.getLootboxClaimStatus(
-      //         BoxesId as any,
-      //         wallet.accountId,
-      //       );
-      //       console.log(ClaimStatus, 'ClaimStatus');
-      //       const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
-
-      //       console.log(claimLoot, 'claimLoot');
-      //     } catch {}
-      //   },
-      // });
     }
 
     Core.onAction(() => this.openOverlay());
@@ -75,16 +58,21 @@ export default class TwitterFeature {
             hidden: false,
             replace: 'lootbox.org',
             exec: async (_, me) => {
-              await this.getClaim(ctx);
-
-              me.state = 'ANOTHER';
-
-              // console.log(this._overlay);
-              // me.hidden = true;
+              await this.getClaim(me);
             },
+          },
+          ANOTHERDef: {
+            // text: `5000 near`,
+            img: boxDef,
+            replace: 'lootbox.org',
           },
           ANOTHER: {
             text: `5000 near`,
+            img: BigBox,
+            replace: 'lootbox.org',
+          },
+          ANOTHER2: {
+            text: `empty`,
             img: emptyBox,
             replace: 'lootbox.org',
           },
@@ -95,6 +83,7 @@ export default class TwitterFeature {
   async getClaim(props?: any): Promise<void> {
     // this._overlay.listen(console.log('lalla'));
     try {
+      props.state = 'ANOTHERDef';
       const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
       this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
       // console.log(wallet.accountId);
@@ -106,8 +95,14 @@ export default class TwitterFeature {
       const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
       // const status = await this._api.claimLootbox(BoxesId as any, 'dapplets_lootbox.testnet');
       // console.log(status);
+      if (claimLoot === 2) {
+        props.state = 'ANOTHER';
+      } else {
+        props.state = 'ANOTHER2';
+      }
 
       console.log(claimLoot, 'claimLoot');
+      this.adapter;
     } catch {}
   }
   async openOverlay(props?: any): Promise<void> {

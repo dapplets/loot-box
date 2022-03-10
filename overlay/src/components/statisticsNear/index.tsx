@@ -155,6 +155,7 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
     setCreationMessageData(MessageData);
   };
   const [value, setValue] = React.useState(MessageData.boxMessage);
+  const [valueName, setValueName] = React.useState(creationForm.name);
   useEffect(() => {
     // onCreationFormUpdate((creationForm.dropChance = value));
     console.log({ value });
@@ -191,9 +192,15 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
         _onValueChange={(newValue: any) => setValue(newValue)}
         value={value}
         setValue={setValue}
+        //
+        _valueName={valueName}
+        _onValueChangeName={(newValue: any) => setValueName(newValue)}
+        valueName={valueName}
+        setValueName={setValueName}
+        //
         onNameUpdated={() => onFormChange('name', 'string')}
         creationForm={creationForm}
-        onCreationFormUpdate={onCreationFormUpdate}
+        onCreationFormUpdate={() => (creationForm.name = valueName)}
         setCreationMessageData={(MessageData.boxMessage = value)}
         onMessageUpdated={(MessageData.boxMessage = value)}
         MessageData={MessageData}

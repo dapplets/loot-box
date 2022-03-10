@@ -27,6 +27,12 @@ export interface CodeProps {
   _onValueChange: any;
   value: any;
   setValue: any;
+
+  // ==
+  _valueName: any;
+  _onValueChangeName: any;
+  valueName: any;
+  setValueName: any;
 }
 export const Code: FC<CodeProps> = (props: CodeProps) => {
   const {
@@ -42,8 +48,14 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
     _onValueChange = () => {},
     value,
     setValue,
+
+    // ==
+    _valueName,
+    _onValueChangeName,
+    valueName,
+    setValueName,
   } = props;
-  // const [value, setValue] = useState('');
+
   const valueToShow = useMemo(
     () => () => {
       _value;
@@ -51,11 +63,12 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
     [_value],
   );
 
-  const changeHandler = (name: keyof Lootbox, value: any) => {
-    const newName = Object.assign({}, NameContentItem);
-    (newName as any)[name] = value;
-    onNameUpdated(newName);
-  };
+  const valueToShowName = useMemo(
+    () => () => {
+      _valueName;
+    },
+    [_valueName],
+  );
 
   console.log(MessageData);
 
@@ -68,10 +81,28 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
           <InputPanel
             // creationForm={creationForm}
             // onCreationFormUpdate={onCreationFormUpdate}
-            value={creationForm.name ?? ''}
-            onChange={(e) => {
-              changeHandler('name', e.target.value);
-              console.log(e);
+            value={_valueName}
+            onChange={(e: any) => {
+              e.stopPropagation();
+              const { data, inputType } = e.nativeEvent;
+              console.log({ data, inputType, e });
+              switch (inputType) {
+                case 'insertText':
+                  if (data !== null && data !== undefined) {
+                    const newValue = _valueName === ' ' ? data : _valueName + data;
+
+                    _onValueChangeName(newValue);
+                  }
+                  break;
+                case 'deleteContentBackward':
+                  const newValue = _valueName.slice(0, -1);
+                  if (newValue.length === 0) _onValueChangeName('');
+                  else _onValueChangeName(newValue);
+                  break;
+
+                default:
+                  break;
+              }
             }}
             type="text"
             appearance="biggest"

@@ -179,16 +179,20 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Fixed"
                   name="dropAmount"
                   id="3_Drop"
-                  // defaultChecked={true}
+                  defaultChecked={true}
                   // onChange={onChangeRadioDropType}
-                  checked={DEFAULT_FT_ITEM.dropType === 'fixed'}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      changeHandlerFT('dropType', 'fixed');
-                      // onChangeRadioDropType;
-                    }
-                    onChangeRadioDropType(e);
-                  }}
+                  // checked={DEFAULT_FT_ITEM.dropType === 'fixed'}
+                  onChange={
+                    onShowDescription_dropAmount
+
+                    //   (e) => {
+                    //   if (e.target.checked) {
+                    //     changeHandlerFT('dropType', 'fixed');
+                    //     // onChangeRadioDropType;
+                    //   }
+                    //   // onChangeRadioDropType(e);
+                    // }
+                  }
                 />
                 <RadioButton
                   value="Variable"
@@ -196,14 +200,17 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   name="dropAmount"
                   id="4_Drop"
                   // onChange={onChangeRadioDropType}
-                  checked={DEFAULT_FT_ITEM.dropType === 'variable'}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      changeHandlerFT('dropType', 'variable');
-                      // onChangeRadioDropType;
-                    }
-                    onChangeRadioDropType(e);
-                  }}
+                  // checked={DEFAULT_FT_ITEM.dropType === 'variable'}
+                  onChange={
+                    onShowDescription_dropAmount
+                    //   (e) => {
+                    //   if (e.target.checked) {
+                    //     changeHandlerFT('dropType', 'variable');
+                    //     // onChangeRadioDropType;
+                    //   }
+                    //   // onChangeRadioDropType(e);
+                    // }
+                  }
                 />
               </div>
               {(isShowDescription_dropAmount && (
@@ -248,29 +255,37 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Fixed"
                   name="dropAmount"
                   id="3_Drop"
-                  // defaultChecked={true}
-                  checked={DEFAULT_NEAR_ITEM.dropType === 'fixed'}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      changeHandler('dropType', 'fixed');
-                      // onChangeRadioDropType;
-                    }
-                    onChangeRadioDropType(e);
-                  }}
+                  defaultChecked={true}
+                  // checked={DEFAULT_NEAR_ITEM.dropType === 'fixed'}
+                  onChange={
+                    onShowDescription_dropAmount
+
+                    //   (e) => {
+                    //   if (e.target.checked) {
+                    //     changeHandler('dropType', 'fixed');
+                    //     // onChangeRadioDropType;
+                    //   }
+                    //   // onChangeRadioDropType(e);
+                    // }
+                  }
                 />
                 <RadioButton
                   value="Variable"
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
-                  checked={DEFAULT_NEAR_ITEM.dropType === 'variable'}
+                  // checked={DEFAULT_NEAR_ITEM.dropType === 'variable'}
                   // onChange={onChangeRadioDropType}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      changeHandler('dropType', 'variable');
-                    }
-                    onChangeRadioDropType(e);
-                  }}
+                  onChange={
+                    onShowDescription_dropAmount
+
+                    //   (e) => {
+                    //   if (e.target.checked) {
+                    //     changeHandler('dropType', 'variable');
+                    //   }
+                    //   // onChangeRadioDropType(e);
+                    // }
+                  }
                 />
               </div>
               {(isShowDescription_dropAmount && (
