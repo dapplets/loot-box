@@ -81,20 +81,18 @@ export default class TwitterFeature {
     });
   }
   async getClaim(props?: any): Promise<void> {
-    // this._overlay.listen(console.log('lalla'));
     try {
       props.state = 'ANOTHERDef';
       const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
       this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-      // console.log(wallet.accountId);
+
       const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
       const BoxesId = await Boxes.map((item, i) => item.id);
-      // console.log(BoxesId, 'BoxesId');
+
       const ClaimStatus = await this._api.getLootboxClaimStatus(BoxesId as any, wallet.accountId);
       console.log(ClaimStatus, 'ClaimStatus');
       const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
-      // const status = await this._api.claimLootbox(BoxesId as any, 'dapplets_lootbox.testnet');
-      // console.log(status);
+
       if (claimLoot === 2) {
         props.state = 'ANOTHER';
       } else {
