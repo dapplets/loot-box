@@ -21,16 +21,10 @@ export interface FillBoxProps {
   imgVal: string;
   onClick?: () => void;
   price: any;
-  // onDoneClick: () => void;
+  onDoneClick: () => void;
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
-  const {
-    onSetId,
-    imgVal,
-    onClick,
-    price,
-    // onDoneClick
-  } = props;
+  const { onSetId, imgVal, onClick, price, onDoneClick } = props;
   const [id, setId] = useState(0);
 
   // const {imageBox} = props
@@ -83,7 +77,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         <div className={cn(styles.payBtn)}>
           <Link to="/deploy_your_box">
             <ButtonPay
-              // onClick={onDoneClick}
+              onClick={onDoneClick}
               styleBtn="default"
               title={`PAY ${price.feeAmount + price.gasAmount + price.fillAmount} NEAR`}
             />

@@ -23,10 +23,9 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
   return (
     <div className={cn(styles.wrapper)} onClick={onClick}>
       <Link to="/statistics">
-        {' '}
         <div className={cn(styles.img)}>
           <img src={imageBox} />
-        </div>{' '}
+        </div>
       </Link>
       <div className={cn(styles.description)}>
         <span className={cn(styles.Blocklink)}>

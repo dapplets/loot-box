@@ -25,7 +25,6 @@ import { Lootbox, NftContentItem } from '../../../../common/interfaces';
 
 import { ChildComponent } from './childComponent';
 import { Test } from '../atoms/test';
-import { SomeInput } from '../atoms/test';
 
 export interface BoxSettingsProps {
   children?: ReactNode;
@@ -62,6 +61,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     newForm.ftContentItems = [];
     newForm.dropChance = value;
     onCreationFormUpdate(newForm);
+
     console.log(creationForm);
   }, []);
   useEffect(() => {
@@ -134,20 +134,15 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             <div className={styles.dropChance_nft}>
               <LabelSettings title="Drop Chance" />
               {/* <Test /> */}
-              {/* <SomeInput
-                _value={`${value}`}
-                _onValueChange={(newValue: any) => setValue(+newValue)}
-                value={value}
-                setValue={setValue}
-              /> */}
+
               <DropChance
                 type="string"
-                max="100"
-                min="0"
-                _value={`${value}`}
-                _onValueChange={(newValue: any) => setValue(+newValue)}
-                value={value}
-                setValue={setValue}
+                maxValueDropChance="100"
+                minValueDropChance="0"
+                valueDropChance={`${value}`}
+                onValueDropChance={(newValue: any) => setValue(+newValue)}
+                valueButtonDropChance={value}
+                setValueButtonDropChance={setValue}
                 pattern="^\d{1,2}|100$"
               />
             </div>

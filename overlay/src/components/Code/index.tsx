@@ -10,7 +10,7 @@ import { TextArea } from '../atoms/TextArea';
 import { Message } from '../atoms/Message';
 import { Lootbox } from '../../../../common/interfaces';
 import { MessageData } from '../../App';
-import { SomeInput } from '../atoms/test';
+
 import { Test } from '../atoms/test';
 export interface CodeProps {
   onChange?: () => void;
@@ -140,8 +140,8 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         <div className={styles.lootboxCode}>
           <Message
             message={value}
-            link="https://lootbox.org/AfB8ad/
-Don’t see the Box?  https://lootbox.org/how-to/"
+            link={`https://lootbox.org/${creationForm.id}/
+Don’t see the Box?  https://lootbox.org/how-to/`}
             instruction="Gift box is made with LootBox Dapplet @lootbox by @dappletsproject. "
           />
         </div>

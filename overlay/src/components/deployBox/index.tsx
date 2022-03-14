@@ -36,7 +36,7 @@ export interface DeployBoxProps
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
   const {
     onChange,
-    onDoneClick,
+    // onDoneClick,
     creationForm,
     onCreationFormUpdate,
     setCreationMessageData,
@@ -99,7 +99,11 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       </div>
 
       <div className={cn(styles.navigation)}>
-        <Link to="/" className={cn(styles.link)} onClick={onDoneClick}>
+        <Link
+          to="/"
+          className={cn(styles.link)}
+          // onClick={onDoneClick}
+        >
           Done
         </Link>
       </div>

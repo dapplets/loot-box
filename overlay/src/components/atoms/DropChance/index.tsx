@@ -17,67 +17,82 @@ export interface DropChanceProps
   prop?: string;
   className?: string;
   onSubmit?: () => void;
-
   placeholder?: string;
   type: string;
-  max: string | number;
-  min: string | number;
-  _value: any;
-  _onValueChange: any;
-  value: any;
-  setValue: any;
+  maxValueDropChance: string | number;
+  minValueDropChance: string | number;
+  valueDropChance: any;
+  onValueDropChance: any;
+  valueButtonDropChance: any;
+  setValueButtonDropChance: any;
 }
 
 export const DropChance: FC<DropChanceProps> = (props) => {
-  const { max, min, _value = '20', _onValueChange = () => {}, value, setValue, type } = props;
+  const {
+    maxValueDropChance,
+    minValueDropChance,
+    valueDropChance = '20',
+    onValueDropChance = () => {},
+    valueButtonDropChance,
+    setValueButtonDropChance,
+    type,
+  } = props;
 
   const valueToShow = useMemo(
     () => () => {
-      `${_value}%`;
+      `${valueDropChance}%`;
     },
-    [_value],
+    [valueDropChance],
   );
 
   return (
     <div className={cn(styles.inputPanel)}>
       <input
-        // onSubmit={handleSubmit}
         type={type}
-        value={`${_value}%`}
+        value={`${valueDropChance}%`}
         onChange={(e: any) => {
           const { data, inputType } = e.nativeEvent;
           console.log({ data, inputType, e });
           switch (inputType) {
             case 'insertText':
               if (isNaN(+data) === false && data !== ' ') {
-                const newValue = _value === '0' ? data : _value + data;
-                if (+newValue > 100) _onValueChange('100');
-                else _onValueChange(newValue);
+                const newValue = valueDropChance === '0' ? data : valueDropChance + data;
+                if (+newValue > 100) onValueDropChance('100');
+                else onValueDropChance(newValue);
               }
               break;
             case 'deleteContentBackward':
-              const newValue = _value.slice(0, -1);
-              if (newValue.length === 0) _onValueChange('0');
-              else _onValueChange(newValue);
+              const newValue = valueDropChance.slice(0, -1);
+              if (newValue.length === 0) onValueDropChance('0');
+              else onValueDropChance(newValue);
               break;
 
             default:
               break;
           }
         }}
-        max={max}
-        min={min}
+        max={maxValueDropChance}
+        min={minValueDropChance}
         className={cn(styles.inputInfo)}
       />
       <div className={cn(styles.buttonPanel)}>
         <button
-          onClick={() => setValue(value - 1 < 0 ? 0 : value - 1)}
+          onClick={() =>
+            setValueButtonDropChance(valueButtonDropChance - 1 < 0 ? 0 : valueButtonDropChance - 1)
+          }
           type="button"
           className={cn(styles.default)}
         >
           <img src={less} alt="" />
         </button>
-        <button onClick={() => setValue(value + 1 > 100 ? 100 : value + 1)} type="button">
+        <button
+          onClick={() =>
+            setValueButtonDropChance(
+              valueButtonDropChance + 1 > 100 ? 100 : valueButtonDropChance + 1,
+            )
+          }
+          type="button"
+        >
           <img src={more} alt="" />
         </button>
       </div>

@@ -1,0 +1,110 @@
+@import '../../styles/color.variables.scss';
+@import '../../styles/null.scss';
+@import '../../styles/fonts.scss';
+
+.wrapper {
+  display: flex;
+  margin: 0 auto;
+  max-width: 1310px;
+
+  justify-content: center;
+  align-items: center;
+  // padding: 9px 0px 7.22px 0px;
+
+  @media (max-width: 1024px) {
+    max-width: 1024px;
+    margin: 0;
+    padding: 0px 0px 0px 0px;
+  }
+  @media (max-width: 600px) {
+    width: 320px;
+    margin: 0 auto;
+  }
+}
+// .content {
+//   width: 1920px;
+// }
+.blockFooter {
+  display: flex;
+  width: 100%;
+
+  justify-content: space-between;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    margin: 0;
+    padding: 0px 5.2% 0px 5.2%;
+  }
+  @media (min-width: 320px) and (max-width: 600px) {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0px 0px 0px;
+  }
+}
+
+.copyBlock {
+  display: flex;
+
+  align-items: center;
+
+  padding: 0px 0px 0px 10px;
+
+  font-family: Montserrat, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 149%;
+  color: #747376;
+}
+
+.linkBlock {
+  display: flex;
+  align-items: center;
+}
+.list {
+  display: flex;
+  width: 220px;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 20px 10px 20px 0px;
+
+  @media (max-width: 1024px) {
+    max-width: 220px;
+    flex: 1 1 auto;
+    padding: 0px 0px 0px 0px;
+  }
+}
+
+.listItem {
+}
+
+.link {
+  cursor: pointer;
+  position: relative;
+  svg {
+    width: 40px;
+  }
+  &:hover {
+    svg {
+      path {
+        fill: $MainGrey;
+      }
+    }
+  }
+  &:active {
+    svg {
+      path {
+        fill: $MainBlack;
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    svg {
+      width: 32px;
+    }
+  }
+}

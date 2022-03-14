@@ -103,28 +103,25 @@ export const MessageData = [
 export default () => {
   const [parsedCtx, setParsedCtx] = useState<ICtx>();
   const [nearAccount, setNearAccount] = useState<string>();
-  const [isOpen, onOpen] = useToggle(false);
-  const [value, setValue] = useState('');
-  const [img, setImg] = useState('');
-  // const [numChildren, onCount] = useState(0);
+  const [isOpenProfile, onOpenProfile] = useToggle(false);
+  const [valueLabel, setValueLabel] = useState('');
+  const [imgBox, setImgBox] = useState('');
   const [lootboxes, setLootboxes] = useState<Lootbox[]>([]);
-  // const [isOpen, openChange] = useState<ICtx>();
   const [winners, setWinners] = useState<LootboxWinner[]>([]);
   const [selectedLootboxId, setSelectedLootboxId] = useState<number | null>(null);
   const [stat, setStat] = useState<LootboxStat | null>(null);
 
   // TODO: come up with a better name
   const [creationForm, setCreationForm] = useState<Lootbox>(EMPTY_FORM);
-  const [clicked, setClicked] = useState<number | null>(0);
+  const [clickedBoxImg, setClickedBoxImg] = useState<number | null>(0);
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
-
   const [loader, setLoader] = useState(false);
 
   // console.log('CREATE: -->', creationForm);
   const [creationMessageData, setCreationMessageData] = useState(MessageData);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    setValueLabel(e.target.value);
   };
 
   useEffect(() => {
@@ -152,12 +149,9 @@ export default () => {
       });
   }, []);
 
-  //create message setter
-  // const messageSetter = (message: any) => {
-  //   setLoader(message);
-  // };
   const doneClickHandler = async () => {
     // show loader
+    console.log('done');
 
     setLoader(true);
     await dappletApi.createNewBox(creationForm).then((x) => {
@@ -173,7 +167,7 @@ export default () => {
       console.log('lootboxes', x);
     });
     setCreationMessageData(MessageData);
-    console.log(MessageData);
+    // console.log(MessageData);
     // console.log(creationForm);
   };
 
@@ -230,44 +224,37 @@ export default () => {
       });
   }, []);
 
-  // if (creationForm !== null) {
-  //   return <div>Loading</div>;
-  // }
-  // const [loader, setLoader] = useState('');
+  const handleLogIn = async () => {
+    const isWalletConnected = await dappletApi.isWalletConnected();
+    if (isWalletConnected) {
+      await dappletApi.disconnectWallet();
+    }
+    setNearAccount(undefined);
+  };
+  const handleLogInBtn = async () => {
+    const isWalletConnected = await dappletApi.isWalletConnected();
+    let accountName: string;
+    if (!isWalletConnected) {
+      accountName = await dappletApi.connectWallet();
+    } else {
+      accountName = await dappletApi.getCurrentNearAccount();
+    }
+    setNearAccount(accountName);
+  };
 
   return (
     <div className={cn(styles.app)}>
       <header style={{ justifyContent: nearAccount ? 'space-between' : 'center' }}>
         {!nearAccount ? (
-          <LogInButton
-            label="Log in "
-            onClick={async () => {
-              const isWalletConnected = await dappletApi.isWalletConnected();
-              let accountName: string;
-              if (!isWalletConnected) {
-                accountName = await dappletApi.connectWallet();
-              } else {
-                accountName = await dappletApi.getCurrentNearAccount();
-              }
-              setNearAccount(accountName);
-            }}
-          />
+          <LogInButton label="Log in " onClick={handleLogInBtn} />
         ) : (
           <>
             <Profile
               avatar={parsedCtx?.authorImg}
               hash={nearAccount}
-              onClick={async () => {
-                const isWalletConnected = await dappletApi.isWalletConnected();
-                if (isWalletConnected) {
-                  await dappletApi.disconnectWallet();
-                }
-                setNearAccount(undefined);
-
-                // console.log(useEffect);
-              }}
-              openChange={onOpen}
-              isOpen={isOpen}
+              onClick={handleLogIn}
+              openChange={onOpenProfile}
+              isOpenProfile={isOpenProfile}
             />
           </>
         )}
@@ -277,7 +264,7 @@ export default () => {
         <Route
           path="/"
           element={
-            <CreateNewBox imgVal={img} label={value}>
+            <CreateNewBox imgVal={imgBox} label={valueLabel}>
               {(loader && <div>Loading</div>) ||
                 lootboxes.map((item, index) => (
                   <ChildComponent
@@ -302,11 +289,10 @@ export default () => {
           path="/select_box"
           element={
             <SelectBox
-              setClicked={setClicked}
-              clicked={clicked}
+              setClicked={setClickedBoxImg}
+              clicked={clickedBoxImg}
               onChange_IMG={(x: string) => {
-                setImg(x);
-                // console.log(x, 'hello');
+                setImgBox(x);
               }}
               creationFormId={creationForm.pictureId}
               onCreationFormUpdate={(id: number) =>
@@ -318,7 +304,7 @@ export default () => {
             />
           }
         />
-        {/* <Route path="/box_settings_value" element={<BoxSettings />} /> */}
+
         <Route
           path="/box_settings_value"
           element={
@@ -348,49 +334,31 @@ export default () => {
         />
         <Route
           path="/fill_your_box"
-          element={
-            <FillBox
-              price={price}
-              imgVal={img}
-              // onDoneClick={doneClickHandler}
-            />
-          }
+          element={<FillBox price={price} imgVal={imgBox} onDoneClick={doneClickHandler} />}
         />
-        {/* <Route path="/winners" element={<StatisticsWinners />} /> */}
+
         <Route
           path="/fill_your_box_nft"
-          element={
-            <FillBox_Nft
-              price={price}
-              imgVal={img}
-              // onDoneClick={doneClickHandler}
-            />
-          }
+          element={<FillBox_Nft price={price} imgVal={imgBox} onDoneClick={doneClickHandler} />}
         />
         <Route
           path="/deploy_your_box"
           element={
-            <DeployBox
-              creationForm={creationForm}
-              onCreationFormUpdate={(x) => setCreationForm(x)}
-              onDoneClick={doneClickHandler}
-              onChange={onChange}
-              setCreationMessageData={(x: any) => setCreationMessageData(x)}
-              MessageData={MessageData}
-            />
+            (loader && <div>Loading</div>) || (
+              <DeployBox
+                creationForm={creationForm}
+                onCreationFormUpdate={(x) => setCreationForm(x)}
+                onDoneClick={doneClickHandler}
+                onChange={onChange}
+                setCreationMessageData={(x: any) => setCreationMessageData(x)}
+                MessageData={MessageData}
+              />
+            )
           }
         />
         <Route
           path="/statistics"
-          element={
-            (loader && <div>Loading</div>) || (
-              <StatisticsNear
-                // creationForm={creationForm}
-                // onCreationFormUpdate={(x) => setCreationForm(x)}
-                stat={stat}
-              />
-            )
-          }
+          element={(loader && <div>Loading</div>) || <StatisticsNear stat={stat} />}
         />
         <Route
           path="/winners"

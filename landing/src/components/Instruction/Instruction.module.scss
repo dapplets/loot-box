@@ -1,0 +1,374 @@
+@import '../../styles/color.variables.scss';
+@import '../../styles/null.scss';
+@import '../../styles/fonts.scss';
+
+.wrapper {
+  display: flex;
+  flex: 1 1 auto;
+
+  align-items: center;
+  flex-direction: column;
+  // width: 1600px;
+  // min-height: 100%;
+  min-height: 100vh;
+
+  margin: 0 auto;
+  // background: #e5e5e5;
+  background: rgba(255, 255, 255, 1);
+}
+.footer {
+  background: rgba(171, 171, 171, 0.5);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  max-width: 900px;
+  padding: 20px 0px 40px 0px;
+}
+
+// ====
+
+.start {
+}
+
+.titleInstruction {
+  font-family: Montserrat, sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 149%;
+  color: #131415;
+  padding: 0px 0px 20px 0px;
+}
+
+.list {
+  list-style-type: decimal !important;
+  padding: 0px 0px 20px 40px;
+}
+
+.item {
+  list-style-type: decimal !important;
+  font-family: Montserrat, sans-serif;
+
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 149%;
+
+  color: #131415;
+}
+
+.link {
+  color: #ff720d;
+  text-decoration: underline;
+  cursor: pointer;
+  &:hover {
+    color: $Primary;
+  }
+  &:hover {
+    color: $PrimaryHover;
+  }
+}
+
+.description {
+  display: block;
+  padding: 20px 0px 20px 0px;
+  font-family: Montserrat, sans-serif;
+
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 149%;
+  color: #444444;
+}
+
+// ====
+.installation {
+  display: flex;
+  flex-direction: column;
+  // flex: 1 1 auto;
+  padding: 20px 0px 0px 0px;
+}
+
+.itemText {
+  font-family: Montserrat, sans-serif;
+
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 149%;
+
+  color: #444444;
+}
+
+.dragDrop {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff url('../../img/instruction/instruction_bg.png');
+}
+
+.dragDropTitle {
+  display: flex;
+  max-width: 370px;
+  padding: 0px 0px 0px 40px;
+  font-family: Montserrat, sans-serif;
+
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 149%;
+
+  color: #444444;
+}
+
+.dragDropImg {
+  max-width: 460px;
+  padding: 0px 40px 0px 0px;
+  border-radius: 10px;
+}
+
+.loadUnpuck {
+  display: flex;
+  flex: 1 1 auto;
+  max-width: 436px;
+  padding: 0px 0px 0px 65px;
+}
+
+.downloads {
+  display: flex;
+  flex: 1 1 auto;
+  max-width: 436px;
+  padding: 0px 65px 0px 0px;
+}
+
+// =====
+
+.walletConnection {
+  padding: 60px 0px 0px 0px;
+}
+
+.titleWallet {
+  font-family: Montserrat, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 149%;
+
+  color: #131415;
+}
+
+.walletConnectionBlock {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  justify-content: space-between;
+  padding: 40px 0px;
+  margin: 0px 0px 10px 0px;
+  align-items: center;
+  background: #fff url('../../img/instruction/instruction_bg.png') 0px -15px no-repeat;
+  position: relative;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.block_1 {
+  &::before {
+    content: '01';
+    position: absolute;
+    bottom: 5%;
+    left: 4%;
+    width: 57px;
+    height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #444444;
+    font-family: Montserrat, sans-serif;
+
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 149%;
+    z-index: 2;
+    color: #ffffff;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 9%;
+    left: -110%;
+    width: 120%;
+    height: 4px;
+    background: #000;
+    z-index: 1;
+  }
+}
+.block_2 {
+  padding: 89px 0px 89px 0px;
+  &::before {
+    content: '02';
+    position: absolute;
+    bottom: 5%;
+    left: 4%;
+    width: 57px;
+    height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #444444;
+    font-family: Montserrat, sans-serif;
+
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 149%;
+    z-index: 2;
+    color: #ffffff;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 13%;
+    left: -110%;
+    width: 120%;
+    height: 4px;
+    background: #000;
+    z-index: 1;
+  }
+}
+.block_3 {
+  &::before {
+    content: '03';
+    position: absolute;
+    bottom: 5%;
+    left: 4%;
+    width: 57px;
+    height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #444444;
+    font-family: Montserrat, sans-serif;
+
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 149%;
+    z-index: 2;
+    color: #ffffff;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 9%;
+    left: -110%;
+    width: 120%;
+    height: 4px;
+    background: #000;
+    z-index: 1;
+  }
+}
+.block_4 {
+  &::before {
+    content: '04';
+    position: absolute;
+    bottom: 5%;
+    left: 4%;
+    width: 57px;
+    height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #444444;
+    font-family: Montserrat, sans-serif;
+
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 149%;
+    z-index: 2;
+    color: #ffffff;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 9.3%;
+    left: -110%;
+    width: 120%;
+    height: 4px;
+    background: #000;
+    z-index: 1;
+  }
+}
+.block_5 {
+  &::before {
+    content: '05';
+    position: absolute;
+    bottom: 5%;
+    left: 4%;
+    width: 57px;
+    height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #444444;
+    font-family: Montserrat, sans-serif;
+
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 149%;
+    z-index: 2;
+    color: #ffffff;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 9.3%;
+    left: -110%;
+    width: 120%;
+    height: 4px;
+    background: #000;
+    z-index: 1;
+  }
+}
+.block_6 {
+  &::before {
+    content: '06';
+    position: absolute;
+    bottom: 5%;
+    left: 4%;
+    width: 57px;
+    height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #444444;
+    font-family: Montserrat, sans-serif;
+
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 149%;
+    z-index: 2;
+    color: #ffffff;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 11%;
+    left: -110%;
+    width: 120%;
+    height: 4px;
+    background: #000;
+    z-index: 1;
+  }
+}
+
+// =====
+.accepting {
+  padding: 60px 0px 0px 0px;
+}
+
+.bg {
+}

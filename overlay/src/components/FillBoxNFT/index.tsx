@@ -20,15 +20,11 @@ export interface FillBoxProps_Nft {
   imgVal: string;
   // id_img?: any;
   price: any;
-  // onDoneClick: () => void;
+  onDoneClick: () => void;
 }
 export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   // const { onSetId, id_img } = props;
-  const {
-    imgVal,
-    price,
-    // onDoneClick
-  } = props;
+  const { imgVal, price, onDoneClick } = props;
   const [id, setId] = useState(0);
 
   // const {imageBox} = props
@@ -50,7 +46,7 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
           <div className={cn(styles.payBtn_block)}>
             <Link to="/deploy_your_box">
               <ButtonPay
-                // onClick={onDoneClick}
+                onClick={onDoneClick}
                 styleBtn="default"
                 title={`PAY ${[(price.gasAmount + price.feeAmount).toFixed(3)]} NEAR`}
               />

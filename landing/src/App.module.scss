@@ -1,0 +1,435 @@
+@import './styles/color.variables.scss';
+@import './styles/null.scss';
+@import './styles/fonts.scss';
+
+// .wrapper {
+//   overflow: hidden;
+//   min-height: 100%;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// .wrapperFullscreen {
+//   display: flex;
+//   min-height: 100vh;
+// }
+
+.wrapper {
+  display: flex;
+  flex: 1 1 auto;
+
+  align-items: center;
+  flex-direction: column;
+  // width: 1600px;
+  // min-height: 100%;
+  min-height: 100vh;
+
+  margin: 0 auto;
+  // padding: 3% 0%;
+  @media (max-width: 1024px) {
+    max-width: 1024px;
+    // margin: 0;
+
+    background: #fffeea url('./img/bg.svg') 50% 50% / cover no-repeat;
+  }
+
+  @media (max-width: 600px) {
+    max-width: 600px;
+
+    background: #fffeea url('./img/bg.svg') 50% 50% / cover no-repeat;
+  }
+}
+header {
+  display: flex;
+  width: 100%;
+  // padding: 0px 0px 3.4% 0px;
+  margin: 0 auto;
+
+  justify-content: center;
+
+  // background: rgba(255, 255, 255, 0.5);
+
+  position: relative;
+  box-shadow: 0px 4px 65px rgba(170, 172, 72, 0.25);
+  z-index: 1;
+  background: inherit;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #f8eede;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    background: inherit;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 2000px rgba(241, 241, 241, 0.2);
+    backdrop-filter: blur(10px);
+    // margin: -20px;
+  }
+}
+
+footer {
+  display: flex;
+
+  width: 100%;
+
+  // background: rgba(255, 255, 255, 0.5);
+  position: relative;
+  box-shadow: 0px 4px 65px rgba(170, 172, 72, 0.25);
+  z-index: 1;
+  background: inherit;
+  &::before {
+    content: '';
+    position: absolute;
+    background: inherit;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 2000px rgba(241, 241, 241, 0.2);
+    backdrop-filter: blur(10px);
+    // margin: -20px;
+  }
+}
+
+.BoxBlock {
+  display: flex;
+  max-width: 56.63%;
+  max-height: 100%;
+  // max-height: 743px;
+  flex: 1 1 auto;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.3% 40px 35px 40px;
+  margin: 1.5% 0px 1% 0px;
+
+  // background: rgba(255, 255, 255, 0.5);
+  border: 2px solid #e3dfb7;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 65px rgba(170, 172, 72, 0.25);
+  border-radius: 40px;
+  // box-shadow: 0 0 1rem 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1;
+  background: inherit;
+  // backdrop-filter: blur(10px);
+
+  &::before {
+    content: '';
+    position: absolute;
+    background: inherit;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 2000px rgba(241, 241, 241, 0.2);
+    border-radius: 40px;
+    backdrop-filter: blur(10px);
+    // margin: -20px;
+  }
+
+  @media (max-width: 1024px) {
+    max-width: 89.59%;
+    margin: 2.6% 0px 15.63% 0px;
+    padding: 0% 2px 0px 2px;
+  }
+
+  @media (max-width: 600px) {
+    max-width: 95%;
+    border-radius: 10px;
+    padding: 1.459% 0px 20px 0px;
+    margin: 1.59% 0px 1.59% 0px;
+  }
+}
+
+.postLoader {
+  display: flex;
+  max-width: 801px;
+  flex: 1 1 auto;
+  flex-direction: column;
+  // max-height: 50.442307692308%;
+
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 40px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    right: -100px;
+    width: 140px;
+    height: 140px;
+    background: url('./img/MadeForDapplets.svg') 0 0 /100% 100% no-repeat;
+  }
+  @media (max-width: 1024px) {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 82px;
+      right: -45px;
+      width: 120px;
+      height: 120px;
+      background: url('./img/MadeForDapplets.svg') 0 0 /120px 120px no-repeat;
+    }
+  }
+
+  @media (max-width: 600px) {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 8%;
+      right: -15px;
+      width: 70px;
+      height: 70px;
+      background: url('./img/MadeForDapplets.svg') 0 0 /70px 70px no-repeat;
+    }
+  }
+
+  animation: fadein 2s;
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadein {
+  /* Firefox */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes fadein {
+  /* Safari and Chrome */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-o-keyframes fadein {
+  /* Opera */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ====
+.boxTitle {
+  margin: 0 auto;
+  padding: 0px 0px 2.51% 0px;
+
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 149%;
+  color: #2d1a0e;
+  @media (min-width: 1280px) and (max-height: 910px) {
+    font-size: 30px;
+    padding: 0px 0px 4.51% 0px;
+  }
+  @media (max-width: 1024px) {
+    padding: 0px 0px 3.51% 0px;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 18px;
+  }
+}
+
+// ====
+.boxImg {
+  display: flex;
+  max-width: 49%;
+  max-height: 49%;
+  flex: 1 1 auto;
+
+  padding: 0px 0px 2.51% 0px;
+  // width: 40.151%;
+
+  img {
+    // display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  @media (min-width: 1280px) and (max-height: 910px) {
+    max-width: 30%;
+    max-height: 30%;
+  }
+  @media (max-width: 1024px) {
+    max-width: 320px;
+    max-height: 320px;
+    // margin: 0px 0px 3% 0px;
+  }
+  @media (max-width: 600px) {
+    // width: 180px;
+    max-width: 56.25%;
+    max-height: 40%;
+  }
+}
+
+// ====
+.radialBarBlock {
+  display: flex;
+  width: 100%;
+
+  flex-direction: column;
+  align-items: center;
+  padding: 0px 0px 22px 0px;
+
+  // height: 40px;
+
+  @media (max-width: 1024px) {
+    width: 95.3%;
+    padding: 0px 0px 0px 0px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 0px 19.5px 22px 19.5px;
+  }
+}
+
+.radialBarTitle {
+  padding: 0px 0px 2.6% 0px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 149%;
+  color: #99590b;
+
+  @media (max-width: 600px) {
+    font-size: 16px;
+  }
+}
+
+.radialBarGraph {
+  width: 100%;
+  height: 40px;
+
+  background: #f0e9cf;
+  border: 1px solid #d0be7f;
+  box-sizing: border-box;
+  border-radius: 70px;
+  @media (min-width: 1280px) and (max-height: 960px) {
+    height: 34px;
+  }
+
+  @media (max-width: 600px) {
+    height: 34px;
+  }
+
+  div {
+    // animation-duration: 2s;
+    // animation-name: bounce-1;
+    // animation-timing-function: linear;
+  }
+}
+
+// @keyframes bounce-1 {
+//   0% {
+//     transform: translateX(0);
+//   }
+//   50% {
+//     transform: translateX(-100%);
+//   }
+//   100% {
+//     transform: translateX(0);
+//   }
+// }
+// ====
+
+.description {
+  width: 87.85%;
+  margin: 0px 0px 2.51% 0px;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 149%;
+  text-align: center;
+  color: #313131;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    padding: 5% 0px 3% 0px;
+    margin: 0px 0px 0px 0px;
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+    // padding: 0px 1px;
+  }
+}
+
+// ====
+.buttonBlock {
+  max-width: 250px;
+  height: 50px;
+
+  @media (max-width: 1024px) {
+  }
+
+  @media (max-width: 600px) {
+    height: 36px;
+  }
+}
+
+// ====
+.button {
+  display: block;
+  padding: 13px 40px;
+
+  background: #ff774b;
+  border-radius: 50px;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 149%;
+  text-transform: uppercase;
+  color: #721e02;
+
+  &:hover {
+    background: $PrimaryHover;
+  }
+
+  &:active {
+    background: $Primary;
+  }
+
+  @media (max-width: 1024px) {
+    padding: 13px 43px;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    padding: 7.5px 23px;
+  }
+}

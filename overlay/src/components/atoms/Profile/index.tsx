@@ -7,13 +7,13 @@ import Down from '../../../icons/createNewBox/down.svg';
 export interface ProfileProps {
   avatar?: string;
   hash: string;
-  isOpen?: boolean;
+  isOpenProfile?: boolean;
   openChange?: () => void;
   onClick?: () => void;
   mini?: boolean;
 }
 export const Profile: FC<ProfileProps> = (props: ProfileProps) => {
-  const { avatar, hash, isOpen = true, openChange, onClick, mini = false } = props;
+  const { avatar, hash, isOpenProfile = true, openChange, onClick, mini = false } = props;
 
   const visible = (hash: string): string => {
     const firstFourCharacters = hash.substring(0, 6);
@@ -28,10 +28,10 @@ export const Profile: FC<ProfileProps> = (props: ProfileProps) => {
         {!mini && <p className={styles.hash}>{visible(hash)}</p>}
         {!mini && <img src={Down} />}
       </header>
-      {isOpen && !mini && (
+      {isOpenProfile && !mini && (
         <ul
           className={cn(styles.list, {
-            [styles.isOpen]: isOpen,
+            [styles.isOpenProfile]: isOpenProfile,
           })}
         >
           <li onClick={onClick} className={styles.item}>

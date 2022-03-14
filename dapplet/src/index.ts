@@ -50,34 +50,19 @@ export default class TwitterFeature {
     const { box } = this.adapter.exports;
 
     this.adapter.attachConfig({
-      POST: (ctx) => [
-        box({
-          initial: 'DEFAULT',
-          DEFAULT: {
-            img: fullBox,
-            hidden: false,
-            replace: 'lootbox.org',
-            exec: async (_, me) => {
-              await this.getClaim(me);
-            },
-          },
-          ANOTHERDef: {
-            // text: `5000 near`,
-            img: boxDef,
-            replace: 'lootbox.org',
-          },
-          ANOTHER: {
-            text: `5000 near`,
-            img: BigBox,
-            replace: 'lootbox.org',
-          },
-          ANOTHER2: {
-            text: `empty`,
-            img: emptyBox,
-            replace: 'lootbox.org',
-          },
-        }),
-      ],
+      POST: async (ctx) => {
+        /// call when new tweet is displayed
+        // parse a text of a tweet. take a lootbox url (https://lootbox.org/1)
+        // if an url is found, then parse a lootbox id (1)
+        // await this._api.getLootboxClaimStatus(BoxesId as any, wallet.accountId);
+        // if claim status is not opened
+        // return [box({ getClaim  })] with not opened picture
+        // else if claim status is full
+        // ...
+        // else if claim status is empty
+        // ...
+        // return [];
+      },
     });
   }
   async getClaim(props?: any): Promise<void> {
@@ -85,9 +70,9 @@ export default class TwitterFeature {
       props.state = 'ANOTHERDef';
       const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
       this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-
-      const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
-      const BoxesId = await Boxes.map((item, i) => item.id);
+      //
+      const Boxes = await this._api.getBoxesByAccount(wallet.accountId);
+      const BoxesId = Boxes.map((item, i) => item.id);
 
       const ClaimStatus = await this._api.getLootboxClaimStatus(BoxesId as any, wallet.accountId);
       console.log(ClaimStatus, 'ClaimStatus');
