@@ -42,6 +42,8 @@ export default class TwitterFeature {
           clearAll: this._api.clearAll.bind(this._api),
           getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
           claimLootbox: this._api.claimLootbox.bind(this._api),
+          _getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
+          _claimLootbox: this._api.claimLootbox.bind(this._api),
         });
     }
     const regExpLootbox = new RegExp(/.*(https:\/\/lootbox\.org\/\d+)/);
@@ -57,14 +59,6 @@ export default class TwitterFeature {
         return numEl;
       } catch {}
     };
-    // const num = (tweet) => {
-    //   if (tweet.search(regExpLootbox) != -1) {
-    //     let numEl = parseInt(tweet.match(/\d+/));
-    //     // if (numEl !) return numEl;
-    //     // console.log(numEl);
-    //     if (numEl !== undefined && numEl !== null) return numEl;
-    //   }
-    // };
 
     Core.onAction(() => this.openOverlay());
 
@@ -78,31 +72,18 @@ export default class TwitterFeature {
             img: boxDef,
             hidden: true,
             replace: `lootbox.org/`,
+            text: '',
             init: async (ctx, me) => {
-              const Tweet = await ctx.text;
+              const Tweet = ctx.text;
 
-              // const getTweetParse = (tweet) => {
-              //   if (tweet.search(regExpLootbox) != -1) {
-              //     return String(tweet);
-              //   }
-              // };
-              // const getNumIndex = (tweet) => {
-              //   try {
-              //     let numEl = parseInt(tweet.match(regExpIndex));
-              //     return numEl;
-              //   } catch {}
-              // };
               const tweetParse = getTweetParse(Tweet);
               const numIndex = getNumIndex(tweetParse);
-              // console.log(tweetParse);
-              // console.log(numIndex);
 
               me.replace = `lootbox.org/${numIndex}`;
               me.hidden = false;
-              // await this.getClaim(me, numIndex);
+
               const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-              this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-              // const BoxesId = numIndex;
+
               const ClaimStatus = await this._api
                 .getLootboxClaimStatus(numIndex, wallet.accountId)
                 .then((x) => {
@@ -112,40 +93,24 @@ export default class TwitterFeature {
                     me.img = emptyBox;
                   }
                 });
-              // const ClaimLoot = await this._api.getLootboxClaimStatus(BoxesId, wallet.accountId);
-              // console.log(ClaimLoot);
 
               console.log(ClaimStatus);
-              // if (ClaimStatus === 0) {
-              //   // console.log(ClaimStatus);
-              //   return (me.img = fullBox);
-              // } else if (ClaimStatus === 1) {
-              //   // console.log(ClaimStatus);
-              //   return (me.img = emptyBox);
-              // } else {
-              //   // console.log(ClaimStatus);
-              //   return (me.img = fullBox);
-              // }
+              // await this._api
+              //   ._getLootboxClaimStatus(numIndex, wallet.accountId)
+              //   .then((x) =>
+              //     console.log(x.status, x.ftContentItems, x.nearContentItems, x.nftContentItems),
+              //   );
+              // await this._api
+              //   ._claimLootbox(numIndex, wallet.accountId)
+              //   .then((x) =>
+              //     console.log(x.status, x.ftContentItems, x.nearContentItems, x.nftContentItems),
+              //   );
             },
             exec: async (ctx, me) => {
-              const Tweet = await ctx.text;
+              const Tweet = ctx.text;
               const tweetParse = getTweetParse(Tweet);
               const numIndex = getNumIndex(tweetParse);
               await this.getClaimExec(me, numIndex);
-              // const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-              // this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-              // console.log('lala');
-              // await this._api.claimLootbox(numIndex, wallet.accountId).then((x) => {
-              //   if (x === 2) {
-              //     // me.state = 'boxWin';
-              //     me.img = BigBox;
-              //     console.log(x);
-              //   } else {
-              //     // me.state = 'boxEmpty';
-              //     me.img = emptyBox;
-              //     console.log(x);
-              //   }
-              // });
             },
           },
           boxDefault: {
@@ -160,23 +125,11 @@ export default class TwitterFeature {
             text: `5000 near`,
             img: BigBox,
             replace: `lootbox.org/`,
-            init: async (ctx, me) => {
-              const Tweet = await ctx.text;
-              const tweetParse = getTweetParse(Tweet);
-              const numIndex = getNumIndex(tweetParse);
-              me.replace = `lootbox.org/${numIndex}`;
-            },
           },
           boxEmpty: {
             text: `empty`,
             img: emptyBox,
             replace: `lootbox.org/`,
-            init: async (ctx, me) => {
-              const Tweet = await ctx.text;
-              const tweetParse = getTweetParse(Tweet);
-              const numIndex = getNumIndex(tweetParse);
-              me.replace = `lootbox.org/${numIndex}`;
-            },
           },
         }),
       ],
@@ -201,63 +154,61 @@ export default class TwitterFeature {
   async getClaimExec(me, num): Promise<void> {
     me.img = boxDef;
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-    this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-    console.log('lala');
+
     await this._api.claimLootbox(num, wallet.accountId).then((x) => {
       if (x === 2) {
         // me.state = 'boxWin';
+        this._api._getLootboxClaimStatus(num, wallet.accountId).then((x) => {
+          if (x.ftContentItems.length !== 0) {
+            x.ftContentItems.map(
+              (x) =>
+                // x.contractAddress,
+                // x.tokenAmount,
+                (me.text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
+            );
+            console.log(x.ftContentItems);
+          } else if (x.nearContentItems.length !== 0) {
+            x.nearContentItems.map(
+              (x) =>
+                // x.tokenAmount,
+                (me.text = `You win: ${x.tokenAmount} near`),
+            );
+            console.log(x.nearContentItems);
+          } else if (x.nftContentItems.length !== 0) {
+            x.nftContentItems.map(
+              (x) => (
+                x.contractAddress,
+                x.quantity,
+                x.tokenId,
+                (me.text = `You win: ${x.quantity} quantity! ${x.tokenId} - token ID, ${x.contractAddress} - contract address`)
+              ),
+            );
+            console.log(x.nftContentItems);
+          } else {
+            return 'false';
+          }
+
+          // console.log(
+          //   // Object.keys(x.ftContentItems).length === 0 && x.ftContentItems.constructor === Object,
+          //   // Object.keys(x.nearContentItems).length === 0 &&
+          //   //   x.nearContentItems.constructor === Object,
+          //   // Object.keys(x.nftContentItems).length === 0 && x.nftContentItems.constructor === Object,
+
+          //   x.ftContentItems,
+          //   x.nearContentItems.map((x) => x.tokenAmount),
+          //   x.nftContentItems.map((x, i) => (x.contractAddress, x.quantity, x.tokenId)),
+          // );
+        });
         me.img = BigBox;
-        console.log(x);
+        // me.text = 'full';
       } else {
         // me.state = 'boxEmpty';
         me.img = emptyBox;
-        console.log(x);
+        me.text = 'empty';
       }
     });
   }
-  // async getClaim(props?: any): Promise<void> {
-  //   // this._overlay.listen(console.log('lalla'));
-  //   try {
-  //     props.state = 'ANOTHERDef';
-  //     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-  //     this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-  //     // console.log(wallet.accountId);
-  //     const Boxes = await this._api.getBoxesByAccount('dapplets_lootbox.testnet');
-  //     const BoxesId = await Boxes.map((item, i) => item.id);
-  //     // console.log(BoxesId, 'BoxesId');
-  //     const ClaimStatus = await this._api.getLootboxClaimStatus(BoxesId as any, wallet.accountId);
-  //     console.log(ClaimStatus, 'ClaimStatus');
-  //     const claimLoot = await this._api.claimLootbox(BoxesId as any, wallet.accountId);
-  //     // const status = await this._api.claimLootbox(BoxesId as any, 'dapplets_lootbox.testnet');
-  //     // console.log(status);
-  //     if (claimLoot === 2) {
-  //       props.state = 'ANOTHER';
-  //     } else {
-  //       props.state = 'ANOTHER2';
-  //     }
 
-  //     console.log(claimLoot, 'claimLoot');
-  //     this.adapter;
-  //   } catch {}
-  // }
-  // async getTweets(ctx, regExpLootbox): Promise<void> {
-  //   // const { ctx, regExpLootbox } = props;
-  //   try {
-  //     const Tweet = await ctx.text;
-  //     const tweetText = String(Tweet);
-  //     // let midstring;
-
-  //     console.log(tweetText);
-  //     console.log(Tweet);
-  //     if (Tweet.search(regExpLootbox) != -1) {
-  //       let numEl = parseInt(Tweet.match(/\d+/));
-  //       console.log(Number(numEl));
-  //       return await Tweet;
-  //     }
-  //   } catch {}
-
-  //   // console.log(tweetText + midstring + regExpLootbox);
-  // }
   async openOverlay(props?: any): Promise<void> {
     this._overlay.send('data', props);
   }

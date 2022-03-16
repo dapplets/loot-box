@@ -55,6 +55,28 @@ export enum LootboxClaimStatus {
   FULL = 2, // Opened and full
 }
 
+export type ClaimedNftContentItem = {
+  contractAddress: string;
+  tokenId: number | null;
+  quantity: number | null;
+};
+
+export type ClaimedFtContentItem = {
+  contractAddress: string;
+  tokenAmount: string;
+};
+
+export type ClaimedNearContentItem = {
+  tokenAmount: string;
+};
+
+export interface LootboxClaimResult {
+  status: LootboxClaimStatus;
+  nearContentItems: ClaimedNearContentItem[];
+  nftContentItems: ClaimedNftContentItem[];
+  ftContentItems: ClaimedFtContentItem[];
+}
+
 export interface IDappletApi {
   connectWallet: () => Promise<string>;
   disconnectWallet: () => Promise<void>;
@@ -68,6 +90,9 @@ export interface IDappletApi {
   getLootboxWinners(lootboxId: number): Promise<LootboxWinner[]>;
   getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimStatus>;
   claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimStatus>;
+
+  _getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimResult>;
+  _claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimResult>;
 
   clearAll: () => Promise<void>;
 }

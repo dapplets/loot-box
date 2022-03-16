@@ -5,6 +5,7 @@ import {
   LootboxStat,
   LootboxWinner,
   LootboxClaimStatus,
+  LootboxClaimResult,
 } from '../../common/interfaces';
 
 function _createFakeLootbox(id: number): Lootbox {
@@ -139,6 +140,102 @@ export class DappletApi implements IDappletApi {
 
   async clearAll() {
     this._setValue('lootboxes', []);
+  }
+
+  public async _getLootboxClaimStatus(
+    lootboxId: number,
+    accountId: string,
+  ): Promise<LootboxClaimResult> {
+    await new Promise((r) => setTimeout(r, 500));
+    const lootboxStatuses = this._getValue('lootboxes-status', []);
+    const entry = lootboxStatuses.find(
+      (x) => x.lootboxId === lootboxId && x.accountId === accountId,
+    );
+
+    const lootType = getRandomIntInclusive(0, 2);
+
+    return {
+      status: entry?.status ?? 0,
+      nearContentItems:
+        lootType === 0
+          ? [
+              {
+                tokenAmount: '10',
+              },
+            ]
+          : [],
+      nftContentItems:
+        lootType === 1
+          ? [
+              {
+                quantity: 3,
+                contractAddress: '0xdead...beef',
+                tokenId: 12,
+              },
+            ]
+          : [],
+      ftContentItems:
+        lootType === 2
+          ? [
+              {
+                tokenAmount: '10',
+                contractAddress: '0xdead...beef',
+              },
+            ]
+          : [],
+    };
+  }
+
+  public async _claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimResult> {
+    await new Promise((r) => setTimeout(r, 4000));
+    if ((await this.getLootboxClaimStatus(lootboxId, accountId)) !== 0) {
+      throw new Error('The lootbox is opened already.');
+    }
+
+    const lootboxStatuses = this._getValue('lootboxes-status', []);
+
+    const status: LootboxClaimStatus = getRandomIntInclusive(0, 2);
+
+    lootboxStatuses.push({
+      lootboxId,
+      accountId,
+      status,
+    });
+
+    this._setValue('lootboxes-status', lootboxStatuses);
+
+    const lootType = getRandomIntInclusive(0, 2);
+
+    return {
+      status,
+      nearContentItems:
+        lootType === 0
+          ? [
+              {
+                tokenAmount: '10',
+              },
+            ]
+          : [],
+      nftContentItems:
+        lootType === 1
+          ? [
+              {
+                quantity: 3,
+                contractAddress: '0xdead...beef',
+                tokenId: 12,
+              },
+            ]
+          : [],
+      ftContentItems:
+        lootType === 2
+          ? [
+              {
+                tokenAmount: '10',
+                contractAddress: '0xdead...beef',
+              },
+            ]
+          : [],
+    };
   }
 
   private _getValue(key: string, defaultValue: any): any {
