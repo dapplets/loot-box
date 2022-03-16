@@ -95,62 +95,20 @@ export default class TwitterFeature {
                 });
 
               console.log(ClaimStatus);
-              // await this._api
-              //   ._getLootboxClaimStatus(numIndex, wallet.accountId)
-              //   .then((x) =>
-              //     console.log(x.status, x.ftContentItems, x.nearContentItems, x.nftContentItems),
-              //   );
-              // await this._api
-              //   ._claimLootbox(numIndex, wallet.accountId)
-              //   .then((x) =>
-              //     console.log(x.status, x.ftContentItems, x.nearContentItems, x.nftContentItems),
-              //   );
             },
             exec: async (ctx, me) => {
               const Tweet = ctx.text;
               const tweetParse = getTweetParse(Tweet);
               const numIndex = getNumIndex(tweetParse);
+
               await this.getClaimExec(me, numIndex);
             },
-          },
-          boxDefault: {
-            img: fullBox,
-            replace: `lootbox.org/`,
-          },
-          boxLoad: {
-            img: boxDef,
-            replace: `lootbox.org/`,
-          },
-          boxWin: {
-            text: `5000 near`,
-            img: BigBox,
-            replace: `lootbox.org/`,
-          },
-          boxEmpty: {
-            text: `empty`,
-            img: emptyBox,
-            replace: `lootbox.org/`,
           },
         }),
       ],
     });
   }
-  // async getClaim(me, num): Promise<void> {
-  //   try {
-  //     me.img = boxDef;
-  //     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-  //     this._overlay.send('getCurrentNearAccount_done', wallet.accountId);
-  //     const BoxesId = num;
-  //     const ClaimStatus = await this._api.getLootboxClaimStatus(BoxesId, wallet.accountId);
-  //     if (ClaimStatus === 0) {
-  //       me.img = fullBox;
-  //     } else {
-  //       me.img = emptyBox;
-  //     }
-  //   } catch (error) {
-  //     console.log('error', error);
-  //   }
-  // }
+
   async getClaimExec(me, num): Promise<void> {
     me.img = boxDef;
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
@@ -200,11 +158,11 @@ export default class TwitterFeature {
           // );
         });
         me.img = BigBox;
-        // me.text = 'full';
+        me.exec = () => {};
       } else {
-        // me.state = 'boxEmpty';
         me.img = emptyBox;
         me.text = 'empty';
+        me.exec = () => {};
       }
     });
   }
