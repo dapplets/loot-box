@@ -119,7 +119,7 @@ export default () => {
 
   // console.log('CREATE: -->', creationForm);
   const [creationMessageData, setCreationMessageData] = useState(MessageData);
-
+  // const wallet =  dappletApi.connectWallet()
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
   };
@@ -346,8 +346,9 @@ export default () => {
           element={
             (loader && <div>Loading</div>) || (
               <DeployBox
-                creationForm={creationForm}
-                onCreationFormUpdate={(x) => setCreationForm(x)}
+                // creationForm={creationForm}
+                // onCreationFormUpdate={(x) => setCreationForm(x)}
+                id={lootboxes.map((item, i) => item.id!)}
                 onDoneClick={doneClickHandler}
                 onChange={onChange}
                 setCreationMessageData={(x: any) => setCreationMessageData(x)}

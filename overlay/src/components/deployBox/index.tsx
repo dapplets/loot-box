@@ -27,26 +27,28 @@ export interface DeployBoxProps
   // onChange_input: () => void;
   // onAddChild: () => void;
   onDoneClick: () => void;
-  creationForm: Lootbox;
-  onCreationFormUpdate: (x: Lootbox) => void;
+  // creationForm: Lootbox;
+  // onCreationFormUpdate: (x: Lootbox) => void;
   setCreationMessageData: (x: any) => void;
   MessageData: any;
+  id: any;
 }
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
   const {
     onChange,
     // onDoneClick,
-    creationForm,
-    onCreationFormUpdate,
+    // creationForm,
+    // onCreationFormUpdate,
     setCreationMessageData,
+    id,
     MessageData,
   } = props;
   const [value, setValue] = useState('');
   const onChange_Area: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.currentTarget;
     setValue(e.target.value);
-    MessageData.id = creationForm.id;
+    // MessageData.id = creationForm.id;
     MessageData.boxMessage = value;
     console.log(MessageData.boxMessage);
 
@@ -63,11 +65,11 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
     event.preventDefault();
     const { name, value } = event.currentTarget;
 
-    creationForm.name = value;
+    // creationForm.name = value;
 
     // console.log(value, creationForm);
 
-    onCreationFormUpdate(creationForm);
+    // onCreationFormUpdate(creationForm);
   };
 
   return (
@@ -92,7 +94,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <div className={cn(styles.message)}>
         <Message
           message={value}
-          link={`https://lootbox.org/${creationForm.id}/
+          link={`https://lootbox.org/${id}/
         Don’t see the Box? https://lootbox.org/how-to/`}
           instruction="Gift box is made with LootBox Dapplet @lootbox by @dappletsproject."
         />
