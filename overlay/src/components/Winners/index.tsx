@@ -13,8 +13,6 @@ import { Link } from 'react-router-dom';
 
 import { StatisticsLink } from '../atoms/StatisticsLink';
 
-import { WinnersInfo } from '../atoms/WinnersInfo';
-
 export interface WinnerProps {
   winners: any;
 }

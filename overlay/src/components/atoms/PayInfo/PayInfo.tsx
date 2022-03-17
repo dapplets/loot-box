@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import cn from 'classnames';
 import styles from './PayInfo.module.scss';
-import classNames from 'classnames';
 
 export interface PayInfoProps {
   title: string;
@@ -21,10 +20,6 @@ export const PayInfo: FC<PayInfoProps> = ({
   const visible = ({ value, appearance }: Pick<PayInfoProps, 'value' | 'appearance'>): string => {
     if (appearance === 'text' || appearance === 'link') return value;
 
-    // const firstFourCharacters = value.substring(0, 4);
-    // const lastFourCharacters = value.substring(value.length - 1, value.length - 5);
-
-    // return `${firstFourCharacters}...${lastFourCharacters}`;
     return value;
   };
 

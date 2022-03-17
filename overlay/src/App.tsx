@@ -1,21 +1,10 @@
-import React, { Children, useEffect, useState, useMemo, FC } from 'react';
-import { Button, Card, Divider, Image, Item } from 'semantic-ui-react';
-// import { bridge } from './dappletBridge';
+import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
-import { LogInButton } from './components/atoms/LoginButtons';
-import CreateNewBox from './components/createNewBox';
-
-import { DeployBox } from './components/deployBox';
-import { Profile } from './components/atoms/Profile';
-// import avatar from './icons/UserAvatarBig.png';
 import styles from './App.module.scss';
-import SelectBox, { IMG } from './components/selectBox';
-import { StatisticsNear, StatisticsWinners, StatisticsCode } from './components/statisticsNear';
-import { FillBox } from './components/fillBox';
+
 import { useToggle } from './hooks/useToggle';
 import { Routes, Route, Link } from 'react-router-dom';
-import { FillBox_Nft } from './components/FillBoxNFT';
-import { ChildComponent } from './components/createNewBox';
+
 import GeneralBridge from '@dapplets/dapplet-overlay-bridge';
 import {
   IDappletApi,
@@ -25,9 +14,21 @@ import {
   BoxCreationPrice,
 } from '../../common/interfaces';
 
+import { StatisticsNear, StatisticsWinners, StatisticsCode } from './components/statisticsNear';
+import { DeployBox } from './components/deployBox';
+import { Profile } from './components/atoms/Profile';
+import SelectBox, { IMG } from './components/selectBox';
+import { FillBox } from './components/fillBox';
+import { FillBox_Nft } from './components/FillBoxNFT';
+import { ChildComponent } from './components/createNewBox';
+import { LogInButton } from './components/atoms/LoginButtons';
+import CreateNewBox from './components/createNewBox';
+
 import { SettingDef } from './components/boxSettings';
 import { SettingsToken } from './components/boxSettings/settingsToken';
 import { SettingsNFT } from './components/boxSettings/settingsNft';
+
+import { Preloader } from './components/atoms/Preloader';
 
 interface ICtx {
   authorFullname: string;
@@ -41,7 +42,7 @@ interface ICtx {
 }
 
 const dappletApi = new GeneralBridge<IDappletApi>();
-// const IMG = [Box1, Box2, Box3, Box4];
+
 const EMPTY_FORM: Lootbox = {
   name: '',
   dropChance: 20,
@@ -116,10 +117,8 @@ export default () => {
   const [clickedBoxImg, setClickedBoxImg] = useState<number | null>(0);
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
   const [loader, setLoader] = useState(false);
-
-  // console.log('CREATE: -->', creationForm);
   const [creationMessageData, setCreationMessageData] = useState(MessageData);
-  // const wallet =  dappletApi.connectWallet()
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
   };
@@ -231,6 +230,7 @@ export default () => {
     }
     setNearAccount(undefined);
   };
+
   const handleLogInBtn = async () => {
     const isWalletConnected = await dappletApi.isWalletConnected();
     let accountName: string;
@@ -265,13 +265,13 @@ export default () => {
           path="/"
           element={
             <CreateNewBox imgVal={imgBox} label={valueLabel}>
-              {(loader && <div>Loading</div>) ||
+              {(loader && <Preloader />) ||
+                // <Preloader />
                 lootboxes.map((item, index) => (
                   <ChildComponent
                     onClick={() => {
                       setLootboxes(lootboxes);
                       setSelectedLootboxId(item.id!);
-                      // console.log(lootboxes, 'hello');
                     }}
                     imgVal={IMG[item.pictureId]}
                     label={item.name}
@@ -305,15 +305,7 @@ export default () => {
           }
         />
 
-        <Route
-          path="/box_settings_value"
-          element={
-            <SettingDef
-              creationForm={creationForm}
-              onCreationFormUpdate={(x) => setCreationForm(x)}
-            />
-          }
-        />
+        <Route path="/box_settings_value" element={<SettingDef />} />
         <Route
           path="/settings_token"
           element={
@@ -344,12 +336,9 @@ export default () => {
         <Route
           path="/deploy_your_box"
           element={
-            (loader && <div>Loading</div>) || (
+            (loader && <Preloader />) || (
               <DeployBox
-                // creationForm={creationForm}
-                // onCreationFormUpdate={(x) => setCreationForm(x)}
                 id={lootboxes.map((item, i) => item.id!)}
-                onDoneClick={doneClickHandler}
                 onChange={onChange}
                 setCreationMessageData={(x: any) => setCreationMessageData(x)}
                 MessageData={MessageData}
@@ -359,19 +348,9 @@ export default () => {
         />
         <Route
           path="/statistics"
-          element={(loader && <div>Loading</div>) || <StatisticsNear stat={stat} />}
+          element={(loader && <Preloader />) || <StatisticsNear stat={stat} />}
         />
-        <Route
-          path="/winners"
-          element={
-            <StatisticsWinners
-              winners={winners}
-              // setSelectedLootboxId={creationForm.id}
-              // creationForm={creationForm}
-              // onCreationFormUpdate={(x: Lootbox) => setCreationForm(x)}
-            />
-          }
-        />
+        <Route path="/winners" element={<StatisticsWinners winners={winners} />} />
         <Route
           path="/code"
           element={
@@ -394,11 +373,3 @@ function then(arg0: (x: any) => void) {
 function winners(arg0: string, winners: any) {
   throw new Error('Function not implemented.');
 }
-
-export interface PreloaderProps {
-  message: any;
-}
-export const Preloader: FC<PreloaderProps> = (props: PreloaderProps) => {
-  const { message } = props;
-  return <div>{message}</div>;
-};

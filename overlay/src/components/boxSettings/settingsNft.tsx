@@ -1,31 +1,17 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  FC,
-  useState,
-  ChangeEventHandler,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { ReactNode, FC, useEffect } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
+
 import { SettingTitle } from '../atoms/SettingTitle';
 import { LabelSettings } from '../atoms/LabelSettings';
 import { Button } from '../atoms/Button';
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
-
-import { useToggle } from '../../hooks/useToggle';
-import { InputPanel } from '../atoms/Input';
-import { RadioButton } from '../atoms/RadioButton';
-// import { Test } from '../atoms/test';
 import { DropChance } from '../atoms/DropChance';
 import { Lootbox, NftContentItem } from '../../../../common/interfaces';
-
 import { ChildComponent } from './childComponent';
 import { Test } from '../atoms/test';
-
+import { ButtonsSetting } from './buttonsSetting';
 export interface BoxSettingsProps {
   children?: ReactNode;
   onChange?: () => void;
@@ -33,8 +19,6 @@ export interface BoxSettingsProps {
   dataType?: string;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
-
-  // qty: any;
 }
 
 const DEFAULT_NFT_ITEM: NftContentItem = {
@@ -44,13 +28,8 @@ const DEFAULT_NFT_ITEM: NftContentItem = {
 };
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const {
-    creationForm,
-    onCreationFormUpdate,
+  const { creationForm, onCreationFormUpdate } = props;
 
-    //  qty
-  } = props;
-  // const [disable, setDisable] = useState(false);
   const [value, setValue] = React.useState(20);
   useEffect(() => {
     // ToDo: move to App.tsx
@@ -65,7 +44,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     console.log(creationForm);
   }, []);
   useEffect(() => {
-    // onCreationFormUpdate((creationForm.dropChance = value));
     creationForm.dropChance = value;
     onCreationFormUpdate(creationForm);
     console.log({ value });
@@ -91,28 +69,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
   return (
     <div className={cn(styles.wrapper)}>
-      <SettingTitle isActive={true} title="Box settings" />
-
-      {/* ToDo: move to separated component */}
       <div className={styles.div}>
-        <div className={cn(styles.loot)}>
-          <LabelSettings title="Loot" />
-          <div className={cn(styles.buttons)}>
-            <Link to="/settings_token" className={styles.btnLink}>
-              <Button appearance="medium" isShowDescription btnText="Token" />
-            </Link>
-            <Link to="/settings_NFT" className={styles.btnLink}>
-              <Button
-                appearance="medium"
-                isShowDescription
-                btnText="NFT"
-                style={{
-                  backgroundColor: '#D9304F',
-                  color: '#fff',
-                }}
-              />
-            </Link>
-          </div>
+        <div className={styles.divBtn}>
+          <ButtonsSetting classNameNft={styles.BtnNft} />
         </div>
 
         <div className={styles.wrapper_nft}>

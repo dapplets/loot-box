@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useState } from 'react';
 import cn from 'classnames';
-import copy from '../../icons/createNewBox/copy.svg';
+
 import Box1 from '../../icons/createNewBox/box1.png';
 import Box2 from '../../icons/createNewBox/box2.png';
 import Box3 from '../../icons/createNewBox/box3.png';
@@ -10,8 +10,7 @@ import { Button } from '../atoms/Button';
 import { CreatedBox } from '../atoms/CreatedBoxCard';
 import { Link } from 'react-router-dom';
 import { useToggle } from '../../hooks/useToggle';
-import SelectBox from '../selectBox';
-import { labels } from '../Statistics';
+
 import { Lootbox } from '../../../../common/interfaces';
 export interface CreateNewBoxProps {
   children: ReactNode;
@@ -54,7 +53,7 @@ export interface ChildComponentProps {
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, label, imgVal, onClick, id, creationForm, status } = props;
+  const { number, label, imgVal, onClick } = props;
 
   return (
     <CreatedBox id={number} label={label} imageBox={imgVal} status="Created" onClick={onClick} />

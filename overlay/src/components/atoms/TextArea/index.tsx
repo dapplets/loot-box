@@ -37,14 +37,10 @@ export const TextArea: FC<TextAreaProps> = (props) => {
     ...anotherProps
   } = props;
   const handleSubmit: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
-    // const formData = new FormData(event.currentTarget);
     event.preventDefault();
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(key, value);
-    //   console.log(formData);
+
     event.preventDefault();
     const { name, value } = event.currentTarget;
-    // console.log(name, value);
   };
   return (
     <div className={cn(styles.inputPanel)}>
@@ -52,8 +48,6 @@ export const TextArea: FC<TextAreaProps> = (props) => {
         value={value}
         className={cn(styles.inputInfo)}
         onChange={onChange}
-        // type="textarea"
-        // type="textarea"
         placeholder={placeholder}
         maxLength={250}
         onSubmit={handleSubmit}

@@ -2,13 +2,12 @@ import React, { FC, useEffect, useState } from 'react';
 import styles from './Statistics.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
-import progr from '../../icons/progress/progress.svg';
+
 import { LabelSettings } from '../atoms/LabelSettings';
 import { Progress } from '../atoms/Progress';
 import { StatisticsInfo } from '../atoms/StatisticsInfo';
 import { ChartProgress } from '../atoms/CircleChart';
 import { StatisticsLink } from '../atoms/StatisticsLink';
-import { LootboxStat } from '../../../../common/interfaces';
 
 export const labels = ['NEAR'];
 export const options = {

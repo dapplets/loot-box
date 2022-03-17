@@ -43,7 +43,6 @@ export interface CetBoxProps {
   setClicked: any;
   onChange_IMG: (x: string) => void;
   id: any;
-  // creationForm: Lootbox;
   onCreationFormUpdate: (id: number) => void;
 }
 
@@ -58,8 +57,6 @@ export const GetBox: FC<CetBoxProps> = (props: CetBoxProps) => {
       <div
         className={cn(styles.secondLine)}
         onClick={(e) => {
-          // e.stopPropagation();
-          // handleClick(`${id}`);
           onChange_IMG(IMG[id]);
         }}
       >
@@ -89,34 +86,22 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
   } = props;
 
   return (
-    <div
-      className={cn(styles.wrapper)}
-      //  onClick={() => console.log(IMG[creationFormId])}
-    >
+    <div className={cn(styles.wrapper)}>
       <SettingTitle isActive={true} title="Select box" />
       <GetBox
         clicked={clicked}
         setClicked={setClicked}
         onChange_IMG={onChange_IMG}
         id={creationFormId}
-        // creationForm={creationForm}
         onCreationFormUpdate={onCreationFormUpdate}
       />
-      {/* <Test /> */}
+
       <div className={styles.navigation}>
         <Link to="/" className={cn(styles.prevStep)}>
-          <LinksStep
-            step="prev"
-            label="Back"
-            //  icon={PrevStep}
-          />
+          <LinksStep step="prev" label="Back" />
         </Link>
         <Link to="/box_settings_value" className={cn(styles.nextStep)}>
-          <LinksStep
-            step="next"
-            label="Next step"
-            // icon={NextStep}
-          />
+          <LinksStep step="next" label="Next step" />
         </Link>
       </div>
     </div>

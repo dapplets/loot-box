@@ -10,18 +10,9 @@ import React, {
 } from 'react';
 import styles from './StatisticsNear.module.scss';
 import cn from 'classnames';
+
 import { Link, useParams } from 'react-router-dom';
 import { StatisticsTitle } from '../atoms/StatisticsTitle';
-import { LabelSettings } from '../atoms/LabelSettings';
-import { Progress } from '../atoms/Progress';
-import { StatisticsInfo } from '../atoms/StatisticsInfo';
-import { ChartProgress } from '../atoms/CircleChart';
-import { StatisticsLink } from '../atoms/StatisticsLink';
-import { useToggle } from '../../hooks/useToggle';
-import { WinnersInfo } from '../atoms/WinnersInfo';
-import { InputPanel } from '../atoms/Input';
-import { TextArea } from '../atoms/TextArea';
-import { Message } from '../atoms/Message';
 import { Code } from '../Code';
 import { Winner } from '../Winners';
 import { Statistics } from '../Statistics';
@@ -39,13 +30,9 @@ const titleList = [
 
 export interface StatisticsNearPropsStat {
   stat?: any;
-  // creationForm: Lootbox;
-  // onCreationFormUpdate: (x: Lootbox) => void;
 }
 
 export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) => {
-  // const { creationForm, onCreationFormUpdate } = props;
-  const { lootboxId } = useParams();
   const { stat } = props;
 
   if (stat === null) {
@@ -78,30 +65,15 @@ export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNea
 };
 export interface StatisticsNearPropsWinner {
   winners: any;
-  // setSelectedLootboxId: void;
-  // creationForm: Lootbox;
-  // onCreationFormUpdate: (x: Lootbox) => void;
 }
 export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
   props: StatisticsNearPropsWinner,
 ) => {
-  const {
-    winners,
+  const { winners } = props;
 
-    //  creationForm, onCreationFormUpdate
-  } = props;
-  // console.log(winners, 'llaa');
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.titleLinksWinners)}>
-        {/* {titleList.map(({ id, title }) => (
-          <StatisticsTitle
-            onClick={onDappletActive}
-            key={id}
-            title={title}
-            isActive={title === 'Statistics' && isDappletActive}
-          />
-        ))} */}
         <div>
           <Link to="/statistics">
             <StatisticsTitle key={0} title={titleList[0].title} />
@@ -118,14 +90,12 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
           </Link>
         </div>
       </div>
-      {/* <Code />  */}
+
       <Winner winners={winners} />
-      {/* <Statistics /> */}
     </div>
   );
 };
 export interface StatisticsNearPropsCode {
-  // winners: any;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
   setCreationMessageData: (x: any) => void;
@@ -157,20 +127,11 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
   const [value, setValue] = React.useState(MessageData.boxMessage);
   const [valueName, setValueName] = React.useState(creationForm.name);
   useEffect(() => {
-    // onCreationFormUpdate((creationForm.dropChance = value));
     console.log({ value });
   });
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.titleLinks)}>
-        {/* {titleList.map(({ id, title }) => (
-          <StatisticsTitle
-            onClick={onDappletActive}
-            key={id}
-            title={title}
-            isActive={title === 'Statistics' && isDappletActive}
-          />
-        ))} */}
         <div>
           <Link to="/statistics">
             <StatisticsTitle key={0} title={titleList[0].title} />
@@ -205,7 +166,6 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
         onMessageUpdated={(MessageData.boxMessage = value)}
         MessageData={MessageData}
       />
-      {/* <Winner /> <Statistics /> */}
     </div>
   );
 };

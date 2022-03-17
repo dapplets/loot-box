@@ -1,6 +1,6 @@
 {
   "name": "loot-box",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "_",
   "main": "lib/index.js",
   "scripts": {

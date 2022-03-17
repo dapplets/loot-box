@@ -13,7 +13,7 @@
 .img {
   padding: 34px 0px 38px 0px;
   width: 100%;
-  // height: 390px;
+
   img {
     width: 100%;
     height: 100%;
@@ -38,7 +38,6 @@
 }
 
 .payInfo {
-  // padding: 0px 0px 33px 0px;
 }
 
 .payBtn {
@@ -50,7 +49,7 @@
 
 .navigation {
   display: flex;
-  // flex: 0 0 auto;
+
   justify-content: space-between;
   padding: 24px 14px 20px 14px;
   position: relative;
@@ -71,10 +70,6 @@
   flex-direction: column;
   flex: 1 0 auto;
   align-items: flex-start;
-  // :first-child {
-  //   display: flex;
-  //   width: 100%;
-  // }
 }
 .title {
   display: flex;

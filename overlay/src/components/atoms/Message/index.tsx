@@ -2,8 +2,7 @@ import React, { CSSProperties, ReactElement, ReactNode, FC, useState } from 'rea
 import cn from 'classnames';
 import styles from './Message.module.scss';
 import { LabelSettings } from '../LabelSettings';
-import { TextArea } from 'semantic-ui-react';
-import Copy from '../../../icons/message/copy.svg';
+
 export interface MessageProps {
   message: any;
   link: string;

@@ -43,7 +43,6 @@ export const InputPanel: FC<InputProps> = (props) => {
         type={type}
         value={value}
         placeholder={placeholder}
-        // pattern="^[1-9]\d*$"
         pattern={pattern}
         className={cn(
           styles.inputInfo,
@@ -59,7 +58,6 @@ export const InputPanel: FC<InputProps> = (props) => {
           },
           className,
         )}
-        // onSubmit={handleSubmit}
         onChange={onChange}
         {...anotherProps}
       />

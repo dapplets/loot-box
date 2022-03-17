@@ -11,65 +11,39 @@ import React, {
   InputHTMLAttributes,
   useMemo,
 } from 'react';
+import styles from './DeployBox.module.scss';
+import cn from 'classnames';
 
 import { SettingTitle } from '../atoms/SettingTitle';
-import styles from './DeployBox.module.scss';
 import { LabelSettings } from '../atoms/LabelSettings';
-import { InputPanel, InputProps } from '../atoms/Input';
+import { InputPanel } from '../atoms/Input';
 import { Message } from '../atoms/Message';
 import { TextArea } from '../atoms/TextArea';
-import cn from 'classnames';
 import { Link } from 'react-router-dom';
-import { Lootbox } from '../../../../common/interfaces';
 
 export interface DeployBoxProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  // onChange_input: () => void;
-  // onAddChild: () => void;
-  onDoneClick: () => void;
-  // creationForm: Lootbox;
-  // onCreationFormUpdate: (x: Lootbox) => void;
   setCreationMessageData: (x: any) => void;
   MessageData: any;
   id: any;
 }
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
-  const {
-    onChange,
-    // onDoneClick,
-    // creationForm,
-    // onCreationFormUpdate,
-    setCreationMessageData,
-    id,
-    MessageData,
-  } = props;
+  const { onChange, setCreationMessageData, id, MessageData } = props;
   const [value, setValue] = useState('');
   const onChange_Area: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.currentTarget;
     setValue(e.target.value);
-    // MessageData.id = creationForm.id;
+
     MessageData.boxMessage = value;
     console.log(MessageData.boxMessage);
 
     setCreationMessageData(MessageData);
   };
-  // const name = creationForm.name;
-
-  // const onSetName = (x: string) => {
-  //   creationForm.name = x;
-  //   onCreationFormUpdate(creationForm);
-  // };
 
   const onChange_name: ChangeEventHandler<HTMLInputElement> = (event) => {
     event.preventDefault();
     const { name, value } = event.currentTarget;
-
-    // creationForm.name = value;
-
-    // console.log(value, creationForm);
-
-    // onCreationFormUpdate(creationForm);
   };
 
   return (
@@ -77,14 +51,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <SettingTitle title="Deploy your box" isActive />
       <div className={cn(styles.boxName)}>
         <LabelSettings title="Box name" />
-        <InputPanel
-          // creationForm={creationForm}
-          // onCreationFormUpdate={onCreationFormUpdate}
-          onChange={onChange_name}
-          type="text"
-          appearance="biggest"
-          // pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})$"
-        />
+        <InputPanel onChange={onChange_name} type="text" appearance="biggest" />
       </div>
 
       <div className={cn(styles.textArea)}>
@@ -101,11 +68,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       </div>
 
       <div className={cn(styles.navigation)}>
-        <Link
-          to="/"
-          className={cn(styles.link)}
-          // onClick={onDoneClick}
-        >
+        <Link to="/" className={cn(styles.link)}>
           Done
         </Link>
       </div>

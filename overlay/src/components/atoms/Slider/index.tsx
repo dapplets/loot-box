@@ -18,34 +18,11 @@ export interface ImageProps {
 }
 
 const Image = ({ onClick, item, index, clicked }: ImageProps) => {
-  // useEffect(() => {
-  //   console.log({ onClick, item, index, clicked }, 'props');
-  // }, [onClick, item, index, clicked]);
-  // useEffect(() => {
-  //   console.log({ onClick });
-  // }, [onClick]);
-  // useEffect(() => {
-  //   console.log({ item });
-  // }, [item]);
-  // useEffect(() => {
-  //   console.log({ index });
-  // }, [index]);
-  // useEffect(() => {
-  //   console.log({ clicked });
-  // }, [clicked]);
   const imgClassName = useMemo(
     () => `keen-slider__slide number-slide1 ${index}  ${clicked === index && 'clicked'}`,
     [clicked, index],
   );
-  // useEffect(() => {
-  //   console.log({
-  //     imgClassName,
-  //     clicked,
-  //     typeclicked: typeof clicked,
-  //     index: index,
-  //     typeindex: typeof index,
-  //   });
-  // }, [imgClassName]);
+
   return <img onClick={() => onClick(index)} className={imgClassName} src={item} id={item} />;
 };
 
@@ -55,20 +32,11 @@ interface SliderProps {
   onChange_IMG: () => void;
   clicked: number | null;
   setClicked: any;
-  // creationForm: Lootbox;
+
   onCreationFormUpdate: (id: number) => void;
-  // onClick: () => void;
 }
 export const IMG = [box1, box2, box3, box4];
 export const Imges: FC<SliderProps> = (props: SliderProps) => {
-  // const [clicked, setClicked] = useState<number | null>(null);
-  // const handleClick = useMemo(
-  //   () => (index: number | null) => {
-  //     console.log('hello world', index);
-  //     setClicked(index);
-  //   },
-  //   [setClicked],
-  // );
   const { clicked, setClicked } = props;
   const { id, imgs, onCreationFormUpdate } = props;
 
@@ -80,17 +48,9 @@ export const Imges: FC<SliderProps> = (props: SliderProps) => {
     [onCreationFormUpdate, setClicked],
   );
 
-  useEffect(() => {
-    // console.log({ setClicked });
-  }, [setClicked]);
-  useEffect(() => {
-    // console.log({ onCreationFormUpdate });
-  }, [onCreationFormUpdate]);
+  useEffect(() => {}, [setClicked]);
+  useEffect(() => {}, [onCreationFormUpdate]);
 
-  //  { const imgClassName = useMemo(
-  //   () => `keen-slider__slide number-slide1 ${clicked === `${index}` && 'clicked'}`,
-  //   [clicked, ],
-  // ) }
   return (
     <>
       {imgs.map((item: string, index: number) => (
@@ -111,9 +71,6 @@ export const Imges: FC<SliderProps> = (props: SliderProps) => {
 
 export const Slider: FC<SliderProps> = (props: SliderProps) => {
   const { onChange_IMG, onCreationFormUpdate, id, clicked, setClicked } = props;
-  // const id = useMemo(() => creationForm.pictureId, [creationForm]);
-
-  // const [imges] = useState(IMG);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);

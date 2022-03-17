@@ -1,23 +1,20 @@
 import React, { CSSProperties, ReactElement, ReactNode, FC, useState } from 'react';
-import { SettingTitle } from '../atoms/SettingTitle';
+import cn from 'classnames';
 import styles from './FillBox.module.scss';
+
 import { LabelSettings } from '../atoms/LabelSettings';
-import { RadioButton, RadioButtonProps } from '../atoms/RadioButton';
+import { RadioButton } from '../atoms/RadioButton';
 import { PayInfo } from '../atoms/PayInfo/PayInfo';
 import { ButtonPay } from '../atoms/ButtonPay';
-import cn from 'classnames';
-import imgBox from '../../icons/createNewBox/box1.png';
+
+import { SettingTitle } from '../atoms/SettingTitle';
 import { LinksStep } from '../atoms/LinksStep';
-import NextStep from '../../icons/selectBox/NextStep.svg';
-import PrevStep from '../../icons/selectBox/prevStep.svg';
+
 import { Link } from 'react-router-dom';
-import { IMG } from '../selectBox';
-// import { GetBox } from '../selectBox';
 
 export interface FillBoxProps {
-  // imageBox: string;
   onSetId?: () => void;
-  // id_img?: any;
+
   imgVal: string;
   onClick?: () => void;
   price: any;
@@ -25,9 +22,7 @@ export interface FillBoxProps {
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const { onSetId, imgVal, onClick, price, onDoneClick } = props;
-  const [id, setId] = useState(0);
 
-  // const {imageBox} = props
   return (
     <div className={cn(styles.wrapper)}>
       <div className={styles.wrapperInfo}>
@@ -35,18 +30,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
           <SettingTitle title="Fill your box" isActive={true} />
         </div>
 
-        <div
-          className={cn(styles.img)}
-          onClick={() => {
-            // console.log(imgVal);
-          }}
-        >
-          <img
-            // src={IMG[1]}
-            src={imgVal}
-            // alt={IMG[id]}
-            // id={id}
-          />
+        <div className={cn(styles.img)} onClick={() => {}}>
+          <img src={imgVal} />
         </div>
         <div className={cn(styles.distributeDrop)}>
           <LabelSettings title="How would you like to distribute drop?" />

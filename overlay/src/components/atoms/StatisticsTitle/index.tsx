@@ -8,13 +8,12 @@ export interface StatisticsTitleProps {
   style?: CSSProperties;
   found?: number | null;
   className?: string;
-  // checked?: boolean;
+
   onClick?: any;
 }
 
 export const StatisticsTitle = (props: StatisticsTitleProps): ReactElement => {
   const { title, isActive = false, found = null, style, className, onClick } = props;
-  // const isVisibleFound = found && found > 0;
 
   return (
     <div className={cn(styles.wrapper, className)}>
@@ -24,7 +23,6 @@ export const StatisticsTitle = (props: StatisticsTitleProps): ReactElement => {
         style={style}
       >
         {title}
-        {/* {isVisibleFound ? <span className={styles.found}>{found}</span> : null} */}
       </h4>
     </div>
   );

@@ -79,8 +79,6 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
           <LabelSettings title="Box name" />
 
           <InputPanel
-            // creationForm={creationForm}
-            // onCreationFormUpdate={onCreationFormUpdate}
             value={_valueName}
             onChange={(e: any) => {
               e.stopPropagation();
@@ -110,7 +108,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         </div>
         <div className={styles.boxMessage}>
           <LabelSettings title="Box Message" />
-          {/* <Test /> */}
+
           <TextArea
             onChange={(e: any) => {
               const { data, inputType } = e.nativeEvent;
