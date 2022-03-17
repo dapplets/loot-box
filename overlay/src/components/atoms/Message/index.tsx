@@ -3,6 +3,7 @@ import cn from 'classnames';
 import styles from './Message.module.scss';
 import { LabelSettings } from '../LabelSettings';
 
+import useCopied from '../../../hooks/useCopyed';
 export interface MessageProps {
   message: any;
   link: string;
@@ -11,6 +12,15 @@ export interface MessageProps {
 
 export const Message: FC<MessageProps> = (props: MessageProps) => {
   const { message, link, instruction } = props;
+  const [copied, copy, setCopied] = useCopied(`${message} ${link} ${instruction}`);
+
+  const copyText = () => {
+    copy();
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+  };
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.lootboxCode)}>
@@ -21,7 +31,11 @@ export const Message: FC<MessageProps> = (props: MessageProps) => {
             <p className={cn(styles.link)}>{link}</p>
             <p className={cn(styles.instruction)}>{instruction}</p>
           </div>
-          <button className={cn(styles.button)}></button>
+          {copied ? (
+            <button className={cn(styles.buttonGoogCopy)}></button>
+          ) : (
+            <button className={cn(styles.button)} onClick={copyText}></button>
+          )}
         </div>
       </div>
     </div>

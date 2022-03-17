@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, useEffect } from 'react';
+import React, { ReactNode, FC, useEffect, useMemo } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 
@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { DropChance } from '../atoms/DropChance';
 import { Lootbox, NftContentItem } from '../../../../common/interfaces';
 import { ChildComponent } from './childComponent';
-import { Test } from '../atoms/test';
+
 import { ButtonsSetting } from './buttonsSetting';
 export interface BoxSettingsProps {
   children?: ReactNode;
@@ -36,13 +36,17 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     // ToDo: how to get rid of object coping?
     const newForm = Object.assign({}, creationForm);
     newForm.nftContentItems = [DEFAULT_NFT_ITEM];
-    newForm.nearContentItems = [];
-    newForm.ftContentItems = [];
+    creationForm.nearContentItems = [];
+    creationForm.ftContentItems = [];
     newForm.dropChance = value;
+    onCreationFormUpdate(creationForm);
     onCreationFormUpdate(newForm);
 
     console.log(creationForm);
   }, []);
+  // const memoizedValue = useMemo(() => {
+  //   onCreationFormUpdate(creationForm);
+  // }, []);
   useEffect(() => {
     creationForm.dropChance = value;
     onCreationFormUpdate(creationForm);
@@ -92,7 +96,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
             <div className={styles.dropChance_nft}>
               <LabelSettings title="Drop Chance" />
-              {/* <Test /> */}
 
               <DropChance
                 type="string"

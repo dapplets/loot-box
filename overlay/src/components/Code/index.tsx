@@ -11,7 +11,6 @@ import { Message } from '../atoms/Message';
 import { Lootbox } from '../../../../common/interfaces';
 import { MessageData } from '../../App';
 
-import { Test } from '../atoms/test';
 export interface CodeProps {
   onChange?: () => void;
   onSubmit?: () => void;

@@ -15,6 +15,7 @@ import { Header } from './components/Header/index';
 import { Footer } from './components/Footer/index';
 import { About } from './components/About';
 import { Instruction } from './components/Instruction';
+import styled, { keyframes } from 'styled-components';
 
 export interface AppProps {
   completed: number;
@@ -114,6 +115,34 @@ function LootboxPage({
       setLoader(false);
     });
   }, [lootboxId]);
+  const pulse = keyframes`
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+`;
+
+  const Bar = styled.div`
+    width: ${100 - 40}%;
+    height: 100%;
+
+    background: linear-gradient(
+      0deg,
+      rgb(240, 164, 29),
+      rgb(255, 217, 4) 94%,
+      rgb(255, 244, 171) 98%
+    );
+    box-shadow: 10px -10px 24px rgba(242, 215, 4, 0.2), -10px -10px 20px rgba(246, 219, 4, 0.2),
+      10px 10px 31px rgba(242, 215, 4, 0.2);
+    border-radius: 40px;
+    text-align: right;
+    position: relative;
+    transform-origin: left top;
+    transform: scaleX(0);
+    animation: ${pulse} 2s forwards;
+  `;
   return (
     // <main>
     <div className={styles.BoxBlock}>
@@ -129,7 +158,8 @@ function LootboxPage({
             {/* <h2 className={styles.radialBarTitle}>{statCur} / 100 tokens left</h2> */}
             <h2 className={styles.radialBarTitle}>{40} / 100 tokens left</h2>
             <div className={styles.radialBarGraph}>
-              <div
+              <Bar />
+              {/* <div
                 style={{
                   // width: `${100 - statCur}%`,
                   width: `${100 - 40}%`,
@@ -142,10 +172,11 @@ function LootboxPage({
                   borderRadius: '40px',
                   textAlign: 'right',
                   position: 'relative',
+                  
                 }}
               >
                 <span className={cn(styles.labelStyles)}></span>
-              </div>
+              </div> */}
             </div>
           </div>
 

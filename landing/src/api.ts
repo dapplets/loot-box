@@ -5,6 +5,7 @@ import {
   LootboxStat,
   LootboxWinner,
   LootboxClaimStatus,
+  LootboxClaimResult,
 } from '../../common/interfaces';
 import {} from '@dapplets/dapplet-extension';
 function _createFakeLootbox(id: number): Lootbox {
@@ -37,6 +38,12 @@ function _createFakeLootbox(id: number): Lootbox {
 }
 
 export class DappletApi implements IDappletApi {
+  _getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimResult> {
+    throw new Error('Method not implemented.');
+  }
+  _claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimResult> {
+    throw new Error('Method not implemented.');
+  }
   async connectWallet() {
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
     await wallet.connect();

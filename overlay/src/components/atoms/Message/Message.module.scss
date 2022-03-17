@@ -49,3 +49,10 @@
   width: 25px;
   height: 25px;
 }
+.buttonGoogCopy {
+  display: inline-block;
+  background: $Primary url('../../../icons/message/yes.svg') center no-repeat;
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+}

@@ -18,8 +18,6 @@ import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
 import { Slider } from '../atoms/Slider';
 
-import { Test } from '../atoms/test';
-
 export interface SelectBoxProps {
   children?: ReactNode;
   imgLink?: string;

@@ -13,14 +13,9 @@ import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 import { useToggle } from '../../hooks/useToggle';
 
-import { SettingTitle } from '../atoms/SettingTitle';
 import { LabelSettings } from '../atoms/LabelSettings';
-import { Button } from '../atoms/Button';
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
-import NextStep from '../../icons/selectBox/NextStep.svg';
-import PrevStep from '../../icons/selectBox/prevStep.svg';
-
 import { InputPanel } from '../atoms/Input';
 import { RadioButton } from '../atoms/RadioButton';
 import { DropChance } from '../atoms/DropChance';
@@ -56,16 +51,14 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
 
   const [valueRadio, setValueRadioLoot] = useState('');
-  const [valueRadioDropType, setValueRadioDropType] = useState('');
+
   const [value, setValue] = React.useState(20);
   const [ftItem, setFtItem] = useState(DEFAULT_FT_ITEM);
   const [nearItem, setNearItem] = useState(DEFAULT_NEAR_ITEM);
 
   useEffect(() => {
-    // onCreationFormUpdate((creationForm.dropChance = value));
     creationForm.dropChance = value;
     onCreationFormUpdate(creationForm);
-    // console.log({ value });
   });
 
   const onChangeRadioLoot: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -73,36 +66,44 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     onShowDescription_tokenAmount();
   };
 
-  const onChangeRadioDropType: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setValueRadioDropType(String(e.target.value));
-    onShowDescription_dropAmount();
-  };
-
   const changeHandler = (name: keyof NearContentItem, value: any) => {
     const newForm = Object.assign({}, creationForm);
-    (newForm as any)[name] = value;
+
+    // (newForm as any)[name] = value;
+    onCreationFormUpdate(
+      (creationForm.ftContentItems[0] = {
+        contractAddress: '',
+        tokenAmount: '',
+        dropType: 'fixed',
+        dropAmountFrom: '',
+        dropAmountTo: '',
+      }),
+    );
 
     newForm.nearContentItems[0][name] = value;
-
     console.log(value);
     onCreationFormUpdate(newForm);
-
-    // console.log(newForm);
   };
 
   const changeHandlerFT = (name: keyof FtContentItem, value: any) => {
     const newForm = Object.assign({}, creationForm);
-    // (newForm as any)[name] = value;
+
+    onCreationFormUpdate(
+      (creationForm.nearContentItems[0] = {
+        tokenAmount: '',
+        dropType: 'fixed',
+        dropAmountFrom: '',
+        dropAmountTo: '',
+      }),
+    );
 
     newForm.ftContentItems[0][name] = value;
     console.log(value);
 
     onCreationFormUpdate(newForm);
-
-    // console.log(newForm);
   };
 
-  // const changeHandlerFT = (e: ChangeEvent<HTMLInputElement>) => {
+  // const changeHandlerFTRadio = (e: ChangeEvent<HTMLInputElement>) => {
   //   const { name, value } = e.currentTarget;
 
   //   // console.log(name, value);
@@ -118,9 +119,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     // ToDo: how to get rid of object coping?
     const newForm = Object.assign({}, creationForm);
     newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
-    newForm.nftContentItems = [];
+    creationForm.nftContentItems = [];
     newForm.ftContentItems = [DEFAULT_FT_ITEM];
-
+    onCreationFormUpdate(creationForm);
+    // onChangeRadioLoot;
     onCreationFormUpdate(newForm);
   }, []);
 
@@ -139,7 +141,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 type="string"
                 appearance="default"
                 placeholder="Token amount"
-                // onChange={(e) => changeHandler.call(null, 'tokenAmount', e.target.value)}
                 pattern="^[0-9]\d*.{2}$"
               />
               <RadioButton
@@ -166,20 +167,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   type="text"
                   appearance="medium"
                   placeholder="Token contract"
-                  // name="contractAddress"
-                  // onChange={changeHandlerFT}
-
-                  value={creationForm.ftContentItems[0].contractAddress ?? ''}
-                  onChange={(e) => changeHandlerFT.call(null, 'contractAddress', e.target.value)}
+                  onChange={(e) => {
+                    changeHandlerFT.call(null, 'contractAddress', e.target.value);
+                  }}
                   pattern="^[0-9]\d*.{2}$"
                 />
                 <InputPanel
                   type="text"
                   appearance="small"
                   placeholder="Token ticker "
-                  // onChange={changeHandlerFT}
-                  // value={creationForm.ftContentItems[0].dropAmountFrom ?? ''}
-
                   // TOKEN TICKER BY INTERFACE
 
                   onChange={(e) => e.target.value}
@@ -198,34 +194,24 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   name="dropAmount"
                   id="3_Drop"
                   defaultChecked={true}
-                  onChange={onShowDescription_dropAmount}
-                  // checked={ftItem.dropType === 'fixed'}
-                  // onChange={() =>
-                  //   setFtItem((prevState: any) => ({
-                  //     ...prevState,
-                  //     dropType: 'fixed',
-                  //   }))
-                  // }
+                  onChange={(e) => {
+                    if (e.target.checked !== undefined) {
+                      changeHandlerFT.call(null, 'dropType', 'fixed');
+                      onShowDescription_dropAmount();
+                    }
+                  }}
                 />
                 <RadioButton
                   value="Variable"
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
-                  onChange={onShowDescription_dropAmount}
-                  // checked={ftItem.dropType === 'variable'}
-                  // onChange={() =>
-                  //   setFtItem((prevState: any) => ({
-                  //     ...prevState,
-                  //     dropType: 'variable',
-                  //   }))
-                  // }
-                  // onChange={(e) => {
-                  //   if (e.target.checked) {
-                  //     changeHandlerFT.bind('variable', 'dropType');
-                  //   }
-                  //   onChangeRadioDropType(e);
-                  // }}
+                  onChange={(e) => {
+                    if (e.target.checked !== undefined) {
+                      changeHandlerFT.call(null, 'dropType', 'variable');
+                      onShowDescription_dropAmount();
+                    }
+                  }}
                 />
               </div>
               {(isShowDescription_dropAmount && (
@@ -234,22 +220,18 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     type="text"
                     appearance="small_medium"
                     placeholder="From"
-                    // onChange={changeHandlerFT}
-                    // name="dropAmountFrom"
-
-                    value={creationForm.ftContentItems[0].dropAmountFrom ?? ''}
-                    onChange={(e) => changeHandlerFT.call(null, 'dropAmountFrom', e.target.value)}
+                    onChange={(e) => {
+                      changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
+                    }}
                     pattern="^[0-9]\d*.{2}$"
                   />
                   <InputPanel
                     type="text"
                     appearance="small_medium"
                     placeholder="To"
-                    // onChange={changeHandlerFT}
-                    // name="dropAmountTo"
-
-                    value={creationForm.ftContentItems[0].dropAmountTo ?? ''}
-                    onChange={(e) => changeHandlerFT.call(null, 'dropAmountTo', e.target.value)}
+                    onChange={(e) => {
+                      changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
+                    }}
                     pattern="^[0-9]\d*.{2}$"
                   />
                 </div>
@@ -258,11 +240,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   type="text"
                   appearance="biggest"
                   placeholder="Drop amount"
-                  value={creationForm.ftContentItems[0].dropAmountFrom ?? ''}
-                  onChange={
-                    (e) => changeHandlerFT.call(null, 'dropAmountFrom', e.target.value)
-                    // changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
-                  }
+                  onChange={(e) => {
+                    changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
+                  }}
                   pattern="^[0-9]\d*.{2}$"
                 />
               )}
@@ -280,53 +260,41 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   name="dropAmount"
                   id="3_Drop"
                   defaultChecked
-                  // checked={creationForm.nearContentItems[0].dropType === 'fixed'}
-                  // checked={DEFAULT_NEAR_ITEM.dropType === 'fixed'}
-                  // onChange={(e) => {
-                  //   if (e.target.checked) {
-                  //     changeHandler.bind('fixed', 'dropType');
-                  //   }
-                  //   onChangeRadioDropType(e);
-                  // }}
-                  onChange={onShowDescription_dropAmount}
+                  onChange={(e) => {
+                    if (e.target.checked !== undefined) {
+                      changeHandler.call(null, 'dropType', 'fixed');
+                      onShowDescription_dropAmount();
+                    }
+                  }}
                 />
                 <RadioButton
                   value="Variable"
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
-                  // checked={creationForm.nearContentItems[0].dropType === 'variable'}
-                  // onChange={onChangeRadioDropType}
-                  // onChange={(e) => {
-                  //   if (e.target.checked) {
-                  //     changeHandler.bind('variable', 'dropType');
-                  //   }
-                  //   onChangeRadioDropType(e);
-                  // }}
-                  onChange={onShowDescription_dropAmount}
+                  onChange={(e) => {
+                    if (e.target.checked !== undefined) {
+                      changeHandler.call(null, 'dropType', 'variable');
+                      onShowDescription_dropAmount();
+                    }
+                  }}
                 />
               </div>
               {(isShowDescription_dropAmount && (
                 <div className={cn(styles.dropAmountInput)}>
                   <InputPanel
-                    type="string"
+                    type="text"
                     appearance="small_medium"
                     placeholder="From"
-                    // onChange={changeHandlerFT}
-                    // name="dropAmountFrom"
-
-                    value={creationForm.nearContentItems[0].dropAmountFrom ?? ''}
-                    onChange={(e) => changeHandler.call(null, 'dropAmountFrom', e.target.value)}
+                    onChange={(e) => {
+                      changeHandler.call(null, 'dropAmountFrom', e.target.value);
+                    }}
                     pattern="^[0-9]\d*.{2}$"
                   />
                   <InputPanel
-                    type="string"
+                    type="text"
                     appearance="small_medium"
                     placeholder="To"
-                    // onChange={changeHandlerFT}
-                    // name="dropAmountTo"
-
-                    value={creationForm.nearContentItems[0].dropAmountTo ?? ''}
                     onChange={(e) => changeHandler.call(null, 'dropAmountTo', e.target.value)}
                     pattern="^[0-9]\d*.{2}$"
                   />
@@ -336,13 +304,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   type="text"
                   appearance="biggest"
                   placeholder="Drop amount"
-                  // onChange={onChangeDropAmount}
-
-                  // value={creationForm.nearContentItems[0].dropAmountFrom ?? ''}
-                  // onChange={
-                  //   (e) => changeHandler.call(null, 'dropAmountFrom', e.target.value)
-                  //   // changeHandler.call(null, 'dropAmountTo', e.target.value);
-                  // }
                   pattern="^[0-9]\d*.{2}$"
                 />
               )}
