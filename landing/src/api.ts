@@ -11,7 +11,6 @@ import {} from '@dapplets/dapplet-extension';
 function _createFakeLootbox(id: number): Lootbox {
   return {
     id: id,
-    name: `Fake Lootbox (${id})`,
     pictureId: id,
     dropChance: 0.5,
     status: 'created',

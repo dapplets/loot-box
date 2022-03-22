@@ -1,28 +1,35 @@
 import { DappletApi } from './api';
+import { Routes, Route, Link } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Lootbox, LootboxStat } from '../../common/interfaces';
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import cn from 'classnames';
 import styles from './App.module.scss';
-import box from './img/box.png';
-import Box1 from './img/boxes/box1.png';
-import Box2 from './img/boxes/box2.png';
-import Box3 from './img/boxes/box3.png';
-import Box4 from './img/boxes/box4.png';
+import styled, { keyframes } from 'styled-components';
+
+import boxDef from './img/box.png';
+
+import blueBox from './img/boxes/blue_box.png';
+import redBox from './img/boxes/red_box.png';
+import safe from './img/boxes/safe.png';
+import box from './img/boxes/box.png';
+import bag from './img/boxes/bag.png';
+import pinata from './img/boxes/pinata.png';
+import pig from './img/boxes/pig.png';
+
 import { Preloader } from './components/Preloader/index';
-import { Routes, Route, Link } from 'react-router-dom';
-import { useParams, useSearchParams } from 'react-router-dom';
+
 import { Header } from './components/Header/index';
 import { Footer } from './components/Footer/index';
 import { About } from './components/About';
 import { Instruction } from './components/Instruction';
-import styled, { keyframes } from 'styled-components';
 
 export interface AppProps {
   completed: number;
   bgcolor: string;
   // stat: number;
 }
-export const IMG = [Box1, Box2, Box3, Box4];
+export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 
 const _api = new DappletApi();
 
@@ -109,6 +116,7 @@ function LootboxPage({
     transform: scaleX(1);
   }
 `;
+  // width: ${100 - 40}%;
   // width: ${100-statCur}
   const Bar = styled.div`
     width: ${100 - 40}%;
@@ -136,14 +144,16 @@ function LootboxPage({
         <div className={styles.postLoader}>
           <h1 className={styles.boxTitle}>Sed egestas et est amet </h1>
           <div className={styles.boxImg}>
-            {/* <img src={selectedLootboxId === null ? IMG[Number(lootboxId)!] : box} /> */}
-            <img src={selectedLootboxId === null ? box : IMG[Number(lootboxId)!]} />
+            {/* <img src={selectedLootboxId === null ? IMG[Number(lootboxId)!] : boxDef} /> */}
+            <img src={selectedLootboxId === null ? boxDef : IMG[Number(lootboxId)!]} />
           </div>
 
           <div className={styles.radialBarBlock}>
-            {/* <h2 className={styles.radialBarTitle}>{statCur} / 100 tokens left</h2> */}
+            {/* <h2 className={styles.radialBarTitle}>
+              <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
+            </h2> */}
             <h2 className={styles.radialBarTitle}>
-              <span className={styles.statCurNum}>{40}</span> / 100 tokens left
+              <span className={styles.statCurNum}>{40} / 100 tokens left</span>
             </h2>
             <div className={styles.radialBarGraph}>
               <Bar />
