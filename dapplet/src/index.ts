@@ -1,16 +1,52 @@
 import {} from '@dapplets/dapplet-extension';
 import EXAMPLE_IMG from './icons/near_dapplet_icon.svg';
-import { DappletApi } from './api';
-import emptyBox from './icons/emptyBox.png';
-import fullBox from './icons/FullBox.png';
-import BigBox from './icons/box.png';
-import boxDef from './icons/box.gif';
+import { IDappletApi } from '../../common/interfaces';
+
+import boxDef from './icons/LightsOut.gif';
+import boxDim from './icons/Dim.gif';
+import White from './icons/White.gif';
+
+import bag from './icons/boxCreate/bag.png';
+import blueBox from './icons/boxCreate/blue_box.png';
+import box from './icons/boxCreate/box.png';
+import pig from './icons/boxCreate/pig.png';
+import pinata from './icons/boxCreate/pinata.png';
+import redBox from './icons/boxCreate/red_box.png';
+import safe from './icons/boxCreate/safe.png';
+
+import bagEmpty from './icons/boxEmpty/bag_empty.png';
+import blueBoxEmpty from './icons/boxEmpty/blue_box_empty.png';
+import boxEmpty from './icons/boxEmpty/box_empty.png';
+import pigEmpty from './icons/boxEmpty/pig_empty.png';
+import pinataEmpty from './icons/boxEmpty/pinata_empty.png';
+import redBoxEmpty from './icons/boxEmpty/red_box_empty.png';
+import safeEmpty from './icons/boxEmpty/safe_empty.png';
+
+import bagOpen from './icons/boxOpen/bag_open.png';
+import blueBoxOpen from './icons/boxOpen/blue_box_open.png';
+import boxOpen from './icons/boxOpen/box_open.png';
+import pigOpen from './icons/boxOpen/pig_open.png';
+import pinataOpen from './icons/boxOpen/pinata_open.png';
+import redBoxOpen from './icons/boxOpen/red_box_open.png';
+import safeOpen from './icons/boxOpen/safe_open.png';
 
 import { LootboxClaimStatus } from '../../common/interfaces';
+import { DappletApi } from './api';
+
+export const BOX_DEFAULT = [blueBox, redBox, safe, box, bag, pinata, pig];
+export const BOX_OPEN = [blueBoxOpen, redBoxOpen, safeOpen, boxOpen, bagOpen, pinataOpen, pigOpen];
+export const BOX_EMPTY = [
+  blueBoxEmpty,
+  redBoxEmpty,
+  safeEmpty,
+  boxEmpty,
+  bagEmpty,
+  pinataEmpty,
+  pigEmpty,
+];
 
 @Injectable
 export default class TwitterFeature {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any,  @typescript-eslint/explicit-module-boundary-types
   @Inject('twitter-adapter.dapplet-base.eth') public adapter: any;
   private _overlay: any;
 
@@ -84,13 +120,19 @@ export default class TwitterFeature {
 
               const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
 
+              const lootboxImg = await this._api
+                .getBoxesByAccount(wallet.accountId)
+                .then((x) => x.map((x) => x.pictureId));
+              console.log(lootboxImg);
+
               const ClaimStatus = await this._api
                 .getLootboxClaimStatus(numIndex, wallet.accountId)
                 .then((x) => {
-                  if (x === 2) {
-                    me.img = fullBox;
+                  if (x !== 2) {
+                    me.img = BOX_DEFAULT[lootboxImg as any];
                   } else {
-                    me.img = emptyBox;
+                    me.img = BOX_EMPTY[lootboxImg as any];
+                    me.exec = () => {};
                   }
                 });
 
@@ -100,8 +142,13 @@ export default class TwitterFeature {
               const Tweet = ctx.text;
               const tweetParse = getTweetParse(Tweet);
               const numIndex = getNumIndex(tweetParse);
+              const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+              const lootboxImg = await this._api
+                .getBoxesByAccount(wallet.accountId)
+                .then((x) => x.map((x) => x.pictureId));
+              console.log(lootboxImg);
 
-              await this.getClaimExec(me, numIndex);
+              await this.getClaimExec(me, numIndex, lootboxImg);
             },
           },
         }),
@@ -109,7 +156,7 @@ export default class TwitterFeature {
     });
   }
 
-  async getClaimExec(me, num): Promise<void> {
+  async getClaimExec(me, num, numImg): Promise<void> {
     me.img = boxDef;
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
 
@@ -157,10 +204,10 @@ export default class TwitterFeature {
           //   x.nftContentItems.map((x, i) => (x.contractAddress, x.quantity, x.tokenId)),
           // );
         });
-        me.img = BigBox;
+        me.img = BOX_OPEN[numImg as any];
         me.exec = () => {};
       } else {
-        me.img = emptyBox;
+        me.img = BOX_EMPTY[numImg as any];
         me.text = 'empty';
         me.exec = () => {};
       }

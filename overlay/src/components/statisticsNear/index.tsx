@@ -1,13 +1,4 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  FC,
-  useState,
-  ChangeEvent,
-  ChangeEventHandler,
-  useEffect,
-} from 'react';
+import React, { FC } from 'react';
 import styles from './StatisticsNear.module.scss';
 import cn from 'classnames';
 
@@ -96,39 +87,11 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
   );
 };
 export interface StatisticsNearPropsCode {
-  creationForm: Lootbox;
-  onCreationFormUpdate: (x: any) => void;
-  setCreationMessageData: (x: any) => void;
-  MessageData: any;
+  id: any;
 }
 export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNearPropsCode) => {
-  const { creationForm, onCreationFormUpdate, setCreationMessageData, MessageData } = props;
-  const onFormChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
-    e,
-  ) => {
-    if (type === 'string') {
-      (creationForm as any)[prop] = e.target.value;
-    } else {
-      (creationForm as any)[prop] = e.target.value;
-    }
-    onCreationFormUpdate(creationForm);
-  };
+  const { id } = props;
 
-  const onMessageChange = (prop: string, type: string): ChangeEventHandler<HTMLInputElement> => (
-    e,
-  ) => {
-    if (type === 'string') {
-      (MessageData as any)[prop] = e.target.value;
-    } else {
-      (MessageData as any)[prop] = e.target.value;
-    }
-    setCreationMessageData(MessageData);
-  };
-  const [value, setValue] = React.useState(MessageData.boxMessage);
-  const [valueName, setValueName] = React.useState(creationForm.name);
-  useEffect(() => {
-    console.log({ value });
-  });
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.titleLinks)}>
@@ -148,24 +111,7 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
           </Link>
         </div>
       </div>
-      <Code
-        _value={value}
-        _onValueChange={(newValue: any) => setValue(newValue)}
-        value={value}
-        setValue={setValue}
-        //
-        _valueName={valueName}
-        _onValueChangeName={(newValue: any) => setValueName(newValue)}
-        valueName={valueName}
-        setValueName={setValueName}
-        //
-        onNameUpdated={() => onFormChange('name', 'string')}
-        creationForm={creationForm}
-        onCreationFormUpdate={() => (creationForm.name = valueName)}
-        setCreationMessageData={(MessageData.boxMessage = value)}
-        onMessageUpdated={(MessageData.boxMessage = value)}
-        MessageData={MessageData}
-      />
+      <Code id={id} />
     </div>
   );
 };

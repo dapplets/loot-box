@@ -39,7 +39,7 @@ import copy from 'copy-to-clipboard';
 import classNames from 'classnames';
 import { Lootbox } from '../../../../../common/interfaces';
 import styles from './Test.module.scss';
-import { MessageData } from '../../../App';
+
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import copyToClipboard from 'copy-to-clipboard';
 export interface TestProps {

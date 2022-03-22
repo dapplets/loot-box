@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import cn from 'classnames';
 import styles from './App.module.scss';
 
@@ -38,13 +38,11 @@ interface ICtx {
   text: string;
 
   isOpen?: boolean;
-  // loading: true;
 }
 
 const dappletApi = new GeneralBridge<IDappletApi>();
 
 const EMPTY_FORM: Lootbox = {
-  name: '',
   dropChance: 20,
   ftContentItems: [],
   nftContentItems: [],
@@ -53,52 +51,9 @@ const EMPTY_FORM: Lootbox = {
   id: 0,
   status: 'created',
 };
-export const MessageData = [
-  {
-    id: 0,
-    boxMessage: '',
-  },
-];
+
 (async () => {
   await dappletApi.clearAll();
-  // console.log('cleared all lootboxes');
-
-  // const lootboxes = await dappletApi.getBoxesByAccount('dapplets_lootbox.testnet');
-  // console.log('getBoxesByAccount', lootboxes);
-
-  // const lootbox: Lootbox = {
-  //   id: -1,
-  //   name: `Auto-created lootbox`,
-  //   pictureId: 1,
-  //   dropChance: 0.5,
-  //   status: 'created',
-  //   nearContentItems: [],
-  //   ftContentItems: [],
-  //   nftContentItems: [
-  //     {
-  //       contractAddress: 'nft.testnet',
-  //       tokenId: 1,
-  //       quantity: 1,
-  //     },
-  //     {
-  //       contractAddress: 'nft.testnet',
-  //       tokenId: 2,
-  //       quantity: 1,
-  //     },
-  //   ],
-  // };
-
-  // const priceInfo = await dappletApi.calcBoxCreationPrice(lootbox);
-  // console.log('price of lootbox creation', priceInfo);
-
-  // const lootboxId = await dappletApi.createNewBox(lootbox);
-  // console.log('created new looxbox with id: ' + lootboxId);
-
-  // const stat = await dappletApi.getLootboxStat(lootboxId);
-  // console.log('statistics of lootbox #' + lootboxId, stat);
-
-  // const winners = await dappletApi.getLootboxWinners(lootboxId);
-  // console.log('winners of lootbox #' + lootboxId, winners);
 })();
 
 export default () => {
@@ -117,7 +72,13 @@ export default () => {
   const [clickedBoxImg, setClickedBoxImg] = useState<number | null>(0);
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
   const [loader, setLoader] = useState(false);
-  const [creationMessageData, setCreationMessageData] = useState(MessageData);
+
+  const [imgSelect, setImgSelect] = useState('');
+
+  const updateImgSelect = (x: string) => {
+    setImgSelect(x);
+    console.log(imgSelect);
+  };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
@@ -134,20 +95,6 @@ export default () => {
     });
   }, []);
 
-  useEffect(() => {
-    dappletApi
-      .getBoxesByAccount('dapplets_lootbox.testnet')
-      .then((x) => {
-        setLootboxes(x);
-        // console.log('lootboxes', x);
-      })
-      .catch((e) => {
-        console.error(e);
-
-        // ToDo: show error to user
-      });
-  }, []);
-
   const doneClickHandler = async () => {
     // show loader
     console.log('done');
@@ -158,27 +105,25 @@ export default () => {
     });
 
     setLoader(false);
-    // hide loader
-    // move to homepage
 
     await dappletApi.getBoxesByAccount('dapplets_lootbox.testnet').then((x) => {
       setLootboxes(x);
       console.log('lootboxes', x);
     });
-    setCreationMessageData(MessageData);
-    // console.log(MessageData);
-    // console.log(creationForm);
+    if (selectedLootboxId === null) return;
   };
+  useEffect(() => {
+    doneClickHandler;
+    selectedLootboxId;
+  }, [doneClickHandler, selectedLootboxId]);
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
-    // console.log(creationForm.id);
+
     dappletApi
       .getLootboxWinners(selectedLootboxId)
       .then((x) => {
-        // console.log('getLootboxStat', x);
         setWinners(x);
-        // console.log('winners of lootbox #' + selectedLootboxId, winners);
       })
       .catch((e) => {
         console.error('getLootboxWinners', e);
@@ -193,9 +138,8 @@ export default () => {
     dappletApi
       .getLootboxStat(selectedLootboxId)
       .then((x) => {
-        // console.log('getLootboxStat', x);
         setStat(x);
-        // console.log('statistics of lootbox #' + selectedLootboxId, stat);
+
         setLoader(false);
       })
 
@@ -207,14 +151,10 @@ export default () => {
   }, [selectedLootboxId]);
 
   useEffect(() => {
-    // if (selectedLootboxId === null) return;
-
     dappletApi
       .calcBoxCreationPrice(creationForm)
       .then((x) => {
-        // console.log('getLootboxPrice', x);
         setPrice(x);
-        // console.log('price of lootbox creation', price);
       })
       .catch((e) => {
         console.error('getLootboxPrice', e);
@@ -241,6 +181,7 @@ export default () => {
     }
     setNearAccount(accountName);
   };
+  // console.log(selectedLootboxId);
 
   return (
     <div className={cn(styles.app)}>
@@ -264,17 +205,16 @@ export default () => {
         <Route
           path="/"
           element={
-            <CreateNewBox imgVal={imgBox} label={valueLabel}>
-              {(loader && <Preloader />) ||
-                // <Preloader />
-                lootboxes.map((item, index) => (
+            (loader && <Preloader />) || (
+              <CreateNewBox imgVal={imgBox} label={valueLabel}>
+                {lootboxes.map((item, index) => (
                   <ChildComponent
                     onClick={() => {
                       setLootboxes(lootboxes);
                       setSelectedLootboxId(item.id!);
                     }}
                     imgVal={IMG[item.pictureId]}
-                    label={item.name}
+                    label={String(item.id!)}
                     number={index}
                     key={index}
                     id={item.id!}
@@ -282,9 +222,10 @@ export default () => {
                     status={item.status!}
                   />
                 ))}
-            </CreateNewBox>
+              </CreateNewBox>
+            )
           }
-        />
+        ></Route>
         <Route
           path="/select_box"
           element={
@@ -293,6 +234,7 @@ export default () => {
               clicked={clickedBoxImg}
               onChange_IMG={(x: string) => {
                 setImgBox(x);
+                updateImgSelect(x);
               }}
               creationFormId={creationForm.pictureId}
               onCreationFormUpdate={(id: number) =>
@@ -326,41 +268,38 @@ export default () => {
         />
         <Route
           path="/fill_your_box"
-          element={<FillBox price={price} imgVal={imgBox} onDoneClick={doneClickHandler} />}
+          element={
+            (loader && <Preloader />) || (
+              <FillBox price={price} imgVal={imgSelect} onDoneClick={doneClickHandler} />
+            )
+          }
         />
 
         <Route
           path="/fill_your_box_nft"
-          element={<FillBox_Nft price={price} imgVal={imgBox} onDoneClick={doneClickHandler} />}
+          element={
+            (loader && <Preloader />) || (
+              <FillBox_Nft price={price} imgVal={imgSelect} onDoneClick={doneClickHandler} />
+            )
+          }
         />
         <Route
           path="/deploy_your_box"
           element={
-            (loader && <Preloader />) || (
-              <DeployBox
-                id={lootboxes.map((item, i) => item.id!)}
-                onChange={onChange}
-                setCreationMessageData={(x: any) => setCreationMessageData(x)}
-                MessageData={MessageData}
-              />
-            )
+            (loader && <Preloader />) || <DeployBox id={selectedLootboxId} onChange={onChange} />
           }
         />
         <Route
           path="/statistics"
           element={(loader && <Preloader />) || <StatisticsNear stat={stat} />}
         />
-        <Route path="/winners" element={<StatisticsWinners winners={winners} />} />
+        <Route
+          path="/winners"
+          element={(loader && <Preloader />) || <StatisticsWinners winners={winners} />}
+        />
         <Route
           path="/code"
-          element={
-            <StatisticsCode
-              creationForm={creationForm}
-              onCreationFormUpdate={(x) => setCreationForm(x)}
-              setCreationMessageData={(x: any) => setCreationMessageData(x)}
-              MessageData={MessageData}
-            />
-          }
+          element={(loader && <Preloader />) || <StatisticsCode id={selectedLootboxId} />}
         />
       </Routes>
     </div>

@@ -241,6 +241,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="biggest"
                   placeholder="Drop amount"
                   onChange={(e) => {
+                    changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
                     changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
                   }}
                   pattern="^[0-9]\d*.{2}$"
@@ -305,6 +306,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="biggest"
                   placeholder="Drop amount"
                   pattern="^[0-9]\d*.{2}$"
+                  onChange={(e) => {
+                    changeHandler.call(null, 'dropAmountTo', e.target.value);
+                    changeHandler.call(null, 'dropAmountFrom', e.target.value);
+                  }}
                 />
               )}
             </div>

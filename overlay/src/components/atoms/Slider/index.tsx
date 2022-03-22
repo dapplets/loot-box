@@ -1,9 +1,12 @@
 import React, { useState, FC, useMemo, useEffect } from 'react';
 
-import box1 from '../../../icons/createNewBox/box1.png';
-import box2 from '../../../icons/createNewBox/box2.png';
-import box3 from '../../../icons/createNewBox/box3.png';
-import box4 from '../../../icons/createNewBox/box4.png';
+import blueBox from '../../../icons/createNewBox/blue_box.png';
+import redBox from '../../../icons/createNewBox/red_box.png';
+import safe from '../../../icons/createNewBox/safe.png';
+import box from '../../../icons/createNewBox/box.png';
+import bag from '../../../icons/createNewBox/bag.png';
+import pinata from '../../../icons/createNewBox/pinata.png';
+import pig from '../../../icons/createNewBox/pig.png';
 
 import cn from 'classnames';
 import 'keen-slider/keen-slider.min.css';
@@ -23,7 +26,15 @@ const Image = ({ onClick, item, index, clicked }: ImageProps) => {
     [clicked, index],
   );
 
-  return <img onClick={() => onClick(index)} className={imgClassName} src={item} id={item} />;
+  return (
+    <img
+      // style={{ maxWidth: '10px !important' }}
+      onClick={() => onClick(index)}
+      className={imgClassName}
+      src={item}
+      id={item}
+    />
+  );
 };
 
 interface SliderProps {
@@ -35,7 +46,7 @@ interface SliderProps {
 
   onCreationFormUpdate: (id: number) => void;
 }
-export const IMG = [box1, box2, box3, box4];
+export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 export const Imges: FC<SliderProps> = (props: SliderProps) => {
   const { clicked, setClicked } = props;
   const { id, imgs, onCreationFormUpdate } = props;
@@ -78,7 +89,7 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
     initial: 0,
     loop: true,
     slides: {
-      perView: 4,
+      perView: 4.1,
       spacing: 5,
     },
     slideChanged(slider) {
@@ -101,6 +112,7 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
             imgs={IMG}
             onChange_IMG={IMG[id]}
             onCreationFormUpdate={onCreationFormUpdate}
+
             // onClick={() => onChange_IMG}
           />
         </div>

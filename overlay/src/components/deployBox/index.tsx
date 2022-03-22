@@ -20,49 +20,28 @@ import { InputPanel } from '../atoms/Input';
 import { Message } from '../atoms/Message';
 import { TextArea } from '../atoms/TextArea';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Lootbox } from '../../../../common/interfaces';
 
 export interface DeployBoxProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  setCreationMessageData: (x: any) => void;
-  MessageData: any;
   id: any;
 }
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
-  const { onChange, setCreationMessageData, id, MessageData } = props;
-  const [value, setValue] = useState('');
-  const onChange_Area: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    const { name, value } = e.currentTarget;
-    setValue(e.target.value);
-
-    MessageData.boxMessage = value;
-    console.log(MessageData.boxMessage);
-
-    setCreationMessageData(MessageData);
-  };
-
-  const onChange_name: ChangeEventHandler<HTMLInputElement> = (event) => {
-    event.preventDefault();
-    const { name, value } = event.currentTarget;
-  };
+  const { id } = props;
+  const [valueMessage, setValueMessage] = useState('');
+  const [valueName, setValueName] = useState('');
+  const [lootboxes, setLootboxes] = useState<Lootbox[]>([]);
 
   return (
     <div className={cn(styles.wrapper)}>
       <SettingTitle title="Deploy your box" isActive />
-      <div className={cn(styles.boxName)}>
-        <LabelSettings title="Box name" />
-        <InputPanel onChange={onChange_name} type="text" appearance="biggest" />
-      </div>
-
-      <div className={cn(styles.textArea)}>
-        <LabelSettings title="Box Message" />
-        <TextArea onChange={onChange_Area} placeholder="Write here a message for your followers " />
-      </div>
       <div className={cn(styles.message)}>
         <Message
-          message={value}
+          message={`message`}
           link={`https://lootbox.org/${id}/
-        Don’t see the Box? https://lootbox.org/how-to/`}
+          Don’t see the Box? https://lootbox.org/how-to/`}
           instruction="Gift box is made with LootBox Dapplet @lootbox by @dappletsproject."
         />
       </div>

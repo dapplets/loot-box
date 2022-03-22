@@ -11,7 +11,8 @@ import {
 function _createFakeLootbox(id: number): Lootbox {
   return {
     id: id,
-    name: `Fake Lootbox (${id})`,
+    // name: `Fake Lootbox (${id})`,
+    // message: `Fake Message (${id})`,
     pictureId: id,
     dropChance: 0.5,
     status: 'created',

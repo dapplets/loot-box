@@ -32,12 +32,7 @@ export default function App(AppProps: any) {
   return (
     <>
       <Routes>
-        {/* <div className={styles.wrapper}> */}
-        {/* <header>
-            <Header />
-          </header> */}
         <Route path="/">
-          {/* <Route index element={<LootboxPage selectedLootboxId={null} />} /> */}
           <Route
             index
             element={
@@ -54,7 +49,6 @@ export default function App(AppProps: any) {
           />
           <Route
             path=":lootboxId"
-            // element={<LootboxPage selectedLootboxId={selectedLootboxId} />}
             element={
               <div className={styles.wrapper}>
                 <header>
@@ -70,7 +64,6 @@ export default function App(AppProps: any) {
         </Route>
         <Route
           path="/about"
-          // element={<About />}
           element={
             <div className={styles.wrapper}>
               <header>
@@ -84,15 +77,8 @@ export default function App(AppProps: any) {
           }
         />
         <Route path="/instruction" element={<Instruction />} />{' '}
-        {/* <footer>
-            <Footer />
-          </footer> */}
-        {/* </div> */}
       </Routes>
     </>
-    // <div>
-    //   <Preloader />
-    // </div>
   );
 }
 
@@ -123,7 +109,7 @@ function LootboxPage({
     transform: scaleX(1);
   }
 `;
-
+  // width: ${100-statCur}
   const Bar = styled.div`
     width: ${100 - 40}%;
     height: 100%;
@@ -156,27 +142,11 @@ function LootboxPage({
 
           <div className={styles.radialBarBlock}>
             {/* <h2 className={styles.radialBarTitle}>{statCur} / 100 tokens left</h2> */}
-            <h2 className={styles.radialBarTitle}>{40} / 100 tokens left</h2>
+            <h2 className={styles.radialBarTitle}>
+              <span className={styles.statCurNum}>{40}</span> / 100 tokens left
+            </h2>
             <div className={styles.radialBarGraph}>
               <Bar />
-              {/* <div
-                style={{
-                  // width: `${100 - statCur}%`,
-                  width: `${100 - 40}%`,
-                  height: '100%',
-                  // backgroundColor: ' #FFD904',
-                  background:
-                    'linear-gradient(0deg, rgb(240, 164, 29), rgb(255, 217, 4) 94%, rgb(255, 244, 171) 98%)',
-                  boxShadow:
-                    '10px -10px 24px rgba(242, 215, 4, 0.2), -10px -10px 20px rgba(246, 219, 4, 0.2), 10px 10px 31px rgba(242, 215, 4, 0.2)',
-                  borderRadius: '40px',
-                  textAlign: 'right',
-                  position: 'relative',
-                  
-                }}
-              >
-                <span className={cn(styles.labelStyles)}></span>
-              </div> */}
             </div>
           </div>
 

@@ -10,10 +10,15 @@ import React, {
 import { SettingTitle } from '../atoms/SettingTitle';
 import styles from './SelectBox.module.scss';
 import cn from 'classnames';
-import box1 from '../../icons/createNewBox/box1.png';
-import box2 from '../../icons/createNewBox/box2.png';
-import box3 from '../../icons/createNewBox/box3.png';
-import box4 from '../../icons/createNewBox/box4.png';
+
+import blueBox from '../../icons/createNewBox/blue_box.png';
+import redBox from '../../icons/createNewBox/red_box.png';
+import safe from '../../icons/createNewBox/safe.png';
+import box from '../../icons/createNewBox/box.png';
+import bag from '../../icons/createNewBox/bag.png';
+import pinata from '../../icons/createNewBox/pinata.png';
+import pig from '../../icons/createNewBox/pig.png';
+
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
 import { Slider } from '../atoms/Slider';
@@ -32,7 +37,7 @@ export interface SelectBoxProps {
   clicked: number | null;
   setClicked: any;
 }
-export const IMG = [box1, box2, box3, box4];
+export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 
 export interface CetBoxProps {
   onClick?: any;

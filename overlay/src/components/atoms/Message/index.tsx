@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactElement, ReactNode, FC, useState } from 'react';
+import React, { CSSProperties, ReactElement, ReactNode, FC, useState, useEffect } from 'react';
 import cn from 'classnames';
 import styles from './Message.module.scss';
 import { LabelSettings } from '../LabelSettings';
@@ -16,11 +16,8 @@ export const Message: FC<MessageProps> = (props: MessageProps) => {
 
   const copyText = () => {
     copy();
-
-    setTimeout(() => {
-      setCopied(false);
-    }, 3000);
   };
+  useEffect(() => {}, [copyText]);
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.lootboxCode)}>

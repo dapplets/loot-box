@@ -21,7 +21,8 @@ export type NearContentItem = {
 
 export type Lootbox = {
   id?: number;
-  name: string;
+  // name: string;
+  // message: string;
   pictureId: number;
   dropChance: number;
   nearContentItems: NearContentItem[];
@@ -85,6 +86,7 @@ export interface IDappletApi {
 
   getBoxesByAccount(account: string): Promise<Lootbox[]>;
   createNewBox(lootbox: Lootbox): Promise<number>;
+
   calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice>;
   getLootboxStat(lootboxId: number): Promise<LootboxStat>;
   getLootboxWinners(lootboxId: number): Promise<LootboxWinner[]>;

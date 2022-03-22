@@ -1,10 +1,14 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, ReactNode, useState, useMemo, useEffect } from 'react';
 import cn from 'classnames';
 
-import Box1 from '../../icons/createNewBox/box1.png';
-import Box2 from '../../icons/createNewBox/box2.png';
-import Box3 from '../../icons/createNewBox/box3.png';
-import Box4 from '../../icons/createNewBox/box4.png';
+// import blueBox from '../../icons/createNewBox/blue_box.png';
+// import redBox from '../../icons/createNewBox/red_box.png';
+// import safe from '../../icons/createNewBox/safe.png';
+// import box from '../../icons/createNewBox/box.png';
+// import bag from '../../icons/createNewBox/bag.png';
+// import pinata from '../../icons/createNewBox/pinata.png';
+// import pig from '../../icons/createNewBox/pig.png';
+
 import styles from './CreateNewBox.module.scss';
 import { Button } from '../atoms/Button';
 import { CreatedBox } from '../atoms/CreatedBoxCard';
@@ -16,15 +20,12 @@ export interface CreateNewBoxProps {
   children: ReactNode;
   label: string;
   imgVal: string;
-  // onClick: () => void;
-  // creationForm: Lootbox;
 }
-export const IMG = [Box1, Box2, Box3, Box4];
+
 export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) => {
   const { label, imgVal, children } = props;
 
   const [isShowDescription, onShowDescription] = useToggle(false);
-
   return (
     <div className={cn(styles.wrapper)}>
       <Link to="/select_box" className={cn(styles.firstLine)}>
