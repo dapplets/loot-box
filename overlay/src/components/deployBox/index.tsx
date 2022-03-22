@@ -33,6 +33,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
   const [valueMessage, setValueMessage] = useState('');
   const [valueName, setValueName] = useState('');
   const [lootboxes, setLootboxes] = useState<Lootbox[]>([]);
+  const [selectedLootboxId, setSelectedLootboxId] = useState<number | null>(null);
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -40,9 +41,9 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <div className={cn(styles.message)}>
         <Message
           message={`message`}
-          link={`https://lootbox.org/${id}/
-          Don’t see the Box? https://lootbox.org/how-to/`}
+          link={`https://lootbox.org/${id}/ Don’t see the Box? https://lootbox.org/how-to/`}
           instruction="Gift box is made with LootBox Dapplet @lootbox by @dappletsproject."
+          // link={`https://lootbox.org/${id}/ `}
         />
       </div>
 

@@ -104,13 +104,12 @@ export default () => {
       console.log('created new lootbox with id: ' + x);
     });
 
-    setLoader(false);
-
     await dappletApi.getBoxesByAccount('dapplets_lootbox.testnet').then((x) => {
       setLootboxes(x);
       console.log('lootboxes', x);
     });
-    if (selectedLootboxId === null) return;
+    setLoader(false);
+    // if (selectedLootboxId === null) return;
   };
   useEffect(() => {
     doneClickHandler;
@@ -205,25 +204,25 @@ export default () => {
         <Route
           path="/"
           element={
-            (loader && <Preloader />) || (
-              <CreateNewBox imgVal={imgBox} label={valueLabel}>
-                {lootboxes.map((item, index) => (
-                  <ChildComponent
-                    onClick={() => {
-                      setLootboxes(lootboxes);
-                      setSelectedLootboxId(item.id!);
-                    }}
-                    imgVal={IMG[item.pictureId]}
-                    label={String(item.id!)}
-                    number={index}
-                    key={index}
-                    id={item.id!}
-                    creationForm={creationForm}
-                    status={item.status!}
-                  />
-                ))}
-              </CreateNewBox>
-            )
+            // (loader && <Preloader />) || (
+            <CreateNewBox imgVal={imgBox} label={valueLabel}>
+              {lootboxes.map((item, index) => (
+                <ChildComponent
+                  onClick={() => {
+                    setLootboxes(lootboxes);
+                    setSelectedLootboxId(item.id!);
+                  }}
+                  imgVal={IMG[item.pictureId]}
+                  label={String(item.id!)}
+                  number={index}
+                  key={index}
+                  id={item.id!}
+                  creationForm={creationForm}
+                  status={item.status!}
+                />
+              ))}
+            </CreateNewBox>
+            // )
           }
         ></Route>
         <Route
@@ -286,7 +285,7 @@ export default () => {
         <Route
           path="/deploy_your_box"
           element={
-            (loader && <Preloader />) || <DeployBox id={selectedLootboxId} onChange={onChange} />
+            (loader && <Preloader />) || <DeployBox id={lootboxes.length} onChange={onChange} />
           }
         />
         <Route

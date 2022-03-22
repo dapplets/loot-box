@@ -9,9 +9,13 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
 }
 
 .img {
+  background: #eaf0f0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   padding: 14px;
   img {
     width: 100%;
@@ -61,6 +65,21 @@
     width: 10px;
     height: 10px;
     background: url('../../../icons/createNewBox/copy.svg') no-repeat;
+  }
+}
+.linkGood {
+  cursor: pointer;
+  display: block;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  span {
+    margin: 0px 0px 0px 4px;
+    display: block;
+    background: $Primary url('../../../icons/message/yesMini.svg') center no-repeat;
+    width: 10px;
+    height: 10px;
+    border-radius: 2.5px;
   }
 }
 

@@ -9,6 +9,58 @@
   color: $MainGrey;
   font-size: 14px;
   line-height: 16px;
-  padding: 0px 0px 10px 0px;
+  padding: 0px 4px 10px 0px;
   margin: 0px 0px 0px 0px;
+}
+
+.spanLabel {
+  display: inline-block;
+  border-radius: 50%;
+  width: 14.17px;
+  height: 14.17px;
+  background: url('../../../icons/Input/question.svg');
+}
+span.supportHover::before {
+  content: attr(data-title);
+}
+// span.support::before,
+span.supportHover::before {
+  content: attr(data-title);
+  display: none;
+  position: absolute;
+  z-index: 9998;
+  top: 0;
+  left: 100%;
+  background: #ededed;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 0.5em -0.1em rgb(0 0 6 / 50%);
+  text-align: left;
+  color: #000;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  color: $ContentBlack;
+  font-size: 12px;
+  line-height: 16px;
+  opacity: 0.9;
+  cursor: default;
+  padding: 5px;
+  margin: -15px 0 0 10px;
+  width: 200px;
+  min-height: 50px;
+  height: auto;
+}
+span.supportHover:hover::before,
+span.supportHover:focus::before {
+  display: block;
+}
+.supportHover {
+  display: inline-block;
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  width: 14.17px;
+  height: 14.17px;
+  background: url('../../../icons/Input/question.svg');
+  cursor: pointer;
 }

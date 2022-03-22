@@ -42,7 +42,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
 
   return (
     <div className={styles.addNftBlock}>
-      <LabelSettings title="Marketplace" />
+      <LabelSettings title="Marketplace" isActive support="Choice of marketplace" />
       <div className={styles.radiobtnMarketplace}>
         <RadioButton
           id={`${id}-1`}

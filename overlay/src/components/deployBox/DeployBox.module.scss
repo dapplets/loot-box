@@ -19,14 +19,14 @@
 }
 .message {
   display: flex;
-  padding: 0px 0px 30px 0px;
+  padding: 42px 0px 30px 0px;
   flex: 1 0 auto;
 }
 .navigation {
   display: flex;
   width: 100%;
   position: relative;
-  padding: 22px 0px 24px 0px;
+  padding: 22px 0px 0px 0px;
   &::before {
     content: '';
     position: absolute;

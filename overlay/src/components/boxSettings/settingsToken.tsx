@@ -135,7 +135,12 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
 
         <div className={cn(styles.wrapperTokenAmount)}>
           <div className={cn(styles.tokenAmount)}>
-            <LabelSettings title="Token amount" />
+            <LabelSettings
+              title="Token amount"
+              isActive
+              support="Please enter the amount to distribute.
+              Minimum quantity: 1"
+            />
             <div className={cn(styles.tokenInput)}>
               <InputPanel
                 type="string"
@@ -184,7 +189,11 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 />
               </div>
               <div className={cn(styles.LabelSettings)}>
-                <LabelSettings title="Drop amount" />
+                <LabelSettings
+                  title="Drop amount"
+                  isActive
+                  support="Choosing the amount to distribute to one person"
+                />
               </div>
 
               <div className={cn(styles.dropAmountButtons)}>
@@ -251,7 +260,12 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           )) || (
             <div className={cn(styles.dropAmount)}>
               <div className={cn(styles.LabelSettings)}>
-                <LabelSettings title="Drop amount" className={cn(styles.LabelSettings)} />
+                <LabelSettings
+                  title="Drop amount"
+                  className={cn(styles.LabelSettings)}
+                  isActive
+                  support="Choosing the amount to distribute to one person"
+                />
               </div>
 
               <div className={cn(styles.dropAmountButtons)}>
@@ -316,7 +330,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           )}
 
           <div className={cn(styles.dropChance)}>
-            <LabelSettings title="Drop Chance" />
+            <LabelSettings title="Drop Chance" isActive support="Probability of getting a win" />
 
             <DropChance
               type="string"

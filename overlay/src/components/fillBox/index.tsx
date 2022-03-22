@@ -34,7 +34,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
           <img src={imgVal} />
         </div>
         <div className={cn(styles.distributeDrop)}>
-          <LabelSettings title="How would you like to distribute drop?" />
+          <LabelSettings title="How would you like to distribute drop?" isActive />
           <div className={cn(styles.distributeDropRadio)}>
             <RadioButton
               value="1 transaction per 1 win"

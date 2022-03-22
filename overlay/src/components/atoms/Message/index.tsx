@@ -5,9 +5,9 @@ import { LabelSettings } from '../LabelSettings';
 
 import useCopied from '../../../hooks/useCopyed';
 export interface MessageProps {
-  message: any;
+  message?: any;
   link: string;
-  instruction: string;
+  instruction?: string;
 }
 
 export const Message: FC<MessageProps> = (props: MessageProps) => {

@@ -105,7 +105,7 @@ export default class TwitterFeature {
         box({
           initial: 'DEFAULT',
           DEFAULT: {
-            img: boxDef,
+            img: { DARK: boxDef, LIGHT: White },
             hidden: true,
             replace: `lootbox.org/`,
             text: '',
@@ -157,7 +157,7 @@ export default class TwitterFeature {
   }
 
   async getClaimExec(me, num, numImg): Promise<void> {
-    me.img = boxDef;
+    me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
 
     await this._api.claimLootbox(num, wallet.accountId).then((x) => {

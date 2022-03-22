@@ -21,9 +21,8 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
       <div className={cn(styles.code)}>
         <div className={styles.lootboxCode}>
           <Message
-            message={'value'}
-            link={`https://lootbox.org/${id}/
-            Don’t see the Box?  https://lootbox.org/how-to/`}
+            message={'message'}
+            link={`https://lootbox.org/${id}/ Don’t see the Box?  https://lootbox.org/how-to/`}
             instruction="Gift box is made with LootBox Dapplet @lootbox by @dappletsproject. "
           />
         </div>
