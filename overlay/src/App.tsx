@@ -52,9 +52,9 @@ const EMPTY_FORM: Lootbox = {
   status: 'created',
 };
 
-(async () => {
-  await dappletApi.clearAll();
-})();
+// (async () => {
+//   await dappletApi.clearAll();
+// })();
 
 export default () => {
   const [parsedCtx, setParsedCtx] = useState<ICtx>();
@@ -68,6 +68,7 @@ export default () => {
   const [stat, setStat] = useState<LootboxStat | null>(null);
 
   // TODO: come up with a better name
+  // toDo -  idPicture on creationForm
   const [creationForm, setCreationForm] = useState<Lootbox>(EMPTY_FORM);
   const [clickedBoxImg, setClickedBoxImg] = useState<number | null>(0);
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
@@ -233,7 +234,7 @@ export default () => {
               clicked={clickedBoxImg}
               onChange_IMG={(x: string) => {
                 setImgBox(x);
-                updateImgSelect(x);
+                // updateImgSelect(x);
               }}
               creationFormId={creationForm.pictureId}
               onCreationFormUpdate={(id: number) =>
@@ -269,7 +270,7 @@ export default () => {
           path="/fill_your_box"
           element={
             (loader && <Preloader />) || (
-              <FillBox price={price} imgVal={imgSelect} onDoneClick={doneClickHandler} />
+              <FillBox price={price} imgVal={imgBox} onDoneClick={doneClickHandler} />
             )
           }
         />
@@ -278,7 +279,7 @@ export default () => {
           path="/fill_your_box_nft"
           element={
             (loader && <Preloader />) || (
-              <FillBox_Nft price={price} imgVal={imgSelect} onDoneClick={doneClickHandler} />
+              <FillBox_Nft price={price} imgVal={imgBox} onDoneClick={doneClickHandler} />
             )
           }
         />

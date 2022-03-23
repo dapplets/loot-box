@@ -93,6 +93,8 @@ export interface IDappletApi {
   getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimStatus>;
   claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimStatus>;
 
+  getLootboxById(lootboxId: number): Promise<Lootbox>;
+
   _getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimResult>;
   _claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimResult>;
 

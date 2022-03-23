@@ -147,6 +147,13 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 appearance="default"
                 placeholder="Token amount"
                 pattern="^[0-9]\d*.{2}$"
+                onChange={(e) => {
+                  if (isShowDescription_tokenAmount) {
+                    changeHandlerFT.call(null, 'tokenAmount', e.target.value);
+                  } else {
+                    changeHandler.call(null, 'tokenAmount', e.target.value);
+                  }
+                }}
               />
               <RadioButton
                 value="$NEAR"

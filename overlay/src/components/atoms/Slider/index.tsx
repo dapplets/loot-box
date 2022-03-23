@@ -92,6 +92,7 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
       perView: 4.1,
       spacing: 5,
     },
+
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel);
     },

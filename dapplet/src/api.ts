@@ -39,6 +39,11 @@ function _createFakeLootbox(id: number): Lootbox {
 }
 
 export class DappletApi implements IDappletApi {
+  async getLootboxById(lootboxId: number): Promise<Lootbox> {
+    await new Promise((r) => setTimeout(r, 300));
+    const lootboxes = this._getValue('lootboxes', []);
+    return lootboxes.find((x) => x.id === lootboxId);
+  }
   async connectWallet() {
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
     await wallet.connect();
@@ -141,6 +146,7 @@ export class DappletApi implements IDappletApi {
 
   async clearAll() {
     this._setValue('lootboxes', []);
+    this._setValue('lootboxes-status', []);
   }
 
   public async _getLootboxClaimStatus(

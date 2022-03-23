@@ -53,6 +53,7 @@ export default class TwitterFeature {
   private _api = new DappletApi();
 
   async activate(): Promise<void> {
+    await this._api.clearAll();
     const contract = await Core.contract('near', 'dev-1634890606019-41631155713650', {
       viewMethods: ['getTweets'],
       changeMethods: ['addTweet', 'removeTweet'],
@@ -72,6 +73,8 @@ export default class TwitterFeature {
 
           getBoxesByAccount: this._api.getBoxesByAccount.bind(this._api),
           createNewBox: this._api.createNewBox.bind(this._api),
+
+          getBoxesById: this._api.getLootboxById.bind(this._api),
           calcBoxCreationPrice: this._api.calcBoxCreationPrice.bind(this._api),
           getLootboxStat: this._api.getLootboxStat.bind(this._api),
           getLootboxWinners: this._api.getLootboxWinners.bind(this._api),
@@ -114,41 +117,192 @@ export default class TwitterFeature {
 
               const tweetParse = getTweetParse(Tweet);
               const numIndex = getNumIndex(tweetParse);
+              // id не  существует - не моенять ссылку
 
-              me.replace = `lootbox.org/${numIndex}`;
-              me.hidden = false;
+              // me.replace = `lootbox.org/${numIndex}`;
+              // me.hidden = false;
 
               const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+              //  todo: feat - contract function - search getlootboxById
+              // const lootboxImg = await this._api
+              //   .getBoxesByAccount(wallet.accountId)
+              //   .then((x) => x.map((x) => x.pictureId));
+              // console.log(lootboxImg[0]);
 
-              const lootboxImg = await this._api
-                .getBoxesByAccount(wallet.accountId)
-                .then((x) => x.map((x) => x.pictureId));
-              console.log(lootboxImg);
+              // console.log(await this._api.getLootboxById(numIndex).then((x) => x));
 
-              const ClaimStatus = await this._api
-                .getLootboxClaimStatus(numIndex, wallet.accountId)
-                .then((x) => {
-                  if (x !== 2) {
-                    me.img = BOX_DEFAULT[lootboxImg as any];
+              const lootboxId = await this._api.getLootboxById(numIndex);
+              if (lootboxId === null || lootboxId === undefined) {
+                // me.hidden = true;
+                return;
+              } else {
+                me.hidden = false;
+                me.replace = `lootbox.org/${numIndex}`;
+                me.img = BOX_DEFAULT[lootboxId.pictureId];
+                await this._api.getLootboxClaimStatus(numIndex, wallet.accountId).then((x) => {
+                  console.log(x);
+                  if (x === 0) {
+                    me.exec = async (ctx, me) => {
+                      const Tweet = ctx.text;
+                      const tweetParse = getTweetParse(Tweet);
+                      const numIndex = getNumIndex(tweetParse);
+                      // await this.getClaimExec(me, numIndex, lootboxId.pictureId);
+                      me.img = { DARK: boxDef, LIGHT: White };
+                      await this._api
+                        .claimLootbox(numIndex, wallet.accountId)
+                        .then((x) => {
+                          try {
+                            if (x === 2) {
+                              me.img = BOX_OPEN[lootboxId.pictureId];
+                              this._api
+                                ._getLootboxClaimStatus(numIndex, wallet.accountId)
+                                .then((x) => {
+                                  if (x.ftContentItems.length !== 0) {
+                                    x.ftContentItems.map(
+                                      (x) =>
+                                        // x.contractAddress,
+                                        // x.tokenAmount,
+                                        (me.text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
+                                    );
+                                    console.log(x.ftContentItems);
+                                  } else if (x.nearContentItems.length !== 0) {
+                                    x.nearContentItems.map(
+                                      (x) =>
+                                        // x.tokenAmount,
+                                        (me.text = `You win: ${x.tokenAmount} near`),
+                                    );
+                                    console.log(x.nearContentItems);
+                                  } else if (x.nftContentItems.length !== 0) {
+                                    x.nftContentItems.map(
+                                      (x) => (
+                                        x.contractAddress,
+                                        x.quantity,
+                                        x.tokenId,
+                                        (me.text = `You win: ${x.quantity} quantity! ${x.tokenId} - token ID, ${x.contractAddress} - contract address`)
+                                      ),
+                                    );
+                                    console.log(x.nftContentItems);
+                                  } else {
+                                    me.text = 'empty';
+                                  }
+                                });
+                            } else {
+                              me.img = BOX_EMPTY[lootboxId.pictureId];
+                              me.text = 'empty';
+                            }
+                            console.log(x);
+                            me.exec = () => {};
+                          } catch {
+                            me.img = BOX_EMPTY[lootboxId.pictureId];
+                            me.text = 'empty';
+                          }
+                        })
+                        .catch(() => {
+                          me.img = BOX_EMPTY[lootboxId.pictureId];
+                          me.text = 'empty';
+                        });
+                    };
+                  } else if (x === 1) {
+                    me.img = BOX_EMPTY[lootboxId.pictureId];
+                    me.text = 'empty';
                   } else {
-                    me.img = BOX_EMPTY[lootboxImg as any];
-                    me.exec = () => {};
+                    me.exec = async (ctx, me) => {
+                      const Tweet = ctx.text;
+                      const tweetParse = getTweetParse(Tweet);
+                      const numIndex = getNumIndex(tweetParse);
+
+                      await this._api
+                        .claimLootbox(numIndex, wallet.accountId)
+                        .then((x) => {
+                          try {
+                            if (x === 2) {
+                              me.img = BOX_OPEN[lootboxId.pictureId];
+                              this._api
+                                ._getLootboxClaimStatus(numIndex, wallet.accountId)
+                                .then((x) => {
+                                  if (x.ftContentItems.length !== 0) {
+                                    x.ftContentItems.map(
+                                      (x) =>
+                                        // x.contractAddress,
+                                        // x.tokenAmount,
+                                        (me.text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
+                                    );
+                                    console.log(x.ftContentItems);
+                                  } else if (x.nearContentItems.length !== 0) {
+                                    x.nearContentItems.map(
+                                      (x) =>
+                                        // x.tokenAmount,
+                                        (me.text = `You win: ${x.tokenAmount} near`),
+                                    );
+                                    console.log(x.nearContentItems);
+                                  } else if (x.nftContentItems.length !== 0) {
+                                    x.nftContentItems.map(
+                                      (x) => (
+                                        x.contractAddress,
+                                        x.quantity,
+                                        x.tokenId,
+                                        (me.text = `You win: ${x.quantity} quantity! ${x.tokenId} - token ID, ${x.contractAddress} - contract address`)
+                                      ),
+                                    );
+                                    console.log(x.nftContentItems);
+                                  } else {
+                                    me.text = 'empty';
+                                  }
+                                });
+                            } else {
+                              me.img = BOX_EMPTY[lootboxId.pictureId];
+                              me.text = 'empty';
+                            }
+                            console.log(x);
+                            me.exec = () => {};
+                          } catch {
+                            me.img = BOX_EMPTY[lootboxId.pictureId];
+                            me.text = 'empty';
+                          }
+                        })
+                        .catch(() => {
+                          me.img = BOX_EMPTY[lootboxId.pictureId];
+                          me.text = 'empty';
+                        });
+
+                      // await this.getClaimExec(me, numIndex, lootboxId.pictureId);
+                    };
                   }
                 });
+              }
+              // if lootbox == null && undef = return, hidden= true
 
-              console.log(ClaimStatus);
+              //   await this._api.getLootboxClaimStatus(numIndex, wallet.accountId).then((x) => {
+              //     if (x !== 2) {
+              //       // me.img = BOX_DEFAULT[lootboxImg[numIndex - 1] as number];
+
+              //       me.exec = async (ctx, me) => {
+              //         const Tweet = ctx.text;
+              //         const tweetParse = getTweetParse(Tweet);
+              //         const numIndex = getNumIndex(tweetParse);
+              //         await this.getClaimExec(me, numIndex, lootboxId.pictureId);
+              //       };
+              //     } else {
+              //       // me.img = BOX_EMPTY[lootboxImg[numIndex - 1] as number];
+              //       me.img = BOX_EMPTY[lootboxId.pictureId];
+              //       me.exec = () => {};
+              //     }
+              //   });
+              //   console.log(lootboxId);
+
+              //   // console.log(ClaimStatus);
             },
             exec: async (ctx, me) => {
-              const Tweet = ctx.text;
-              const tweetParse = getTweetParse(Tweet);
-              const numIndex = getNumIndex(tweetParse);
-              const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-              const lootboxImg = await this._api
-                .getBoxesByAccount(wallet.accountId)
-                .then((x) => x.map((x) => x.pictureId));
-              console.log(lootboxImg);
-
-              await this.getClaimExec(me, numIndex, lootboxImg);
+              // const Tweet = ctx.text;
+              // const tweetParse = getTweetParse(Tweet);
+              // const numIndex = getNumIndex(tweetParse);
+              // // const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+              // // const lootboxImg = await this._api
+              // //   .getBoxesByAccount(wallet.accountId)
+              // //   .then((x) => x.map((x) => x.pictureId));
+              // // console.log(lootboxImg);
+              // const lootboxId = await this._api.getLootboxById(numIndex);
+              // await this.getClaimExec(me, numIndex, lootboxId.pictureId);
             },
           },
         }),
@@ -156,63 +310,65 @@ export default class TwitterFeature {
     });
   }
 
-  async getClaimExec(me, num, numImg): Promise<void> {
-    me.img = { DARK: boxDef, LIGHT: White };
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+  // async getClaimExec(me, num, numImg): Promise<void> {
+  //   me.img = { DARK: boxDef, LIGHT: White };
+  //   const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
 
-    await this._api.claimLootbox(num, wallet.accountId).then((x) => {
-      if (x === 2) {
-        // me.state = 'boxWin';
-        this._api._getLootboxClaimStatus(num, wallet.accountId).then((x) => {
-          if (x.ftContentItems.length !== 0) {
-            x.ftContentItems.map(
-              (x) =>
-                // x.contractAddress,
-                // x.tokenAmount,
-                (me.text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
-            );
-            console.log(x.ftContentItems);
-          } else if (x.nearContentItems.length !== 0) {
-            x.nearContentItems.map(
-              (x) =>
-                // x.tokenAmount,
-                (me.text = `You win: ${x.tokenAmount} near`),
-            );
-            console.log(x.nearContentItems);
-          } else if (x.nftContentItems.length !== 0) {
-            x.nftContentItems.map(
-              (x) => (
-                x.contractAddress,
-                x.quantity,
-                x.tokenId,
-                (me.text = `You win: ${x.quantity} quantity! ${x.tokenId} - token ID, ${x.contractAddress} - contract address`)
-              ),
-            );
-            console.log(x.nftContentItems);
-          } else {
-            return 'false';
-          }
+  //   try {
+  //     await this._api.claimLootbox(num, wallet.accountId).then((x) => {
+  //       if (x === 2) {
+  //         // me.state = 'boxWin';
+  //         this._api._getLootboxClaimStatus(num, wallet.accountId).then((x) => {
+  //           if (x.ftContentItems.length !== 0) {
+  //             x.ftContentItems.map(
+  //               (x) =>
+  //                 // x.contractAddress,
+  //                 // x.tokenAmount,
+  //                 (me.text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
+  //             );
+  //             console.log(x.ftContentItems);
+  //           } else if (x.nearContentItems.length !== 0) {
+  //             x.nearContentItems.map(
+  //               (x) =>
+  //                 // x.tokenAmount,
+  //                 (me.text = `You win: ${x.tokenAmount} near`),
+  //             );
+  //             console.log(x.nearContentItems);
+  //           } else if (x.nftContentItems.length !== 0) {
+  //             x.nftContentItems.map(
+  //               (x) => (
+  //                 x.contractAddress,
+  //                 x.quantity,
+  //                 x.tokenId,
+  //                 (me.text = `You win: ${x.quantity} quantity! ${x.tokenId} - token ID, ${x.contractAddress} - contract address`)
+  //               ),
+  //             );
+  //             console.log(x.nftContentItems);
+  //           } else {
+  //             return 'false';
+  //           }
 
-          // console.log(
-          //   // Object.keys(x.ftContentItems).length === 0 && x.ftContentItems.constructor === Object,
-          //   // Object.keys(x.nearContentItems).length === 0 &&
-          //   //   x.nearContentItems.constructor === Object,
-          //   // Object.keys(x.nftContentItems).length === 0 && x.nftContentItems.constructor === Object,
+  //           // console.log(
+  //           //   // Object.keys(x.ftContentItems).length === 0 && x.ftContentItems.constructor === Object,
+  //           //   // Object.keys(x.nearContentItems).length === 0 &&
+  //           //   //   x.nearContentItems.constructor === Object,
+  //           //   // Object.keys(x.nftContentItems).length === 0 && x.nftContentItems.constructor === Object,
 
-          //   x.ftContentItems,
-          //   x.nearContentItems.map((x) => x.tokenAmount),
-          //   x.nftContentItems.map((x, i) => (x.contractAddress, x.quantity, x.tokenId)),
-          // );
-        });
-        me.img = BOX_OPEN[numImg as any];
-        me.exec = () => {};
-      } else {
-        me.img = BOX_EMPTY[numImg as any];
-        me.text = 'empty';
-        me.exec = () => {};
-      }
-    });
-  }
+  //           //   x.ftContentItems,
+  //           //   x.nearContentItems.map((x) => x.tokenAmount),
+  //           //   x.nftContentItems.map((x, i) => (x.contractAddress, x.quantity, x.tokenId)),
+  //           // );
+  //         });
+  //         me.img = BOX_OPEN[numImg];
+  //         me.exec = () => {};
+  //       } else {
+  //         me.img = BOX_EMPTY[numImg];
+  //         me.text = 'empty';
+  //         me.exec = () => {};
+  //       }
+  //     });
+  //   } catch (error) {}
+  // }
 
   async openOverlay(props?: any): Promise<void> {
     this._overlay.send('data', props);
