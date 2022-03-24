@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, useEffect, useMemo } from 'react';
+import React, { ReactNode, FC, useEffect, useMemo, useState } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 
@@ -29,6 +29,7 @@ const DEFAULT_NFT_ITEM: NftContentItem = {
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
+  const [link, onLink] = useState(false);
 
   const [value, setValue] = React.useState(20);
   useEffect(() => {
@@ -44,9 +45,24 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
     console.log(creationForm);
   }, []);
-  // const memoizedValue = useMemo(() => {
-  //   onCreationFormUpdate(creationForm);
-  // }, []);
+
+  const LinkBlock = useMemo(() => {
+    if (creationForm.nftContentItems.length !== 0) {
+      if (
+        String(creationForm.nftContentItems[0].quantity).length > 2 &&
+        creationForm.nftContentItems[0].quantity !== null &&
+        String(creationForm.nftContentItems[0].tokenId).length > 2 &&
+        creationForm.nftContentItems[0].tokenId !== null
+      ) {
+        onLink(false);
+      } else {
+        onLink(true);
+      }
+    } else {
+      onLink(true);
+    }
+  }, [creationForm]);
+
   useEffect(() => {
     creationForm.dropChance = value;
     onCreationFormUpdate(creationForm);
@@ -68,6 +84,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const nftUpdatedHandler = (id: number, nft: NftContentItem) => {
     const newForm = Object.assign({}, creationForm);
     newForm.nftContentItems[id] = nft;
+
     onCreationFormUpdate(newForm);
   };
 
@@ -116,9 +133,11 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         <Link to="/select_box">
           <LinksStep step="prev" label="Back" />
         </Link>
-        <Link to="/fill_your_box_nft">
-          <LinksStep disabled={true} step="next" label="Next step" />
-        </Link>
+        {(link && <div></div>) || (
+          <Link to="/fill_your_box_nft">
+            <LinksStep disabled={true} step="next" label="Next step" />
+          </Link>
+        )}
       </div>
     </div>
   );

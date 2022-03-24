@@ -8,6 +8,7 @@ import React, {
   ChangeEvent,
   useMemo,
   useEffect,
+  useRef,
 } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
@@ -55,6 +56,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const [value, setValue] = React.useState(20);
   const [ftItem, setFtItem] = useState(DEFAULT_FT_ITEM);
   const [nearItem, setNearItem] = useState(DEFAULT_NEAR_ITEM);
+  const [link, onLink] = useState(false);
+  // console.log(creationForm);
+  const node = useRef<HTMLInputElement>();
 
   useEffect(() => {
     creationForm.dropChance = value;
@@ -65,6 +69,29 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     setValueRadioLoot(e.target.value);
     onShowDescription_tokenAmount();
   };
+
+  const LinkBlock = useMemo(() => {
+    if (creationForm.nearContentItems.length !== 0 || creationForm.ftContentItems.length !== 0) {
+      if (
+        (creationForm.nearContentItems[0].tokenAmount.length > 2 &&
+          creationForm.nearContentItems[0].dropAmountFrom.length > 2 &&
+          creationForm.nearContentItems[0].dropAmountTo.length > 2) ||
+        (creationForm.ftContentItems[0].tokenAmount.length > 2 &&
+          creationForm.ftContentItems[0].dropAmountFrom.length > 2 &&
+          creationForm.ftContentItems[0].dropAmountTo.length > 2 &&
+          creationForm.ftContentItems[0].contractAddress.length > 2)
+      ) {
+        onLink(false);
+      } else {
+        onLink(true);
+      }
+    } else {
+      onLink(true);
+    }
+    console.log(creationForm);
+
+    console.log(link);
+  }, [creationForm, link, node, isShowDescription_tokenAmount, isShowDescription_dropAmount]);
 
   const changeHandler = (name: keyof NearContentItem, value: any) => {
     const newForm = Object.assign({}, creationForm);
@@ -79,6 +106,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
         dropAmountTo: '',
       }),
     );
+    // onCreationFormUpdate((creationForm.ftContentItems = []));
+    creationForm.ftContentItems = [];
 
     newForm.nearContentItems[0][name] = value;
     console.log(value);
@@ -96,6 +125,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
         dropAmountTo: '',
       }),
     );
+    // onCreationFormUpdate((creationForm.nearContentItems = []));
 
     newForm.ftContentItems[0][name] = value;
     console.log(value);
@@ -113,6 +143,11 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   //   }));
   //   // console.log(e);
   // };
+  const handleClick = () => {
+    if (node && node.current) {
+      node.current.value = '';
+    }
+  };
 
   useEffect(() => {
     // ToDo: move to App.tsx
@@ -146,6 +181,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 type="string"
                 appearance="default"
                 placeholder="Token amount"
+                // ref={node}
+                innerRef={node}
                 pattern="^[0-9]\d*.{2}$"
                 onChange={(e) => {
                   if (isShowDescription_tokenAmount) {
@@ -161,14 +198,29 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 name="TokenAmount"
                 id="1_amount"
                 defaultChecked={true}
-                onChange={onChangeRadioLoot}
+                onChange={(e) => {
+                  if (e.target.checked !== undefined) {
+                    creationForm.ftContentItems[0].tokenAmount = '';
+                    onChangeRadioLoot(e);
+                    handleClick();
+                  }
+                }}
+
+                // onChange={onChangeRadioLoot}
               />
               <RadioButton
                 value="Custom token"
                 title="Custom token"
                 name="TokenAmount"
                 id="2_amount"
-                onChange={onChangeRadioLoot}
+                // onChange={onChangeRadioLoot}
+                onChange={(e) => {
+                  if (e.target.checked !== undefined) {
+                    creationForm.nearContentItems[0].tokenAmount = '';
+                    onChangeRadioLoot(e);
+                    handleClick();
+                  }
+                }}
               />
             </div>
           </div>
@@ -212,6 +264,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   defaultChecked={true}
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
+                      creationForm.nearContentItems[0].dropAmountFrom = '';
+                      creationForm.nearContentItems[0].dropAmountTo = '';
                       changeHandlerFT.call(null, 'dropType', 'fixed');
                       onShowDescription_dropAmount();
                     }
@@ -224,6 +278,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   id="4_Drop"
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
+                      creationForm.nearContentItems[0].dropAmountFrom = '';
+                      creationForm.nearContentItems[0].dropAmountTo = '';
                       changeHandlerFT.call(null, 'dropType', 'variable');
                       onShowDescription_dropAmount();
                     }
@@ -284,6 +340,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   defaultChecked
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
+                      creationForm.nearContentItems[0].dropAmountFrom = '';
+                      creationForm.nearContentItems[0].dropAmountTo = '';
                       changeHandler.call(null, 'dropType', 'fixed');
                       onShowDescription_dropAmount();
                     }
@@ -296,6 +354,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   id="4_Drop"
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
+                      creationForm.nearContentItems[0].dropAmountFrom = '';
+                      creationForm.nearContentItems[0].dropAmountTo = '';
                       changeHandler.call(null, 'dropType', 'variable');
                       onShowDescription_dropAmount();
                     }
@@ -356,9 +416,11 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
         <Link to="/select_box">
           <LinksStep step="prev" label="Back" />
         </Link>
-        <Link to="/fill_your_box">
-          <LinksStep step="next" label="Next step" />
-        </Link>
+        {(link && <div></div>) || (
+          <Link to="/fill_your_box">
+            <LinksStep step="next" label="Next step" />
+          </Link>
+        )}
       </div>
     </div>
   );

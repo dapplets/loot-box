@@ -21,6 +21,7 @@ export interface InputProps
   className?: 'string';
   type: string;
   pattern?: string;
+  innerRef?: any;
 }
 
 export const InputPanel: FC<InputProps> = (props) => {
@@ -33,7 +34,7 @@ export const InputPanel: FC<InputProps> = (props) => {
     className,
     type,
     pattern,
-
+    innerRef,
     ...anotherProps
   } = props;
 
@@ -44,6 +45,7 @@ export const InputPanel: FC<InputProps> = (props) => {
         value={value}
         placeholder={placeholder}
         pattern={pattern}
+        ref={innerRef}
         className={cn(
           styles.inputInfo,
           {

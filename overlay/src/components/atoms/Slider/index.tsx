@@ -104,7 +104,12 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
   return (
     <>
       <div className={cn(styles.navigationWrapper)}>
-        <div ref={sliderRef} className={cn(styles.keenSlider)}>
+        <div
+          ref={sliderRef}
+          className={cn(styles.keenSlider)}
+          // className="keen-slider"
+          // "keen-slider"
+        >
           <Imges
             clicked={clicked}
             setClicked={setClicked}

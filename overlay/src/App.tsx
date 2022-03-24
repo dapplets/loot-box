@@ -270,7 +270,11 @@ export default () => {
           path="/fill_your_box"
           element={
             (loader && <Preloader />) || (
-              <FillBox price={price} imgVal={imgBox} onDoneClick={doneClickHandler} />
+              <FillBox
+                price={price}
+                imgVal={IMG[creationForm.pictureId]}
+                onDoneClick={doneClickHandler}
+              />
             )
           }
         />
@@ -279,7 +283,11 @@ export default () => {
           path="/fill_your_box_nft"
           element={
             (loader && <Preloader />) || (
-              <FillBox_Nft price={price} imgVal={imgBox} onDoneClick={doneClickHandler} />
+              <FillBox_Nft
+                price={price}
+                imgVal={IMG[creationForm.pictureId]}
+                onDoneClick={doneClickHandler}
+              />
             )
           }
         />

@@ -29,9 +29,9 @@ span.supportHover::before {
   display: none;
   position: absolute;
   z-index: 9998;
-  top: 0;
-  left: 100%;
-  background: #ededed;
+  top: -40px;
+  right: -80px;
+  background: #f4f4f4;
   border-radius: 3px;
   border: 1px solid #ccc;
   box-shadow: 5px 5px 0.5em -0.1em rgb(0 0 6 / 50%);
@@ -39,20 +39,24 @@ span.supportHover::before {
   color: #000;
   font-family: Roboto, sans-serif;
   font-weight: 400;
-  color: $ContentBlack;
+  font-style: italic;
+  color: $MainGrey;
   font-size: 12px;
   line-height: 16px;
   opacity: 0.9;
   cursor: default;
   padding: 5px;
   margin: -15px 0 0 10px;
+
   width: 200px;
   min-height: 50px;
   height: auto;
 }
 span.supportHover:hover::before,
 span.supportHover:focus::before {
-  display: block;
+  display: flex;
+  // justify-content: center;
+  align-items: center;
 }
 .supportHover {
   display: inline-block;
