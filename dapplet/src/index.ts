@@ -128,7 +128,7 @@ export default class TwitterFeature {
                 me.replace = `lootbox.org/${numIndex}`;
                 await this.getClaimStatus(me, numIndex, lootboxId);
                 // me.img = BOX_DEFAULT[lootboxId.pictureId];
-                const getClaim = await this._api.claimLootbox(numIndex, wallet.accountId);
+                // const getClaim = await this._api.claimLootbox(numIndex, wallet.accountId);
               }
             },
             exec: async (ctx, me) => {},

@@ -61,6 +61,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const node = useRef<HTMLInputElement>();
 
   useEffect(() => {
+    // ToDo: move to App.tsx
+    // ToDo: how to get rid of object coping?
+
+    creationForm.nearContentItems = [];
+    creationForm.ftContentItems = [];
+    creationForm.nftContentItems = [];
+  }, []);
+
+  useEffect(() => {
     creationForm.dropChance = value;
     onCreationFormUpdate(creationForm);
   });
@@ -152,6 +161,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   useEffect(() => {
     // ToDo: move to App.tsx
     // ToDo: how to get rid of object coping?
+
     const newForm = Object.assign({}, creationForm);
     newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
     creationForm.nftContentItems = [];

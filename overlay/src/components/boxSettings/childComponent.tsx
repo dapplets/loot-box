@@ -7,6 +7,7 @@ import React, {
   ChangeEventHandler,
   useMemo,
   useEffect,
+  useRef,
 } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
@@ -27,10 +28,11 @@ export interface ChildComponentProps {
   onDeleteChild?: () => void;
   nftItem: NftContentItem;
   onNftUpdated: (x: NftContentItem) => void;
+  innerRef?: any;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { onDeleteChild, nftItem, onNftUpdated } = props;
+  const { onDeleteChild, nftItem, onNftUpdated, innerRef } = props;
 
   const [id] = useState('radiogroup-' + Math.floor(Math.random() * 1_000_000));
 
@@ -87,17 +89,19 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
             type="string"
             appearance="medium_big"
             placeholder="Token ID"
-            value={nftItem.tokenId ?? ''}
+            // value={nftItem.tokenId ?? ''}
             onChange={(e) => changeHandler('tokenId', e.target.value)}
             pattern="^[0-9]\d*.{2}$"
+            innerRef={innerRef}
           />
           <InputPanel
             type="string"
             appearance="small_mini"
             placeholder="Quantity"
-            value={nftItem.quantity ?? ''}
+            // value={nftItem.quantity ?? ''}
             onChange={(e) => changeHandler('quantity', e.target.value)}
             pattern="^[0-9]\d*.{1}$"
+            innerRef={innerRef}
           />
         </div>
 

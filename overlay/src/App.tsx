@@ -107,11 +107,14 @@ export default () => {
 
     await dappletApi.getBoxesByAccount('dapplets_lootbox.testnet').then((x) => {
       setLootboxes(x);
+
       console.log('lootboxes', x);
     });
+    setCreationForm(EMPTY_FORM);
     setLoader(false);
     // if (selectedLootboxId === null) return;
   };
+
   useEffect(() => {
     doneClickHandler;
     selectedLootboxId;

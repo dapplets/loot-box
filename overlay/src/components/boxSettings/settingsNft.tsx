@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, useEffect, useMemo, useState } from 'react';
+import React, { ReactNode, FC, useEffect, useMemo, useState, useRef } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 
@@ -30,18 +30,21 @@ const DEFAULT_NFT_ITEM: NftContentItem = {
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
   const [link, onLink] = useState(false);
-
+  const node = useRef<HTMLInputElement>();
   const [value, setValue] = React.useState(20);
   useEffect(() => {
     // ToDo: move to App.tsx
     // ToDo: how to get rid of object coping?
     const newForm = Object.assign({}, creationForm);
+    creationForm.nftContentItems = [];
     newForm.nftContentItems = [DEFAULT_NFT_ITEM];
+
     creationForm.nearContentItems = [];
     creationForm.ftContentItems = [];
     newForm.dropChance = value;
     onCreationFormUpdate(creationForm);
     onCreationFormUpdate(newForm);
+    console.log(newForm);
 
     console.log(creationForm);
   }, []);
@@ -61,7 +64,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     } else {
       onLink(true);
     }
-  }, [creationForm]);
+  }, [creationForm, link, node]);
 
   useEffect(() => {
     creationForm.dropChance = value;
@@ -88,6 +91,11 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     onCreationFormUpdate(newForm);
   };
 
+  const handleClick = () => {
+    if (node && node.current) {
+      node.current.value = '';
+    }
+  };
   return (
     <div className={cn(styles.wrapper)}>
       <div className={styles.div}>
@@ -105,6 +113,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                   creationForm.nftContentItems.length > 1 ? onDeleteChild.bind(null, i) : undefined
                 }
                 onNftUpdated={nftUpdatedHandler.bind(null, i)}
+                innerRef={node}
               />
             ))}
             <div className={styles.addNFTBtn}>
@@ -134,7 +143,13 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
           <LinksStep step="prev" label="Back" />
         </Link>
         {(link && <div></div>) || (
-          <Link to="/fill_your_box_nft">
+          <Link
+            to="/fill_your_box_nft"
+            onClick={() => {
+              handleClick();
+              console.log('lalalla');
+            }}
+          >
             <LinksStep disabled={true} step="next" label="Next step" />
           </Link>
         )}
