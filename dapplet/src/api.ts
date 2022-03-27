@@ -21,17 +21,17 @@ function _createFakeLootbox(id: number): Lootbox {
     nftContentItems: [
       {
         contractAddress: 'nft.testnet',
-        tokenId: 1,
+        tokenId: '1',
         quantity: 1,
       },
       {
         contractAddress: 'nft.testnet',
-        tokenId: 2,
+        tokenId: '2',
         quantity: 1,
       },
       {
         contractAddress: 'nft.testnet',
-        tokenId: 3,
+        tokenId: '3',
         quantity: 1,
       },
     ],

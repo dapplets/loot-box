@@ -52,6 +52,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
         value={`${valueDropChance}%`}
         onChange={(e: any) => {
           const { data, inputType } = e.nativeEvent;
+
           console.log({ data, inputType, e });
           switch (inputType) {
             case 'insertText':

@@ -3,7 +3,7 @@
 @import '../../styles/fonts.scss';
 
 .wrapper {
-  padding: 29px 0px 0px 0px;
+  padding: 60px 0px 0px 0px;
   // height: 100vh;
   display: flex;
   flex: 1 0 auto;
@@ -146,13 +146,33 @@
 }
 
 // nft
+.btnToken {
+  background: $Primary;
+  color: #fff;
+  &:hover {
+    background: $PrimaryHover !important;
+    color: #fff !important;
+  }
+  &:active {
+    background: $PrimaryPressed !important;
+    color: #fff !important;
+  }
+}
 
 .divBtn {
   width: 100%;
 }
 .BtnNft {
-  background: #d9304f;
+  background: $Primary;
   color: #fff;
+  &:hover {
+    background: $PrimaryHover !important;
+    color: #fff !important;
+  }
+  &:active {
+    background: $PrimaryPressed !important;
+    color: #fff !important;
+  }
 }
 .wrapper_nft {
   display: flex;
@@ -253,4 +273,8 @@
 .btnToken {
   background: #d9304f;
   color: #fff;
+}
+
+.invalid {
+  background: red !important;
 }

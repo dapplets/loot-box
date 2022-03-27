@@ -16,8 +16,12 @@ export const Message: FC<MessageProps> = (props: MessageProps) => {
 
   const copyText = () => {
     copy();
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
-  useEffect(() => {}, [copyText]);
+  // useEffect(() => {}, [copyText]);
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.lootboxCode)}>

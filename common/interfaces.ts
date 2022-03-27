@@ -1,6 +1,6 @@
 export type NftContentItem = {
   contractAddress: string;
-  tokenId: number | null;
+  tokenId: string;
   quantity: number | null;
 };
 

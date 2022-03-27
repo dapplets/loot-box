@@ -27,8 +27,11 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
 
   const copyText = () => {
     copy();
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
-  useEffect(() => {}, [copyText]);
 
   return (
     <div className={cn(styles.wrapper)} onClick={onClick}>

@@ -18,7 +18,7 @@ export interface InputProps
     | 'medium_big'
     | 'big'
     | 'biggest';
-  className?: 'string';
+  className?: string;
   type: string;
   pattern?: string;
   innerRef?: any;

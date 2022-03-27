@@ -43,23 +43,55 @@ import styles from './Test.module.scss';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import copyToClipboard from 'copy-to-clipboard';
 export interface TestProps {
-  MessageData?: any;
-  value?: string;
-  copied?: false;
+  prop?: string;
+  className?: string;
+  onSubmit?: () => void;
+  placeholder?: string;
+  type: string;
+
+  valueDropChance: any;
+  onValueDropChance: any;
 }
 
-export default function Test(str: string): [boolean, () => void, (value: boolean) => void] {
-  const copyableString = useRef(str);
-  const [copied, setCopied] = useState(false);
+export const Test: FC<TestProps> = (props) => {
+  const {
+    valueDropChance = '',
+    onValueDropChance = () => {},
 
-  const copyAction = useCallback(() => {
-    const copiedString = copyToClipboard(copyableString.current);
-    setCopied(copiedString);
-  }, [copyableString]);
+    type,
+  } = props;
+  const valueToShow = useMemo(
+    () => () => {
+      `${valueDropChance}`;
+    },
+    [valueDropChance],
+  );
+  const regExpIndex = new RegExp(/\d+(\.?\d+)?/gm);
+  // /\d+(\.?\d+)?/gm
+  return (
+    <div>
+      <input
+        value={`${valueDropChance}`}
+        onChange={(e: any) => {
+          const { data, inputType } = e.nativeEvent;
+          const test = regExpIndex.test(data);
+          console.log({ data, inputType, e });
+          switch (inputType) {
+            case 'insertText':
+              if (test) {
+                const newValue = valueDropChance + data;
+                onValueDropChance(newValue);
+              } else {
+                const newValue = '';
+                onValueDropChance(newValue);
+              }
+              break;
 
-  useEffect(() => {
-    copyableString.current = str;
-  }, [str]);
-
-  return [copied, copyAction, setCopied];
-}
+            default:
+              break;
+          }
+        }}
+      />
+    </div>
+  );
+};

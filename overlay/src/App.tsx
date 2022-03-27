@@ -13,6 +13,8 @@ import {
   LootboxWinner,
   BoxCreationPrice,
 } from '../../common/interfaces';
+import {} from '@dapplets/dapplet-extension';
+import NearAvatar from './icons/avatarDef.png';
 
 import { StatisticsNear, StatisticsWinners, StatisticsCode } from './components/statisticsNear';
 import { DeployBox } from './components/deployBox';
@@ -52,13 +54,14 @@ const EMPTY_FORM: Lootbox = {
   status: 'created',
 };
 
-// (async () => {
-//   await dappletApi.clearAll();
-// })();
+(async () => {
+  await dappletApi.clearAll();
+})();
 
 export default () => {
   const [parsedCtx, setParsedCtx] = useState<ICtx>();
   const [nearAccount, setNearAccount] = useState<string>();
+  const [nearAccountImg, setNearAccountImg] = useState<string>();
   const [isOpenProfile, onOpenProfile] = useToggle(false);
   const [valueLabel, setValueLabel] = useState('');
   const [imgBox, setImgBox] = useState('');
@@ -74,12 +77,12 @@ export default () => {
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
   const [loader, setLoader] = useState(false);
 
-  const [imgSelect, setImgSelect] = useState('');
+  // const [imgSelect, setImgSelect] = useState('');
 
-  const updateImgSelect = (x: string) => {
-    setImgSelect(x);
-    console.log(imgSelect);
-  };
+  // const updateImgSelect = (x: string) => {
+  //   setImgSelect(x);
+  //   console.log(imgSelect);
+  // };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
@@ -94,6 +97,10 @@ export default () => {
       }
       setNearAccount(accountName);
     });
+    // const contract = await Core.contract('near', 'dev-1634890606019-41631155713650', {
+    //   viewMethods: ['getTweets'],
+    //   changeMethods: ['addTweet', 'removeTweet'],
+    // });
   }, []);
 
   const doneClickHandler = async () => {
@@ -111,6 +118,9 @@ export default () => {
       console.log('lootboxes', x);
     });
     setCreationForm(EMPTY_FORM);
+    console.log(EMPTY_FORM);
+
+    // await dappletApi.clearAll();
     setLoader(false);
     // if (selectedLootboxId === null) return;
   };
@@ -177,6 +187,7 @@ export default () => {
   const handleLogInBtn = async () => {
     const isWalletConnected = await dappletApi.isWalletConnected();
     let accountName: string;
+    let accountImg: string;
     if (!isWalletConnected) {
       accountName = await dappletApi.connectWallet();
     } else {
@@ -194,7 +205,7 @@ export default () => {
         ) : (
           <>
             <Profile
-              avatar={parsedCtx?.authorImg}
+              avatar={NearAvatar}
               hash={nearAccount}
               onClick={handleLogIn}
               openChange={onOpenProfile}
@@ -250,7 +261,15 @@ export default () => {
           }
         />
 
-        <Route path="/box_settings_value" element={<SettingDef />} />
+        <Route
+          path="/box_settings_value"
+          element={
+            <SettingDef
+              creationForm={creationForm}
+              onCreationFormUpdate={(x) => setCreationForm(x)}
+            />
+          }
+        />
         <Route
           path="/settings_token"
           element={

@@ -141,6 +141,7 @@ export default class TwitterFeature {
     me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
     const getLootboxClaimStatus = await this._api.getLootboxClaimStatus(numIndex, wallet.accountId);
+
     if (getLootboxClaimStatus === 0 || getLootboxClaimStatus == 2) {
       me.img = BOX_DEFAULT[lootbox.pictureId];
       me.exec = () => {

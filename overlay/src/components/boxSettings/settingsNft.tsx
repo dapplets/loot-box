@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { DropChance } from '../atoms/DropChance';
 import { Lootbox, NftContentItem } from '../../../../common/interfaces';
 import { ChildComponent } from './childComponent';
+import './invalid.scss';
 
 import { ButtonsSetting } from './buttonsSetting';
 export interface BoxSettingsProps {
@@ -24,17 +25,33 @@ export interface BoxSettingsProps {
 const DEFAULT_NFT_ITEM: NftContentItem = {
   contractAddress: 'custom.near',
   quantity: null,
-  tokenId: null,
+  tokenId: '',
 };
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
   const [link, onLink] = useState(false);
-  const node = useRef<HTMLInputElement>();
+  // const node = useRef<HTMLInputElement>();
   const [value, setValue] = React.useState(20);
+  // const [nameClassInput, setNameClassInput] = useState('');
+
+  const nodeNftContract = useRef<HTMLInputElement>();
+  const nodeQuanity = useRef<HTMLInputElement>();
+
+  // const validInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  //   if (e.target.value === '.' || isNaN(+e.target.value) === false) {
+  //     setNameClassInput('0');
+  //   } else {
+  //     setNameClassInput('invalid');
+  //   }
+  // };
   useEffect(() => {
     // ToDo: move to App.tsx
     // ToDo: how to get rid of object coping?
+    DEFAULT_NFT_ITEM.contractAddress = '';
+    DEFAULT_NFT_ITEM.quantity = 0;
+    DEFAULT_NFT_ITEM.tokenId = '';
+
     const newForm = Object.assign({}, creationForm);
     creationForm.nftContentItems = [];
     newForm.nftContentItems = [DEFAULT_NFT_ITEM];
@@ -48,15 +65,24 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
     console.log(creationForm);
   }, []);
-
+  const booleanNodeNftContract = nodeNftContract.current?.classList.contains('invalid');
+  const booleanNodeQuanity = nodeQuanity.current?.classList.contains('invalid');
   const LinkBlock = useMemo(() => {
-    if (creationForm.nftContentItems.length !== 0) {
+    if (
+      creationForm.nftContentItems.length !== 0 &&
+      // && nameClassInput === '0'
+      booleanNodeNftContract != true &&
+      booleanNodeQuanity != true
+    ) {
       if (
-        String(creationForm.nftContentItems[0].quantity).length > 2 &&
+        String(creationForm.nftContentItems[0].quantity).length >= 1 &&
         creationForm.nftContentItems[0].quantity !== null &&
-        String(creationForm.nftContentItems[0].tokenId).length > 2 &&
+        String(creationForm.nftContentItems[0].tokenId).length >= 1 &&
         creationForm.nftContentItems[0].tokenId !== null
+        // &&
+        // nameClassInput === '0'
       ) {
+        // console.log(nameClassInput);
         onLink(false);
       } else {
         onLink(true);
@@ -64,7 +90,14 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     } else {
       onLink(true);
     }
-  }, [creationForm, link, node]);
+  }, [
+    creationForm,
+    link,
+    // nodeNftContract,
+    // nodeQuanity,
+    //  node
+    // nameClassInput,
+  ]);
 
   useEffect(() => {
     creationForm.dropChance = value;
@@ -92,8 +125,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   };
 
   const handleClick = () => {
-    if (node && node.current) {
-      node.current.value = '';
+    if (nodeNftContract && nodeNftContract.current && nodeQuanity && nodeQuanity.current) {
+      nodeNftContract.current.value = '';
+      nodeQuanity.current.value = '';
     }
   };
   return (
@@ -113,7 +147,10 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                   creationForm.nftContentItems.length > 1 ? onDeleteChild.bind(null, i) : undefined
                 }
                 onNftUpdated={nftUpdatedHandler.bind(null, i)}
-                innerRef={node}
+                nodeNftContract={nodeNftContract}
+                nodeQuanity={nodeQuanity}
+                // onChange={(e: any) => validInput(e)}
+                // className={nameClassInput}
               />
             ))}
             <div className={styles.addNFTBtn}>

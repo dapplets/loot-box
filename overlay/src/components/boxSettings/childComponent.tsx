@@ -23,19 +23,45 @@ import { InputPanel } from '../atoms/Input';
 import { RadioButton } from '../atoms/RadioButton';
 import { DropChance } from '../atoms/DropChance';
 import { NftContentItem } from '../../../../common/interfaces';
+import './invalid.scss';
+import classNames from 'classnames';
 
 export interface ChildComponentProps {
   onDeleteChild?: () => void;
   nftItem: NftContentItem;
   onNftUpdated: (x: NftContentItem) => void;
-  innerRef?: any;
+  // innerRef?: any;
+  // onChange: (x: any) => void;
+  nodeNftContract: any;
+  nodeQuanity: any;
+  // className: string;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { onDeleteChild, nftItem, onNftUpdated, innerRef } = props;
+  const {
+    onDeleteChild,
+    nftItem,
+    onNftUpdated,
+    nodeNftContract,
+    nodeQuanity,
+    //  innerRef
+    // onChange,
+    // className,
+  } = props;
 
   const [id] = useState('radiogroup-' + Math.floor(Math.random() * 1_000_000));
-
+  const NearReg = new RegExp(/^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/gm);
+  // const [nameClassInput, setNameClassInput] = useState('');
+  // const validInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  //   if (e.target.value === '.' || isNaN(+e.target.value) === false) {
+  //     setNameClassInput('0');
+  //   } else {
+  //     setNameClassInput('invalid');
+  //   }
+  // };
+  // const invalid = useMemo(() => {
+  //   console.log(nameClassInput);
+  // }, [nameClassInput]);
   const changeHandler = (name: keyof NftContentItem, value: any) => {
     const newNft = Object.assign({}, nftItem);
     (newNft as any)[name] = value;
@@ -89,19 +115,63 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
             type="string"
             appearance="medium_big"
             placeholder="Token ID"
+            // className={className}
             // value={nftItem.tokenId ?? ''}
-            onChange={(e) => changeHandler('tokenId', e.target.value)}
-            pattern="^[0-9]\d*.{2}$"
-            innerRef={innerRef}
+            onChange={(e) => {
+              // if (
+              //   (e.target.value === '.' || isNaN(+e.target.value) === false) &&
+              //   (e.target.value[0] !== '0' ||
+              //     (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
+              //   +e.target.value !== 0
+              // )
+              if (
+                NearReg.test(e.target.value) &&
+                e.target.value.length >= 2 &&
+                e.target.value.length <= 64 &&
+                +e.target.value !== 0
+              ) {
+                // console.log(node.current?.className);
+                nodeNftContract.current?.classList.remove('invalid');
+                // onLink(false);
+              } else {
+                // setNameClassInput('invalid');
+                nodeNftContract.current?.classList.add('invalid');
+                // onLink(true);
+              }
+              changeHandler('tokenId', e.target.value);
+              // validInput(e);
+              // onChange(e);
+            }}
+            // pattern="^[0-9]\d*.{2}$"
+            innerRef={nodeNftContract}
           />
           <InputPanel
             type="string"
             appearance="small_mini"
             placeholder="Quantity"
             // value={nftItem.quantity ?? ''}
-            onChange={(e) => changeHandler('quantity', e.target.value)}
-            pattern="^[0-9]\d*.{1}$"
-            innerRef={innerRef}
+            // className={className}
+            onChange={(e) => {
+              changeHandler('quantity', e.target.value);
+              if (
+                (e.target.value === '.' || isNaN(+e.target.value) === false) &&
+                (e.target.value[0] !== '0' ||
+                  (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
+                +e.target.value !== 0
+              ) {
+                // console.log(node.current?.className);
+                nodeQuanity.current?.classList.remove('invalid');
+                // onLink(false);
+              } else {
+                // setNameClassInput('invalid');
+                nodeQuanity.current?.classList.add('invalid');
+                // onLink(true);
+              }
+              // validInput(e);
+              // onChange(e);
+            }}
+            // pattern="^[0-9]\d*.{1}$"
+            innerRef={nodeQuanity}
           />
         </div>
 

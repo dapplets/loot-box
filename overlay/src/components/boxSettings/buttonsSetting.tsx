@@ -13,11 +13,12 @@ export interface BoxSettingsProps {
   dataType?: string;
   classNameNft?: string;
   classNameToken?: string;
+  onClick?: any;
   // creationForm: Lootbox;
   // onCreationFormUpdate: (x: any) => void;
 }
 export const ButtonsSetting: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { classNameNft, classNameToken } = props;
+  const { classNameNft, classNameToken, onClick } = props;
 
   return (
     <div className={cn(styles.wrapperBtn)}>
@@ -32,6 +33,7 @@ export const ButtonsSetting: FC<BoxSettingsProps> = (props: BoxSettingsProps) =>
                 className={classNameToken}
                 isShowDescription
                 btnText="Token"
+                onClick={onClick}
               />
             </Link>
             <Link to="/settings_NFT" className={styles.btnLink}>
@@ -40,6 +42,7 @@ export const ButtonsSetting: FC<BoxSettingsProps> = (props: BoxSettingsProps) =>
                 className={classNameNft}
                 isShowDescription
                 btnText="NFT"
+                onClick={onClick}
               />
             </Link>
           </div>
