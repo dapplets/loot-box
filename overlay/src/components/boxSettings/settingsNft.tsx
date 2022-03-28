@@ -45,26 +45,8 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   //     setNameClassInput('invalid');
   //   }
   // };
-  useEffect(() => {
-    // ToDo: move to App.tsx
-    // ToDo: how to get rid of object coping?
-    DEFAULT_NFT_ITEM.contractAddress = '';
-    DEFAULT_NFT_ITEM.quantity = 0;
-    DEFAULT_NFT_ITEM.tokenId = '';
+  const newForm = Object.assign({}, creationForm);
 
-    const newForm = Object.assign({}, creationForm);
-    creationForm.nftContentItems = [];
-    newForm.nftContentItems = [DEFAULT_NFT_ITEM];
-
-    creationForm.nearContentItems = [];
-    creationForm.ftContentItems = [];
-    newForm.dropChance = value;
-    onCreationFormUpdate(creationForm);
-    onCreationFormUpdate(newForm);
-    console.log(newForm);
-
-    console.log(creationForm);
-  }, []);
   const booleanNodeNftContract = nodeNftContract.current?.classList.contains('invalid');
   const booleanNodeQuanity = nodeQuanity.current?.classList.contains('invalid');
   const LinkBlock = useMemo(() => {
@@ -83,6 +65,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         // nameClassInput === '0'
       ) {
         // console.log(nameClassInput);
+        // console.log(DEFAULT_NFT_ITEM);
+        // console.log(newForm);
+
         onLink(false);
       } else {
         onLink(true);
@@ -93,8 +78,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   }, [
     creationForm,
     link,
-    // nodeNftContract,
-    // nodeQuanity,
+    nodeNftContract,
+    nodeQuanity,
+    DEFAULT_NFT_ITEM,
     //  node
     // nameClassInput,
   ]);
@@ -102,7 +88,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   useEffect(() => {
     creationForm.dropChance = value;
     onCreationFormUpdate(creationForm);
-    console.log({ value });
+    // console.log({ value });
   });
 
   const addButtonClickHandler = () => {
@@ -126,15 +112,40 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
   const handleClick = () => {
     if (nodeNftContract && nodeNftContract.current && nodeQuanity && nodeQuanity.current) {
-      nodeNftContract.current.value = '';
-      nodeQuanity.current.value = '';
     }
   };
+
+  useEffect(() => {
+    // ToDo: move to App.tsx
+    // ToDo: how to get rid of object coping?
+    DEFAULT_NFT_ITEM.contractAddress = '';
+    DEFAULT_NFT_ITEM.quantity = 0;
+    DEFAULT_NFT_ITEM.tokenId = '';
+
+    const newForm = Object.assign({}, creationForm);
+    creationForm.nftContentItems = [];
+    newForm.nftContentItems = [DEFAULT_NFT_ITEM];
+
+    creationForm.nearContentItems = [];
+    creationForm.ftContentItems = [];
+    newForm.dropChance = value;
+    onCreationFormUpdate(creationForm);
+    onCreationFormUpdate(newForm);
+    // console.log(newForm);
+
+    // console.log(creationForm);
+  }, []);
   return (
     <div className={cn(styles.wrapper)}>
       <div className={styles.div}>
         <div className={styles.divBtn}>
-          <ButtonsSetting classNameNft={styles.BtnNft} />
+          <ButtonsSetting
+            classNameNft={styles.BtnNft}
+            onClick={() => {
+              creationForm.nftContentItems[0].tokenId = '';
+              creationForm.nftContentItems[0].quantity = 0;
+            }}
+          />
         </div>
 
         <div className={styles.wrapper_nft}>
@@ -184,7 +195,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             to="/fill_your_box_nft"
             onClick={() => {
               handleClick();
-              console.log('lalalla');
+              // console.log('lalalla');
             }}
           >
             <LinksStep disabled={true} step="next" label="Next step" />

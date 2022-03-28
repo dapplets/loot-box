@@ -105,11 +105,11 @@ export default () => {
 
   const doneClickHandler = async () => {
     // show loader
-    console.log('done');
+    // console.log('done');
 
     setLoader(true);
     await dappletApi.createNewBox(creationForm).then((x) => {
-      console.log('created new lootbox with id: ' + x);
+      // console.log('created new lootbox with id: ' + x);
     });
 
     await dappletApi.getBoxesByAccount('dapplets_lootbox.testnet').then((x) => {
@@ -118,7 +118,7 @@ export default () => {
       console.log('lootboxes', x);
     });
     setCreationForm(EMPTY_FORM);
-    console.log(EMPTY_FORM);
+    // console.log(EMPTY_FORM);
 
     // await dappletApi.clearAll();
     setLoader(false);

@@ -165,7 +165,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     );
 
     newForm.ftContentItems[0][name] = value;
-    console.log(value);
+    // console.log(value);
 
     onCreationFormUpdate(newForm);
   };
@@ -198,10 +198,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     onCreationFormUpdate(creationForm);
 
     onCreationFormUpdate(newForm);
-    console.log(creationForm);
-    console.log(newForm);
-    console.log(DEFAULT_NEAR_ITEM);
-    console.log(DEFAULT_FT_ITEM);
+    // console.log(creationForm);
+    // console.log(newForm);
+    // console.log(DEFAULT_NEAR_ITEM);
+    // console.log(DEFAULT_FT_ITEM);
   }, []);
   const handleClick = () => {
     if (nodeTokenAmount && nodeTokenAmount.current) {
@@ -338,8 +338,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   defaultChecked={true}
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
-                      creationForm.nearContentItems[0].dropAmountFrom = '';
-                      creationForm.nearContentItems[0].dropAmountTo = '';
+                      creationForm.ftContentItems[0].dropAmountFrom = '';
+                      creationForm.ftContentItems[0].dropAmountTo = '';
                       changeHandlerFT.call(null, 'dropType', 'fixed');
                       onShowDescription_dropAmount();
                     }
@@ -352,8 +352,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   id="4_Drop"
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
-                      creationForm.nearContentItems[0].dropAmountFrom = '';
-                      creationForm.nearContentItems[0].dropAmountTo = '';
+                      creationForm.ftContentItems[0].dropAmountFrom = '';
+                      creationForm.ftContentItems[0].dropAmountTo = '';
                       changeHandlerFT.call(null, 'dropType', 'variable');
                       onShowDescription_dropAmount();
                     }
@@ -393,6 +393,17 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                           (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                         +e.target.value !== 0
                       ) {
+                        if (
+                          nodeFrom &&
+                          nodeFrom.current &&
+                          nodeTo &&
+                          nodeTo.current &&
+                          +nodeFrom.current.value <= +nodeTo.current.value
+                        ) {
+                          nodeFrom.current?.classList.remove('invalid');
+                        } else {
+                          nodeFrom.current?.classList.add('invalid');
+                        }
                         nodeTo.current?.classList.remove('invalid');
                       } else {
                         nodeTo.current?.classList.add('invalid');
@@ -499,6 +510,17 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                           (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                         +e.target.value !== 0
                       ) {
+                        if (
+                          nodeFrom &&
+                          nodeFrom.current &&
+                          nodeTo &&
+                          nodeTo.current &&
+                          +nodeFrom.current.value <= +nodeTo.current.value
+                        ) {
+                          nodeFrom.current?.classList.remove('invalid');
+                        } else {
+                          nodeFrom.current?.classList.add('invalid');
+                        }
                         nodeTo.current?.classList.remove('invalid');
                       } else {
                         nodeTo.current?.classList.add('invalid');
@@ -542,7 +564,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <DropChance
               type="string"
               maxValueDropChance="100"
-              minValueDropChance="0"
+              minValueDropChance="1"
               valueDropChance={`${value}`}
               onValueDropChance={(newValue: any) => setValue(+newValue)}
               valueButtonDropChance={value}

@@ -86,7 +86,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
         />
         <RadioButton
           id={`${id}-2`}
-          value="Minbase"
+          value="Mintbase"
           name={id}
           checked={nftItem.contractAddress === 'mintbase.near'}
           onChange={(e) => {

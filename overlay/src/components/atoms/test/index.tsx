@@ -75,7 +75,7 @@ export const Test: FC<TestProps> = (props) => {
         onChange={(e: any) => {
           const { data, inputType } = e.nativeEvent;
           const test = regExpIndex.test(data);
-          console.log({ data, inputType, e });
+          // console.log({ data, inputType, e });
           switch (inputType) {
             case 'insertText':
               if (test) {

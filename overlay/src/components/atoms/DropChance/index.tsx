@@ -53,7 +53,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
         onChange={(e: any) => {
           const { data, inputType } = e.nativeEvent;
 
-          console.log({ data, inputType, e });
+          // console.log({ data, inputType, e });
           switch (inputType) {
             case 'insertText':
               if (isNaN(+data) === false && data !== ' ') {
@@ -64,7 +64,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
               break;
             case 'deleteContentBackward':
               const newValue = valueDropChance.slice(0, -1);
-              if (newValue.length === 0) onValueDropChance('0');
+              if (newValue.length === 0) onValueDropChance('1');
               else onValueDropChance(newValue);
               break;
 
@@ -79,7 +79,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
       <div className={cn(styles.buttonPanel)}>
         <button
           onClick={() =>
-            setValueButtonDropChance(valueButtonDropChance - 1 < 0 ? 0 : valueButtonDropChance - 1)
+            setValueButtonDropChance(valueButtonDropChance - 1 < 1 ? 1 : valueButtonDropChance - 1)
           }
           type="button"
           className={cn(styles.default)}
