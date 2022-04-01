@@ -3,10 +3,10 @@
   "branch": "default",
   "version": { "$ref": "package.json#/version" },
   "type": "FEATURE",
-  "title": "Loot-Box",
+  "title": "LootBox Dapplet",
   "description": { "$ref": "package.json#/description" },
   "main": { "$ref": "package.json#/main" },
-  "icon": "src/icons/near_dapplet_icon_70.png",
+  "icon": "src/icons/Lootbox.svg",
   "contextIds": ["twitter-adapter.dapplet-base.eth"],
   "config": {
     "schema": "config/schema.json",

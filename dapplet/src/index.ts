@@ -63,7 +63,7 @@ export default class TwitterFeature {
       this._overlay = (<any>Core)
         .overlay({
           name: 'overlay',
-          title: 'Dapplets x NEAR example',
+          title: '',
         })
         .declare({
           connectWallet: this._api.connectWallet.bind(this._api),

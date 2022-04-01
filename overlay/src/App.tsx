@@ -14,7 +14,7 @@ import {
   BoxCreationPrice,
 } from '../../common/interfaces';
 import {} from '@dapplets/dapplet-extension';
-import NearAvatar from './icons/avatarDef.png';
+import Avatar from './icons/Lootbox.png';
 
 import { StatisticsNear, StatisticsWinners, StatisticsCode } from './components/statisticsNear';
 import { DeployBox } from './components/deployBox';
@@ -205,7 +205,7 @@ export default () => {
         ) : (
           <>
             <Profile
-              avatar={NearAvatar}
+              avatar={Avatar}
               hash={nearAccount}
               onClick={handleLogIn}
               openChange={onOpenProfile}
