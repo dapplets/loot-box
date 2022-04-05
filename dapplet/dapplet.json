@@ -6,7 +6,7 @@
   "title": "LootBox Dapplet",
   "description": { "$ref": "package.json#/description" },
   "main": { "$ref": "package.json#/main" },
-  "icon": "src/icons/Lootbox.svg",
+  "icon": "src/icons/Lootbox3.png",
   "contextIds": ["twitter-adapter.dapplet-base.eth"],
   "config": {
     "schema": "config/schema.json",

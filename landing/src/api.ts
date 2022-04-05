@@ -19,17 +19,17 @@ function _createFakeLootbox(id: number): Lootbox {
     nftContentItems: [
       {
         contractAddress: 'nft.testnet',
-        tokenId: 1,
+        tokenId: '',
         quantity: 1,
       },
       {
         contractAddress: 'nft.testnet',
-        tokenId: 2,
+        tokenId: '',
         quantity: 1,
       },
       {
         contractAddress: 'nft.testnet',
-        tokenId: 3,
+        tokenId: '',
         quantity: 1,
       },
     ],
@@ -37,6 +37,9 @@ function _createFakeLootbox(id: number): Lootbox {
 }
 
 export class DappletApi implements IDappletApi {
+  getLootboxById(lootboxId: number): Promise<Lootbox> {
+    throw new Error('Method not implemented.');
+  }
   _getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimResult> {
     throw new Error('Method not implemented.');
   }
