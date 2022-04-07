@@ -4,26 +4,29 @@ import cn from 'classnames';
 import { Link } from 'react-router-dom';
 import { LabelSettings } from '../atoms/LabelSettings';
 import { StatisticsLink } from '../atoms/StatisticsLink';
-
+import { Lootbox } from '../../../../common/interfaces';
 import { Message } from '../atoms/Message';
 
 export interface CodeProps {
   onChange?: () => void;
   onSubmit?: () => void;
   id: any;
+  winInfo: any;
 }
 
 export const Code: FC<CodeProps> = (props: CodeProps) => {
-  const { id } = props;
+  const { id, winInfo } = props;
+  const [infoWin, setInfoWin] = useState<Lootbox[]>([]);
 
   return (
     <div className={styles.wrapper}>
       <div className={cn(styles.code)}>
         <div className={styles.lootboxCode}>
           <Message
-            message={'message'}
-            link={`https://lootbox.org/${id}/ Don’t see the Box?  https://lootbox.org/how-to/`}
-            instruction="Gift box is made with LootBox Dapplet @lootbox by @dappletsproject. "
+            message={`We are holding the ${winInfo} #Giveaway. Click on the lootbox picture and get your prize!`}
+            link={`https://ltbx.app/${id}/`}
+            instruction="Don’t see the Box? Install this dapp: https://ltbx.app/how-to/"
+            project="Gift box is made with LootBox Dapplet @lootboxdapp by @dappletsproject"
           />
         </div>
       </div>

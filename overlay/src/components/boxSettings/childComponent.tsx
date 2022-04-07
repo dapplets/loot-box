@@ -70,7 +70,17 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
 
   return (
     <div className={styles.addNftBlock}>
-      <LabelSettings title="Marketplace" isActive support="Choice of marketplace" />
+      <LabelSettings
+        title="Marketplace"
+        isActive
+        support="Please select the dropping NFT parameters:
+
+Marketplace - you can choose the Paras.id, Mintbase or custom NFT contract.
+
+Token ID - insert the marketplace NFT ID or NFT contract address.
+
+Quantity - select the dropping NFT quantity from one to any. All NFTs need to be in one batch."
+      />
       <div className={styles.radiobtnMarketplace}>
         <RadioButton
           id={`${id}-1`}

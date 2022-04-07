@@ -85,12 +85,18 @@ export default class TwitterFeature {
           _claimLootbox: this._api.claimLootbox.bind(this._api),
         });
     }
-    const regExpLootbox = new RegExp(/.*(https:\/\/lootbox\.org\/\d+)/);
+    const regExpLootbox = new RegExp(/.*(https:\/\/ltbx\.app\/\d+)/);
     const regExpIndex = new RegExp(/\d+/);
     const getTweetParse = (tweet) => {
       if (tweet.search(regExpLootbox) != -1) {
         return String(tweet);
       }
+    };
+    const getTweetLink = (tweet) => {
+      try {
+        let numEl = tweet.exec(regExpLootbox);
+        return numEl;
+      } catch {}
     };
     const getNumIndex = (tweet) => {
       try {
@@ -110,22 +116,25 @@ export default class TwitterFeature {
           DEFAULT: {
             img: { DARK: boxDef, LIGHT: White },
             hidden: true,
-            replace: `lootbox.org/`,
+            replace: `ltbx.app/`,
             text: '',
             init: async (ctx, me) => {
               const Tweet = ctx.text;
 
               const tweetParse = getTweetParse(Tweet);
+              const tweetParseLink = getTweetLink(tweetParse);
               const numIndex = getNumIndex(tweetParse);
 
               const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-
+              console.log(tweetParse);
+              console.log(numIndex);
+              console.log(tweetParseLink);
               const lootboxId = await this._api.getLootboxById(numIndex);
               if (lootboxId === null || lootboxId === undefined) {
                 return;
               } else {
                 me.hidden = false;
-                me.replace = `lootbox.org/${numIndex}`;
+                me.replace = `ltbx.app/${numIndex}`;
                 await this.getClaimStatus(me, numIndex, lootboxId);
                 // me.img = BOX_DEFAULT[lootboxId.pictureId];
                 // const getClaim = await this._api.claimLootbox(numIndex, wallet.accountId);

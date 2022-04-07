@@ -20,10 +20,11 @@ export interface CreateNewBoxProps {
   children: ReactNode;
   label: string;
   imgVal: string;
+  winInfo: any;
 }
 
 export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) => {
-  const { label, imgVal, children } = props;
+  const { label, imgVal, children, winInfo } = props;
 
   const [isShowDescription, onShowDescription] = useToggle(false);
   return (
@@ -51,12 +52,43 @@ export interface ChildComponentProps {
   id: number;
   creationForm: Lootbox;
   status: string;
+  winInfo: any;
+  // setWinInfo: (x: string) => void;
+  // getWin: any;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, label, imgVal, onClick } = props;
+  const { number, label, imgVal, onClick, creationForm, winInfo } = props;
+
+  const [winAmount, setWinAmount] = useState('');
+  // useEffect(() => {
+  //   if (
+  //     // winInfo.ftContentItems.tokenAmount !== undefined &&
+  //     +winInfo.ftContentItems[0].tokenAmount !== 0
+  //   ) {
+  //     setWinAmount(winInfo.ftContentItems[0].tokenAmount + `  TOKEN`);
+  //   } else if (
+  //     // winInfo.nearContentItems.tokenAmount !== undefined &&
+  //     +winInfo.nearContentItems[0].tokenAmount !== 0
+  //   ) {
+  //     setWinAmount(winInfo.nearContentItems[0].tokenAmount + ` NEAR`);
+  //   } else {
+  //     setWinAmount(`${winInfo.nftContentItems.length}  NFT`);
+  //   }
+  // }, []);
+
+  // console.log(+winInfo.nearContentItems[0].tokenAmount);
+  // console.log(+winInfo.ftContentItems[0].tokenAmount);
+  // console.log(winInfo.nftContentItems.length + `  NFT`);
 
   return (
-    <CreatedBox id={number} label={label} imageBox={imgVal} status="Created" onClick={onClick} />
+    <CreatedBox
+      id={number}
+      label={label}
+      imageBox={imgVal}
+      status="Created"
+      onClick={onClick}
+      WinInfo={winInfo}
+    />
   );
 };

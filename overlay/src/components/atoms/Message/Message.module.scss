@@ -22,7 +22,7 @@
 }
 .messageBlock {
   display: flex;
-  max-width: 100%;
+  max-width: 90%;
   flex-direction: column;
   font-family: Roboto, sans-serif;
   font-weight: 500;
@@ -30,18 +30,27 @@
   line-height: 16px;
   color: $MainGrey;
   word-wrap: break-word;
-  p {
-    display: block;
-    max-width: 314px;
-  }
+  // p {
+  //   display: block;
+  //   max-width: 314px;
+  // }
 }
 .messageInput {
   display: block;
-  // max-width: 314px;
+  max-width: 300px;
 }
 .link {
+  display: block;
+  width: 100%;
+  // max-width: 314px;
 }
 .instruction {
+  display: block;
+  width: 100%;
+}
+.project {
+  display: block;
+  width: 100%;
 }
 .button {
   display: inline-block;

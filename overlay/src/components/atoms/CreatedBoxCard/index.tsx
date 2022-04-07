@@ -13,10 +13,11 @@ export interface CreatedBoxProps {
   status: string;
   id: number;
   onClick: () => void;
+  WinInfo?: any;
 }
 
 export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
-  const { label, imageBox, status, id, onClick } = props;
+  const { label, imageBox, status, id, onClick, WinInfo } = props;
   const [copied, copy, setCopied] = useCopied(`${label}`);
   const visible = (hash: string): string => {
     const firstFourCharacters = hash.substring(0, 6);
@@ -38,6 +39,7 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
       <Link to="/statistics">
         <div className={cn(styles.img)}>
           <img src={imageBox} />
+          <span className={styles.winInfo}> {WinInfo}</span>
         </div>
       </Link>
       <div className={cn(styles.description)}>

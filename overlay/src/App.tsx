@@ -77,6 +77,8 @@ export default () => {
   const [price, setPrice] = useState<BoxCreationPrice | null>(null);
   const [loader, setLoader] = useState(false);
 
+  const [winInfo, setWinInfo] = useState('');
+
   // const [imgSelect, setImgSelect] = useState('');
 
   // const updateImgSelect = (x: string) => {
@@ -187,7 +189,7 @@ export default () => {
   const handleLogInBtn = async () => {
     const isWalletConnected = await dappletApi.isWalletConnected();
     let accountName: string;
-    let accountImg: string;
+    // let accountImg: string;
     if (!isWalletConnected) {
       accountName = await dappletApi.connectWallet();
     } else {
@@ -196,6 +198,17 @@ export default () => {
     setNearAccount(accountName);
   };
   // console.log(selectedLootboxId);
+  const getWin = async (y: any) => {
+    lootboxes.map((x) => {
+      if (+x.ftContentItems[y].tokenAmount !== 0) {
+        setWinInfo(x.ftContentItems[y].tokenAmount + `  TOKEN`);
+      } else if (+x.nearContentItems[y].tokenAmount !== 0) {
+        setWinInfo(x.nearContentItems[y].tokenAmount + ` NEAR`);
+      } else if (x.nftContentItems.length !== 0) {
+        setWinInfo(String(x.nftContentItems.length + `  NFT`));
+      }
+    });
+  };
 
   return (
     <div className={cn(styles.app)}>
@@ -220,7 +233,7 @@ export default () => {
           path="/"
           element={
             // (loader && <Preloader />) || (
-            <CreateNewBox imgVal={imgBox} label={valueLabel}>
+            <CreateNewBox winInfo={winInfo} imgVal={imgBox} label={valueLabel}>
               {lootboxes.map((item, index) => (
                 <ChildComponent
                   onClick={() => {
@@ -234,6 +247,8 @@ export default () => {
                   id={item.id!}
                   creationForm={creationForm}
                   status={item.status!}
+                  // getWin={() => getWin(index)}
+                  winInfo={winInfo}
                 />
               ))}
             </CreateNewBox>
@@ -296,6 +311,10 @@ export default () => {
                 price={price}
                 imgVal={IMG[creationForm.pictureId]}
                 onDoneClick={doneClickHandler}
+                creationForm={creationForm}
+                winInfo={winInfo}
+                setWinInfo={(x) => setWinInfo(x)}
+                onCreationFormUpdate={(x) => setCreationForm(x)}
               />
             )
           }
@@ -306,7 +325,10 @@ export default () => {
           element={
             (loader && <Preloader />) || (
               <FillBox_Nft
+                creationForm={creationForm}
                 price={price}
+                winInfo={winInfo}
+                setWinInfo={(x) => setWinInfo(x)}
                 imgVal={IMG[creationForm.pictureId]}
                 onDoneClick={doneClickHandler}
               />
@@ -316,7 +338,9 @@ export default () => {
         <Route
           path="/deploy_your_box"
           element={
-            (loader && <Preloader />) || <DeployBox id={lootboxes.length} onChange={onChange} />
+            (loader && <Preloader />) || (
+              <DeployBox winInfo={winInfo} id={lootboxes.length} onChange={onChange} />
+            )
           }
         />
         <Route
@@ -329,7 +353,9 @@ export default () => {
         />
         <Route
           path="/code"
-          element={(loader && <Preloader />) || <StatisticsCode id={selectedLootboxId} />}
+          element={
+            (loader && <Preloader />) || <StatisticsCode id={selectedLootboxId} winInfo={winInfo} />
+          }
         />
       </Routes>
     </div>

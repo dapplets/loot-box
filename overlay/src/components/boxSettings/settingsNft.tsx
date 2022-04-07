@@ -169,7 +169,13 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             </div>
 
             <div className={styles.dropChance_nft}>
-              <LabelSettings title="Drop Chance" isActive support="Probability of getting a win" />
+              <LabelSettings
+                title="Drop Chance"
+                isActive
+                support="The chance to one person to ged the drop. 
+
+Please enter the amount in percents."
+              />
 
               <DropChance
                 type="string"
