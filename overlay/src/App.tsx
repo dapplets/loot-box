@@ -247,8 +247,7 @@ export default () => {
                   id={item.id!}
                   creationForm={creationForm}
                   status={item.status!}
-                  // getWin={() => getWin(index)}
-                  winInfo={winInfo}
+                  winInfo={item}
                 />
               ))}
             </CreateNewBox>

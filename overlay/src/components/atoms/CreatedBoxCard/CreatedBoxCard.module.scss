@@ -24,18 +24,18 @@
 }
 .winInfo {
   position: absolute;
-  top: 45%;
-  left: 30%;
+  top: 70%;
+  left: 25%;
   display: inline-block;
   padding: 5px 15px;
-  background: $PureWhite;
-  border-radius: 15%;
-  border: 1px solid $PureBlack;
+  background: #fff;
+  border-radius: 15px;
+  border: 1px solid #000;
   font-family: Roboto, sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: $PureBlack;
+  color: #000;
 }
 
 .description {

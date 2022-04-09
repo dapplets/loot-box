@@ -63,7 +63,7 @@ export default class TwitterFeature {
       this._overlay = (<any>Core)
         .overlay({
           name: 'overlay',
-          title: '',
+          title: 'LootBox Dapplet',
         })
         .declare({
           connectWallet: this._api.connectWallet.bind(this._api),
@@ -85,19 +85,16 @@ export default class TwitterFeature {
           _claimLootbox: this._api.claimLootbox.bind(this._api),
         });
     }
+
     const regExpLootbox = new RegExp(/.*(https:\/\/ltbx\.app\/\d+)/);
     const regExpIndex = new RegExp(/\d+/);
     const getTweetParse = (tweet) => {
       if (tweet.search(regExpLootbox) != -1) {
-        return String(tweet);
+        let numEl = tweet.match(regExpLootbox);
+        return String(numEl[0]);
       }
     };
-    const getTweetLink = (tweet) => {
-      try {
-        let numEl = tweet.exec(regExpLootbox);
-        return numEl;
-      } catch {}
-    };
+
     const getNumIndex = (tweet) => {
       try {
         let numEl = parseInt(tweet.match(regExpIndex));
@@ -117,18 +114,17 @@ export default class TwitterFeature {
             img: { DARK: boxDef, LIGHT: White },
             hidden: true,
             replace: `ltbx.app/`,
+            position: 'bottom',
             text: '',
             init: async (ctx, me) => {
               const Tweet = ctx.text;
 
               const tweetParse = getTweetParse(Tweet);
-              const tweetParseLink = getTweetLink(tweetParse);
+
               const numIndex = getNumIndex(tweetParse);
 
               const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-              console.log(tweetParse);
-              console.log(numIndex);
-              console.log(tweetParseLink);
+
               const lootboxId = await this._api.getLootboxById(numIndex);
               if (lootboxId === null || lootboxId === undefined) {
                 return;

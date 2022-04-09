@@ -26,7 +26,7 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
             message={`We are holding the ${winInfo} #Giveaway. Click on the lootbox picture and get your prize!`}
             link={`https://ltbx.app/${id}/`}
             instruction="Don’t see the Box? Install this dapp: https://ltbx.app/how-to/"
-            project="Gift box is made with LootBox Dapplet @lootboxdapp by @dappletsproject"
+            project="The gift box is made with the LootBox Dapplet @lootboxdapp by @dappletsproject"
           />
         </div>
       </div>

@@ -10,6 +10,7 @@ import { ButtonPay } from '../atoms/ButtonPay';
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
 import { Lootbox } from '../../../../common/interfaces';
+import { useEffect } from 'react';
 
 export interface FillBoxProps_Nft {
   onSetId?: any;
@@ -22,21 +23,32 @@ export interface FillBoxProps_Nft {
 }
 export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   const { imgVal, price, onDoneClick, creationForm, winInfo, setWinInfo } = props;
-  const winNft = creationForm.nftContentItems.length + `  NFT`;
-  setWinInfo(winNft);
+  const [winInfoNft, setWinInfoNft] = useState(winInfo);
+  useEffect(() => {
+    let sumQuantity = 0;
+
+    for (let i = 0; i < creationForm.nftContentItems.length; i++) {
+      sumQuantity += +creationForm.nftContentItems[i].quantity!;
+    }
+
+    const winNft = String(sumQuantity) + ` NFT`;
+    setWinInfoNft(winNft);
+    setWinInfo(winNft);
+  }, []);
+
+  // setWinInfo(winNft);
   return (
     <div className={cn(styles.wrapper)}>
       <SettingTitle title="Fill your box" isActive />
       <div className={cn(styles.img)}>
         <img src={imgVal} />
-        <span className={styles.spanWin}>{winNft}</span>
+        <span className={styles.spanWin}>{winInfoNft}</span>
       </div>
       <div className={styles.textNft}>
         You need to tranfer selected NFTs to lootbox.near account. When all NFTs are tranferred,
         please click the button below.
       </div>
       <div className={cn(styles.payBtn_block)}>
-        {' '}
         <ButtonPay styleBtn="disable" title="NFTs transferred" />
       </div>
 

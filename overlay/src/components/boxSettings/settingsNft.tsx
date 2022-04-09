@@ -30,7 +30,7 @@ const DEFAULT_NFT_ITEM: NftContentItem = {
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
-  const [link, onLink] = useState(false);
+  const [link, onLink] = useState(true);
   // const node = useRef<HTMLInputElement>();
   const [value, setValue] = React.useState(20);
   // const [nameClassInput, setNameClassInput] = useState('');
@@ -57,9 +57,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
       booleanNodeQuanity != true
     ) {
       if (
-        String(creationForm.nftContentItems[0].quantity).length >= 1 &&
         creationForm.nftContentItems[0].quantity !== null &&
-        String(creationForm.nftContentItems[0].tokenId).length >= 1 &&
+        creationForm.nftContentItems[0].quantity >= 1 &&
+        creationForm.nftContentItems[0].tokenId.length >= 1 &&
         creationForm.nftContentItems[0].tokenId !== null
         // &&
         // nameClassInput === '0'
@@ -67,6 +67,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         // console.log(nameClassInput);
         // console.log(DEFAULT_NFT_ITEM);
         // console.log(newForm);
+        console.log(nodeQuanity);
+
+        console.log(booleanNodeQuanity);
 
         onLink(false);
       } else {
@@ -172,9 +175,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
               <LabelSettings
                 title="Drop Chance"
                 isActive
-                support="The chance to one person to ged the drop. 
+                support="The chance a person has to get the drop. 
 
-Please enter the amount in percents."
+                Please enter the amount in percentage"
               />
 
               <DropChance
@@ -201,6 +204,8 @@ Please enter the amount in percents."
             to="/fill_your_box_nft"
             onClick={() => {
               handleClick();
+              creationForm.ftContentItems = [];
+              creationForm.nearContentItems = [];
               // console.log('lalalla');
             }}
           >

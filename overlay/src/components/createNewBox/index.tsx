@@ -77,9 +77,22 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
   //   }
   // }, []);
 
-  // console.log(+winInfo.nearContentItems[0].tokenAmount);
-  // console.log(+winInfo.ftContentItems[0].tokenAmount);
-  // console.log(winInfo.nftContentItems.length + `  NFT`);
+  useEffect(() => {
+    if (winInfo.ftContentItems.length !== 0) {
+      winInfo.ftContentItems.map((x: any) => setWinAmount(`${x.tokenAmount} TOKEN`));
+    } else if (winInfo.nearContentItems.length !== 0) {
+      winInfo.nearContentItems.map((x: any) => setWinAmount(`${x.tokenAmount} NEAR`));
+    } else if (winInfo.nftContentItems.length !== 0) {
+      let sumQuantity = 0;
+
+      for (let i = 0; i < winInfo.nftContentItems.length; i++) {
+        sumQuantity += +winInfo.nftContentItems[i].quantity!;
+      }
+
+      const winNft = String(sumQuantity) + ` NFT`;
+      setWinAmount(winNft);
+    }
+  });
 
   return (
     <CreatedBox
@@ -88,7 +101,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
       imageBox={imgVal}
       status="Created"
       onClick={onClick}
-      WinInfo={winInfo}
+      WinInfo={winAmount}
     />
   );
 };

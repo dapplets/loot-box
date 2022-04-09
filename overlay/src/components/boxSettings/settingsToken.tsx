@@ -221,8 +221,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <LabelSettings
               title="Token amount"
               isActive
-              support="Please enter the amount to distribute.
-              Minimum quantity: 1"
+              support={`Please enter the number of tokens you want to distribute.
+              You can select a NEAR token or any custom token in the NEAR blockchain.
+              Minimum quantity: 1 token`}
             />
             <div className={cn(styles.tokenInput)}>
               <InputPanel
@@ -325,7 +326,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 <LabelSettings
                   title="Drop amount"
                   isActive
-                  support="Choosing the amount to distribute to one person"
+                  support="Please enter the number of tokens the winner will receive.
+
+                  You can select a fixed amount or a variable amount. In case of a variable amount please choose the MIN and MAX sums."
                 />
               </div>
 
@@ -442,7 +445,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Drop amount"
                   className={cn(styles.LabelSettings)}
                   isActive
-                  support="Choosing the amount to distribute to one person"
+                  support="Please enter the number of tokens the winner will receive.
+
+                  You can select a fixed amount or a variable amount. In case of a variable amount please choose the MIN and MAX sums."
                 />
               </div>
 
@@ -559,7 +564,12 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             onValueDropChance={(newValue: any) => onValTest(newValue)}
           /> */}
           <div className={cn(styles.dropChance)}>
-            <LabelSettings title="Drop Chance" isActive support="Probability of getting a win" />
+            <LabelSettings
+              title="Drop Chance"
+              isActive
+              support="The chance a person has to get the drop. 
+Please enter the amount in percentage."
+            />
 
             <DropChance
               type="string"
@@ -578,7 +588,19 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           <LinksStep step="prev" label="Back" />
         </Link>
         {(link && <div></div>) || (
-          <Link to="/fill_your_box" onClick={handleClick}>
+          <Link
+            to="/fill_your_box"
+            onClick={() => {
+              handleClick();
+              if (isShowDescription_tokenAmount) {
+                creationForm.nearContentItems = [];
+                creationForm.nftContentItems = [];
+              } else {
+                creationForm.ftContentItems = [];
+                creationForm.nftContentItems = [];
+              }
+            }}
+          >
             <LinksStep step="next" label="Next step" />
           </Link>
         )}

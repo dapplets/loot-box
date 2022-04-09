@@ -12,6 +12,7 @@ import { LinksStep } from '../atoms/LinksStep';
 
 import { Link } from 'react-router-dom';
 import { Lootbox } from '../../../../common/interfaces';
+import { useEffect } from 'react';
 
 export interface FillBoxProps {
   // onSetId?: () => void;
@@ -37,12 +38,22 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     setWinInfo,
     winInfo,
   } = props;
-  const newForm = Object.assign({}, creationForm);
-  const winAmount = newForm.nearContentItems[0].tokenAmount;
-  const winAmountTicker = newForm.ftContentItems[0].tokenAmount;
-  const winAmountParse = winAmount + `  NEAR`;
-  const winAmountTickerParse = winAmountTicker + `  TOKEN`;
-  setWinInfo(+winAmount !== 0 ? winAmountParse : winAmountTickerParse);
+  // const newForm = Object.assign({}, creationForm);
+  const [winInfoToken, setWinInfoToken] = useState(winInfo);
+  useEffect(() => {
+    if (creationForm.nearContentItems[0]) {
+      const winAmount = creationForm.nearContentItems[0].tokenAmount;
+      const winAmountParse = winAmount + ` NEAR`;
+      setWinInfoToken(winAmountParse);
+      setWinInfo(winAmountParse);
+    } else if (creationForm.ftContentItems[0]) {
+      const winAmountTicker = creationForm.ftContentItems[0].tokenAmount;
+      const winAmountTickerParse = winAmountTicker + ` TOKEN`;
+      setWinInfoToken(winAmountTickerParse);
+      setWinInfo(winAmountTickerParse);
+    }
+  }, []);
+
   return (
     <div className={cn(styles.wrapper)}>
       <div className={styles.wrapperInfo}>
@@ -53,7 +64,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         <div className={cn(styles.img)} onClick={() => {}}>
           <img src={imgVal} />
           <span className={styles.spanWin}>
-            {+winAmount !== 0 ? winAmountParse : winAmountTickerParse}
+            {winInfoToken}
+            {/* {+winAmount !== 0 ? winAmountParse : winAmountTickerParse} */}
           </span>
         </div>
         <div className={cn(styles.distributeDrop)}>
@@ -61,7 +73,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
             title="How would you like to distribute drop?"
             support="You can choose between one transaction for one winner or one transaction for all winners. 
 
-          Taking the first options you will need to pay additional gas amount."
+            The first option will require an additional amount of gas"
             isActive
           />
           <div className={cn(styles.distributeDropRadio)}>

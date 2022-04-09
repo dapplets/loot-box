@@ -15,8 +15,11 @@ export const Message: FC<MessageProps> = (props: MessageProps) => {
   const { message, link, instruction, project } = props;
   const [copied, copy, setCopied] = useCopied(
     `${message}
+
 ${link}
+
 ${instruction}
+
 ${project}`,
   );
 
@@ -33,11 +36,11 @@ ${project}`,
       <div className={cn(styles.lootboxCode)}>
         <LabelSettings
           title="LOOTBOX CODE"
-          support="Copy this Lootbox code and paste it to any Twitter post. 
+          support="Copy this Lootbox code and paste it to your Twitter post. 
 
-All users with the dapplet installed will see the lootbox picture with the drop amount.
-
-Users without the dapplet installed will see the teaser message and the links to the lootbox web page and intallation manual"
+          All users who have the dapplet installed will see the Lootbox picture with the drop amount.
+          
+          Users who don’t have the dapplet installed will see a message and links to the Lootbox web page and the installation manual."
           isActive
         />
         <div className={cn(styles.message)}>
