@@ -28,6 +28,7 @@ pub enum LootboxStatus {
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub enum ClaimResult {
+    NotExists,
     NotOpened,
     NotWin,
     WinNear { total_amount: u64 },
@@ -98,6 +99,28 @@ impl Contract {
             .collect()
     }
 
+    pub fn get_lootbox_claim_status(&mut self, lootbox_id: LootboxId, account_id: &AccountId) -> ClaimResult {
+        match self.lootboxes_by_id.get(lootbox_id) {
+            Some(_x) => {
+                match self.claims_per_lootbox_and_account.get(&lootbox_id) {
+                    Some(claim_result_by_account_id) => {
+                        match claim_result_by_account_id.get(&account_id) {
+                            Some(x) => {
+                                match self.claim_results.get(x) {
+                                    Some(x) => x,
+                                    None => ClaimResult::NotOpened
+                                }
+                            },
+                            None => ClaimResult::NotOpened
+                        }
+                    },
+                    None => ClaimResult::NotOpened
+                }
+            },
+            None => ClaimResult::NotExists
+        }
+    }
+
     // Write functions
 
     pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u16, loot_items: Vec<LootItem>) -> LootboxId {        
@@ -126,6 +149,32 @@ impl Contract {
         self.lootboxes_per_owner.insert(&lootbox.owner_id, &lootboxes_set);
         lootbox.id
     }
+
+    pub fn claim_lootbox(&mut self, lootbox_id: LootboxId) -> ClaimResult {
+        let _lootbox = self.get_lootbox_by_id(lootbox_id).expect("No lootbox");
+        
+        let account_id = env::predecessor_account_id();
+        let mut lootboxes_map = self.claims_per_lootbox_and_account.get(&lootbox_id).unwrap_or_else(|| {
+            LookupMap::new(
+                StorageKey::ClaimsPerLootboxAndOwner
+                .try_to_vec()
+                .unwrap(),
+            )
+        });
+
+        match lootboxes_map.get(&account_id) {
+            Some(_x) => {
+                panic!("Already claimed.");
+            },
+            None => {
+                let claim_result = ClaimResult::WinNear { total_amount: 1 };
+                self.claim_results.push(&claim_result);
+                let claim_result_id = self.claim_results.len() - 1;
+                lootboxes_map.insert(&account_id, &claim_result_id);
+                claim_result
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -134,27 +183,29 @@ mod tests {
     use near_sdk::test_utils::VMContextBuilder;
     use near_sdk::testing_env;
 
-    fn get_context(predecessor: AccountId) -> VMContextBuilder {
-        let mut builder = VMContextBuilder::new();
-        builder.predecessor_account_id(predecessor);
-        builder
-    }
-
     fn to_account(account: &str) -> AccountId {
         AccountId::try_from(account.to_string()).expect("Invalid account")
     }
 
-    #[test]
-    fn increment() {
-        let context = get_context(to_account("test.near"));
-        testing_env!(context.build());
+    fn get_contract() -> Contract {
+        let mut builder = VMContextBuilder::new();
+        builder.predecessor_account_id(to_account("test.near"));
+        
+        testing_env!(builder.build());
 
-        let mut contract = Contract {
+        let contract = Contract {
             lootboxes_by_id: Vector::new(StorageKey::LootboxesById.try_to_vec().unwrap()),
             lootboxes_per_owner: LookupMap::new(StorageKey::LootboxesPerOwner.try_to_vec().unwrap()),
             claims_per_lootbox_and_account: LookupMap::new(StorageKey::ClaimsPerLootboxAndOwner.try_to_vec().unwrap()),
             claim_results: Vector::new(StorageKey::ClaimResultsById.try_to_vec().unwrap()),
         };
+
+        contract
+    }
+
+    #[test]
+    fn should_create_lootbox() {
+        let mut contract = get_contract();
 
         let loot_items = Vec::from([
             LootItem::Near { drop_amount_from: 1, drop_amount_to: 10, total_amount: 100 }
@@ -168,6 +219,14 @@ mod tests {
                 assert_eq!(lootbox_id, x.id);
                 assert_eq!(1, x.loot_items.len());
                 // ToDo: check another properties
+
+                let claim_result_before = contract.get_lootbox_claim_status(lootbox_id, &to_account("test.near"));
+                assert_eq!(matches!(claim_result_before, ClaimResult::NotOpened), true);
+
+                let claim_result = contract.claim_lootbox(lootbox_id);
+                let claim_result_after = contract.get_lootbox_claim_status(lootbox_id, &to_account("test.near"));
+                assert_eq!(matches!(claim_result_after, claim_result), true);
+
             },
             None => env::panic_str("No lootbox")
         }
