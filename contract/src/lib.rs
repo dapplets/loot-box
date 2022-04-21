@@ -2,6 +2,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, Vector};
 use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash};
 use near_sdk::serde::{Deserialize, Serialize};
+use near_sdk::json_types::{U64};
 
 pub type LootboxId = u64;
 pub type ClaimResultId = u64;
@@ -87,8 +88,8 @@ impl Contract {
 
     // View functions
 
-    pub fn get_lootbox_by_id(&mut self, lootbox_id: LootboxId) -> Option<Lootbox> {
-        self.lootboxes_by_id.get(lootbox_id)
+    pub fn get_lootbox_by_id(&mut self, lootbox_id: U64) -> Option<Lootbox> {
+        self.lootboxes_by_id.get(lootbox_id.into())
     }
 
     pub fn get_lootboxes_by_account(&mut self, account_id: &AccountId, from_index: Option<u64>, limit: Option<u64>) -> Vec<Lootbox> {
@@ -105,7 +106,7 @@ impl Contract {
         tokens.iter()
             .skip(start as usize) 
             .take(limit.unwrap_or(50) as usize) 
-            .map(|lootbox_id| self.get_lootbox_by_id(lootbox_id.clone()).unwrap())
+            .map(|lootbox_id| self.get_lootbox_by_id(lootbox_id.clone().into()).unwrap())
             .collect()
     }
 
@@ -113,7 +114,8 @@ impl Contract {
         self.claim_results.get(claim_result_id)
     }
 
-    pub fn get_lootbox_claim_status(&mut self, lootbox_id: LootboxId, account_id: &AccountId) -> ClaimResult {
+    pub fn get_lootbox_claim_status(&mut self, lootbox_id: U64, account_id: &AccountId) -> ClaimResult {
+        let lootbox_id = lootbox_id.into();
         match self.lootboxes_by_id.get(lootbox_id) {
             Some(_x) => {
                 match self.claims_per_lootbox_and_account.get(&lootbox_id) {
@@ -135,8 +137,9 @@ impl Contract {
         }
     }
 
-    pub fn get_claims_by_lootbox(&mut self, lootbox_id: &LootboxId, from_index: Option<u64>, limit: Option<u64>) -> Vec<ClaimResult> {
-        let claims_ids = self.claims_per_lootbox.get(lootbox_id);
+    pub fn get_claims_by_lootbox(&mut self, lootbox_id: U64, from_index: Option<u64>, limit: Option<u64>) -> Vec<ClaimResult> {
+        let lootbox_id: u64 = lootbox_id.into();
+        let claims_ids = self.claims_per_lootbox.get(&lootbox_id);
 
         let claims = if let Some(claims_ids) = claims_ids {
             claims_ids
@@ -155,7 +158,7 @@ impl Contract {
 
     // Write functions
 
-    pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u16, loot_items: Vec<LootItem>) -> LootboxId {        
+    pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u16, loot_items: Vec<LootItem>) -> U64 {        
         let lootbox = Lootbox {
             id: self.lootboxes_by_id.len(),
             owner_id: env::predecessor_account_id(),
@@ -179,12 +182,13 @@ impl Contract {
 
         lootboxes_vector.push(&lootbox.id);
         self.lootboxes_per_owner.insert(&lootbox.owner_id, &lootboxes_vector);
-        lootbox.id
+        lootbox.id.into()
     }
 
-    pub fn claim_lootbox(&mut self, lootbox_id: LootboxId) -> ClaimResult {
-        let _lootbox = self.get_lootbox_by_id(lootbox_id).expect("No lootbox");
+    pub fn claim_lootbox(&mut self, lootbox_id: U64) -> ClaimResult {
+        let _lootbox = self.get_lootbox_by_id(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
         
+        let lootbox_id: u64 = lootbox_id.into();
         let account_id = env::predecessor_account_id();
         let mut lootboxes_map = self.claims_per_lootbox_and_account.get(&lootbox_id).unwrap_or_else(|| {
             LookupMap::new(
@@ -198,7 +202,7 @@ impl Contract {
 
         match lootboxes_map.get(&account_id) {
             Some(_x) => {
-                panic!("Already claimed.");
+                env::panic_str("Already claimed.");
             },
             None => {
                 let claim_result = ClaimResult::WinNear { total_amount: 1 };
@@ -268,7 +272,7 @@ mod tests {
 
         match lootbox {
             Some(x) => {
-                assert_eq!(lootbox_id, x.id);
+                assert_eq!(lootbox_id.0, x.id);
                 assert_eq!(1, x.loot_items.len());
                 // ToDo: check another properties
 
@@ -279,7 +283,7 @@ mod tests {
                 let claim_result_after = contract.get_lootbox_claim_status(lootbox_id, &to_account("test.near"));
                 assert_eq!(matches!(claim_result_after, _claim_result), true);
 
-                let claim_results = contract.get_claims_by_lootbox(&lootbox_id, None, None);
+                let claim_results = contract.get_claims_by_lootbox(lootbox_id, None, None);
                 assert_eq!(claim_results.len(), 1);
 
             },
