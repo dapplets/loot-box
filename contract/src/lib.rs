@@ -1,5 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LookupMap, UnorderedSet, Vector};
+use near_sdk::collections::{LookupMap, Vector};
 use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash};
 use near_sdk::serde::{Deserialize, Serialize};
 
@@ -12,7 +12,10 @@ pub enum StorageKey {
     LootboxesPerOwner,
     LootboxesPerOwnerInner { account_id_hash: CryptoHash },
     ClaimsPerLootboxAndOwner,
-    ClaimResultsById
+    ClaimsPerLootboxAndOwnerInner { account_id_hash: CryptoHash },
+    ClaimResultsById,
+    ClaimsPerLootbox,
+    ClaimsPerLootboxInner { lootbox_id_hash: CryptoHash }
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
@@ -59,15 +62,22 @@ pub struct Lootbox {
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)] // ToDo: check what's Default means
 pub struct Contract {
     pub lootboxes_by_id: Vector<Lootbox>,
-    pub lootboxes_per_owner: LookupMap<AccountId, UnorderedSet<LootboxId>>,
+    pub lootboxes_per_owner: LookupMap<AccountId, Vector<LootboxId>>,
     pub claims_per_lootbox_and_account: LookupMap<LootboxId, LookupMap<AccountId, ClaimResultId>>,
-    pub claim_results: Vector<ClaimResult>
+    pub claim_results: Vector<ClaimResult>,
+    pub claims_per_lootbox: LookupMap<LootboxId, Vector<ClaimResultId>>
 }
 
 //used to generate a unique prefix in our storage collections (this is to avoid data collisions)
 pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
     let mut hash = CryptoHash::default();
     hash.copy_from_slice(&env::sha256(account_id.as_bytes()));
+    hash
+}
+
+pub(crate) fn hash_lootbox_id(lootbox_id: &LootboxId) -> CryptoHash {
+    let mut hash = CryptoHash::default();
+    hash.copy_from_slice(&env::sha256(&lootbox_id.to_be_bytes()));
     hash
 }
 
@@ -99,6 +109,10 @@ impl Contract {
             .collect()
     }
 
+    pub fn get_claim_by_id(&mut self, claim_result_id: ClaimResultId) -> Option<ClaimResult> {
+        self.claim_results.get(claim_result_id)
+    }
+
     pub fn get_lootbox_claim_status(&mut self, lootbox_id: LootboxId, account_id: &AccountId) -> ClaimResult {
         match self.lootboxes_by_id.get(lootbox_id) {
             Some(_x) => {
@@ -121,6 +135,24 @@ impl Contract {
         }
     }
 
+    pub fn get_claims_by_lootbox(&mut self, lootbox_id: &LootboxId, from_index: Option<u64>, limit: Option<u64>) -> Vec<ClaimResult> {
+        let claims_ids = self.claims_per_lootbox.get(lootbox_id);
+
+        let claims = if let Some(claims_ids) = claims_ids {
+            claims_ids
+        } else {
+            return vec![];
+        };
+
+        let start = u64::from(from_index.unwrap_or(0));
+
+        claims.iter()
+            .skip(start as usize) 
+            .take(limit.unwrap_or(50) as usize) 
+            .map(|claim_id| self.get_claim_by_id(claim_id.clone()).unwrap())
+            .collect()
+    }
+
     // Write functions
 
     pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u16, loot_items: Vec<LootItem>) -> LootboxId {        
@@ -135,8 +167,8 @@ impl Contract {
         
         self.lootboxes_by_id.push(&lootbox);
 
-        let mut lootboxes_set = self.lootboxes_per_owner.get(&lootbox.owner_id).unwrap_or_else(|| {
-            UnorderedSet::new(
+        let mut lootboxes_vector = self.lootboxes_per_owner.get(&lootbox.owner_id).unwrap_or_else(|| {
+            Vector::new(
                 StorageKey::LootboxesPerOwnerInner {
                     account_id_hash: hash_account_id(&lootbox.owner_id),
                 }
@@ -145,8 +177,8 @@ impl Contract {
             )
         });
 
-        lootboxes_set.insert(&lootbox.id);
-        self.lootboxes_per_owner.insert(&lootbox.owner_id, &lootboxes_set);
+        lootboxes_vector.push(&lootbox.id);
+        self.lootboxes_per_owner.insert(&lootbox.owner_id, &lootboxes_vector);
         lootbox.id
     }
 
@@ -156,7 +188,9 @@ impl Contract {
         let account_id = env::predecessor_account_id();
         let mut lootboxes_map = self.claims_per_lootbox_and_account.get(&lootbox_id).unwrap_or_else(|| {
             LookupMap::new(
-                StorageKey::ClaimsPerLootboxAndOwner
+                StorageKey::ClaimsPerLootboxAndOwnerInner {
+                    account_id_hash: hash_account_id(&account_id),
+                }
                 .try_to_vec()
                 .unwrap(),
             )
@@ -171,6 +205,20 @@ impl Contract {
                 self.claim_results.push(&claim_result);
                 let claim_result_id = self.claim_results.len() - 1;
                 lootboxes_map.insert(&account_id, &claim_result_id);
+                self.claims_per_lootbox_and_account.insert(&lootbox_id, &lootboxes_map);
+                
+                let mut claims_vector = self.claims_per_lootbox.get(&lootbox_id).unwrap_or_else(|| {
+                    Vector::new(
+                        StorageKey::ClaimsPerLootboxInner {
+                            lootbox_id_hash: hash_lootbox_id(&lootbox_id),
+                        }
+                        .try_to_vec()
+                        .unwrap(),
+                    )
+                });
+                claims_vector.push(&claim_result_id);
+                self.claims_per_lootbox.insert(&lootbox_id, &claims_vector);
+
                 claim_result
             }
         }
@@ -198,6 +246,7 @@ mod tests {
             lootboxes_per_owner: LookupMap::new(StorageKey::LootboxesPerOwner.try_to_vec().unwrap()),
             claims_per_lootbox_and_account: LookupMap::new(StorageKey::ClaimsPerLootboxAndOwner.try_to_vec().unwrap()),
             claim_results: Vector::new(StorageKey::ClaimResultsById.try_to_vec().unwrap()),
+            claims_per_lootbox: LookupMap::new(StorageKey::ClaimsPerLootbox.try_to_vec().unwrap()),
         };
 
         contract
@@ -214,6 +263,9 @@ mod tests {
 
         let lootbox = contract.get_lootbox_by_id(lootbox_id);
 
+        let lootboxes = contract.get_lootboxes_by_account(&to_account("test.near"), None, None);
+        assert_eq!(lootboxes.len(), 1);
+
         match lootbox {
             Some(x) => {
                 assert_eq!(lootbox_id, x.id);
@@ -223,9 +275,12 @@ mod tests {
                 let claim_result_before = contract.get_lootbox_claim_status(lootbox_id, &to_account("test.near"));
                 assert_eq!(matches!(claim_result_before, ClaimResult::NotOpened), true);
 
-                let claim_result = contract.claim_lootbox(lootbox_id);
+                let _claim_result = contract.claim_lootbox(lootbox_id);
                 let claim_result_after = contract.get_lootbox_claim_status(lootbox_id, &to_account("test.near"));
-                assert_eq!(matches!(claim_result_after, claim_result), true);
+                assert_eq!(matches!(claim_result_after, _claim_result), true);
+
+                let claim_results = contract.get_claims_by_lootbox(&lootbox_id, None, None);
+                assert_eq!(claim_results.len(), 1);
 
             },
             None => env::panic_str("No lootbox")
