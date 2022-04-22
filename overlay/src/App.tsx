@@ -96,8 +96,6 @@ export default () => {
         accountName = await dappletApi.getCurrentNearAccount();
         await dappletApi.getBoxesByAccount(accountName).then((x) => {
           setLootboxes(x);
-
-          console.log('lootboxes', x);
         });
       }
       setNearAccount(accountName);
@@ -120,8 +118,6 @@ export default () => {
 
     await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
       setLootboxes(x);
-
-      console.log('lootboxes', x);
     });
     setCreationForm(EMPTY_FORM);
     // console.log(EMPTY_FORM);
