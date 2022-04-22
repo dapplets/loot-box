@@ -13,7 +13,7 @@ import {
   LootboxWinner,
   BoxCreationPrice,
 } from '../../common/interfaces';
-import {} from '@dapplets/dapplet-extension';
+import { } from '@dapplets/dapplet-extension';
 import Avatar from './icons/Lootbox.png';
 
 import { StatisticsNear, StatisticsWinners, StatisticsCode } from './components/statisticsNear';
@@ -31,6 +31,7 @@ import { SettingsToken } from './components/boxSettings/settingsToken';
 import { SettingsNFT } from './components/boxSettings/settingsNft';
 
 import { Preloader } from './components/atoms/Preloader';
+import { Api } from './api';
 
 interface ICtx {
   authorFullname: string;
@@ -43,6 +44,7 @@ interface ICtx {
 }
 
 const dappletApi = new GeneralBridge<IDappletApi>();
+const api = new Api();
 
 const EMPTY_FORM: Lootbox = {
   dropChance: 20,
@@ -53,10 +55,6 @@ const EMPTY_FORM: Lootbox = {
   id: 0,
   status: 'created',
 };
-
-(async () => {
-  await dappletApi.clearAll();
-})();
 
 export default () => {
   const [parsedCtx, setParsedCtx] = useState<ICtx>();
@@ -96,6 +94,11 @@ export default () => {
       let accountName: string | undefined;
       if (isWalletConnected) {
         accountName = await dappletApi.getCurrentNearAccount();
+        await dappletApi.getBoxesByAccount(accountName).then((x) => {
+          setLootboxes(x);
+
+          console.log('lootboxes', x);
+        });
       }
       setNearAccount(accountName);
     });
@@ -109,12 +112,13 @@ export default () => {
     // show loader
     // console.log('done');
 
-    setLoader(true);
-    await dappletApi.createNewBox(creationForm).then((x) => {
-      // console.log('created new lootbox with id: ' + x);
-    });
+    if (!nearAccount) throw new Error('Not logged in.');
 
-    await dappletApi.getBoxesByAccount('dapplets_lootbox.testnet').then((x) => {
+    setLoader(true);
+    const id = await dappletApi.createNewBox(creationForm);
+    setSelectedLootboxId(id);
+
+    await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
       setLootboxes(x);
 
       console.log('lootboxes', x);
@@ -122,7 +126,6 @@ export default () => {
     setCreationForm(EMPTY_FORM);
     // console.log(EMPTY_FORM);
 
-    // await dappletApi.clearAll();
     setLoader(false);
     // if (selectedLootboxId === null) return;
   };
@@ -135,16 +138,22 @@ export default () => {
   useEffect(() => {
     if (selectedLootboxId === null) return;
 
-    dappletApi
-      .getLootboxWinners(selectedLootboxId)
-      .then((x) => {
-        setWinners(x);
-      })
-      .catch((e) => {
-        console.error('getLootboxWinners', e);
+    Promise.all([
+      api.getLootboxClaims(selectedLootboxId.toString()),
+      dappletApi.getLootboxWinners(selectedLootboxId)
+    ]).then(([claims, winners]) => {
+      setWinners(winners.map(x => {
+        const txHash = claims.find((y: any) => y.signerId === x.nearAccount)?.hash;
+        return ({
+          ...x,
+          txLink: txHash ? `https://explorer.testnet.near.org/transactions/${txHash}` : ''
+        });
+      }));
+    }).catch((e) => {
+      console.error('getLootboxWinners', e);
 
-        // ToDo: show error to user
-      });
+      // ToDo: show error to user
+    });
   }, [selectedLootboxId]);
 
   useEffect(() => {
@@ -338,7 +347,7 @@ export default () => {
           path="/deploy_your_box"
           element={
             (loader && <Preloader />) || (
-              <DeployBox winInfo={winInfo} id={lootboxes.length} onChange={onChange} />
+              <DeployBox winInfo={winInfo} id={selectedLootboxId} onChange={onChange} />
             )
           }
         />

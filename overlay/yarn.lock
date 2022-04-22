@@ -1009,6 +1009,11 @@
   "resolved" "https://registry.npmjs.org/atob/-/atob-2.1.2.tgz"
   "version" "2.1.2"
 
+"autobahn-browser@^20.9.2":
+  "integrity" "sha512-RPzig9ItC0cT9sbUc7axTuSnuD5lexLE+KD/3HAOqELKRxGIPwwahvAGUUVc3SgG0PXBVHxsDW9cUoN5vesnhQ=="
+  "resolved" "https://registry.npmjs.org/autobahn-browser/-/autobahn-browser-20.9.2.tgz"
+  "version" "20.9.2"
+
 "balanced-match@^1.0.0":
   "integrity" "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="
   "resolved" "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"

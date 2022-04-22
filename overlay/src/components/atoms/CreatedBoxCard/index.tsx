@@ -39,7 +39,7 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
       <Link to="/statistics">
         <div className={cn(styles.img)}>
           <img src={imageBox} />
-          <span className={styles.winInfo}> {WinInfo}</span>
+          {(WinInfo && WinInfo !== '') ? <span className={styles.winInfo}> {WinInfo}</span> : null}
         </div>
       </Link>
       <div className={cn(styles.description)}>

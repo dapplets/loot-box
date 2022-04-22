@@ -10,6 +10,14 @@
 
     `RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release`
 
+5. Deploy
+
+    `near dev-deploy --wasmFile ./res/lootbox_near_contract.wasm`
+
+6. Initialize
+
+    `near call dev-1650658484393-79396311861979 new '' --accountId buidler.testnet`
+
 **Get more info at:**
 
 * [Rust Smart Contract Quick Start](https://docs.near.org/docs/develop/contracts/rust/intro)

@@ -146,10 +146,6 @@ export class DappletApi implements IDappletApi {
     return status;
   }
 
-  async clearAll() {
-    this._setValue('lootboxes', []);
-  }
-
   private _getValue(key: string, defaultValue: any): any {
     return localStorage[key] ? JSON.parse(localStorage[key]) : defaultValue;
   }

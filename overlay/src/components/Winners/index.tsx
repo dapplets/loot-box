@@ -19,34 +19,36 @@ export interface WinnerProps {
 export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   const { winners } = props;
 
-  const Num = () => {
-    return winners.map((item: any, index: number) => (
-      <div className={cn(styles.winnersList)} key={index}>
-        <div className={styles.winnersLink}>
-          <div className={styles.itemLink}>{'@dilman'}</div>
-
-          <div className={styles.itemLink}>{item.nearAccount}</div>
-          <div className={styles.itemLink}>{item.amount}</div>
-        </div>
-
-        <a href={item.txLink} className={styles.label}>
-          TX
-        </a>
-      </div>
-    ));
-  };
-
   return (
     <div className={styles.wrapper}>
-      <div className={styles.blockInfo}>
-        <ul className={styles.listTitle}>
-          <span className={styles.itemTitle}>Twitter:</span>
-          <li className={styles.itemTitle}>Near:</li>
-          <li className={styles.itemTitle}>Amount:</li>
-          <li className={styles.itemTitle}>TX</li>
-        </ul>
-        <Num />
-      </div>
+      <table className={styles.blockInfo}>
+        <thead>
+          <tr className={styles.listTitle}>
+            {/* <span className={styles.itemTitle}>Twitter:</span> */}
+            <th className={styles.itemTitle}>Near</th>
+            <th className={styles.itemTitle}>Amount</th>
+            <th className={styles.itemTitle}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {winners.map((item: any, index: number) => (
+            <tr className={cn(styles.winnersList)} key={index}>
+              {/* <div className={styles.winnersLink}> */}
+              {/* <div className={styles.itemLink}>{'@dilman'}</div> */}
+
+              <td className={styles.itemLink}>{item.nearAccount}</td>
+              <td className={styles.itemLink}>{item.amount}</td>
+              <td>
+                <a href={item.txLink} target="_blank" className={styles.label}>
+                  OPEN TX
+                </a>
+              </td>
+              {/* </div> */}
+
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className={cn(styles.link)}>
         <Link to="/">
           <StatisticsLink label="Copy winners" />

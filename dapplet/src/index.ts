@@ -30,7 +30,7 @@ import pinataOpen from './icons/boxOpen/pinata_open.png';
 import redBoxOpen from './icons/boxOpen/red_box_open.png';
 import safeOpen from './icons/boxOpen/safe_open.png';
 
-import { LootboxClaimStatus } from '../../common/interfaces';
+import { LootboxClaimResult } from '../../common/interfaces';
 import { DappletApi } from './api';
 
 export const BOX_DEFAULT = [blueBox, redBox, safe, box, bag, pinata, pig];
@@ -53,17 +53,11 @@ export default class TwitterFeature {
   private _api = new DappletApi();
 
   async activate(): Promise<void> {
-    await this._api.clearAll();
-    const contract = await Core.contract('near', 'dev-1634890606019-41631155713650', {
-      viewMethods: ['getTweets'],
-      changeMethods: ['addTweet', 'removeTweet'],
-    });
-
     if (!this._overlay) {
       this._overlay = (<any>Core)
         .overlay({
           name: 'overlay',
-          title: 'LootBox Dapplet',
+          title: 'LootBox',
         })
         .declare({
           connectWallet: this._api.connectWallet.bind(this._api),
@@ -78,11 +72,10 @@ export default class TwitterFeature {
           calcBoxCreationPrice: this._api.calcBoxCreationPrice.bind(this._api),
           getLootboxStat: this._api.getLootboxStat.bind(this._api),
           getLootboxWinners: this._api.getLootboxWinners.bind(this._api),
-          clearAll: this._api.clearAll.bind(this._api),
-          getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
-          claimLootbox: this._api.claimLootbox.bind(this._api),
-          _getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
-          _claimLootbox: this._api.claimLootbox.bind(this._api),
+          // getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
+          // claimLootbox: this._api.claimLootbox.bind(this._api),
+          _getLootboxClaimStatus: this._api._getLootboxClaimStatus.bind(this._api),
+          _claimLootbox: this._api._claimLootbox.bind(this._api),
         });
     }
 
@@ -102,6 +95,7 @@ export default class TwitterFeature {
       } catch {}
     };
 
+    this.openOverlay();
     Core.onAction(() => this.openOverlay());
 
     const { box } = this.adapter.exports;
@@ -145,17 +139,21 @@ export default class TwitterFeature {
   async getClaimStatus(me, numIndex, lootbox): Promise<void> {
     me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-    const getLootboxClaimStatus = await this._api.getLootboxClaimStatus(numIndex, wallet.accountId);
+    const result = await this._api._getLootboxClaimStatus(numIndex, wallet.accountId);
 
-    if (getLootboxClaimStatus === 0 || getLootboxClaimStatus == 2) {
+    if (result.status === 0) {
       me.img = BOX_DEFAULT[lootbox.pictureId];
       me.exec = () => {
         this.getClaimLoot(me, numIndex, lootbox);
       };
-    } else {
+    } else if (result.status === 1) {
       me.img = BOX_EMPTY[lootbox.pictureId];
-      me.text = 'The lootbox is opened already';
-      me.exec = () => {};
+      me.text = 'Empty';
+      me.exec = null;
+    } else if (result.status === 2) {
+      me.img = BOX_OPEN[lootbox.pictureId];
+      me.text = this._formatWinningText(result);
+      me.exec = null;
     }
   }
 
@@ -163,35 +161,20 @@ export default class TwitterFeature {
     me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
     const getLootboxClaim = await this._api
-      .claimLootbox(numIndex, wallet.accountId)
+      ._claimLootbox(numIndex, wallet.accountId)
       .catch((err) => {
         me.img = BOX_EMPTY[lootbox.pictureId];
         me.text = 'The lootbox is opened already';
         me.exec = () => {};
         console.log(err);
+        return null;
       });
-    if (getLootboxClaim === 2 || getLootboxClaim === 0) {
+    if (getLootboxClaim.status === 2 || getLootboxClaim.status === 0) {
       me.img = BOX_OPEN[lootbox.pictureId];
       this._api
         ._getLootboxClaimStatus(numIndex, wallet.accountId)
         .then((x) => {
-          if (x.ftContentItems.length !== 0) {
-            x.ftContentItems.map(
-              (x) =>
-                (me.text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
-            );
-          } else if (x.nearContentItems.length !== 0) {
-            x.nearContentItems.map((x) => (me.text = `You win: ${x.tokenAmount} near`));
-          } else if (x.nftContentItems.length !== 0) {
-            x.nftContentItems.map(
-              (x) => (
-                x.contractAddress,
-                x.quantity,
-                x.tokenId,
-                (me.text = `You win: ${x.quantity} quantity! ${x.tokenId} - token ID, ${x.contractAddress} - contract address`)
-              ),
-            );
-          }
+          me.text = this._formatWinningText(x);
         })
         .catch((err) => {
           me.img = BOX_EMPTY[lootbox.pictureId];
@@ -209,5 +192,29 @@ export default class TwitterFeature {
 
   async openOverlay(props?: any): Promise<void> {
     this._overlay.send('data', props);
+  }
+
+  private _formatWinningText(x: LootboxClaimResult): string {
+    let text = undefined;
+
+    if (x.ftContentItems.length !== 0) {
+      x.ftContentItems.map(
+        (x) =>
+          (text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
+      );
+    } else if (x.nearContentItems.length !== 0) {
+      x.nearContentItems.map((x) => (text = `You win: ${x.tokenAmount} NEAR`));
+    } else if (x.nftContentItems.length !== 0) {
+      x.nftContentItems.map(
+        (x) => (
+          x.contractAddress,
+          x.quantity,
+          x.tokenId,
+          (text = `You win: ${x.quantity} quantity! ${x.tokenId} - token ID, ${x.contractAddress} - contract address`)
+        ),
+      );
+    }
+
+    return text;
   }
 }
