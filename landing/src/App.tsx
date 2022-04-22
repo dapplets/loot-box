@@ -89,21 +89,13 @@ export default function App(AppProps: any) {
   );
 }
 
-function LootboxPage({
-  selectedLootboxId,
-}: // stat,
-{
-  selectedLootboxId: number | null;
-  // stat: number | undefined;
-}) {
+function LootboxPage({ selectedLootboxId }: { selectedLootboxId: number | null }) {
   const { lootboxId } = useParams();
   const [statCur, setStat] = useState(Number);
   const [loader, setLoader] = useState(false);
   useEffect(() => {
     setLoader(true);
     _api.getLootboxStat(Number(lootboxId!)).then((x) => {
-      // console.log('getLootboxStat', x.currentBalance);
-
       setStat(x.currentBalance);
       setLoader(false);
     });
@@ -116,8 +108,7 @@ function LootboxPage({
     transform: scaleX(1);
   }
 `;
-  // width: ${100 - 40}%;
-  // width: ${100-statCur}
+
   const Bar = styled.div`
     width: ${100 - 40}%;
     height: 100%;
@@ -137,6 +128,7 @@ function LootboxPage({
     transform: scaleX(0);
     animation: ${pulse} 2s forwards;
   `;
+
   return (
     // <main>
     <div className={styles.BoxBlock}>

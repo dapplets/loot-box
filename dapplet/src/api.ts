@@ -196,10 +196,7 @@ NotExists,
       account_id: accountId,
     });
 
-    console.log('claim_status', claim_status);
-
     const result = this._convertClaimResultFromContract(claim_status);
-    console.log('claim_result', result);
     return result;
   }
 
@@ -209,8 +206,6 @@ NotExists,
     const claim_status = await contract.claim_lootbox({
       lootbox_id: lootboxId.toString(),
     });
-
-    console.log('claim_status', claim_status);
 
     return this._convertClaimResultFromContract(claim_status);
   }

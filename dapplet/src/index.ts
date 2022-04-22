@@ -166,7 +166,7 @@ export default class TwitterFeature {
         me.img = BOX_EMPTY[lootbox.pictureId];
         me.text = 'The lootbox is opened already';
         me.exec = () => {};
-        console.log(err);
+        console.error(err);
         return null;
       });
     if (getLootboxClaim.status === 2 || getLootboxClaim.status === 0) {
@@ -180,7 +180,7 @@ export default class TwitterFeature {
           me.img = BOX_EMPTY[lootbox.pictureId];
           me.text = 'The lootbox is opened already';
           me.exec = () => {};
-          console.log(err);
+          console.error(err);
         });
       me.exec = () => {};
     } else {
