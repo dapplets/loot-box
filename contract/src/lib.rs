@@ -2,7 +2,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, Vector};
 use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::json_types::{U64};
+use near_sdk::json_types::{U64, U128};
 
 pub type LootboxId = u64;
 pub type ClaimResultId = u64;
@@ -13,7 +13,7 @@ pub enum StorageKey {
     LootboxesPerOwner,
     LootboxesPerOwnerInner { account_id_hash: CryptoHash },
     ClaimsPerLootboxAndOwner,
-    ClaimsPerLootboxAndOwnerInner { account_id_hash: CryptoHash },
+    ClaimsPerLootboxAndOwnerInner { lootbox_id_hash: CryptoHash },
     ClaimResultsById,
     ClaimsPerLootbox,
     ClaimsPerLootboxInner { lootbox_id_hash: CryptoHash }
@@ -22,11 +22,11 @@ pub enum StorageKey {
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub enum LootboxStatus {
-    Created,
-    Filled,
-    Payed,
-    Dropping,
-    Dropped,
+    Created = 0,
+    Filled = 1,
+    Payed = 2,
+    Dropping = 3,
+    Dropped = 4,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
@@ -34,24 +34,24 @@ pub enum LootboxStatus {
 pub enum ClaimResult {
     NotExists,
     NotOpened,
-    NotWin,
-    WinNear { total_amount: u64 },
-    WinFt { token_contract: AccountId, total_amount: u64 },
-    WinNft { token_contract: AccountId, token_id: u64 },
+    NotWin { lootbox_id: U64, claimer_id: AccountId },
+    WinNear { lootbox_id: U64, claimer_id: AccountId, total_amount: U128 },
+    WinFt { lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, total_amount: U128 },
+    WinNft { lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, token_id: String },
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub enum LootItem {
-    Near { total_amount: u64, drop_amount_from: u64, drop_amount_to: u64 },
-    Ft { token_contract: AccountId, total_amount: u64, drop_amount_from: u64, drop_amount_to: u64 },
-    Nft { token_contract: AccountId, token_id: u64 },
+    Near { total_amount: U128, drop_amount_from: U128, drop_amount_to: U128 },
+    Ft { token_contract: AccountId, total_amount: U128, drop_amount_from: U128, drop_amount_to: U128 },
+    Nft { token_contract: AccountId, token_id: String },
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Lootbox {
-    pub id: u64,
+    pub id: U64,
     pub owner_id: AccountId,
     pub picture_id: u16,
     pub drop_chance: u16,
@@ -86,13 +86,26 @@ pub(crate) fn hash_lootbox_id(lootbox_id: &LootboxId) -> CryptoHash {
 impl Contract {
     // ToDo: reserve Id 0 in lootboxes_by_id
 
-    // View functions
+    // Initialization functions
 
-    pub fn get_lootbox_by_id(&mut self, lootbox_id: U64) -> Option<Lootbox> {
-        self.lootboxes_by_id.get(lootbox_id.into())
+    #[init]
+    pub fn new() -> Self {
+        Self {
+            lootboxes_by_id: Vector::new(StorageKey::LootboxesById.try_to_vec().unwrap()),
+            lootboxes_per_owner: LookupMap::new(StorageKey::LootboxesPerOwner.try_to_vec().unwrap()),
+            claims_per_lootbox_and_account: LookupMap::new(StorageKey::ClaimsPerLootboxAndOwner.try_to_vec().unwrap()),
+            claim_results: Vector::new(StorageKey::ClaimResultsById.try_to_vec().unwrap()),
+            claims_per_lootbox: LookupMap::new(StorageKey::ClaimsPerLootbox.try_to_vec().unwrap()),
+        }
     }
 
-    pub fn get_lootboxes_by_account(&mut self, account_id: &AccountId, from_index: Option<u64>, limit: Option<u64>) -> Vec<Lootbox> {
+    // View functions
+
+    pub fn get_lootbox_by_id(&self, lootbox_id: U64) -> Option<Lootbox> {
+        self.lootboxes_by_id.get(lootbox_id.0)
+    }
+
+    pub fn get_lootboxes_by_account(&self, account_id: &AccountId, from_index: Option<u64>, limit: Option<u64>) -> Vec<Lootbox> {
         let lootbox_ids = self.lootboxes_per_owner.get(account_id);
 
         let tokens = if let Some(lootbox_ids) = lootbox_ids {
@@ -106,16 +119,16 @@ impl Contract {
         tokens.iter()
             .skip(start as usize) 
             .take(limit.unwrap_or(50) as usize) 
-            .map(|lootbox_id| self.get_lootbox_by_id(lootbox_id.clone().into()).unwrap())
+            .map(|lootbox_id| self.lootboxes_by_id.get(lootbox_id).unwrap())
             .collect()
     }
 
-    pub fn get_claim_by_id(&mut self, claim_result_id: ClaimResultId) -> Option<ClaimResult> {
+    pub fn get_claim_by_id(&self, claim_result_id: ClaimResultId) -> Option<ClaimResult> {
         self.claim_results.get(claim_result_id)
     }
 
-    pub fn get_lootbox_claim_status(&mut self, lootbox_id: U64, account_id: &AccountId) -> ClaimResult {
-        let lootbox_id = lootbox_id.into();
+    pub fn get_lootbox_claim_status(&self, lootbox_id: U64, account_id: &AccountId) -> ClaimResult {
+        let lootbox_id = lootbox_id.0;
         match self.lootboxes_by_id.get(lootbox_id) {
             Some(_x) => {
                 match self.claims_per_lootbox_and_account.get(&lootbox_id) {
@@ -137,8 +150,8 @@ impl Contract {
         }
     }
 
-    pub fn get_claims_by_lootbox(&mut self, lootbox_id: U64, from_index: Option<u64>, limit: Option<u64>) -> Vec<ClaimResult> {
-        let lootbox_id: u64 = lootbox_id.into();
+    pub fn get_claims_by_lootbox(&self, lootbox_id: U64, from_index: Option<u64>, limit: Option<u64>) -> Vec<ClaimResult> {
+        let lootbox_id: u64 = lootbox_id.0;
         let claims_ids = self.claims_per_lootbox.get(&lootbox_id);
 
         let claims = if let Some(claims_ids) = claims_ids {
@@ -160,7 +173,7 @@ impl Contract {
 
     pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u16, loot_items: Vec<LootItem>) -> U64 {        
         let lootbox = Lootbox {
-            id: self.lootboxes_by_id.len(),
+            id: self.lootboxes_by_id.len().into(),
             owner_id: env::predecessor_account_id(),
             picture_id: picture_id,
             drop_chance: drop_chance,
@@ -180,20 +193,23 @@ impl Contract {
             )
         });
 
-        lootboxes_vector.push(&lootbox.id);
+        lootboxes_vector.push(&lootbox.id.0);
         self.lootboxes_per_owner.insert(&lootbox.owner_id, &lootboxes_vector);
-        lootbox.id.into()
+
+        // env::log_str(format!("Created lootbox {} by {}", lootbox.id.0, env::predecessor_account_id()).as_ref());
+
+        lootbox.id
     }
 
     pub fn claim_lootbox(&mut self, lootbox_id: U64) -> ClaimResult {
         let _lootbox = self.get_lootbox_by_id(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
         
-        let lootbox_id: u64 = lootbox_id.into();
+        let lootbox_id: u64 = lootbox_id.0;
         let account_id = env::predecessor_account_id();
         let mut lootboxes_map = self.claims_per_lootbox_and_account.get(&lootbox_id).unwrap_or_else(|| {
             LookupMap::new(
                 StorageKey::ClaimsPerLootboxAndOwnerInner {
-                    account_id_hash: hash_account_id(&account_id),
+                    lootbox_id_hash: hash_lootbox_id(&lootbox_id),
                 }
                 .try_to_vec()
                 .unwrap(),
@@ -205,7 +221,11 @@ impl Contract {
                 env::panic_str("Already claimed.");
             },
             None => {
-                let claim_result = ClaimResult::WinNear { total_amount: 1 };
+                let claim_result = ClaimResult::WinNear {
+                    lootbox_id: lootbox_id.into(),
+                    claimer_id: env::predecessor_account_id(),
+                    total_amount: 1000000000000000000000000.into() // 1 NEAR
+                };
                 self.claim_results.push(&claim_result);
                 let claim_result_id = self.claim_results.len() - 1;
                 lootboxes_map.insert(&account_id, &claim_result_id);
@@ -222,6 +242,8 @@ impl Contract {
                 });
                 claims_vector.push(&claim_result_id);
                 self.claims_per_lootbox.insert(&lootbox_id, &claims_vector);
+
+                // env::log_str(format!("Claim result {} of lootbox {} by {}", claim_result_id, lootbox_id, env::predecessor_account_id()).as_ref());
 
                 claim_result
             }
