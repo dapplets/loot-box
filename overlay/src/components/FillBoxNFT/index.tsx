@@ -77,7 +77,7 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
             <ButtonPay
               onClick={onDoneClick}
               styleBtn="default"
-              title={`PAY ${[(price.gasAmount + price.feeAmount).toFixed(3)]} NEAR`}
+              title={`PAY ${[price.totalAmount?.toFixed?.(3)]} NEAR`}
             />
           </Link>
         </div>

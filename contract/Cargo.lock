@@ -462,6 +462,7 @@ checksum = "21a41fed9d98f27ab1c6d161da622a4fa35e8a54a8adc24bbf3ddd0ef70b0e50"
 name = "lootbox-near-contract"
 version = "0.1.0"
 dependencies = [
+ "near-contract-standards",
  "near-sdk",
  "serde_json",
 ]
@@ -492,6 +493,17 @@ checksum = "4cd61f43cedc1bb7a7c097ef3adbab0092a51185dca0e48d5851b37818e13978"
 dependencies = [
  "borsh",
  "serde",
+]
+
+[[package]]
+name = "near-contract-standards"
+version = "4.0.0-pre.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a47ea28f3a2a912625532fa307ab346cc0112c2c309e654ec81d1b9e7c2ca60e"
+dependencies = [
+ "near-sdk",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

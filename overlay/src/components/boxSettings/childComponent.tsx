@@ -121,6 +121,20 @@ Quantity - select the dropping NFT quantity from one to any. All NFTs need to be
       </div>
       <div className={styles.addNFT}>
         <div className={styles.inputCustomNFT}>
+          <div>
+          <InputPanel
+            type="string"
+            appearance="medium_big"
+            placeholder="Contract Address"
+            // className={className}
+            // value={nftItem.tokenId ?? ''}
+            onChange={(e) => {
+              changeHandler('contractAddress', e.target.value);
+            }}
+            // pattern="^[0-9]\d*.{2}$"
+            // innerRef={nodeNftContract}
+          />
+          </div> 
           <InputPanel
             type="string"
             appearance="medium_big"
@@ -134,20 +148,20 @@ Quantity - select the dropping NFT quantity from one to any. All NFTs need to be
               //     (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
               //   +e.target.value !== 0
               // )
-              if (
-                NearReg.test(e.target.value) &&
-                e.target.value.length >= 2 &&
-                e.target.value.length <= 64 &&
-                +e.target.value !== 0
-              ) {
-                // console.log(node.current?.className);
-                nodeNftContract.current?.classList.remove('invalid');
-                // onLink(false);
-              } else {
-                // setNameClassInput('invalid');
-                nodeNftContract.current?.classList.add('invalid');
-                // onLink(true);
-              }
+              // if (
+              //   NearReg.test(e.target.value) &&
+              //   e.target.value.length >= 2 &&
+              //   e.target.value.length <= 64 &&
+              //   +e.target.value !== 0
+              // ) {
+              //   // console.log(node.current?.className);
+              //   nodeNftContract.current?.classList.remove('invalid');
+              //   // onLink(false);
+              // } else {
+              //   // setNameClassInput('invalid');
+              //   nodeNftContract.current?.classList.add('invalid');
+              //   // onLink(true);
+              // }
               changeHandler('tokenId', e.target.value);
               // validInput(e);
               // onChange(e);

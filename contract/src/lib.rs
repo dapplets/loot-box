@@ -1,8 +1,28 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, Vector};
-use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash,};
+use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash, Gas, Balance, promise_result_as_success, Promise};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::json_types::{U64, U128};
+use near_sdk::{ext_contract};
+use near_contract_standards::non_fungible_token::{Token};
+
+const NO_DEPOSIT: Balance = 0;
+const BASE_GAS: Gas = Gas(5_000_000_000_000);
+const GAS_FOR_NFT_CHECK_OWNERSHIP: Gas = Gas(30_000_000_000_000);
+
+#[ext_contract(ext_nft)]
+trait NonFungibleToken {
+    fn nft_transfer(&mut self, receiver_id: String, token_id: String, approval_id: Option<u64>, memo: Option<String>);
+    fn nft_transfer_call(&mut self, receiver_id: String, token_id: String, approval_id: Option<u64>, memo: Option<String>, msg: String) -> bool;
+    fn nft_token(&self, token_id: String) -> Option<Token>;
+}
+
+#[ext_contract(ext_self)]
+trait SelfContract {
+    fn callback_assert_nft_ownership();
+    fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64;
+    fn callback_return_claim_result(claim_result: ClaimResult) -> ClaimResult;
+}
 
 pub type LootboxId = u64;
 pub type ClaimResultId = u64;
@@ -27,6 +47,13 @@ pub enum LootboxStatus {
     Payed = 2,
     Dropping = 3,
     Dropped = 4,
+}
+
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
+#[serde(crate = "near_sdk::serde")]
+pub enum Either<S, T> {
+    Left(S),
+    Right(T),
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
@@ -176,13 +203,14 @@ impl Contract {
 
     // Write functions
     #[payable]
-    pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {  
+    pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> Either<Promise, U64> {  
         
         if drop_chance == 0 {
             env::panic_str("Drop chance must be more than 0");
         }
 
         let mut near_loot_amount: u128 = 0;
+        let mut promises: Option<Promise> = None;
 
         for item in &loot_items {
             match item {
@@ -197,6 +225,23 @@ impl Contract {
 
                     near_loot_amount += total_amount.0;
                 },
+                LootItem::Nft { token_contract, token_id } => {
+                    let promise = ext_nft::nft_token(token_id.to_string(), token_contract.clone(), NO_DEPOSIT, BASE_GAS)
+                        .then(
+                            ext_self::callback_assert_nft_ownership(
+                                env::current_account_id(),
+                                NO_DEPOSIT,
+                                GAS_FOR_NFT_CHECK_OWNERSHIP,
+                            )
+                        );
+
+                    promises = match promises {
+                        Some(x) => Some(x.and(promise)),
+                        None => Some(promise)
+                    };
+
+                    near_loot_amount += 1; // assert_one_yocto
+                },
                 _ => env::panic_str("Unsupported loot item")
             }
         }
@@ -205,9 +250,30 @@ impl Contract {
             env::panic_str("Attached deposit and loot items must be equal");
         }
 
+        match promises {
+            Some(x) => Either::Left(x.then(ext_self::callback_register_lootbox(
+                env::predecessor_account_id(),
+                picture_id, 
+                drop_chance, 
+                loot_items,
+                env::current_account_id(),
+                NO_DEPOSIT,
+                GAS_FOR_NFT_CHECK_OWNERSHIP,
+            ))),
+            None => Either::Right(self.callback_register_lootbox(
+                env::predecessor_account_id(),
+                picture_id, 
+                drop_chance, 
+                loot_items
+            ))
+        }
+    }
+
+    #[private]
+    pub fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {  
         let lootbox = Lootbox {
             id: self.lootboxes_by_id.len().into(),
-            owner_id: env::predecessor_account_id(),
+            owner_id: owner_id,
             picture_id: picture_id,
             drop_chance: drop_chance,
             loot_items: loot_items,
@@ -230,12 +296,20 @@ impl Contract {
         lootboxes_vector.push(&lootbox.id.0);
         self.lootboxes_per_owner.insert(&lootbox.owner_id, &lootboxes_vector);
 
-        // env::log_str(format!("Created lootbox {} by {}", lootbox.id.0, env::predecessor_account_id()).as_ref());
-
         lootbox.id
     }
 
-    pub fn claim_lootbox(&mut self, lootbox_id: U64) -> ClaimResult {
+    #[private]
+    pub fn callback_assert_nft_ownership(&mut self) {
+        let token_serialized = promise_result_as_success().expect("NFT contract did not respond");
+        let token = near_sdk::serde_json::from_slice::<Token>(&token_serialized).ok().expect("Cannot deserialize response from NFT");
+
+        if token.owner_id != env::current_account_id() {
+            env::panic_str("NFT must be transferred to lootbox contract");
+        }
+    }
+
+    pub fn claim_lootbox(&mut self, lootbox_id: U64) -> Either<Promise, ClaimResult> {
         let mut _lootbox = self.get_lootbox_by_id(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
         
         let lootbox_id: u64 = lootbox_id.0;
@@ -255,9 +329,8 @@ impl Contract {
                 env::panic_str("Already claimed.");
             },
             None => {
-
                 // generate loot
-                let claim_result = self._pull_random_loot(&mut _lootbox);
+                let claim_result = self.internal_pull_random_loot(&mut _lootbox);
 
                 // update lootbox
                 self.lootboxes_by_id.replace(lootbox_id, &_lootbox);
@@ -281,20 +354,62 @@ impl Contract {
                 claims_vector.push(&claim_result_id);
                 self.claims_per_lootbox.insert(&lootbox_id, &claims_vector);
 
-                // env::log_str(format!("Claim result {} of lootbox {} by {}", claim_result_id, lootbox_id, env::predecessor_account_id()).as_ref());
-
-                claim_result
+                match claim_result {
+                    ClaimResult::NotExists => Either::Right(claim_result),
+                    ClaimResult::NotOpened => Either::Right(claim_result),
+                    ClaimResult::NotWin { lootbox_id: _, claimer_id: _ } => Either::Right(claim_result),
+                    ClaimResult::WinNear { lootbox_id, claimer_id, total_amount } => {
+                        Either::Left(
+                            Promise::new(claimer_id.clone())
+                                .transfer(total_amount.0)
+                                .then(
+                                    ext_self::callback_return_claim_result(
+                                        ClaimResult::WinNear { lootbox_id, claimer_id, total_amount },
+                                        env::current_account_id(),
+                                        NO_DEPOSIT,
+                                        GAS_FOR_NFT_CHECK_OWNERSHIP,
+                                    )
+                                )
+                        )
+                    },
+                    ClaimResult::WinFt { lootbox_id:_, claimer_id:_, token_contract:_, total_amount:_ } => {
+                        env::panic_str("FT is not implemented");
+                    },
+                    ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id } => {
+                        Either::Left(ext_nft::nft_transfer(
+                            claimer_id.to_string(),
+                            token_id.clone(),
+                            None,
+                            None,
+                            token_contract.clone(),
+                            1,
+                            BASE_GAS
+                        ).then(
+                            ext_self::callback_return_claim_result(
+                                ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id },
+                                env::current_account_id(),
+                                NO_DEPOSIT,
+                                GAS_FOR_NFT_CHECK_OWNERSHIP,
+                            )
+                        ))
+                    },
+                }
             }
         }
     }
 
-    fn _pull_random_loot(&mut self, _lootbox: &mut Lootbox) -> ClaimResult {
+    #[private]
+    pub fn callback_return_claim_result(claim_result: ClaimResult) -> ClaimResult {
+        claim_result
+    }
+
+    fn internal_pull_random_loot(&mut self, _lootbox: &mut Lootbox) -> ClaimResult {
         let random = env::random_seed_array();
         let random_1 = u64::from_be_bytes(random[0..8].try_into().unwrap());
         let random_2 = u128::from_be_bytes(random[8..24].try_into().unwrap());
 
         let min_idx: u64 = 0;
-        let max_idx: u64 = _lootbox.loot_items.len() as u64;
+        let max_idx: u64 = _lootbox.loot_items.len() as u64 - 1;
         let rand_idx = usize::try_from(random_1 % (max_idx - min_idx + 1) + min_idx).unwrap();
 
         if random[0] <= _lootbox.drop_chance {
@@ -335,9 +450,29 @@ impl Contract {
                 // LootItem::Ft { token_contract, total_amount, drop_amount_from, drop_amount_to, balance } => {
                 //     env::panic_str("FT item is not implemented")
                 // },
-                // LootItem::Nft { token_contract, token_id } => {
-                //     env::panic_str("NFT item is not implemented")
-                // }
+                LootItem::Nft { token_contract, token_id } => {
+                    let new_item = LootItem::Nft { 
+                        token_contract: token_contract.clone(),
+                        token_id: token_id.clone()
+                    };
+
+                    _lootbox.distributed_items.push(new_item);
+
+                    let claim_result = ClaimResult::WinNft { 
+                        lootbox_id: _lootbox.id, 
+                        claimer_id: env::predecessor_account_id(),
+                        token_contract: token_contract.clone(),
+                        token_id: token_id.clone()
+                    };
+
+                    if _lootbox.loot_items.len() == 1 {
+                        _lootbox.loot_items.pop();
+                    } else {
+                        _lootbox.loot_items[rand_idx] = _lootbox.loot_items.pop().expect("No items");
+                    }
+
+                    claim_result
+                }
                 _ => env::panic_str("Unsupported loot item")
             }
         } else {

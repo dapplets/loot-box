@@ -7,6 +7,7 @@ import {
   LootboxClaimResult,
 } from '../../common/interfaces';
 import { sum } from './helpers';
+import { BN } from './bn.js';
 
 const { parseNearAmount, formatNearAmount } = Core.near.utils.format;
 
@@ -59,6 +60,8 @@ export class DappletApi implements IDappletApi {
       limit: null,
     });
 
+    console.log(lootboxes_)
+
     return lootboxes_.map((x) => this._convertLootboxFromContract(x));
   }
 
@@ -72,13 +75,20 @@ export class DappletApi implements IDappletApi {
       contract.contractId,
       'create_lootbox',
       lootboxStruct,
-      undefined,
+      new BN('300000000000000'),
       parseNearAmount(prices.fillAmount),
     );
 
-    const id = JSON.parse(atob(receipt.lootboxId.status.SuccessValue));
+    const debased64 = atob(receipt.status.SuccessValue);
+    const result = JSON.parse(debased64);
 
-    return id;
+    if (typeof result === 'string') {
+      return result;
+    } else if (typeof result === 'object' && "Right" in result) {
+      return result.Right;
+    } else {
+      throw new Error("Invalid result received: " + debased64);
+    }
   }
 
   async calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice> {
@@ -89,13 +99,15 @@ export class DappletApi implements IDappletApi {
     for (const item of lootboxStruct.loot_items) {
       if ('Near' in item) {
         fillAmount = sum(fillAmount, item.Near.total_amount);
+      } else if ('Nft' in item) {
+        fillAmount = sum(fillAmount, "1");
       }
     }
 
     return {
       feeAmount: '0',
       fillAmount: formatNearAmount(fillAmount),
-      gasAmount: '0.01',
+      gasAmount: formatNearAmount('300000000000000'),
       totalAmount: formatNearAmount(sum('0', fillAmount, parseNearAmount('0.01'))),
     };
   }
@@ -191,11 +203,18 @@ export class DappletApi implements IDappletApi {
   public async _claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimResult> {
     const contract = await this._contract;
 
-    const claim_status = await contract.claim_lootbox({
-      lootbox_id: lootboxId.toString(),
-    });
+    const receipt = await contract.account.functionCall(
+      contract.contractId,
+      'claim_lootbox',
+      {
+        lootbox_id: lootboxId.toString(),
+      },
+      new BN('300000000000000'),
+    );
 
-    return this._convertClaimResultFromContract(claim_status);
+    const result = JSON.parse(atob(receipt.status.SuccessValue));
+
+    return this._convertClaimResultFromContract(result);
   }
 
   private _convertLootboxFromContract(x: any): Lootbox {
@@ -281,6 +300,19 @@ export class DappletApi implements IDappletApi {
         ],
         ftContentItems: [],
         nftContentItems: [],
+      };
+    } else if (typeof claim_status === 'object' && claim_status.WinNft) {
+      return {
+        status: 2,
+        nearContentItems: [],
+        ftContentItems: [],
+        nftContentItems: [
+          {
+            contractAddress: claim_status.WinNft.token_contract,
+            tokenId: claim_status.WinNft.token_id,
+            quantity: 1
+          },
+        ],
       };
     } else if (typeof claim_status === 'object' && claim_status.NotWin) {
       return {
