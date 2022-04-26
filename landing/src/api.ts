@@ -77,7 +77,7 @@ export class DappletApi implements IDappletApi {
     }
   }
 
-  async createNewBox(lootbox: Lootbox): Promise<number> {
+  async createNewBox(lootbox: Lootbox): Promise<string> {
     await new Promise((r) => setTimeout(r, 3000));
     const lootboxes = this._getValue('lootboxes', []);
     const id = lootboxes.length + 1;
@@ -90,9 +90,10 @@ export class DappletApi implements IDappletApi {
   async calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice> {
     await new Promise((r) => setTimeout(r, 300));
     return {
-      feeAmount: 0.1,
-      fillAmount: 10,
-      gasAmount: 0.003,
+      feeAmount: "0.1",
+      fillAmount: "10",
+      gasAmount: "0.003",
+      totalAmount: "0"
     };
   }
 

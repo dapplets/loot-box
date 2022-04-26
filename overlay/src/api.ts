@@ -8,7 +8,7 @@ export class Api {
     const transactions = await session.call(
       'com.nearprotocol.testnet.explorer.transactions-list-by-account-id',
       [
-        'dev-1650658484393-79396311861979',
+        'dev-1650928735605-51635263468190',
         10000,
         {
           endTimestamp: 1938353482933,

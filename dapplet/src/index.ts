@@ -203,7 +203,7 @@ export default class TwitterFeature {
           (text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
       );
     } else if (x.nearContentItems.length !== 0) {
-      x.nearContentItems.map((x) => (text = `You win: ${x.tokenAmount} NEAR`));
+      x.nearContentItems.map((x) => (text = `You win: ${x.tokenAmount} $NEAR`));
     } else if (x.nftContentItems.length !== 0) {
       x.nftContentItems.map(
         (x) => (

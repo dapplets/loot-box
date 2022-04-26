@@ -1,6 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, Vector};
-use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash};
+use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash,};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::json_types::{U64, U128};
 
@@ -43,8 +43,8 @@ pub enum ClaimResult {
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub enum LootItem {
-    Near { total_amount: U128, drop_amount_from: U128, drop_amount_to: U128 },
-    Ft { token_contract: AccountId, total_amount: U128, drop_amount_from: U128, drop_amount_to: U128 },
+    Near { total_amount: U128, drop_amount_from: U128, drop_amount_to: U128, balance: U128 },
+    Ft { token_contract: AccountId, total_amount: U128, drop_amount_from: U128, drop_amount_to: U128, balance: U128 },
     Nft { token_contract: AccountId, token_id: String },
 }
 
@@ -54,9 +54,10 @@ pub struct Lootbox {
     pub id: U64,
     pub owner_id: AccountId,
     pub picture_id: u16,
-    pub drop_chance: u16,
+    pub drop_chance: u8,
     pub loot_items: Vec<LootItem>,
     pub status: LootboxStatus,
+    pub distributed_items: Vec<LootItem>,
 }
 
 #[near_bindgen]
@@ -100,6 +101,10 @@ impl Contract {
     }
 
     // View functions
+
+    pub fn get_random() -> Vec<u8> {
+        env::random_seed()
+    }
 
     pub fn get_lootbox_by_id(&self, lootbox_id: U64) -> Option<Lootbox> {
         self.lootboxes_by_id.get(lootbox_id.0)
@@ -170,14 +175,43 @@ impl Contract {
     }
 
     // Write functions
+    #[payable]
+    pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {  
+        
+        if drop_chance == 0 {
+            env::panic_str("Drop chance must be more than 0");
+        }
 
-    pub fn create_lootbox(&mut self, picture_id: u16, drop_chance: u16, loot_items: Vec<LootItem>) -> U64 {        
+        let mut near_loot_amount: u128 = 0;
+
+        for item in &loot_items {
+            match item {
+                LootItem::Near { total_amount, drop_amount_from, drop_amount_to, balance } => {
+                    if !(drop_amount_from.0 <= drop_amount_to.0 && drop_amount_to.0 > 0 && drop_amount_to.0 <= total_amount.0) {
+                        env::panic_str("Drop amount must be valid range");
+                    }                    
+
+                    if balance != total_amount {
+                        env::panic_str("balance and total_amount must be equal");
+                    }
+
+                    near_loot_amount += total_amount.0;
+                },
+                _ => env::panic_str("Unsupported loot item")
+            }
+        }
+
+        if near_loot_amount != env::attached_deposit() {
+            env::panic_str("Attached deposit and loot items must be equal");
+        }
+
         let lootbox = Lootbox {
             id: self.lootboxes_by_id.len().into(),
             owner_id: env::predecessor_account_id(),
             picture_id: picture_id,
             drop_chance: drop_chance,
             loot_items: loot_items,
+            distributed_items: vec![],
             status: LootboxStatus::Created,
         };
         
@@ -202,7 +236,7 @@ impl Contract {
     }
 
     pub fn claim_lootbox(&mut self, lootbox_id: U64) -> ClaimResult {
-        let _lootbox = self.get_lootbox_by_id(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
+        let mut _lootbox = self.get_lootbox_by_id(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
         
         let lootbox_id: u64 = lootbox_id.0;
         let account_id = env::predecessor_account_id();
@@ -221,16 +255,20 @@ impl Contract {
                 env::panic_str("Already claimed.");
             },
             None => {
-                let claim_result = ClaimResult::WinNear {
-                    lootbox_id: lootbox_id.into(),
-                    claimer_id: env::predecessor_account_id(),
-                    total_amount: 1000000000000000000000000.into() // 1 NEAR
-                };
+
+                // generate loot
+                let claim_result = self._pull_random_loot(&mut _lootbox);
+
+                // update lootbox
+                self.lootboxes_by_id.replace(lootbox_id, &_lootbox);
+
+                // store claim result
                 self.claim_results.push(&claim_result);
                 let claim_result_id = self.claim_results.len() - 1;
                 lootboxes_map.insert(&account_id, &claim_result_id);
                 self.claims_per_lootbox_and_account.insert(&lootbox_id, &lootboxes_map);
                 
+                // store claim results per lootbox
                 let mut claims_vector = self.claims_per_lootbox.get(&lootbox_id).unwrap_or_else(|| {
                     Vector::new(
                         StorageKey::ClaimsPerLootboxInner {
@@ -246,6 +284,66 @@ impl Contract {
                 // env::log_str(format!("Claim result {} of lootbox {} by {}", claim_result_id, lootbox_id, env::predecessor_account_id()).as_ref());
 
                 claim_result
+            }
+        }
+    }
+
+    fn _pull_random_loot(&mut self, _lootbox: &mut Lootbox) -> ClaimResult {
+        let random = env::random_seed_array();
+        let random_1 = u64::from_be_bytes(random[0..8].try_into().unwrap());
+        let random_2 = u128::from_be_bytes(random[8..24].try_into().unwrap());
+
+        let min_idx: u64 = 0;
+        let max_idx: u64 = _lootbox.loot_items.len() as u64;
+        let rand_idx = usize::try_from(random_1 % (max_idx - min_idx + 1) + min_idx).unwrap();
+
+        if random[0] <= _lootbox.drop_chance {
+            let item = &_lootbox.loot_items[rand_idx];
+            match item {
+                LootItem::Near { total_amount, drop_amount_from, drop_amount_to, balance} => {
+                    let mut win_amount = random_2 % (drop_amount_to.0 - drop_amount_from.0 + 1) + drop_amount_from.0;
+
+                    if win_amount > balance.0 {
+                        win_amount = balance.0;
+                    }
+
+                    let new_item = LootItem::Near { 
+                        total_amount: *total_amount, 
+                        drop_amount_from: *drop_amount_from, 
+                        drop_amount_to: *drop_amount_to, 
+                        balance: (balance.0 - win_amount).into()
+                    };
+
+                    if balance.0 == 0 {
+                        _lootbox.distributed_items.push(new_item);
+                        if _lootbox.loot_items.len() == 1 {
+                            _lootbox.loot_items.pop();
+                        } else {
+                            _lootbox.loot_items[rand_idx] = _lootbox.loot_items.pop().expect("No items");
+                        }
+                        
+                    } else {
+                        _lootbox.loot_items[rand_idx] = new_item;
+                    }
+
+                    ClaimResult::WinNear { 
+                        lootbox_id: _lootbox.id, 
+                        claimer_id: env::predecessor_account_id(), 
+                        total_amount: win_amount.into()
+                    }
+                },
+                // LootItem::Ft { token_contract, total_amount, drop_amount_from, drop_amount_to, balance } => {
+                //     env::panic_str("FT item is not implemented")
+                // },
+                // LootItem::Nft { token_contract, token_id } => {
+                //     env::panic_str("NFT item is not implemented")
+                // }
+                _ => env::panic_str("Unsupported loot item")
+            }
+        } else {
+            ClaimResult::NotWin { 
+                lootbox_id: _lootbox.id, 
+                claimer_id: env::predecessor_account_id() 
             }
         }
     }
@@ -283,7 +381,7 @@ mod tests {
         let mut contract = get_contract();
 
         let loot_items = Vec::from([
-            LootItem::Near { drop_amount_from: 1, drop_amount_to: 10, total_amount: 100 }
+            LootItem::Near { drop_amount_from: 1, drop_amount_to: 10, total_amount: 100, balance: 0 }
         ]);
         let lootbox_id = contract.create_lootbox(1, 0, loot_items);
 

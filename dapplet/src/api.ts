@@ -4,14 +4,14 @@ import {
   BoxCreationPrice,
   LootboxStat,
   LootboxWinner,
-  LootboxClaimStatus,
   LootboxClaimResult,
 } from '../../common/interfaces';
+import { sum } from './helpers';
 
 const { parseNearAmount, formatNearAmount } = Core.near.utils.format;
 
 export class DappletApi implements IDappletApi {
-  private _contract = Core.contract('near', 'dev-1650658484393-79396311861979', {
+  private _contract = Core.contract('near', 'dev-1650928735605-51635263468190', {
     viewMethods: [
       'get_lootbox_by_id',
       'get_lootboxes_by_account',
@@ -62,44 +62,41 @@ export class DappletApi implements IDappletApi {
     return lootboxes_.map((x) => this._convertLootboxFromContract(x));
   }
 
-  async createNewBox(lootbox: Lootbox): Promise<number> {
+  async createNewBox(lootbox: Lootbox): Promise<string> {
     const contract = await this._contract;
-    const id = await contract.create_lootbox({
-      picture_id: lootbox.pictureId,
-      drop_chance: lootbox.dropChance,
-      loot_items: [
-        ...lootbox.nearContentItems.map((x) => ({
-          Near: {
-            total_amount: parseNearAmount(x.tokenAmount),
-            drop_amount_from: parseNearAmount(x.dropAmountFrom),
-            drop_amount_to: parseNearAmount(x.dropAmountTo),
-          },
-        })),
-        ...lootbox.ftContentItems.map((x) => ({
-          Ft: {
-            token_contract: x.contractAddress,
-            total_amount: parseNearAmount(x.tokenAmount),
-            drop_amount_from: parseNearAmount(x.dropAmountFrom),
-            drop_amount_to: parseNearAmount(x.dropAmountTo),
-          },
-        })),
-        ...lootbox.nftContentItems.map((x) => ({
-          Nft: {
-            token_contract: x.contractAddress,
-            token_id: x.tokenId,
-          },
-        })),
-      ],
-    });
+    const prices = await this.calcBoxCreationPrice(lootbox);
+
+    const lootboxStruct = this._convertLootboxToContract(lootbox);
+
+    const receipt = await contract.account.functionCall(
+      contract.contractId,
+      'create_lootbox',
+      lootboxStruct,
+      undefined,
+      parseNearAmount(prices.fillAmount),
+    );
+
+    const id = JSON.parse(atob(receipt.lootboxId.status.SuccessValue));
+
     return id;
   }
 
   async calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice> {
-    await new Promise((r) => setTimeout(r, 300));
+    const lootboxStruct = this._convertLootboxToContract(lootbox);
+
+    let fillAmount = '0';
+
+    for (const item of lootboxStruct.loot_items) {
+      if ('Near' in item) {
+        fillAmount = sum(fillAmount, item.Near.total_amount);
+      }
+    }
+
     return {
-      feeAmount: 0.1,
-      fillAmount: 10,
-      gasAmount: 0.003,
+      feeAmount: '0',
+      fillAmount: formatNearAmount(fillAmount),
+      gasAmount: '0.01',
+      totalAmount: formatNearAmount(sum('0', fillAmount, parseNearAmount('0.01'))),
     };
   }
 
@@ -113,11 +110,11 @@ export class DappletApi implements IDappletApi {
       if (item.Near !== undefined) {
         totalAmount += Number(formatNearAmount(item.Near.total_amount));
       } else if (item.Ft !== undefined) {
-        console.error("Total amount calculation is not implemented for FT.");        
+        console.error('Total amount calculation is not implemented for FT.');
       } else if (item.Nft !== undefined) {
-        console.error("Total amount calculation is not implemented for NFT.");
+        console.error('Total amount calculation is not implemented for NFT.');
       } else {
-        console.error("Unknown loot item");
+        console.error('Unknown loot item');
       }
     }
 
@@ -129,11 +126,13 @@ export class DappletApi implements IDappletApi {
       if (item.WinNear !== undefined) {
         winAmount += Number(formatNearAmount(item.WinNear.total_amount));
       } else if (item.WinFt !== undefined) {
-        console.error("Total amount calculation is not implemented for FT.");        
+        console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
-        console.error("Total amount calculation is not implemented for NFT.");
+        console.error('Total amount calculation is not implemented for NFT.');
+      } else if (item.NotWin !== undefined) {
+        // Nothing to do
       } else {
-        console.error("Unknown loot item");
+        console.error('Unknown loot item');
       }
     }
 
@@ -153,26 +152,15 @@ export class DappletApi implements IDappletApi {
       limit: null,
     });
 
-    /*
-NotExists,
-    NotOpened,
-    NotWin,
-    WinNear { total_amount: u64 },
-    WinFt { token_contract: AccountId, total_amount: u64 },
-    WinNft { token_contract: AccountId, token_id: u64 },
-
-    */
-
     return claims.map((x) => {
       if (typeof x === 'object' && x.NotWin !== undefined) {
         return {
           lootboxId: x.NotWin.lootbox_id,
           nearAccount: x.NotWin.claimer_id,
-          amount: "0",
+          amount: '0',
           txLink: null,
         };
-      }
-      if (typeof x === 'object' && x.WinNear !== undefined) {
+      } else if (typeof x === 'object' && x.WinNear !== undefined) {
         return {
           lootboxId: x.WinNear.lootbox_id,
           nearAccount: x.WinNear.claimer_id,
@@ -214,7 +202,7 @@ NotExists,
     return {
       id: x.id,
       pictureId: x.picture_id,
-      dropChance: x.drop_chance,
+      dropChance: Math.floor((x.drop_chance * 100) / 255),
       // ownerId: x.owner_id,
       status: { 0: 'created', 1: 'filled', 2: 'payed', 3: 'dropping', 4: 'dropped' }[x.status], // ToDo: why is string here?
       nearContentItems: x.loot_items
@@ -243,6 +231,38 @@ NotExists,
     };
   }
 
+  private _convertLootboxToContract(lootbox: Lootbox) {
+    return {
+      picture_id: lootbox.pictureId,
+      drop_chance: Math.floor((lootbox.dropChance * 255) / 100),
+      loot_items: [
+        ...lootbox.nearContentItems.map((x) => ({
+          Near: {
+            total_amount: parseNearAmount(x.tokenAmount),
+            drop_amount_from: parseNearAmount(x.dropAmountFrom),
+            drop_amount_to: parseNearAmount(x.dropAmountTo),
+            balance: parseNearAmount(x.tokenAmount),
+          },
+        })),
+        ...lootbox.ftContentItems.map((x) => ({
+          Ft: {
+            token_contract: x.contractAddress,
+            total_amount: parseNearAmount(x.tokenAmount),
+            drop_amount_from: parseNearAmount(x.dropAmountFrom),
+            drop_amount_to: parseNearAmount(x.dropAmountTo),
+            balance: parseNearAmount(x.tokenAmount),
+          },
+        })),
+        ...lootbox.nftContentItems.map((x) => ({
+          Nft: {
+            token_contract: x.contractAddress,
+            token_id: x.tokenId,
+          },
+        })),
+      ],
+    };
+  }
+
   private _convertClaimResultFromContract(claim_status: any): LootboxClaimResult {
     if (claim_status === 'NotOpened') {
       return {
@@ -259,6 +279,13 @@ NotExists,
             tokenAmount: formatNearAmount(claim_status.WinNear.total_amount.toString()),
           },
         ],
+        ftContentItems: [],
+        nftContentItems: [],
+      };
+    } else if (typeof claim_status === 'object' && claim_status.NotWin) {
+      return {
+        status: 1,
+        nearContentItems: [],
         ftContentItems: [],
         nftContentItems: [],
       };

@@ -16,7 +16,7 @@
 
 6. Initialize
 
-    `near call dev-1650658484393-79396311861979 new '' --accountId buidler.testnet`
+    `near call dev-1650928735605-51635263468190 new '' --accountId buidler.testnet`
 
 **Get more info at:**
 

@@ -68,7 +68,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
             {/* {+winAmount !== 0 ? winAmountParse : winAmountTickerParse} */}
           </span>
         </div>
-        <div className={cn(styles.distributeDrop)}>
+        {/* <div className={cn(styles.distributeDrop)}>
           <LabelSettings
             title="How would you like to distribute drop?"
             support="You can choose between one transaction for one winner or one transaction for all winners. 
@@ -91,7 +91,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
               id="2_DISTRIBUTE"
             />
           </div>
-        </div>
+        </div> */}
         <div className={cn(styles.payBlock)}>
           <LabelSettings title="You need to pay" />
           <div className={cn(styles.payInfo)}>
@@ -105,7 +105,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
             <ButtonPay
               onClick={onDoneClick}
               styleBtn="default"
-              title={`PAY ${price.feeAmount + price.gasAmount + price.fillAmount} NEAR`}
+              title={`PAY ${price.totalAmount} NEAR`}
             />
           </Link>
         </div>

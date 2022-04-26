@@ -32,9 +32,10 @@ export type Lootbox = {
 };
 
 export type BoxCreationPrice = {
-  fillAmount: number;
-  gasAmount: number;
-  feeAmount: number;
+  fillAmount: string;
+  gasAmount: string;
+  feeAmount: string;
+  totalAmount: string;
 };
 
 export type LootboxStat = {
@@ -83,16 +84,13 @@ export interface IDappletApi {
   disconnectWallet: () => Promise<void>;
   isWalletConnected: () => Promise<boolean>;
   getCurrentNearAccount: () => Promise<string>;
-
+  
   getBoxesByAccount(account: string): Promise<Lootbox[]>;
-  createNewBox(lootbox: Lootbox): Promise<number>;
+  createNewBox(lootbox: Lootbox): Promise<string>;
 
   calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice>;
   getLootboxStat(lootboxId: number): Promise<LootboxStat>;
   getLootboxWinners(lootboxId: number): Promise<LootboxWinner[]>;
-  // getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimStatus>;
-  // claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimStatus>;
-
   getLootboxById(lootboxId: number): Promise<Lootbox>;
 
   _getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimResult>;
