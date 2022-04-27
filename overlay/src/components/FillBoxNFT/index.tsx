@@ -27,9 +27,9 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   useEffect(() => {
     let sumQuantity = 0;
 
-    for (let i = 0; i < creationForm.nftContentItems.length; i++) {
-      sumQuantity += +creationForm.nftContentItems[i].quantity!;
-    }
+    // for (let i = 0; i < creationForm.nftContentItems.length; i++) {
+    //   sumQuantity += +creationForm.nftContentItems[i].quantity!;
+    // }
 
     const winNft = String(sumQuantity) + ` NFT`;
     setWinInfoNft(winNft);

@@ -83,16 +83,18 @@ export default class TwitterFeature {
     const regExpIndex = new RegExp(/\d+/);
     const getTweetParse = (tweet) => {
       if (tweet.search(regExpLootbox) != -1) {
-        let numEl = tweet.match(regExpLootbox);
+        const numEl = tweet.match(regExpLootbox);
         return String(numEl[0]);
       }
     };
 
     const getNumIndex = (tweet) => {
       try {
-        let numEl = parseInt(tweet.match(regExpIndex));
+        const numEl = parseInt(tweet.match(regExpIndex)).toString();
         return numEl;
-      } catch {}
+      } catch (_) {
+        //
+      }
     };
 
     this.openOverlay();
@@ -205,14 +207,7 @@ export default class TwitterFeature {
     } else if (x.nearContentItems.length !== 0) {
       x.nearContentItems.map((x) => (text = `You win: ${x.tokenAmount} $NEAR`));
     } else if (x.nftContentItems.length !== 0) {
-      x.nftContentItems.map(
-        (x) => (
-          x.contractAddress,
-          x.quantity,
-          x.tokenId,
-          (text = `You win: ${x.quantity} quantity! ${x.tokenId} - token ID, ${x.contractAddress} - contract address`)
-        ),
-      );
+      text = `You win: ${x.nftContentItems.length} NFT`;
     }
 
     return text;

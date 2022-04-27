@@ -49,7 +49,7 @@ export interface ChildComponentProps {
   label: string;
   imgVal: string;
   onClick: () => void;
-  id: number;
+  id: string;
   creationForm: Lootbox;
   status: string;
   winInfo: any;
@@ -83,13 +83,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
     } else if (winInfo.nearContentItems.length !== 0) {
       winInfo.nearContentItems.map((x: any) => setWinAmount(`${x.tokenAmount} NEAR`));
     } else if (winInfo.nftContentItems.length !== 0) {
-      let sumQuantity = 0;
-
-      for (let i = 0; i < winInfo.nftContentItems.length; i++) {
-        sumQuantity += +winInfo.nftContentItems[i].quantity!;
-      }
-
-      const winNft = String(sumQuantity) + ` NFT`;
+      const winNft = String(winInfo.nftContentItems.length) + ` NFT`;
       setWinAmount(winNft);
     }
   });

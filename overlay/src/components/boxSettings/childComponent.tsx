@@ -77,9 +77,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
 
 Marketplace - you can choose the Paras.id, Mintbase or custom NFT contract.
 
-Token ID - insert the marketplace NFT ID or NFT contract address.
-
-Quantity - select the dropping NFT quantity from one to any. All NFTs need to be in one batch."
+Token ID - insert the marketplace NFT ID or NFT contract address."
       />
       <div className={styles.radiobtnMarketplace}>
         <RadioButton
@@ -169,11 +167,10 @@ Quantity - select the dropping NFT quantity from one to any. All NFTs need to be
             // pattern="^[0-9]\d*.{2}$"
             innerRef={nodeNftContract}
           />
-          <InputPanel
+          {/* <InputPanel
             type="string"
             appearance="small_mini"
             placeholder="Quantity"
-            // value={nftItem.quantity ?? ''}
             // className={className}
             onChange={(e) => {
               changeHandler('quantity', e.target.value);
@@ -196,7 +193,7 @@ Quantity - select the dropping NFT quantity from one to any. All NFTs need to be
             }}
             // pattern="^[0-9]\d*.{1}$"
             innerRef={nodeQuanity}
-          />
+          /> */}
         </div>
 
         {onDeleteChild && (

@@ -52,7 +52,7 @@ const EMPTY_FORM: Lootbox = {
   nftContentItems: [],
   nearContentItems: [],
   pictureId: 0,
-  id: 0,
+  id: "0",
   status: 'created',
 };
 
@@ -65,7 +65,7 @@ export default () => {
   const [imgBox, setImgBox] = useState('');
   const [lootboxes, setLootboxes] = useState<Lootbox[]>([]);
   const [winners, setWinners] = useState<LootboxWinner[]>([]);
-  const [selectedLootboxId, setSelectedLootboxId] = useState<number | null>(null);
+  const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
   const [stat, setStat] = useState<LootboxStat | null>(null);
 
   // TODO: come up with a better name
@@ -159,7 +159,6 @@ export default () => {
       .getLootboxStat(selectedLootboxId)
       .then((x) => {
         setStat(x);
-
         setLoader(false);
       })
 

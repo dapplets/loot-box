@@ -24,7 +24,7 @@ export class DappletApi implements IDappletApi {
     network: 'testnet',
   });
 
-  async getLootboxById(lootboxId: number): Promise<Lootbox> {
+  async getLootboxById(lootboxId: string): Promise<Lootbox> {
     if (lootboxId === undefined) return null;
     const contract = await this._contract;
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
@@ -59,8 +59,6 @@ export class DappletApi implements IDappletApi {
       from_index: null,
       limit: null,
     });
-
-    console.log(lootboxes_)
 
     return lootboxes_.map((x) => this._convertLootboxFromContract(x));
   }
@@ -112,7 +110,7 @@ export class DappletApi implements IDappletApi {
     };
   }
 
-  async getLootboxStat(lootboxId: number): Promise<LootboxStat> {
+  async getLootboxStat(lootboxId: string): Promise<LootboxStat> {
     if (lootboxId === undefined) return null;
     const contract = await this._contract;
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
@@ -156,7 +154,7 @@ export class DappletApi implements IDappletApi {
     };
   }
 
-  async getLootboxWinners(lootboxId: number): Promise<LootboxWinner[]> {
+  async getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]> {
     const contract = await this._contract;
     const claims = await contract.get_claims_by_lootbox({
       lootbox_id: lootboxId.toString(),
@@ -186,7 +184,7 @@ export class DappletApi implements IDappletApi {
   }
 
   public async _getLootboxClaimStatus(
-    lootboxId: number,
+    lootboxId: string,
     accountId: string,
   ): Promise<LootboxClaimResult> {
     const contract = await this._contract;
@@ -200,7 +198,7 @@ export class DappletApi implements IDappletApi {
     return result;
   }
 
-  public async _claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimResult> {
+  public async _claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimResult> {
     const contract = await this._contract;
 
     const receipt = await contract.account.functionCall(
@@ -218,13 +216,14 @@ export class DappletApi implements IDappletApi {
   }
 
   private _convertLootboxFromContract(x: any): Lootbox {
+    const all_loot_items = [...x.loot_items, ...x.distributed_items];
     return {
       id: x.id,
       pictureId: x.picture_id,
       dropChance: Math.floor((x.drop_chance * 100) / 255),
       // ownerId: x.owner_id,
       status: { 0: 'created', 1: 'filled', 2: 'payed', 3: 'dropping', 4: 'dropped' }[x.status], // ToDo: why is string here?
-      nearContentItems: x.loot_items
+      nearContentItems: all_loot_items
         .filter((x) => x['Near'])
         .map((x) => ({
           tokenAmount: formatNearAmount(x.Near.total_amount),
@@ -232,7 +231,7 @@ export class DappletApi implements IDappletApi {
           dropAmountTo: formatNearAmount(x.Near.drop_amount_to),
           dropType: x.Near.drop_amount_from === x.Near.drop_amount_to ? 'fixed' : 'variable',
         })),
-      ftContentItems: x.loot_items
+      ftContentItems: all_loot_items
         .filter((x) => x['Ft'])
         .map((x) => ({
           contractAddress: x.Ft.token_contract,
@@ -241,7 +240,7 @@ export class DappletApi implements IDappletApi {
           dropAmountTo: formatNearAmount(x.Ft.drop_amount_to),
           dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
         })),
-      nftContentItems: x.loot_items
+      nftContentItems: all_loot_items
         .filter((x) => x['Nft'])
         .map((x) => ({
           contractAddress: x.Nft.token_contract,
@@ -309,8 +308,7 @@ export class DappletApi implements IDappletApi {
         nftContentItems: [
           {
             contractAddress: claim_status.WinNft.token_contract,
-            tokenId: claim_status.WinNft.token_id,
-            quantity: 1
+            tokenId: claim_status.WinNft.token_id
           },
         ],
       };
@@ -325,10 +323,4 @@ export class DappletApi implements IDappletApi {
       throw new Error('Unknown claim result');
     }
   }
-}
-
-function getRandomIntInclusive(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
 }

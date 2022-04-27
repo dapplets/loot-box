@@ -1,7 +1,6 @@
 export type NftContentItem = {
   contractAddress: string;
   tokenId: string;
-  quantity: number | null;
 };
 
 export type FtContentItem = {
@@ -20,7 +19,7 @@ export type NearContentItem = {
 };
 
 export type Lootbox = {
-  id?: number;
+  id?: string;
   // name: string;
   // message: string;
   pictureId: number;
@@ -59,8 +58,7 @@ export enum LootboxClaimStatus {
 
 export type ClaimedNftContentItem = {
   contractAddress: string;
-  tokenId: number | null;
-  quantity: number | null;
+  tokenId: string | null;
 };
 
 export type ClaimedFtContentItem = {
@@ -89,10 +87,10 @@ export interface IDappletApi {
   createNewBox(lootbox: Lootbox): Promise<string>;
 
   calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice>;
-  getLootboxStat(lootboxId: number): Promise<LootboxStat>;
-  getLootboxWinners(lootboxId: number): Promise<LootboxWinner[]>;
-  getLootboxById(lootboxId: number): Promise<Lootbox>;
+  getLootboxStat(lootboxId: string): Promise<LootboxStat>;
+  getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]>;
+  getLootboxById(lootboxId: string): Promise<Lootbox>;
 
-  _getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimResult>;
-  _claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimResult>;
+  _getLootboxClaimStatus(lootboxId: string, accountId: string): Promise<LootboxClaimResult>;
+  _claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimResult>;
 }

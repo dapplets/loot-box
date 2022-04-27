@@ -8,7 +8,7 @@ import {
   LootboxClaimResult,
 } from '../../common/interfaces';
 import {} from '@dapplets/dapplet-extension';
-function _createFakeLootbox(id: number): Lootbox {
+function _createFakeLootbox(id: string): Lootbox {
   return {
     id: id,
     pictureId: id,
@@ -20,30 +20,27 @@ function _createFakeLootbox(id: number): Lootbox {
       {
         contractAddress: 'nft.testnet',
         tokenId: '',
-        quantity: 1,
       },
       {
         contractAddress: 'nft.testnet',
         tokenId: '',
-        quantity: 1,
       },
       {
         contractAddress: 'nft.testnet',
         tokenId: '',
-        quantity: 1,
       },
     ],
   };
 }
 
 export class DappletApi implements IDappletApi {
-  getLootboxById(lootboxId: number): Promise<Lootbox> {
+  getLootboxById(lootboxId: string): Promise<Lootbox> {
     throw new Error('Method not implemented.');
   }
-  _getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimResult> {
+  _getLootboxClaimStatus(lootboxId: string, accountId: string): Promise<LootboxClaimResult> {
     throw new Error('Method not implemented.');
   }
-  _claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimResult> {
+  _claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimResult> {
     throw new Error('Method not implemented.');
   }
   async connectWallet() {
@@ -97,7 +94,7 @@ export class DappletApi implements IDappletApi {
     };
   }
 
-  async getLootboxStat(lootboxId: number): Promise<LootboxStat> {
+  async getLootboxStat(lootboxId: string): Promise<LootboxStat> {
     await new Promise((r) => setTimeout(r, 1000));
     return {
       totalAmount: lootboxId * 10,
@@ -107,7 +104,7 @@ export class DappletApi implements IDappletApi {
     };
   }
 
-  async getLootboxWinners(lootboxId: number): Promise<LootboxWinner[]> {
+  async getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]> {
     await new Promise((r) => setTimeout(r, 1000));
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((x) => ({
       nearAccount: `tester_${x}.testnet`,
@@ -117,7 +114,7 @@ export class DappletApi implements IDappletApi {
     }));
   }
 
-  async getLootboxClaimStatus(lootboxId: number, accountId: string): Promise<LootboxClaimStatus> {
+  async getLootboxClaimStatus(lootboxId: string, accountId: string): Promise<LootboxClaimStatus> {
     await new Promise((r) => setTimeout(r, 500));
     const lootboxStatuses = this._getValue('lootboxes-status', []);
     const entry = lootboxStatuses.find(
@@ -126,7 +123,7 @@ export class DappletApi implements IDappletApi {
     return entry?.status ?? 0;
   }
 
-  async claimLootbox(lootboxId: number, accountId: string): Promise<LootboxClaimStatus> {
+  async claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimStatus> {
     await new Promise((r) => setTimeout(r, 4000));
     if ((await this.getLootboxClaimStatus(lootboxId, accountId)) !== 0) {
       throw new Error('The lootbox is opened already.');

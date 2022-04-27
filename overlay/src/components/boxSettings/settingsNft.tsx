@@ -24,7 +24,6 @@ export interface BoxSettingsProps {
 
 const DEFAULT_NFT_ITEM: NftContentItem = {
   contractAddress: 'custom.near',
-  quantity: null,
   tokenId: '',
 };
 
@@ -57,10 +56,10 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
       booleanNodeQuanity != true
     ) {
       if (
-        creationForm.nftContentItems[0].quantity !== null &&
-        creationForm.nftContentItems[0].quantity >= 1 &&
         creationForm.nftContentItems[0].tokenId.length >= 1 &&
-        creationForm.nftContentItems[0].tokenId !== null
+        creationForm.nftContentItems[0].tokenId !== null &&
+        creationForm.nftContentItems[0].contractAddress.length >= 1 &&
+        creationForm.nftContentItems[0].contractAddress !== null
         // &&
         // nameClassInput === '0'
       ) {
@@ -122,7 +121,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     // ToDo: move to App.tsx
     // ToDo: how to get rid of object coping?
     DEFAULT_NFT_ITEM.contractAddress = '';
-    DEFAULT_NFT_ITEM.quantity = 0;
     DEFAULT_NFT_ITEM.tokenId = '';
 
     const newForm = Object.assign({}, creationForm);
@@ -146,7 +144,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             classNameNft={styles.BtnNft}
             onClick={() => {
               creationForm.nftContentItems[0].tokenId = '';
-              creationForm.nftContentItems[0].quantity = 0;
             }}
           />
         </div>

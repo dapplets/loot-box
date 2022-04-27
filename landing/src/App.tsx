@@ -89,7 +89,7 @@ export default function App(AppProps: any) {
   );
 }
 
-function LootboxPage({ selectedLootboxId }: { selectedLootboxId: number | null }) {
+function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }) {
   const { lootboxId } = useParams();
   const [statCur, setStat] = useState(Number);
   const [loader, setLoader] = useState(false);
