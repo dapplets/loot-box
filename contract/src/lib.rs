@@ -1,6 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, Vector};
-use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash, Gas, Balance, promise_result_as_success, Promise};
+use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash, Gas, Balance, promise_result_as_success, Promise, PromiseResult};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::json_types::{U64, U128};
 use near_sdk::{ext_contract};
@@ -260,7 +260,7 @@ impl Contract {
                 NO_DEPOSIT,
                 GAS_FOR_NFT_CHECK_OWNERSHIP,
             ))),
-            None => Either::Right(self.callback_register_lootbox(
+            None => Either::Right(self.internal_register_lootbox(
                 env::predecessor_account_id(),
                 picture_id, 
                 drop_chance, 
@@ -271,6 +271,16 @@ impl Contract {
 
     #[private]
     pub fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {  
+        assert_eq!(env::promise_results_count(), 1, "This is a callback method");
+
+        match env::promise_result(0) {
+            PromiseResult::NotReady => env::panic_str("NotReady"),
+            PromiseResult::Failed => env::panic_str("Failed"),
+            PromiseResult::Successful(_) => self.internal_register_lootbox(owner_id, picture_id, drop_chance, loot_items),
+        }
+    }
+
+    fn internal_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {
         let lootbox = Lootbox {
             id: self.lootboxes_by_id.len().into(),
             owner_id: owner_id,
