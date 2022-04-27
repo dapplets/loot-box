@@ -84,15 +84,15 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
           id={`${id}-1`}
           value="Paras"
           name={id}
-          checked={nftItem.contractAddress === 'paras.near'}
+          checked={nftItem.contractAddress === 'paras-token-v2.testnet'}
           onChange={(e) => {
             // ToDo: how to make better?
             if (e.target.checked) {
-              changeHandler('contractAddress', 'paras.near');
+              changeHandler('contractAddress', 'paras-token-v2.testnet');
             }
           }}
         />
-        <RadioButton
+        {/* <RadioButton
           id={`${id}-2`}
           value="Mintbase"
           name={id}
@@ -102,13 +102,13 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
               changeHandler('contractAddress', 'mintbase.near');
             }
           }}
-        />
+        /> */}
         <RadioButton
           id={`${id}-3`}
           value="Custom NFT"
           name={id}
           checked={
-            nftItem.contractAddress !== 'paras.near' && nftItem.contractAddress !== 'mintbase.near'
+            nftItem.contractAddress !== 'paras-token-v2.testnet' // && nftItem.contractAddress !== 'mintbase.near'
           }
           onChange={(e) => {
             if (e.target.checked) {
@@ -125,7 +125,7 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
             appearance="medium_big"
             placeholder="Contract Address"
             // className={className}
-            // value={nftItem.tokenId ?? ''}
+            value={nftItem.contractAddress ?? ''}
             onChange={(e) => {
               changeHandler('contractAddress', e.target.value);
             }}
@@ -135,7 +135,7 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
           </div> 
           <InputPanel
             type="string"
-            appearance="medium_big"
+            appearance="small_mini"
             placeholder="Token ID"
             // className={className}
             // value={nftItem.tokenId ?? ''}

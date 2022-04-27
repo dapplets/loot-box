@@ -115,14 +115,17 @@ export class DappletApi implements IDappletApi {
     const contract = await this._contract;
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
 
+    const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
+
     let totalAmount = 0;
-    for (const item of lootbox.loot_items) {
+    for (const item of all_loot_items) {
       if (item.Near !== undefined) {
         totalAmount += Number(formatNearAmount(item.Near.total_amount));
       } else if (item.Ft !== undefined) {
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.Nft !== undefined) {
-        console.error('Total amount calculation is not implemented for NFT.');
+        // console.error('Total amount calculation is not implemented for NFT.');
+        totalAmount += 1; // ToDo: how to calculate statistics of NFT?
       } else {
         console.error('Unknown loot item');
       }
@@ -138,7 +141,8 @@ export class DappletApi implements IDappletApi {
       } else if (item.WinFt !== undefined) {
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
-        console.error('Total amount calculation is not implemented for NFT.');
+        // console.error('Total amount calculation is not implemented for NFT.');
+        winAmount += 1; // ToDo: how to calculate statistics of NFT?
       } else if (item.NotWin !== undefined) {
         // Nothing to do
       } else {
@@ -162,6 +166,8 @@ export class DappletApi implements IDappletApi {
       limit: null,
     });
 
+    console.log('claims', claims)
+
     return claims.map((x) => {
       if (typeof x === 'object' && x.NotWin !== undefined) {
         return {
@@ -177,7 +183,15 @@ export class DappletApi implements IDappletApi {
           amount: formatNearAmount(x.WinNear.total_amount),
           txLink: null,
         };
+      } else if (typeof x === 'object' && x.WinNft !== undefined) {
+        return {
+          lootboxId: x.WinNft.lootbox_id,
+          nearAccount: x.WinNft.claimer_id,
+          amount: `NFT: ${x.WinNft.token_contract} / ${x.WinNft.token_id}`,
+          txLink: null,
+        };
       } else {
+        console.error('x', x)
         throw new Error('Unknown claim result.');
       }
     });
