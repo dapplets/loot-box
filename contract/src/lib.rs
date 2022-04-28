@@ -7,6 +7,7 @@ use near_sdk::{ext_contract};
 use near_contract_standards::non_fungible_token::{Token};
 
 const NO_DEPOSIT: Balance = 0;
+const ONE_YOCTO: Balance = 1;
 const BASE_GAS: Gas = Gas(5_000_000_000_000);
 const GAS_FOR_NFT_CHECK_OWNERSHIP: Gas = Gas(30_000_000_000_000);
 
@@ -258,6 +259,9 @@ impl Contract {
                     if balance != total_amount {
                         env::panic_str("balance and total_amount must be equal");
                     }
+
+                    near_loot_amount += 1; // assert_one_yocto
+
                     // let promise = ext_ft::ft_balance_of(env::current_account_id(), token_contract.clone(), NO_DEPOSIT, BASE_GAS)
                     //     .then(
                     //         ext_self::callback_assert_nft_ownership(
@@ -433,7 +437,7 @@ impl Contract {
                             total_amount,
                             None,
                             token_contract.clone(),
-                            NO_DEPOSIT,
+                            ONE_YOCTO,
                             BASE_GAS
                         ).then(
                             ext_self::callback_return_claim_result(
@@ -443,6 +447,8 @@ impl Contract {
                                 GAS_FOR_NFT_CHECK_OWNERSHIP,
                             )
                         ))
+
+                        // ToDo: catch error from promise
                     },
                     ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id } => {
                         Either::Left(ext_nft::nft_transfer(
@@ -451,7 +457,7 @@ impl Contract {
                             None,
                             None,
                             token_contract.clone(),
-                            1,
+                            ONE_YOCTO,
                             BASE_GAS
                         ).then(
                             ext_self::callback_return_claim_result(
@@ -535,7 +541,7 @@ impl Contract {
 
                     if new_balance == 0 {
                         _lootbox.distributed_items.push(new_item);
-                        _lootbox.loot_items.remove(rand_idx);                        
+                        _lootbox.loot_items.remove(rand_idx);
                     } else {
                         _lootbox.loot_items[rand_idx] = new_item;
                     }

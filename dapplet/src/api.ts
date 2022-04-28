@@ -5,9 +5,11 @@ import {
   LootboxStat,
   LootboxWinner,
   LootboxClaimResult,
+  FtMetadata,
 } from '../../common/interfaces';
 import { sum } from './helpers';
 import { BN } from './bn.js';
+import * as format from './format';
 
 const { parseNearAmount, formatNearAmount } = Core.near.utils.format;
 
@@ -82,10 +84,10 @@ export class DappletApi implements IDappletApi {
 
     if (typeof result === 'string') {
       return result;
-    } else if (typeof result === 'object' && "Right" in result) {
+    } else if (typeof result === 'object' && 'Right' in result) {
       return result.Right;
     } else {
-      throw new Error("Invalid result received: " + debased64);
+      throw new Error('Invalid result received: ' + debased64);
     }
   }
 
@@ -98,7 +100,11 @@ export class DappletApi implements IDappletApi {
       if ('Near' in item) {
         fillAmount = sum(fillAmount, item.Near.total_amount);
       } else if ('Nft' in item) {
-        fillAmount = sum(fillAmount, "1");
+        fillAmount = sum(fillAmount, '1'); // 1 yoctoNEAR is required
+      } else if ('Ft' in item) {
+        fillAmount = sum(fillAmount, '1'); // 1 yoctoNEAR is required
+      } else {
+        console.error('Unknown loot_item', item);
       }
     }
 
@@ -166,8 +172,6 @@ export class DappletApi implements IDappletApi {
       limit: null,
     });
 
-    console.log('claims', claims)
-
     return claims.map((x) => {
       if (typeof x === 'object' && x.NotWin !== undefined) {
         return {
@@ -183,6 +187,13 @@ export class DappletApi implements IDappletApi {
           amount: formatNearAmount(x.WinNear.total_amount),
           txLink: null,
         };
+      } else if (typeof x === 'object' && x.WinFt !== undefined) {
+        return {
+          lootboxId: x.WinFt.lootbox_id,
+          nearAccount: x.WinFt.claimer_id,
+          amount: format.formatNearAmount(x.WinFt.total_amount, 6),
+          txLink: null,
+        };
       } else if (typeof x === 'object' && x.WinNft !== undefined) {
         return {
           lootboxId: x.WinNft.lootbox_id,
@@ -191,10 +202,25 @@ export class DappletApi implements IDappletApi {
           txLink: null,
         };
       } else {
-        console.error('x', x)
+        console.error('Unknown claim result', x);
         throw new Error('Unknown claim result.');
       }
     });
+  }
+
+  // @CacheMethod()
+  public async getFtMetadata(address: string): Promise<FtMetadata | null> {
+    try {
+      const contract = await Core.contract('near', address, {
+        viewMethods: ['ft_metadata'],
+        changeMethods: [],
+        network: 'testnet',
+      });
+
+      return contract.ft_metadata();
+    } catch (_) {
+      return null;
+    }
   }
 
   public async _getLootboxClaimStatus(
@@ -249,9 +275,9 @@ export class DappletApi implements IDappletApi {
         .filter((x) => x['Ft'])
         .map((x) => ({
           contractAddress: x.Ft.token_contract,
-          tokenAmount: formatNearAmount(x.Ft.total_amount),
-          dropAmountFrom: formatNearAmount(x.Ft.drop_amount_from),
-          dropAmountTo: formatNearAmount(x.Ft.drop_amount_to),
+          tokenAmount: format.formatNearAmount(x.Ft.total_amount, 6),
+          dropAmountFrom: format.formatNearAmount(x.Ft.drop_amount_from, 6),
+          dropAmountTo: format.formatNearAmount(x.Ft.drop_amount_to, 6),
           dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
         })),
       nftContentItems: all_loot_items
@@ -279,10 +305,10 @@ export class DappletApi implements IDappletApi {
         ...lootbox.ftContentItems.map((x) => ({
           Ft: {
             token_contract: x.contractAddress,
-            total_amount: parseNearAmount(x.tokenAmount),
-            drop_amount_from: parseNearAmount(x.dropAmountFrom),
-            drop_amount_to: parseNearAmount(x.dropAmountTo),
-            balance: parseNearAmount(x.tokenAmount),
+            total_amount: format.parseNearAmount(x.tokenAmount, 6),
+            drop_amount_from: format.parseNearAmount(x.dropAmountFrom, 6),
+            drop_amount_to: format.parseNearAmount(x.dropAmountTo, 6),
+            balance: format.parseNearAmount(x.tokenAmount, 6),
           },
         })),
         ...lootbox.nftContentItems.map((x) => ({
@@ -322,9 +348,21 @@ export class DappletApi implements IDappletApi {
         nftContentItems: [
           {
             contractAddress: claim_status.WinNft.token_contract,
-            tokenId: claim_status.WinNft.token_id
+            tokenId: claim_status.WinNft.token_id,
           },
         ],
+      };
+    } else if (typeof claim_status === 'object' && claim_status.WinFt) {
+      return {
+        status: 2,
+        nearContentItems: [],
+        ftContentItems: [
+          {
+            contractAddress: claim_status.WinFt.token_contract,
+            tokenAmount: format.formatNearAmount(claim_status.WinFt.total_amount.toString(), 6),
+          },
+        ],
+        nftContentItems: [],
       };
     } else if (typeof claim_status === 'object' && claim_status.NotWin) {
       return {

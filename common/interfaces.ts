@@ -77,6 +77,16 @@ export interface LootboxClaimResult {
   ftContentItems: ClaimedFtContentItem[];
 }
 
+export interface FtMetadata {
+  spec: string;
+  name: string;
+  symbol: string;
+  icon: string;
+  reference: string;
+  reference_hash: string;
+  decimals: number;
+}
+
 export interface IDappletApi {
   connectWallet: () => Promise<string>;
   disconnectWallet: () => Promise<void>;
@@ -93,4 +103,6 @@ export interface IDappletApi {
 
   _getLootboxClaimStatus(lootboxId: string, accountId: string): Promise<LootboxClaimResult>;
   _claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimResult>;
+
+  getFtMetadata(address: string): Promise<FtMetadata | null>;
 }
