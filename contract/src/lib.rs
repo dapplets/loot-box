@@ -493,14 +493,16 @@ impl Contract {
                         win_amount = balance.0;
                     }
 
+                    let new_balance = balance.0 - win_amount;
+
                     let new_item = LootItem::Near { 
                         total_amount: *total_amount, 
                         drop_amount_from: *drop_amount_from, 
                         drop_amount_to: *drop_amount_to, 
-                        balance: (balance.0 - win_amount).into()
+                        balance: new_balance.into()
                     };
 
-                    if balance.0 == 0 {
+                    if new_balance == 0 {
                         _lootbox.distributed_items.push(new_item);
                         _lootbox.loot_items.remove(rand_idx);
                     } else {
@@ -520,6 +522,7 @@ impl Contract {
                         win_amount = balance.0;
                     }
 
+                    let new_balance = balance.0 - win_amount;
                     let token_contract = token_contract.clone();
 
                     let new_item = LootItem::Ft {
@@ -527,10 +530,10 @@ impl Contract {
                         total_amount: *total_amount,
                         drop_amount_from: *drop_amount_from, 
                         drop_amount_to: *drop_amount_to, 
-                        balance: (balance.0 - win_amount).into()
+                        balance: new_balance.into()
                     };
 
-                    if balance.0 == 0 {
+                    if new_balance == 0 {
                         _lootbox.distributed_items.push(new_item);
                         _lootbox.loot_items.remove(rand_idx);                        
                     } else {
