@@ -201,9 +201,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             to="/fill_your_box_nft"
             onClick={() => {
               handleClick();
+              console.log(creationForm);
               creationForm.ftContentItems = [];
               creationForm.nearContentItems = [];
-              // console.log('lalalla');
             }}
           >
             <LinksStep disabled={true} step="next" label="Next step" />

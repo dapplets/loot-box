@@ -38,7 +38,6 @@ export function getMilliseconds(seconds: number): number {
   return seconds * 1000;
 }
 
-
 // /**
 //  * Decorator for async methods caching promises until it's not fulfilled.
 //  * Prevents execution of multiple promises at the same time.

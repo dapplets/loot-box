@@ -6,6 +6,7 @@
     "@dapplets/dapplet-overlay-bridge": "^0.1.1",
     "apexcharts": "^3.33.0",
     "autobahn-browser": "^20.9.2",
+    "bignumber.js": "^9.0.2",
     "chart.js": "^3.7.0",
     "ethers": "^5.0.14",
     "immutability-helper": "^3.1.1",

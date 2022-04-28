@@ -26,6 +26,7 @@ import { ButtonsSetting } from './buttonsSetting';
 import { Test } from '../atoms/test';
 import classNames from 'classnames';
 import './invalid.scss';
+import { truncate } from 'fs/promises';
 
 export interface BoxSettingsProps {
   children?: ReactNode;
@@ -116,8 +117,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           creationForm.ftContentItems[0].dropAmountTo.length >= 1 &&
           creationForm.ftContentItems[0].contractAddress.length >= 1)
       ) {
-        // console.log(creationForm);
-
         onLink(false);
       } else {
         // console.log(nameClassInput);
@@ -125,6 +124,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       }
     } else {
       onLink(true);
+      // console.log(checkValueMath());
     }
   }, [
     creationForm,
@@ -206,6 +206,31 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const handleClick = () => {
     if (nodeTokenAmount && nodeTokenAmount.current) {
       nodeTokenAmount.current.value = '';
+    }
+  };
+  const checkValueMath = () => {
+    if (
+      (Number(creationForm.nearContentItems[0].tokenAmount) >=
+        Number(creationForm.nearContentItems[0].dropAmountFrom) &&
+        Number(creationForm.nearContentItems[0].tokenAmount) %
+          Number(creationForm.nearContentItems[0].dropAmountFrom) ===
+          0 &&
+        creationForm.nearContentItems[0].dropType === 'fixed') ||
+      (Number(creationForm.ftContentItems[0].tokenAmount) >=
+        Number(creationForm.ftContentItems[0].dropAmountFrom) &&
+        Number(creationForm.ftContentItems[0].tokenAmount) %
+          Number(creationForm.ftContentItems[0].dropAmountFrom) ===
+          0 &&
+        creationForm.ftContentItems[0].dropType === 'fixed')
+    ) {
+      return true;
+    } else if (
+      creationForm.nearContentItems[0].dropType === 'variable' ||
+      creationForm.ftContentItems[0].dropType === 'variable'
+    ) {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -434,6 +459,13 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     }
                     changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
                     changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
+                    if (!checkValueMath()) {
+                      onLink(true);
+                      nodeDropAmount.current?.classList.add('invalid');
+                    } else {
+                      onLink(false);
+                      nodeDropAmount.current?.classList.remove('invalid');
+                    }
                   }}
                 />
               )}
@@ -546,13 +578,24 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       (e.target.value[0] !== '0' ||
                         (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                       +e.target.value !== 0
+                      // &&
+                      // checkValueMath()
                     ) {
+                      // console.log(checkValueMath());
+
                       nodeDropAmount.current?.classList.remove('invalid');
                     } else {
                       nodeDropAmount.current?.classList.add('invalid');
                     }
                     changeHandler.call(null, 'dropAmountTo', e.target.value);
                     changeHandler.call(null, 'dropAmountFrom', e.target.value);
+                    if (!checkValueMath()) {
+                      onLink(true);
+                      nodeDropAmount.current?.classList.add('invalid');
+                    } else {
+                      onLink(false);
+                      nodeDropAmount.current?.classList.remove('invalid');
+                    }
                   }}
                 />
               )}
@@ -587,23 +630,33 @@ Please enter the amount in percentage."
         <Link to="/select_box" onClick={handleClick}>
           <LinksStep step="prev" label="Back" />
         </Link>
-        {(link && <div></div>) || (
-          <Link
-            to="/fill_your_box"
-            onClick={() => {
-              handleClick();
-              if (isShowDescription_tokenAmount) {
-                creationForm.nearContentItems = [];
-                creationForm.nftContentItems = [];
-              } else {
-                creationForm.ftContentItems = [];
-                creationForm.nftContentItems = [];
-              }
-            }}
-          >
-            <LinksStep step="next" label="Next step" />
-          </Link>
-        )}
+        {(link && <div></div>) ||
+          (checkValueMath() && (
+            <Link
+              to="/fill_your_box"
+              onClick={() => {
+                console.log(checkValueMath());
+
+                handleClick();
+                // console.log(creationForm);
+
+                if (isShowDescription_tokenAmount) {
+                  creationForm.nearContentItems = [];
+                  creationForm.nftContentItems = [];
+                } else {
+                  creationForm.ftContentItems = [];
+                  creationForm.nftContentItems = [];
+                }
+                onLink(false);
+                // } else {
+                //   onLink(true);
+                //   nodeDropAmount.current?.classList.add('invalid');
+                // }
+              }}
+            >
+              <LinksStep step="next" label="Next step" />
+            </Link>
+          ))}
       </div>
     </div>
   );
