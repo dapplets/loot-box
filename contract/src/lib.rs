@@ -17,6 +17,14 @@ trait NonFungibleToken {
     fn nft_token(&self, token_id: String) -> Option<Token>;
 }
 
+#[ext_contract(ext_ft)]
+trait FungibleToken {
+    fn ft_transfer(&mut self, receiver_id: String, amount: U128, memo: Option<String>);
+    fn ft_transfer_call(&mut self, receiver_id: String, amount: U128, msg: String, memo: Option<String>) -> Promise;
+    fn ft_total_supply(&self) -> U128;
+    fn ft_balance_of(&self, account_id: String) -> U128;
+}
+
 #[ext_contract(ext_self)]
 trait SelfContract {
     fn callback_assert_nft_ownership();
@@ -242,7 +250,30 @@ impl Contract {
 
                     near_loot_amount += 1; // assert_one_yocto
                 },
-                _ => env::panic_str("Unsupported loot item")
+                LootItem::Ft { token_contract: _, total_amount, drop_amount_from, drop_amount_to, balance } => {
+                    if !(drop_amount_from.0 <= drop_amount_to.0 && drop_amount_to.0 > 0 && drop_amount_to.0 <= total_amount.0) {
+                        env::panic_str("Drop amount must be valid range");
+                    }                    
+
+                    if balance != total_amount {
+                        env::panic_str("balance and total_amount must be equal");
+                    }
+                    // let promise = ext_ft::ft_balance_of(env::current_account_id(), token_contract.clone(), NO_DEPOSIT, BASE_GAS)
+                    //     .then(
+                    //         ext_self::callback_assert_nft_ownership(
+                    //             env::current_account_id(),
+                    //             NO_DEPOSIT,
+                    //             GAS_FOR_NFT_CHECK_OWNERSHIP,
+                    //         )
+                    //     );
+
+                    // promises = match promises {
+                    //     Some(x) => Some(x.and(promise)),
+                    //     None => Some(promise)
+                    // };
+
+                    // ToDo: check ft balance / transfer ft
+                }
             }
         }
 
@@ -271,13 +302,18 @@ impl Contract {
 
     #[private]
     pub fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {  
-        assert_eq!(env::promise_results_count(), 1, "This is a callback method");
-
-        match env::promise_result(0) {
-            PromiseResult::NotReady => env::panic_str("NotReady"),
-            PromiseResult::Failed => env::panic_str("Failed"),
-            PromiseResult::Successful(_) => self.internal_register_lootbox(owner_id, picture_id, drop_chance, loot_items),
+        let promises_count = env::promise_results_count();
+        assert_ne!(promises_count, 0, "This is a callback method");
+        
+        for n in 0..(promises_count - 1) {
+            match env::promise_result(n) {
+                PromiseResult::NotReady => env::panic_str("NotReady"),
+                PromiseResult::Failed => env::panic_str("Failed"),
+                PromiseResult::Successful(_) => {},
+            }
         }
+
+        self.internal_register_lootbox(owner_id, picture_id, drop_chance, loot_items)
     }
 
     fn internal_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {
@@ -364,6 +400,8 @@ impl Contract {
                 claims_vector.push(&claim_result_id);
                 self.claims_per_lootbox.insert(&lootbox_id, &claims_vector);
 
+                // ToDo: change lootbox status on completed if items are over.
+
                 match claim_result {
                     ClaimResult::NotExists => Either::Right(claim_result),
                     ClaimResult::NotOpened => Either::Right(claim_result),
@@ -382,8 +420,22 @@ impl Contract {
                                 )
                         )
                     },
-                    ClaimResult::WinFt { lootbox_id:_, claimer_id:_, token_contract:_, total_amount:_ } => {
-                        env::panic_str("FT is not implemented");
+                    ClaimResult::WinFt { lootbox_id, claimer_id, token_contract, total_amount } => {
+                        Either::Left(ext_ft::ft_transfer(
+                            claimer_id.to_string(),
+                            total_amount,
+                            None,
+                            token_contract.clone(),
+                            NO_DEPOSIT,
+                            BASE_GAS
+                        ).then(
+                            ext_self::callback_return_claim_result(
+                                ClaimResult::WinFt { lootbox_id, claimer_id, token_contract, total_amount },
+                                env::current_account_id(),
+                                NO_DEPOSIT,
+                                GAS_FOR_NFT_CHECK_OWNERSHIP,
+                            )
+                        ))
                     },
                     ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id } => {
                         Either::Left(ext_nft::nft_transfer(
@@ -414,6 +466,8 @@ impl Contract {
     }
 
     fn internal_pull_random_loot(&mut self, _lootbox: &mut Lootbox) -> ClaimResult {
+        assert_ne!(_lootbox.loot_items.len(), 0, "Lootbox items are over");
+
         let random = env::random_seed_array();
         let random_1 = u64::from_be_bytes(random[0..8].try_into().unwrap());
         let random_2 = u128::from_be_bytes(random[8..24].try_into().unwrap());
@@ -441,12 +495,7 @@ impl Contract {
 
                     if balance.0 == 0 {
                         _lootbox.distributed_items.push(new_item);
-                        if _lootbox.loot_items.len() == 1 {
-                            _lootbox.loot_items.pop();
-                        } else {
-                            _lootbox.loot_items[rand_idx] = _lootbox.loot_items.pop().expect("No items");
-                        }
-                        
+                        _lootbox.loot_items.remove(rand_idx);
                     } else {
                         _lootbox.loot_items[rand_idx] = new_item;
                     }
@@ -457,9 +506,37 @@ impl Contract {
                         total_amount: win_amount.into()
                     }
                 },
-                // LootItem::Ft { token_contract, total_amount, drop_amount_from, drop_amount_to, balance } => {
-                //     env::panic_str("FT item is not implemented")
-                // },
+                LootItem::Ft { token_contract, total_amount, drop_amount_from, drop_amount_to, balance } => {
+                    let mut win_amount = random_2 % (drop_amount_to.0 - drop_amount_from.0 + 1) + drop_amount_from.0;
+
+                    if win_amount > balance.0 {
+                        win_amount = balance.0;
+                    }
+
+                    let token_contract = token_contract.clone();
+
+                    let new_item = LootItem::Ft {
+                        token_contract: token_contract.clone(),
+                        total_amount: *total_amount,
+                        drop_amount_from: *drop_amount_from, 
+                        drop_amount_to: *drop_amount_to, 
+                        balance: (balance.0 - win_amount).into()
+                    };
+
+                    if balance.0 == 0 {
+                        _lootbox.distributed_items.push(new_item);
+                        _lootbox.loot_items.remove(rand_idx);                        
+                    } else {
+                        _lootbox.loot_items[rand_idx] = new_item;
+                    }
+
+                    ClaimResult::WinFt {
+                        lootbox_id: _lootbox.id, 
+                        claimer_id: env::predecessor_account_id(), 
+                        token_contract: token_contract.clone(),
+                        total_amount: win_amount.into()
+                    }
+                },
                 LootItem::Nft { token_contract, token_id } => {
                     let new_item = LootItem::Nft { 
                         token_contract: token_contract.clone(),
@@ -475,15 +552,10 @@ impl Contract {
                         token_id: token_id.clone()
                     };
 
-                    if _lootbox.loot_items.len() == 1 {
-                        _lootbox.loot_items.pop();
-                    } else {
-                        _lootbox.loot_items[rand_idx] = _lootbox.loot_items.pop().expect("No items");
-                    }
+                    _lootbox.loot_items.remove(rand_idx);
 
                     claim_result
                 }
-                _ => env::panic_str("Unsupported loot item")
             }
         } else {
             ClaimResult::NotWin { 
