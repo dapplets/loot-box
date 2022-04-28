@@ -236,7 +236,7 @@ export class DappletApi implements IDappletApi {
       pictureId: x.picture_id,
       dropChance: Math.floor((x.drop_chance * 100) / 255),
       // ownerId: x.owner_id,
-      status: { 0: 'created', 1: 'filled', 2: 'payed', 3: 'dropping', 4: 'dropped' }[x.status], // ToDo: why is string here?
+      status: x.status.toLowerCase(),
       nearContentItems: all_loot_items
         .filter((x) => x['Near'])
         .map((x) => ({

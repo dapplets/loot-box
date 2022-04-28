@@ -58,7 +58,7 @@ export interface ChildComponentProps {
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, label, imgVal, onClick, creationForm, winInfo } = props;
+  const { number, label, imgVal, onClick, creationForm, winInfo, status } = props;
 
   const [winAmount, setWinAmount] = useState('');
   // useEffect(() => {
@@ -93,7 +93,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
       id={number}
       label={label}
       imageBox={imgVal}
-      status="Created"
+      status={status}
       onClick={onClick}
       WinInfo={winAmount}
     />
