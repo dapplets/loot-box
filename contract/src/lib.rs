@@ -378,6 +378,13 @@ impl Contract {
                 // generate loot
                 let claim_result = self.internal_pull_random_loot(&mut _lootbox);
 
+                // change lootbox status
+                if _lootbox.loot_items.len() == 0 {
+                    _lootbox.status = LootboxStatus::Dropped;
+                } else {
+                    _lootbox.status = LootboxStatus::Dropping;
+                }
+
                 // update lootbox
                 self.lootboxes_by_id.replace(lootbox_id, &_lootbox);
 
