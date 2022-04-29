@@ -116,16 +116,22 @@ export default () => {
     if (!nearAccount) throw new Error('Not logged in.');
 
     setLoader(true);
-    const id = await dappletApi.createNewBox(creationForm);
-    setSelectedLootboxId(id);
+    try {
+      const id = await dappletApi.createNewBox(creationForm);
+      setSelectedLootboxId(id);
 
-    await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
-      setLootboxes(x);
-    });
-    setCreationForm(EMPTY_FORM);
+      await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
+        setLootboxes(x);
+      });
+      setCreationForm(EMPTY_FORM);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoader(false);
+    }
+
     // console.log(EMPTY_FORM);
 
-    setLoader(false);
     // if (selectedLootboxId === null) return;
   };
 
