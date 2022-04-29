@@ -56,6 +56,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
       booleanNodeQuanity != true
     ) {
       if (
+        creationForm.nftContentItems[0] &&
         creationForm.nftContentItems[0].tokenId.length >= 1 &&
         creationForm.nftContentItems[0].tokenId !== null &&
         creationForm.nftContentItems[0].contractAddress.length >= 1 &&
@@ -201,9 +202,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             to="/fill_your_box_nft"
             onClick={() => {
               handleClick();
+              console.log(creationForm);
               creationForm.ftContentItems = [];
               creationForm.nearContentItems = [];
-              // console.log('lalalla');
             }}
           >
             <LinksStep disabled={true} step="next" label="Next step" />

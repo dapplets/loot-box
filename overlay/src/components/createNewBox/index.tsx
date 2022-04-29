@@ -53,8 +53,6 @@ export interface ChildComponentProps {
   creationForm: Lootbox;
   status: string;
   winInfo: any;
-  // setWinInfo: (x: string) => void;
-  // getWin: any;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {

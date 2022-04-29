@@ -38,7 +38,6 @@ export function getMilliseconds(seconds: number): number {
   return seconds * 1000;
 }
 
-
 export function groupBy<T>(xs: T[], key: string): { [group_key: string]: T[] } {
   return xs.reduce(function(rv, x) {
     (rv[x[key]] = rv[x[key]] || []).push(x);

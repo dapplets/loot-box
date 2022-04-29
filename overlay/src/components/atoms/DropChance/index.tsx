@@ -53,7 +53,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
         onChange={(e: any) => {
           const { data, inputType } = e.nativeEvent;
 
-          // console.log({ data, inputType, e });
+          console.log({ data, inputType, e });
           switch (inputType) {
             case 'insertText':
               if (isNaN(+data) === false && data !== ' ') {
@@ -63,9 +63,10 @@ export const DropChance: FC<DropChanceProps> = (props) => {
               }
               break;
             case 'deleteContentBackward':
-              const newValue = valueDropChance.slice(0, -1);
-              if (newValue.length === 0) onValueDropChance('1');
-              else onValueDropChance(newValue);
+              const newValue = valueDropChance.slice(0, -2);
+              // if (newValue.length === 0) onValueDropChance('1');
+              // else
+              onValueDropChance(newValue);
               break;
 
             default:

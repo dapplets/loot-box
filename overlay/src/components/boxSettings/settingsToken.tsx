@@ -26,6 +26,7 @@ import { ButtonsSetting } from './buttonsSetting';
 import { Test } from '../atoms/test';
 import classNames from 'classnames';
 import './invalid.scss';
+import { truncate } from 'fs/promises';
 
 export interface BoxSettingsProps {
   children?: ReactNode;
@@ -97,42 +98,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const booleanNodeFrom = nodeFrom.current?.classList.contains('invalid');
   const booleanNodeTo = nodeTo.current?.classList.contains('invalid');
   const booleanNodeDropAmount = nodeDropAmount.current?.classList.contains('invalid');
-  const LinkBlock = useMemo(() => {
-    if (
-      (creationForm.nearContentItems.length !== 0 || creationForm.ftContentItems.length !== 0) &&
-      booleanNodeTokenAmount != true &&
-      booleanNodeTokenContract != true &&
-      booleanNodeTokenTicer != true &&
-      booleanNodeFrom != true &&
-      booleanNodeTo != true &&
-      booleanNodeDropAmount != true
-    ) {
-      if (
-        (creationForm.nearContentItems[0].tokenAmount.length >= 1 &&
-          creationForm.nearContentItems[0].dropAmountFrom.length >= 1 &&
-          creationForm.nearContentItems[0].dropAmountTo.length >= 1) ||
-        (creationForm.ftContentItems[0].tokenAmount.length >= 1 &&
-          creationForm.ftContentItems[0].dropAmountFrom.length >= 1 &&
-          creationForm.ftContentItems[0].dropAmountTo.length >= 1 &&
-          creationForm.ftContentItems[0].contractAddress.length >= 1)
-      ) {
-        // console.log(creationForm);
-
-        onLink(false);
-      } else {
-        // console.log(nameClassInput);
-        onLink(true);
-      }
-    } else {
-      onLink(true);
-    }
-  }, [
-    creationForm,
-    link,
-    nodeTokenAmount,
-    isShowDescription_tokenAmount,
-    isShowDescription_dropAmount,
-  ]);
 
   const changeHandler = (name: keyof NearContentItem, value: any) => {
     const newForm = Object.assign({}, creationForm);
@@ -208,6 +173,72 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       nodeTokenAmount.current.value = '';
     }
   };
+  const checkValueMath = () => {
+    if (
+      (creationForm.nearContentItems[0] &&
+        Number(creationForm.nearContentItems[0].tokenAmount) >=
+          Number(creationForm.nearContentItems[0].dropAmountFrom) &&
+        Number(creationForm.nearContentItems[0].tokenAmount) %
+          Number(creationForm.nearContentItems[0].dropAmountFrom) ===
+          0 &&
+        creationForm.nearContentItems[0].dropType === 'fixed') ||
+      (creationForm.ftContentItems[0] &&
+        Number(creationForm.ftContentItems[0].tokenAmount) >=
+          Number(creationForm.ftContentItems[0].dropAmountFrom) &&
+        Number(creationForm.ftContentItems[0].tokenAmount) %
+          Number(creationForm.ftContentItems[0].dropAmountFrom) ===
+          0 &&
+        creationForm.ftContentItems[0].dropType === 'fixed')
+    ) {
+      return true;
+    } else if (
+      (creationForm.nearContentItems[0] &&
+        creationForm.nearContentItems[0].dropType === 'variable') ||
+      (creationForm.ftContentItems[0] && creationForm.ftContentItems[0].dropType === 'variable')
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const LinkBlock = useMemo(() => {
+    if (
+      (creationForm.nearContentItems.length !== 0 || creationForm.ftContentItems.length !== 0) &&
+      booleanNodeTokenAmount != true &&
+      booleanNodeTokenContract != true &&
+      booleanNodeTokenTicer != true &&
+      booleanNodeFrom != true &&
+      booleanNodeTo != true &&
+      booleanNodeDropAmount != true
+    ) {
+      if (
+        (creationForm.nearContentItems[0] &&
+          creationForm.nearContentItems[0].tokenAmount &&
+          creationForm.nearContentItems[0].tokenAmount.length >= 1 &&
+          creationForm.nearContentItems[0].dropAmountFrom.length >= 1 &&
+          creationForm.nearContentItems[0].dropAmountTo.length >= 1) ||
+        (creationForm.ftContentItems[0] &&
+          creationForm.ftContentItems[0].tokenAmount.length >= 1 &&
+          creationForm.ftContentItems[0].dropAmountFrom.length >= 1 &&
+          creationForm.ftContentItems[0].dropAmountTo.length >= 1 &&
+          creationForm.ftContentItems[0].contractAddress.length >= 1)
+      ) {
+        onLink(false);
+      } else {
+        // console.log(nameClassInput);
+        onLink(true);
+      }
+    } else {
+      onLink(true);
+      // console.log(checkValueMath());
+    }
+  }, [
+    creationForm,
+    link,
+    nodeTokenAmount,
+    isShowDescription_tokenAmount,
+    isShowDescription_dropAmount,
+  ]);
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -243,9 +274,17 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     nodeTokenAmount.current?.classList.add('invalid');
                   }
                   if (isShowDescription_tokenAmount) {
-                    changeHandlerFT.call(null, 'tokenAmount', e.target.value);
+                    changeHandlerFT.call(
+                      null,
+                      'tokenAmount',
+                      String(Math.floor(Number(e.target.value) * 1000000) / 1000000),
+                    );
                   } else {
-                    changeHandler.call(null, 'tokenAmount', e.target.value);
+                    changeHandler.call(
+                      null,
+                      'tokenAmount',
+                      String(Math.floor(Number(e.target.value) * 1000000) / 1000000),
+                    );
                   }
                 }}
               />
@@ -289,6 +328,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="medium"
                   placeholder="Token contract"
                   innerRef={nodeTokenContract}
+                  value={creationForm.ftContentItems[0].contractAddress}
                   onChange={(e) => {
                     if (
                       NearReg.test(e.target.value) &&
@@ -434,6 +474,13 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     }
                     changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
                     changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
+                    if (!checkValueMath()) {
+                      onLink(true);
+                      nodeDropAmount.current?.classList.add('invalid');
+                    } else {
+                      onLink(false);
+                      nodeDropAmount.current?.classList.remove('invalid');
+                    }
                   }}
                 />
               )}
@@ -546,13 +593,24 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       (e.target.value[0] !== '0' ||
                         (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                       +e.target.value !== 0
+                      // &&
+                      // checkValueMath()
                     ) {
+                      // console.log(checkValueMath());
+
                       nodeDropAmount.current?.classList.remove('invalid');
                     } else {
                       nodeDropAmount.current?.classList.add('invalid');
                     }
                     changeHandler.call(null, 'dropAmountTo', e.target.value);
                     changeHandler.call(null, 'dropAmountFrom', e.target.value);
+                    if (!checkValueMath()) {
+                      onLink(true);
+                      nodeDropAmount.current?.classList.add('invalid');
+                    } else {
+                      onLink(false);
+                      nodeDropAmount.current?.classList.remove('invalid');
+                    }
                   }}
                 />
               )}
@@ -587,23 +645,33 @@ Please enter the amount in percentage."
         <Link to="/select_box" onClick={handleClick}>
           <LinksStep step="prev" label="Back" />
         </Link>
-        {(link && <div></div>) || (
-          <Link
-            to="/fill_your_box"
-            onClick={() => {
-              handleClick();
-              if (isShowDescription_tokenAmount) {
-                creationForm.nearContentItems = [];
-                creationForm.nftContentItems = [];
-              } else {
-                creationForm.ftContentItems = [];
-                creationForm.nftContentItems = [];
-              }
-            }}
-          >
-            <LinksStep step="next" label="Next step" />
-          </Link>
-        )}
+        {(link && <div></div>) ||
+          (checkValueMath() && (
+            <Link
+              to="/fill_your_box"
+              onClick={() => {
+                // console.log(checkValueMath());
+
+                handleClick();
+                console.log(creationForm);
+
+                if (isShowDescription_tokenAmount) {
+                  creationForm.nearContentItems = [];
+                  creationForm.nftContentItems = [];
+                } else {
+                  creationForm.ftContentItems = [];
+                  creationForm.nftContentItems = [];
+                }
+                onLink(false);
+                // } else {
+                //   onLink(true);
+                //   nodeDropAmount.current?.classList.add('invalid');
+                // }
+              }}
+            >
+              <LinksStep step="next" label="Next step" />
+            </Link>
+          ))}
       </div>
     </div>
   );

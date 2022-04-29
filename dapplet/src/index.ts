@@ -128,6 +128,7 @@ export default class TwitterFeature {
                 me.hidden = false;
                 me.replace = `ltbx.app/${numIndex}`;
                 await this.getClaimStatus(me, numIndex, lootboxId);
+                // me.exec = null;
                 // me.img = BOX_DEFAULT[lootboxId.pictureId];
                 // const getClaim = await this._api.claimLootbox(numIndex, wallet.accountId);
               }
@@ -142,7 +143,7 @@ export default class TwitterFeature {
     me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
     const result = await this._api._getLootboxClaimStatus(numIndex, wallet.accountId);
-
+    me.exec = null;
     if (result.status === 0) {
       me.img = BOX_DEFAULT[lootbox.pictureId];
       me.exec = () => {
@@ -161,6 +162,7 @@ export default class TwitterFeature {
 
   async getClaimLoot(me, numIndex, lootbox): Promise<void> {
     me.img = { DARK: boxDef, LIGHT: White };
+    me.exec = null;
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
     const getLootboxClaim = await this._api
       ._claimLootbox(numIndex, wallet.accountId)
@@ -201,8 +203,7 @@ export default class TwitterFeature {
 
     if (x.ftContentItems.length !== 0) {
       x.ftContentItems.map(
-        (x) =>
-          (text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
+        (x) => (text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
       );
     } else if (x.nearContentItems.length !== 0) {
       x.nearContentItems.map((x) => (text = `You win: ${x.tokenAmount} $NEAR`));

@@ -13,7 +13,7 @@ import {
   LootboxWinner,
   BoxCreationPrice,
 } from '../../common/interfaces';
-import { } from '@dapplets/dapplet-extension';
+import {} from '@dapplets/dapplet-extension';
 import Avatar from './icons/Lootbox.png';
 
 import { StatisticsNear, StatisticsWinners, StatisticsCode } from './components/statisticsNear';
@@ -52,7 +52,7 @@ const EMPTY_FORM: Lootbox = {
   nftContentItems: [],
   nearContentItems: [],
   pictureId: 0,
-  id: "0",
+  id: '0',
   status: 'created',
 };
 
@@ -76,6 +76,7 @@ export default () => {
   const [loader, setLoader] = useState(false);
 
   const [winInfo, setWinInfo] = useState('');
+  const [isLoadLootbox, setLoadLootbox] = useState(false);
 
   // const [imgSelect, setImgSelect] = useState('');
 
@@ -91,6 +92,7 @@ export default () => {
   useEffect(() => {
     dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
     dappletApi.isWalletConnected().then(async (isWalletConnected) => {
+      setLoadLootbox(true);
       let accountName: string | undefined;
       if (isWalletConnected) {
         accountName = await dappletApi.getCurrentNearAccount();
@@ -98,6 +100,7 @@ export default () => {
           setLootboxes(x);
         });
       }
+      setLoadLootbox(false);
       setNearAccount(accountName);
     });
     // const contract = await Core.contract('near', 'dev-1634890606019-41631155713650', {
@@ -136,20 +139,24 @@ export default () => {
 
     Promise.all([
       api.getLootboxClaims(selectedLootboxId.toString()),
-      dappletApi.getLootboxWinners(selectedLootboxId)
-    ]).then(([claims, winners]) => {
-      setWinners(winners.map(x => {
-        const txHash = claims.find((y: any) => y.signerId === x.nearAccount)?.hash;
-        return ({
-          ...x,
-          txLink: txHash ? `https://explorer.testnet.near.org/transactions/${txHash}` : ''
-        });
-      }));
-    }).catch((e) => {
-      console.error('getLootboxWinners', e);
+      dappletApi.getLootboxWinners(selectedLootboxId),
+    ])
+      .then(([claims, winners]) => {
+        setWinners(
+          winners.map((x) => {
+            const txHash = claims.find((y: any) => y.signerId === x.nearAccount)?.hash;
+            return {
+              ...x,
+              txLink: txHash ? `https://explorer.testnet.near.org/transactions/${txHash}` : '',
+            };
+          }),
+        );
+      })
+      .catch((e) => {
+        console.error('getLootboxWinners', e);
 
-      // ToDo: show error to user
-    });
+        // ToDo: show error to user
+      });
   }, [selectedLootboxId]);
 
   useEffect(() => {
@@ -213,155 +220,173 @@ export default () => {
       }
     });
   };
+  // console.log(getWin(selectedLootboxId));
 
   return (
-    <div className={cn(styles.app)}>
-      <header style={{ justifyContent: nearAccount ? 'space-between' : 'center' }}>
-        {!nearAccount ? (
-          <LogInButton label="Log in " onClick={handleLogInBtn} />
-        ) : (
-          <>
-            <Profile
-              avatar={Avatar}
-              hash={nearAccount}
-              onClick={handleLogIn}
-              openChange={onOpenProfile}
-              isOpenProfile={isOpenProfile}
-            />
-          </>
-        )}
-      </header>
-
-      <Routes>
-        <Route
-          path="/"
-          element={
-            // (loader && <Preloader />) || (
-            <CreateNewBox winInfo={winInfo} imgVal={imgBox} label={valueLabel}>
-              {lootboxes.map((item, index) => (
-                <ChildComponent
-                  onClick={() => {
-                    setLootboxes(lootboxes);
-                    setSelectedLootboxId(item.id!);
-                  }}
-                  imgVal={IMG[item.pictureId]}
-                  label={String(item.id!)}
-                  number={index}
-                  key={index}
-                  id={item.id!}
-                  creationForm={creationForm}
-                  status={item.status!}
-                  winInfo={item}
+    <>
+      {isLoadLootbox ? (
+        <Preloader />
+      ) : (
+        <div className={cn(styles.app)}>
+          <header style={{ justifyContent: nearAccount ? 'space-between' : 'center' }}>
+            {!nearAccount ? (
+              <LogInButton label="Log in " onClick={handleLogInBtn} />
+            ) : (
+              <>
+                <Profile
+                  avatar={Avatar}
+                  hash={nearAccount}
+                  onClick={handleLogIn}
+                  openChange={onOpenProfile}
+                  isOpenProfile={isOpenProfile}
                 />
-              ))}
-            </CreateNewBox>
-            // )
-          }
-        ></Route>
-        <Route
-          path="/select_box"
-          element={
-            <SelectBox
-              setClicked={setClickedBoxImg}
-              clicked={clickedBoxImg}
-              onChange_IMG={(x: string) => {
-                setImgBox(x);
-                // updateImgSelect(x);
-              }}
-              creationFormId={creationForm.pictureId}
-              onCreationFormUpdate={(id: number) =>
-                setCreationForm({
-                  ...creationForm,
-                  pictureId: id,
-                })
+              </>
+            )}
+          </header>
+
+          <Routes>
+            <Route
+              path="/"
+              element={
+                (loader && <Preloader />) || (
+                  <CreateNewBox winInfo={winInfo} imgVal={imgBox} label={valueLabel}>
+                    {lootboxes.map((item, index) => (
+                      <ChildComponent
+                        onClick={() => {
+                          setLootboxes(lootboxes);
+                          setSelectedLootboxId(item.id!);
+                        }}
+                        imgVal={IMG[item.pictureId]}
+                        label={String(item.id!)}
+                        number={index}
+                        key={index}
+                        id={item.id!}
+                        creationForm={creationForm}
+                        status={item.status!}
+                        winInfo={item}
+                      />
+                    ))}
+                  </CreateNewBox>
+                )
+              }
+            ></Route>
+            <Route
+              path="/select_box"
+              element={
+                <SelectBox
+                  setClicked={setClickedBoxImg}
+                  clicked={clickedBoxImg}
+                  onChange_IMG={(x: string) => {
+                    setImgBox(x);
+                    // updateImgSelect(x);
+                  }}
+                  creationFormId={creationForm.pictureId}
+                  onCreationFormUpdate={(id: number) =>
+                    setCreationForm({
+                      ...creationForm,
+                      pictureId: id,
+                    })
+                  }
+                />
               }
             />
-          }
-        />
 
-        <Route
-          path="/box_settings_value"
-          element={
-            <SettingDef
-              creationForm={creationForm}
-              onCreationFormUpdate={(x) => setCreationForm(x)}
+            <Route
+              path="/box_settings_value"
+              element={
+                <SettingDef
+                  creationForm={creationForm}
+                  onCreationFormUpdate={(x) => setCreationForm(x)}
+                />
+              }
             />
-          }
-        />
-        <Route
-          path="/settings_token"
-          element={
-            <SettingsToken
-              creationForm={creationForm}
-              onCreationFormUpdate={(x) => setCreationForm(x)}
+            <Route
+              path="/settings_token"
+              element={
+                <SettingsToken
+                  creationForm={creationForm}
+                  onCreationFormUpdate={(x) => setCreationForm(x)}
+                />
+              }
             />
-          }
-        />
-        <Route
-          path="/settings_NFT"
-          element={
-            <SettingsNFT
-              creationForm={creationForm}
-              onCreationFormUpdate={(x) => setCreationForm(x)}
+            <Route
+              path="/settings_NFT"
+              element={
+                <SettingsNFT
+                  creationForm={creationForm}
+                  onCreationFormUpdate={(x) => setCreationForm(x)}
+                />
+              }
             />
-          }
-        />
-        <Route
-          path="/fill_your_box"
-          element={
-            (loader && <Preloader />) || (
-              <FillBox
-                price={price}
-                imgVal={IMG[creationForm.pictureId]}
-                onDoneClick={doneClickHandler}
-                creationForm={creationForm}
-                winInfo={winInfo}
-                setWinInfo={(x) => setWinInfo(x)}
-                onCreationFormUpdate={(x) => setCreationForm(x)}
-              />
-            )
-          }
-        />
+            <Route
+              path="/fill_your_box"
+              element={
+                (loader && <Preloader />) || (
+                  <FillBox
+                    price={price}
+                    imgVal={IMG[creationForm.pictureId]}
+                    onDoneClick={doneClickHandler}
+                    creationForm={creationForm}
+                    winInfo={winInfo}
+                    setWinInfo={(x) => setWinInfo(x)}
+                    onCreationFormUpdate={(x) => setCreationForm(x)}
+                  />
+                )
+              }
+            />
 
-        <Route
-          path="/fill_your_box_nft"
-          element={
-            (loader && <Preloader />) || (
-              <FillBox_Nft
-                creationForm={creationForm}
-                price={price}
-                winInfo={winInfo}
-                setWinInfo={(x) => setWinInfo(x)}
-                imgVal={IMG[creationForm.pictureId]}
-                onDoneClick={doneClickHandler}
-              />
-            )
-          }
-        />
-        <Route
-          path="/deploy_your_box"
-          element={
-            (loader && <Preloader />) || (
-              <DeployBox winInfo={winInfo} id={selectedLootboxId} onChange={onChange} />
-            )
-          }
-        />
-        <Route
-          path="/statistics"
-          element={(loader && <Preloader />) || <StatisticsNear stat={stat} />}
-        />
-        <Route
-          path="/winners"
-          element={(loader && <Preloader />) || <StatisticsWinners winners={winners} />}
-        />
-        <Route
-          path="/code"
-          element={
-            (loader && <Preloader />) || <StatisticsCode id={selectedLootboxId} winInfo={winInfo} />
-          }
-        />
-      </Routes>
-    </div>
+            <Route
+              path="/fill_your_box_nft"
+              element={
+                (loader && <Preloader />) || (
+                  <FillBox_Nft
+                    creationForm={creationForm}
+                    price={price}
+                    winInfo={winInfo}
+                    setWinInfo={(x) => setWinInfo(x)}
+                    imgVal={IMG[creationForm.pictureId]}
+                    onDoneClick={doneClickHandler}
+                  />
+                )
+              }
+            />
+            <Route
+              path="/deploy_your_box"
+              element={
+                (loader && <Preloader />) || (
+                  <DeployBox winInfo={winInfo} id={selectedLootboxId} onChange={onChange} />
+                )
+              }
+            />
+            <Route
+              path="/statistics"
+              element={(loader && <Preloader />) || <StatisticsNear stat={stat} />}
+            />
+            <Route
+              path="/winners"
+              element={
+                (loader && <Preloader />) || (
+                  <StatisticsWinners
+                    id={selectedLootboxId}
+                    // getWin={getWin}
+                    // winInfo={winInfo}
+                    winners={winners}
+                  />
+                )
+              }
+            />
+            <Route
+              path="/code"
+              element={
+                (loader && <Preloader />) || (
+                  <StatisticsCode id={selectedLootboxId} winInfo={winInfo} />
+                )
+              }
+            />
+          </Routes>
+        </div>
+      )}
+    </>
   );
 };
 function then(arg0: (x: any) => void) {

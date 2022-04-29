@@ -15,6 +15,7 @@ import { StatisticsLink } from '../atoms/StatisticsLink';
 
 export interface WinnerProps {
   winners: any;
+  // getWin: any;
 }
 export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   const { winners } = props;
@@ -44,7 +45,6 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
                 </a>
               </td>
               {/* </div> */}
-
             </tr>
           ))}
         </tbody>
