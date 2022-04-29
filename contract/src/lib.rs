@@ -116,6 +116,14 @@ pub struct OnNftTransferArgs {
     pub lootbox_id: U64
 }
 
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct OnFtTransferArgs {
+    pub lootbox_id: U64,
+    pub drop_amount_from: U128, 
+    pub drop_amount_to: U128
+}
+
 //used to generate a unique prefix in our storage collections (this is to avoid data collisions)
 pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
     let mut hash = CryptoHash::default();
@@ -299,6 +307,7 @@ impl Contract {
         );
         assert_eq!(previous_owner_id, signer_id, "Lootbox: previous_owner_id should be signer_id");
         assert_eq!(previous_owner_id, sender_id, "Lootbox: previous_owner_id should be sender_id");
+        assert_eq!(signer_id, sender_id, "Lootbox: signer_id should be sender_id");
 
         // ToDo: accept only approved NFT contracts
         // Example: https://github.com/ParasHQ/paras-marketplace-contract/blob/6a9d96adfaead4210499993f78f22b599a6f78d1/paras-marketplace-contract/src/nft_callbacks.rs#L64-L67
@@ -319,6 +328,39 @@ impl Contract {
         env::log_str(&format!("NFT {} / {} added to lootbox {}", nft_contract_id, token_id, lootbox_id.0));
 
         PromiseOrValue::Value(false) // NFT should not be returned to `sender_id`
+    }
+
+    pub fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> PromiseOrValue<U128> {
+        let ft_contract_id = env::predecessor_account_id();
+        let signer_id = env::signer_account_id();
+        assert_ne!(
+            env::current_account_id(), ft_contract_id,
+            "Lootbox: ft_on_approve should only be called via cross-contract call"
+        );
+        assert_eq!(signer_id, sender_id, "Lootbox: signer_id should be sender_id");
+
+        let OnFtTransferArgs { lootbox_id, drop_amount_from, drop_amount_to } = serde_json::from_str(&msg).expect("Not valid NftTransferArgs");
+
+        let mut lootbox = self.lootboxes_by_id.get(lootbox_id.0).expect("Lootbox: non-existent id");
+
+        assert_eq!(lootbox.owner_id, signer_id, "Lootbox: only owner can top up a lootbox");
+        assert_ne!(lootbox.status, LootboxStatus::Dropping, "Lootbox: already dropping");
+
+        let ft_loot = LootItem::Ft { 
+            token_contract: ft_contract_id.clone(), 
+            total_amount: amount, 
+            drop_amount_from, 
+            drop_amount_to, 
+            balance: amount 
+        };
+        lootbox.loot_items.push(ft_loot);
+        lootbox.status = LootboxStatus::Filled;
+
+        self.lootboxes_by_id.replace(lootbox_id.0, &lootbox);
+
+        env::log_str(&format!("FT {} / {} added to lootbox {}", ft_contract_id, amount.0, lootbox_id.0));
+
+        PromiseOrValue::Value(U128::from(0))
     }
 
     // /*

@@ -14,6 +14,8 @@ import * as format from './format';
 const { parseNearAmount, formatNearAmount } = Core.near.utils.format;
 const { transactions } = Core.near;
 
+const MAX_GAS_PER_TX = 300000000000000;
+
 export class DappletApi implements IDappletApi {
   private _contract = Core.contract('near', 'dev-1651241153572-71089672213750', {
     viewMethods: [
@@ -70,7 +72,7 @@ export class DappletApi implements IDappletApi {
     const contract = await this._contract;
     const prices = await this.calcBoxCreationPrice(lootbox);
     const lootboxStruct = this._convertLootboxToContract(lootbox);
-    
+
     const nftItems = lootboxStruct.loot_items.filter((x) => 'Nft' in x).map((x) => x['Nft']);
     const ftItems = lootboxStruct.loot_items.filter((x) => 'Ft' in x).map((x) => x['Ft']);
 
@@ -82,29 +84,89 @@ export class DappletApi implements IDappletApi {
       contract.contractId,
       'create_lootbox',
       lootboxStruct,
-      new BN('300000000000000'),
+      new BN(MAX_GAS_PER_TX.toString()),
       parseNearAmount(prices.fillAmount),
     );
 
     const debased64 = atob(receipt.status.SuccessValue);
     const lootboxId = JSON.parse(debased64);
-    
+
     // send transactions for nft transfering
     if (nftItems.length > 0) {
       // nfts from one contract are able to transfer in one batch tx
       const nftItemsByContract = groupBy(nftItems, 'token_contract');
       for (const contractId in nftItemsByContract) {
         const tokenIds = nftItemsByContract[contractId].map((x) => x.token_id);
+
         const actions = tokenIds.map((x) =>
           transactions.functionCall(
             'nft_transfer_call',
             {
               token_id: x,
               receiver_id: contract.contractId,
-              msg: JSON.stringify({ lootbox_id: lootboxId })
+              msg: JSON.stringify({ lootbox_id: lootboxId }),
             },
-            new BN(Math.floor(300000000000000 / tokenIds.length).toString()), // split 300 Tgas for every action
+            new BN(Math.floor(MAX_GAS_PER_TX / tokenIds.length).toString()), // split 300 Tgas for every action
             new BN('1'), // 1 yoctoNEAR is required for NFT transfering
+          ),
+        );
+
+        await contract.account.signAndSendTransaction(contractId, actions);
+      }
+    }
+
+    // send transactions for ft transfering
+    if (ftItems.length > 0) {
+      // ft from one contract are able to transfer in one batch tx
+      const ftItemsByContract = groupBy(ftItems, 'token_contract');
+      for (const contractId in ftItemsByContract) {
+        const fts = ftItemsByContract[contractId];
+
+        const storageBalance = await contract.account.viewFunction(
+          contractId,
+          'storage_balance_of',
+          { account_id: contract.contractId },
+        );
+
+        const actions = [];
+        const actionsCount = !storageBalance ? fts.length + 1 : fts.length;
+
+        // top up storage balance for new tokens
+        if (!storageBalance) {
+          const balanceBounds = await contract.account.viewFunction(
+            contractId,
+            'storage_balance_bounds',
+            {},
+          );
+
+          const storageDepositAction = transactions.functionCall(
+            'storage_deposit',
+            {
+              account_id: contract.contractId,
+            },
+            new BN(Math.floor(MAX_GAS_PER_TX / actionsCount).toString()), // split 300 Tgas for every action
+            new BN(balanceBounds.min),
+          );
+
+          actions.push(storageDepositAction);
+        }
+
+        actions.push(
+          ...fts.map((x) =>
+            transactions.functionCall(
+              'ft_transfer_call',
+              {
+                receiver_id: contract.contractId,
+                amount: x.total_amount,
+                msg: JSON.stringify({
+                  lootbox_id: lootboxId,
+                  drop_amount_from: x.drop_amount_from,
+                  drop_amount_to: x.drop_amount_to,
+                }),
+              },
+              new BN(Math.floor(MAX_GAS_PER_TX / actionsCount).toString()), // split 300 Tgas for every action
+              new BN('1'), // 1 yoctoNEAR is required for FT transfering
+            ),
           ),
         );
 
@@ -135,7 +197,7 @@ export class DappletApi implements IDappletApi {
     return {
       feeAmount: '0',
       fillAmount: formatNearAmount(fillAmount),
-      gasAmount: formatNearAmount('300000000000000'),
+      gasAmount: formatNearAmount(MAX_GAS_PER_TX.toString()),
       totalAmount: formatNearAmount(sum('0', fillAmount, parseNearAmount('0.01'))),
     };
   }
@@ -271,7 +333,7 @@ export class DappletApi implements IDappletApi {
       {
         lootbox_id: lootboxId.toString(),
       },
-      new BN('300000000000000'),
+      new BN(MAX_GAS_PER_TX.toString()),
     );
 
     const result = JSON.parse(atob(receipt.status.SuccessValue));
