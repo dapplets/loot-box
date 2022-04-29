@@ -7,14 +7,15 @@ import {
   LootboxClaimResult,
   FtMetadata,
 } from '../../common/interfaces';
-import { sum } from './helpers';
+import { sum, groupBy } from './helpers';
 import { BN } from './bn.js';
 import * as format from './format';
 
 const { parseNearAmount, formatNearAmount } = Core.near.utils.format;
+const { transactions } = Core.near;
 
 export class DappletApi implements IDappletApi {
-  private _contract = Core.contract('near', 'dev-1650928735605-51635263468190', {
+  private _contract = Core.contract('near', 'dev-1651162408741-46233879712819', {
     viewMethods: [
       'get_lootbox_by_id',
       'get_lootboxes_by_account',
@@ -67,9 +68,42 @@ export class DappletApi implements IDappletApi {
 
   async createNewBox(lootbox: Lootbox): Promise<string> {
     const contract = await this._contract;
+    const { account } = contract;
+
     const prices = await this.calcBoxCreationPrice(lootbox);
 
     const lootboxStruct = this._convertLootboxToContract(lootbox);
+
+    const nftItems = lootboxStruct.loot_items.filter((x) => 'Nft' in x).map((x) => x['Nft']);
+
+    const approveResults = await Promise.all(nftItems.map((x) =>
+      account.viewFunction(x.token_contract, 'nft_is_approved', {
+        token_id: x.token_id,
+        approved_account_id: 'dev-1651162408741-46233879712819',
+      }).then(is_approved => ({ ...x, is_approved }))
+    ));
+
+    const nonApprovedNftItems = approveResults.filter(x => x.is_approved === false);
+
+    if (nonApprovedNftItems.length > 0) {
+      const nftItemsByContract = groupBy(nonApprovedNftItems, 'token_contract');
+      for (const contractId in nftItemsByContract) {
+        const tokenIds = nftItemsByContract[contractId].map((x) => x.token_id);
+        const actions = tokenIds.map((x) =>
+          transactions.functionCall(
+            'nft_approve',
+            {
+              token_id: x,
+              account_id: contract.contractId,
+            },
+            new BN(Math.floor(300000000000000 / tokenIds.length).toString()), // split 300 Tgas for every action
+            new BN('1000000000000000000000'), // for storage More info: https://github.com/near/near-sdk-rs/blob/fe6b193ec14d2fc2a0b9030b61892e37d7ad835f/near-contract-standards/src/non_fungible_token/utils.rs#L5
+          ),
+        );
+
+        const result = await account.signAndSendTransaction(contractId, actions);
+      }
+    }
 
     const receipt = await contract.account.functionCall(
       contract.contractId,

@@ -38,26 +38,9 @@ export function getMilliseconds(seconds: number): number {
   return seconds * 1000;
 }
 
-// /**
-//  * Decorator for async methods caching promises until it's not fulfilled.
-//  * Prevents execution of multiple promises at the same time.
-//  */
-//  export function CacheMethod() {
-//   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-//     const symbol = Symbol();
-//     const originMethod = descriptor.value;
-//     descriptor.value = function (...args: any[]) {
-//       const me = this as any;
-//       if (!me[symbol]) {
-//         const result = originMethod.bind(me)(...args);
-//         if (result instanceof Promise) {
-//           me[symbol] = result;
-//         } else {
-//           throw new Error("CachePromise decorator must be applied on async method.");
-//         }
-//       }
-//       return me[symbol];
-//     }
-//     return descriptor;
-//   };
-// }
+export function groupBy<T>(xs: T[], key: string): { [group_key: string]: T[] } {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};

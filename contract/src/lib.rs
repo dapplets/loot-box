@@ -8,14 +8,16 @@ use near_contract_standards::non_fungible_token::{Token};
 
 const NO_DEPOSIT: Balance = 0;
 const ONE_YOCTO: Balance = 1;
-const BASE_GAS: Gas = Gas(5_000_000_000_000);
-const GAS_FOR_NFT_CHECK_OWNERSHIP: Gas = Gas(30_000_000_000_000);
+const BASE_GAS: Gas = Gas(20_000_000_000_000);
+const GAS_FOR_NFT_CHECK_OWNERSHIP: Gas = Gas(100_000_000_000_000);
+const GAS_FOR_LOOTBOX_CREATION: Gas = Gas(20_000_000_000_000);
 
 #[ext_contract(ext_nft)]
 trait NonFungibleToken {
     fn nft_transfer(&mut self, receiver_id: String, token_id: String, approval_id: Option<u64>, memo: Option<String>);
     fn nft_transfer_call(&mut self, receiver_id: String, token_id: String, approval_id: Option<u64>, memo: Option<String>, msg: String) -> bool;
     fn nft_token(&self, token_id: String) -> Option<Token>;
+    // fn nft_is_approved(&self, token_id: TokenId, approved_account_id: AccountId, approval_id: Option<u64>) -> bool;
 }
 
 #[ext_contract(ext_ft)]
@@ -28,9 +30,10 @@ trait FungibleToken {
 
 #[ext_contract(ext_self)]
 trait SelfContract {
-    fn callback_assert_nft_ownership();
-    fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64;
+    fn callback_assert_nft_ownership(&mut self, lootbox_creator_address: AccountId);
+    fn callback_transfer_tokens(&mut self, loot_items: Vec<LootItem>) -> Promise;
     fn callback_return_claim_result(claim_result: ClaimResult) -> ClaimResult;
+    fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64;
 }
 
 pub type LootboxId = u64;
@@ -76,7 +79,7 @@ pub enum ClaimResult {
     WinNft { lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, token_id: String },
 }
 
-#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub enum LootItem {
     Near { total_amount: U128, drop_amount_from: U128, drop_amount_to: U128, balance: U128 },
@@ -238,6 +241,7 @@ impl Contract {
                     let promise = ext_nft::nft_token(token_id.to_string(), token_contract.clone(), NO_DEPOSIT, BASE_GAS)
                         .then(
                             ext_self::callback_assert_nft_ownership(
+                                env::predecessor_account_id(),
                                 env::current_account_id(),
                                 NO_DEPOSIT,
                                 GAS_FOR_NFT_CHECK_OWNERSHIP,
@@ -286,16 +290,24 @@ impl Contract {
         }
 
         match promises {
-            Some(x) => Either::Left(x.then(ext_self::callback_register_lootbox(
-                env::predecessor_account_id(),
-                picture_id, 
-                drop_chance, 
-                loot_items,
-                env::current_account_id(),
-                NO_DEPOSIT,
-                GAS_FOR_NFT_CHECK_OWNERSHIP,
-            ))),
-            None => Either::Right(self.internal_register_lootbox(
+            Some(x) => Either::Left(
+                x.then(ext_self::callback_transfer_tokens(
+                    loot_items.to_vec(),
+                    env::current_account_id(),
+                    NO_DEPOSIT,
+                    GAS_FOR_NFT_CHECK_OWNERSHIP,
+                ))
+                .then(ext_self::callback_register_lootbox(
+                    env::predecessor_account_id(),
+                    picture_id, 
+                    drop_chance, 
+                    loot_items,
+                    env::current_account_id(),
+                    NO_DEPOSIT,
+                    GAS_FOR_LOOTBOX_CREATION,
+                ))
+            ),
+            None => Either::Right(self.callback_register_lootbox(
                 env::predecessor_account_id(),
                 picture_id, 
                 drop_chance, 
@@ -305,11 +317,12 @@ impl Contract {
     }
 
     #[private]
-    pub fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {  
+    pub fn callback_transfer_tokens(&mut self, loot_items: Vec<LootItem>) -> Promise {  
         let promises_count = env::promise_results_count();
         assert_ne!(promises_count, 0, "This is a callback method");
-        
-        for n in 0..(promises_count - 1) {
+
+        // Do not create a lootbox if async checkings are failed
+        for n in 0..promises_count {
             match env::promise_result(n) {
                 PromiseResult::NotReady => env::panic_str("NotReady"),
                 PromiseResult::Failed => env::panic_str("Failed"),
@@ -317,10 +330,53 @@ impl Contract {
             }
         }
 
-        self.internal_register_lootbox(owner_id, picture_id, drop_chance, loot_items)
+        let mut promises: Option<Promise> = None;
+        
+        for item in &loot_items {
+            match item {
+                LootItem::Near { total_amount: _, drop_amount_from: _, drop_amount_to:_, balance:_ } => {
+                    // Do nothing
+                },
+                LootItem::Nft { token_contract, token_id } => {
+                    let promise = ext_nft::nft_transfer(
+                        env::current_account_id().to_string(),
+                        token_id.clone(),
+                        None,
+                        None,
+                        token_contract.clone(),
+                        ONE_YOCTO,
+                        BASE_GAS
+                    );
+
+                    promises = match promises {
+                        Some(x) => Some(x.and(promise)),
+                        None => Some(promise)
+                    };
+                },
+                LootItem::Ft { token_contract: _, total_amount: _, drop_amount_from: _, drop_amount_to: _, balance: _ } => {
+                    // Do nothing
+                }
+            }
+        }
+
+        promises.expect("Unreachable code")
     }
 
-    fn internal_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {
+    #[private]
+    pub fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64 {
+        let promises_count = env::promise_results_count();
+        
+        if promises_count != 0 {
+            // Do not create a lootbox if async checkings are failed
+            for n in 0..promises_count {
+                match env::promise_result(n) {
+                    PromiseResult::NotReady => env::panic_str("NotReady"),
+                    PromiseResult::Failed => env::panic_str("Failed"),
+                    PromiseResult::Successful(_) => {},
+                }
+            }
+        }     
+
         let lootbox = Lootbox {
             id: self.lootboxes_by_id.len().into(),
             owner_id: owner_id,
@@ -349,13 +405,30 @@ impl Contract {
         lootbox.id
     }
 
+    /*
+        The function panics if NFT's owner is not a lootbox creator
+        or the lootbox contract is not approved in NFT.
+    */
     #[private]
-    pub fn callback_assert_nft_ownership(&mut self) {
+    pub fn callback_assert_nft_ownership(&mut self, lootbox_creator_address: AccountId) {
         let token_serialized = promise_result_as_success().expect("NFT contract did not respond");
         let token = near_sdk::serde_json::from_slice::<Token>(&token_serialized).ok().expect("Cannot deserialize response from NFT");
+        let lootbox_contract_address = env::current_account_id();
 
-        if token.owner_id != env::current_account_id() {
-            env::panic_str("NFT must be transferred to lootbox contract");
+        env::log_str(&lootbox_contract_address.to_string());
+        env::log_str(&lootbox_creator_address.to_string());
+
+        if token.owner_id != lootbox_creator_address {
+            env::panic_str("You are not an owner of NFT");
+        }
+
+        match token.approved_account_ids {
+            Some(x) => {
+                if !x.contains_key(&lootbox_contract_address) {
+                    env::panic_str("NFT is not approved");
+                }
+            },
+            None => env::panic_str("NFT is not approved")
         }
     }
 
