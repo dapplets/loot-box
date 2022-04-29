@@ -34,6 +34,7 @@ export interface ChildComponentProps {
   // onChange: (x: any) => void;
   nodeNftContract: any;
   nodeQuanity: any;
+  // getWin: any;
   // className: string;
 }
 
@@ -44,6 +45,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
     onNftUpdated,
     nodeNftContract,
     nodeQuanity,
+    // getWin,
     //  innerRef
     // onChange,
     // className,
@@ -120,19 +122,19 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
       <div className={styles.addNFT}>
         <div className={styles.inputCustomNFT}>
           <div>
-          <InputPanel
-            type="string"
-            appearance="medium_big"
-            placeholder="Contract Address"
-            // className={className}
-            value={nftItem.contractAddress ?? ''}
-            onChange={(e) => {
-              changeHandler('contractAddress', e.target.value);
-            }}
-            // pattern="^[0-9]\d*.{2}$"
-            // innerRef={nodeNftContract}
-          />
-          </div> 
+            <InputPanel
+              type="string"
+              appearance="medium_big"
+              placeholder="Contract Address"
+              // className={className}
+              value={nftItem.contractAddress ?? ''}
+              onChange={(e) => {
+                changeHandler('contractAddress', e.target.value);
+              }}
+              // pattern="^[0-9]\d*.{2}$"
+              // innerRef={nodeNftContract}
+            />
+          </div>
           <InputPanel
             type="string"
             appearance="small_mini"

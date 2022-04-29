@@ -25,15 +25,13 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   const { imgVal, price, onDoneClick, creationForm, winInfo, setWinInfo } = props;
   const [winInfoNft, setWinInfoNft] = useState(winInfo);
   useEffect(() => {
-    let sumQuantity = 0;
-
+    // let sumQuantity = 0;
     // for (let i = 0; i < creationForm.nftContentItems.length; i++) {
     //   sumQuantity += +creationForm.nftContentItems[i].quantity!;
     // }
-
-    const winNft = String(sumQuantity) + ` NFT`;
-    setWinInfoNft(winNft);
-    setWinInfo(winNft);
+    // const winNft = String(sumQuantity) + ` NFT`;
+    // setWinInfoNft(winNft);
+    // setWinInfo(winNft);
   }, []);
 
   // setWinInfo(winNft);
@@ -42,11 +40,11 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
       <SettingTitle title="Fill your box" isActive />
       <div className={cn(styles.img)}>
         <img src={imgVal} />
-        <span className={styles.spanWin}>{winInfoNft}</span>
+        <span className={styles.spanWin}>1 NFT</span>
       </div>
       <div className={styles.textNft}>
-        You need to tranfer selected NFTs to dev-1650928735605-51635263468190 account. When all NFTs are tranferred,
-        please click the button below.
+        You need to tranfer selected NFTs to dev-1650928735605-51635263468190 account. When all NFTs
+        are tranferred, please click the button below.
       </div>
       <div className={cn(styles.payBtn_block)}>
         <ButtonPay styleBtn="disable" title="NFTs transferred" />

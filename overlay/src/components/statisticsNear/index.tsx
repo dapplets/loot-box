@@ -56,11 +56,18 @@ export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNea
 };
 export interface StatisticsNearPropsWinner {
   winners: any;
+  // getWin?: any;
+  id?: any;
+  // winInfo: any;
 }
 export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
   props: StatisticsNearPropsWinner,
 ) => {
-  const { winners } = props;
+  const { winners, id } = props;
+  console.log(id);
+  // getWin(id);
+  // console.log(winInfo);
+  console.log(winners);
 
   return (
     <div className={cn(styles.wrapper)}>

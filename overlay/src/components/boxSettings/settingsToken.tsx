@@ -98,41 +98,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const booleanNodeFrom = nodeFrom.current?.classList.contains('invalid');
   const booleanNodeTo = nodeTo.current?.classList.contains('invalid');
   const booleanNodeDropAmount = nodeDropAmount.current?.classList.contains('invalid');
-  const LinkBlock = useMemo(() => {
-    if (
-      (creationForm.nearContentItems.length !== 0 || creationForm.ftContentItems.length !== 0) &&
-      booleanNodeTokenAmount != true &&
-      booleanNodeTokenContract != true &&
-      booleanNodeTokenTicer != true &&
-      booleanNodeFrom != true &&
-      booleanNodeTo != true &&
-      booleanNodeDropAmount != true
-    ) {
-      if (
-        (creationForm.nearContentItems[0].tokenAmount.length >= 1 &&
-          creationForm.nearContentItems[0].dropAmountFrom.length >= 1 &&
-          creationForm.nearContentItems[0].dropAmountTo.length >= 1) ||
-        (creationForm.ftContentItems[0].tokenAmount.length >= 1 &&
-          creationForm.ftContentItems[0].dropAmountFrom.length >= 1 &&
-          creationForm.ftContentItems[0].dropAmountTo.length >= 1 &&
-          creationForm.ftContentItems[0].contractAddress.length >= 1)
-      ) {
-        onLink(false);
-      } else {
-        // console.log(nameClassInput);
-        onLink(true);
-      }
-    } else {
-      onLink(true);
-      // console.log(checkValueMath());
-    }
-  }, [
-    creationForm,
-    link,
-    nodeTokenAmount,
-    isShowDescription_tokenAmount,
-    isShowDescription_dropAmount,
-  ]);
 
   const changeHandler = (name: keyof NearContentItem, value: any) => {
     const newForm = Object.assign({}, creationForm);
@@ -210,14 +175,16 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   };
   const checkValueMath = () => {
     if (
-      (Number(creationForm.nearContentItems[0].tokenAmount) >=
-        Number(creationForm.nearContentItems[0].dropAmountFrom) &&
+      (creationForm.nearContentItems[0] &&
+        Number(creationForm.nearContentItems[0].tokenAmount) >=
+          Number(creationForm.nearContentItems[0].dropAmountFrom) &&
         Number(creationForm.nearContentItems[0].tokenAmount) %
           Number(creationForm.nearContentItems[0].dropAmountFrom) ===
           0 &&
         creationForm.nearContentItems[0].dropType === 'fixed') ||
-      (Number(creationForm.ftContentItems[0].tokenAmount) >=
-        Number(creationForm.ftContentItems[0].dropAmountFrom) &&
+      (creationForm.ftContentItems[0] &&
+        Number(creationForm.ftContentItems[0].tokenAmount) >=
+          Number(creationForm.ftContentItems[0].dropAmountFrom) &&
         Number(creationForm.ftContentItems[0].tokenAmount) %
           Number(creationForm.ftContentItems[0].dropAmountFrom) ===
           0 &&
@@ -225,14 +192,53 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     ) {
       return true;
     } else if (
-      creationForm.nearContentItems[0].dropType === 'variable' ||
-      creationForm.ftContentItems[0].dropType === 'variable'
+      (creationForm.nearContentItems[0] &&
+        creationForm.nearContentItems[0].dropType === 'variable') ||
+      (creationForm.ftContentItems[0] && creationForm.ftContentItems[0].dropType === 'variable')
     ) {
       return true;
     } else {
       return false;
     }
   };
+  const LinkBlock = useMemo(() => {
+    if (
+      (creationForm.nearContentItems.length !== 0 || creationForm.ftContentItems.length !== 0) &&
+      booleanNodeTokenAmount != true &&
+      booleanNodeTokenContract != true &&
+      booleanNodeTokenTicer != true &&
+      booleanNodeFrom != true &&
+      booleanNodeTo != true &&
+      booleanNodeDropAmount != true
+    ) {
+      if (
+        (creationForm.nearContentItems[0] &&
+          creationForm.nearContentItems[0].tokenAmount &&
+          creationForm.nearContentItems[0].tokenAmount.length >= 1 &&
+          creationForm.nearContentItems[0].dropAmountFrom.length >= 1 &&
+          creationForm.nearContentItems[0].dropAmountTo.length >= 1) ||
+        (creationForm.ftContentItems[0] &&
+          creationForm.ftContentItems[0].tokenAmount.length >= 1 &&
+          creationForm.ftContentItems[0].dropAmountFrom.length >= 1 &&
+          creationForm.ftContentItems[0].dropAmountTo.length >= 1 &&
+          creationForm.ftContentItems[0].contractAddress.length >= 1)
+      ) {
+        onLink(false);
+      } else {
+        // console.log(nameClassInput);
+        onLink(true);
+      }
+    } else {
+      onLink(true);
+      // console.log(checkValueMath());
+    }
+  }, [
+    creationForm,
+    link,
+    nodeTokenAmount,
+    isShowDescription_tokenAmount,
+    isShowDescription_dropAmount,
+  ]);
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -268,9 +274,17 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     nodeTokenAmount.current?.classList.add('invalid');
                   }
                   if (isShowDescription_tokenAmount) {
-                    changeHandlerFT.call(null, 'tokenAmount', e.target.value);
+                    changeHandlerFT.call(
+                      null,
+                      'tokenAmount',
+                      String(Math.floor(Number(e.target.value) * 1000000) / 1000000),
+                    );
                   } else {
-                    changeHandler.call(null, 'tokenAmount', e.target.value);
+                    changeHandler.call(
+                      null,
+                      'tokenAmount',
+                      String(Math.floor(Number(e.target.value) * 1000000) / 1000000),
+                    );
                   }
                 }}
               />
@@ -314,6 +328,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="medium"
                   placeholder="Token contract"
                   innerRef={nodeTokenContract}
+                  value={creationForm.ftContentItems[0].contractAddress}
                   onChange={(e) => {
                     if (
                       NearReg.test(e.target.value) &&
@@ -635,10 +650,10 @@ Please enter the amount in percentage."
             <Link
               to="/fill_your_box"
               onClick={() => {
-                console.log(checkValueMath());
+                // console.log(checkValueMath());
 
                 handleClick();
-                // console.log(creationForm);
+                console.log(creationForm);
 
                 if (isShowDescription_tokenAmount) {
                   creationForm.nearContentItems = [];
