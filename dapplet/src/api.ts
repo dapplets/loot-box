@@ -15,7 +15,7 @@ const { parseNearAmount, formatNearAmount } = Core.near.utils.format;
 const { transactions } = Core.near;
 
 export class DappletApi implements IDappletApi {
-  private _contract = Core.contract('near', 'dev-1651162408741-46233879712819', {
+  private _contract = Core.contract('near', 'dev-1651241153572-71089672213750', {
     viewMethods: [
       'get_lootbox_by_id',
       'get_lootboxes_by_account',
@@ -68,43 +68,16 @@ export class DappletApi implements IDappletApi {
 
   async createNewBox(lootbox: Lootbox): Promise<string> {
     const contract = await this._contract;
-    const { account } = contract;
-
     const prices = await this.calcBoxCreationPrice(lootbox);
-
     const lootboxStruct = this._convertLootboxToContract(lootbox);
-
+    
     const nftItems = lootboxStruct.loot_items.filter((x) => 'Nft' in x).map((x) => x['Nft']);
+    const ftItems = lootboxStruct.loot_items.filter((x) => 'Ft' in x).map((x) => x['Ft']);
 
-    const approveResults = await Promise.all(nftItems.map((x) =>
-      account.viewFunction(x.token_contract, 'nft_is_approved', {
-        token_id: x.token_id,
-        approved_account_id: 'dev-1651162408741-46233879712819',
-      }).then(is_approved => ({ ...x, is_approved }))
-    ));
+    // remove nft and ft from loot_items to add them later
+    lootboxStruct.loot_items = lootboxStruct.loot_items.filter((x) => 'Near' in x);
 
-    const nonApprovedNftItems = approveResults.filter(x => x.is_approved === false);
-
-    if (nonApprovedNftItems.length > 0) {
-      const nftItemsByContract = groupBy(nonApprovedNftItems, 'token_contract');
-      for (const contractId in nftItemsByContract) {
-        const tokenIds = nftItemsByContract[contractId].map((x) => x.token_id);
-        const actions = tokenIds.map((x) =>
-          transactions.functionCall(
-            'nft_approve',
-            {
-              token_id: x,
-              account_id: contract.contractId,
-            },
-            new BN(Math.floor(300000000000000 / tokenIds.length).toString()), // split 300 Tgas for every action
-            new BN('1000000000000000000000'), // for storage More info: https://github.com/near/near-sdk-rs/blob/fe6b193ec14d2fc2a0b9030b61892e37d7ad835f/near-contract-standards/src/non_fungible_token/utils.rs#L5
-          ),
-        );
-
-        const result = await account.signAndSendTransaction(contractId, actions);
-      }
-    }
-
+    // make transaction via functionCall to set a custom gas amount
     const receipt = await contract.account.functionCall(
       contract.contractId,
       'create_lootbox',
@@ -114,15 +87,32 @@ export class DappletApi implements IDappletApi {
     );
 
     const debased64 = atob(receipt.status.SuccessValue);
-    const result = JSON.parse(debased64);
+    const lootboxId = JSON.parse(debased64);
+    
+    // send transactions for nft transfering
+    if (nftItems.length > 0) {
+      // nfts from one contract are able to transfer in one batch tx
+      const nftItemsByContract = groupBy(nftItems, 'token_contract');
+      for (const contractId in nftItemsByContract) {
+        const tokenIds = nftItemsByContract[contractId].map((x) => x.token_id);
+        const actions = tokenIds.map((x) =>
+          transactions.functionCall(
+            'nft_transfer_call',
+            {
+              token_id: x,
+              receiver_id: contract.contractId,
+              msg: JSON.stringify({ lootbox_id: lootboxId })
+            },
+            new BN(Math.floor(300000000000000 / tokenIds.length).toString()), // split 300 Tgas for every action
+            new BN('1'), // 1 yoctoNEAR is required for NFT transfering
+          ),
+        );
 
-    if (typeof result === 'string') {
-      return result;
-    } else if (typeof result === 'object' && 'Right' in result) {
-      return result.Right;
-    } else {
-      throw new Error('Invalid result received: ' + debased64);
+        await contract.account.signAndSendTransaction(contractId, actions);
+      }
     }
+
+    return lootboxId;
   }
 
   async calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice> {
@@ -134,9 +124,9 @@ export class DappletApi implements IDappletApi {
       if ('Near' in item) {
         fillAmount = sum(fillAmount, item.Near.total_amount);
       } else if ('Nft' in item) {
-        fillAmount = sum(fillAmount, '1'); // 1 yoctoNEAR is required
+        // fillAmount = sum(fillAmount, '1'); // 1 yoctoNEAR is required
       } else if ('Ft' in item) {
-        fillAmount = sum(fillAmount, '1'); // 1 yoctoNEAR is required
+        // fillAmount = sum(fillAmount, '1'); // 1 yoctoNEAR is required
       } else {
         console.error('Unknown loot_item', item);
       }
