@@ -26,6 +26,7 @@ import { ButtonsSetting } from './buttonsSetting';
 import { Test } from '../atoms/test';
 import classNames from 'classnames';
 import './invalid.scss';
+
 import { truncate } from 'fs/promises';
 import BigNumber from 'bignumber.js';
 
@@ -36,6 +37,7 @@ export interface BoxSettingsProps {
   dataType?: string;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
+  setFtMetadata: (x: any) => void;
 }
 const DEFAULT_NEAR_ITEM: NearContentItem = {
   tokenAmount: '',
@@ -52,7 +54,7 @@ const DEFAULT_FT_ITEM: FtContentItem = {
   dropAmountTo: '',
 };
 export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { creationForm, onCreationFormUpdate } = props;
+  const { creationForm, onCreationFormUpdate, setFtMetadata } = props;
   const [isShowDescription_tokenAmount, onShowDescription_tokenAmount] = useToggle(false);
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
 
@@ -394,6 +396,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       nodeTokenContract.current?.classList.add('invalid');
                     }
                     changeHandlerFT.call(null, 'contractAddress', e.target.value);
+                    setFtMetadata(e.target.value);
                   }}
                 />
                 <InputPanel
@@ -709,10 +712,8 @@ Please enter the amount in percentage."
             <Link
               to="/fill_your_box"
               onClick={() => {
-                // console.log(checkValueMath());
-                console.log(check());
-
                 handleClick();
+
                 console.log(creationForm);
 
                 if (isShowDescription_tokenAmount) {

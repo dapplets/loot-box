@@ -305,6 +305,7 @@ export class DappletApi implements IDappletApi {
 
       return contract.ft_metadata();
     } catch (_) {
+      console.error('Unknown address', _);
       return null;
     }
   }

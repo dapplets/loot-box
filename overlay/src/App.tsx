@@ -12,6 +12,7 @@ import {
   LootboxStat,
   LootboxWinner,
   BoxCreationPrice,
+  FtMetadata,
 } from '../../common/interfaces';
 import {} from '@dapplets/dapplet-extension';
 import Avatar from './icons/Lootbox.png';
@@ -79,6 +80,8 @@ export default () => {
   const [winInfo, setWinInfo] = useState('');
 
   const [messageError, setMessageError] = useState(false);
+  const [ftMetadata, setFtMetadata] = useState('');
+  const [newMetadata, setMetadata] = useState<FtMetadata | null>();
   // const [isLoadLootbox, setLoadLootbox] = useState(false);
 
   // const [imgSelect, setImgSelect] = useState('');
@@ -152,6 +155,27 @@ export default () => {
 
     selectedLootboxId;
   }, [doneClickHandler, selectedLootboxId]);
+
+  useEffect(() => {
+    const init = async () => {
+      const banana = 'banana.ft-fin.testnet';
+      await dappletApi
+        .getFtMetadata(banana)
+        .then((x) => {
+          console.log(x?.symbol);
+        })
+        .catch((e) => {
+          console.error(e);
+
+          // ToDo: show error to user
+        });
+    };
+    init();
+    // console.log(dappletApi.getFtMetadata);
+
+    console.log(newMetadata);
+    console.log(ftMetadata);
+  }, [newMetadata, ftMetadata]);
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
@@ -335,6 +359,7 @@ export default () => {
               path="/settings_token"
               element={
                 <SettingsToken
+                  setFtMetadata={setFtMetadata}
                   creationForm={creationForm}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
                 />
