@@ -152,19 +152,20 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   useEffect(() => {
     // ToDo: move to App.tsx
     // ToDo: how to get rid of object coping?
-    DEFAULT_NEAR_ITEM.dropAmountFrom = '';
-    DEFAULT_NEAR_ITEM.dropAmountTo = '';
+    // DEFAULT_NEAR_ITEM.dropAmountFrom = '';
+    // DEFAULT_NEAR_ITEM.dropAmountTo = '';
     DEFAULT_NEAR_ITEM.tokenAmount = '';
 
-    DEFAULT_FT_ITEM.contractAddress = '';
-    DEFAULT_FT_ITEM.dropAmountFrom = '';
-    DEFAULT_FT_ITEM.dropAmountTo = '';
+    // DEFAULT_FT_ITEM.contractAddress = '';
+    // DEFAULT_FT_ITEM.dropAmountFrom = '';
+    // DEFAULT_FT_ITEM.dropAmountTo = '';
     DEFAULT_FT_ITEM.tokenAmount = '';
 
     newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
     creationForm.nftContentItems = [];
     newForm.ftContentItems = [DEFAULT_FT_ITEM];
     onCreationFormUpdate(creationForm);
+    console.log(DEFAULT_NEAR_ITEM);
 
     onCreationFormUpdate(newForm);
     // console.log(creationForm);
@@ -214,9 +215,20 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       } else if (
         (creationForm.nearContentItems[0] &&
           creationForm.nearContentItems[0].dropType === 'variable') ||
+        //  &&
+
         (creationForm.ftContentItems[0] && creationForm.ftContentItems[0].dropType === 'variable')
       ) {
-        return true;
+        if (
+          Number(creationForm.nearContentItems[0].tokenAmount) >=
+            Number(creationForm.nearContentItems[0].dropAmountTo) ||
+          Number(creationForm.ftContentItems[0].tokenAmount) >=
+            Number(creationForm.ftContentItems[0].dropAmountTo)
+        ) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         false;
       }
@@ -383,8 +395,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   type="text"
                   appearance="medium"
                   placeholder="Token contract"
+                  defaultValue={DEFAULT_FT_ITEM.contractAddress}
                   innerRef={nodeTokenContract}
-                  value={creationForm.ftContentItems[0].contractAddress}
+                  // value={creationForm.ftContentItems[0].contractAddress}
                   onChange={(e) => {
                     if (
                       NearReg.test(e.target.value) &&
@@ -407,18 +420,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   innerRef={nodeTokenTicer}
                   readOnly
                   value={newMetadata ? newMetadata.symbol : ''}
-                  // onChange={(e) => {
-                  //   if (
-                  //     (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                  //     (e.target.value[0] !== '0' ||
-                  //       (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                  //     +e.target.value !== 0
-                  //   ) {
-                  //     nodeTokenTicer.current?.classList.remove('invalid');
-                  //   } else {
-                  //     nodeTokenTicer.current?.classList.add('invalid');
-                  //   }
-                  // }}
                 />
               </div>
               <div className={cn(styles.LabelSettings)}>
@@ -468,6 +469,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     type="text"
                     appearance="small_medium"
                     placeholder="From"
+                    defaultValue={DEFAULT_FT_ITEM.dropAmountFrom}
                     innerRef={nodeFrom}
                     onInput={(e) => func(e)}
                     onChange={(e) => {
@@ -488,6 +490,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     type="text"
                     appearance="small_medium"
                     placeholder="To"
+                    defaultValue={DEFAULT_FT_ITEM.dropAmountTo}
                     innerRef={nodeTo}
                     onInput={(e) => func(e)}
                     onChange={(e) => {
@@ -513,6 +516,13 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         nodeTo.current?.classList.add('invalid');
                       }
                       changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
+                      if (!check()) {
+                        onLink(true);
+                        nodeTo.current?.classList.add('invalid');
+                      } else {
+                        onLink(false);
+                        nodeTo.current?.classList.remove('invalid');
+                      }
                     }}
                   />
                 </div>
@@ -522,6 +532,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="biggest"
                   placeholder="Drop amount"
                   innerRef={nodeDropAmount}
+                  defaultValue={DEFAULT_FT_ITEM.dropAmountFrom}
                   onInput={(e) => func(e)}
                   onChange={(e) => {
                     if (
@@ -598,6 +609,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     appearance="small_medium"
                     placeholder="From"
                     innerRef={nodeFrom}
+                    defaultValue={DEFAULT_NEAR_ITEM.dropAmountFrom}
                     onInput={(e) => func(e)}
                     onChange={(e) => {
                       if (
@@ -618,6 +630,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     appearance="small_medium"
                     placeholder="To"
                     innerRef={nodeTo}
+                    defaultValue={DEFAULT_NEAR_ITEM.dropAmountTo}
                     onInput={(e) => func(e)}
                     onChange={(e) => {
                       if (
@@ -642,6 +655,13 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         nodeTo.current?.classList.add('invalid');
                       }
                       changeHandler.call(null, 'dropAmountTo', e.target.value);
+                      if (!check()) {
+                        onLink(true);
+                        nodeTo.current?.classList.add('invalid');
+                      } else {
+                        onLink(false);
+                        nodeTo.current?.classList.remove('invalid');
+                      }
                     }}
                   />
                 </div>
@@ -651,6 +671,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="biggest"
                   placeholder="Drop amount"
                   innerRef={nodeDropAmount}
+                  defaultValue={DEFAULT_NEAR_ITEM.dropAmountFrom}
                   onInput={(e) => func(e)}
                   onChange={(e) => {
                     if (
@@ -716,7 +737,7 @@ Please enter the amount in percentage."
               to="/fill_your_box"
               onClick={() => {
                 handleClick();
-
+                console.log(DEFAULT_NEAR_ITEM);
                 console.log(creationForm);
 
                 if (isShowDescription_tokenAmount) {

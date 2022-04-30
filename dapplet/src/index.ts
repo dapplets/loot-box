@@ -128,9 +128,6 @@ export default class TwitterFeature {
                 me.hidden = false;
                 me.replace = `ltbx.app/${numIndex}`;
                 await this.getClaimStatus(me, numIndex, lootboxId);
-                // me.exec = null;
-                // me.img = BOX_DEFAULT[lootboxId.pictureId];
-                // const getClaim = await this._api.claimLootbox(numIndex, wallet.accountId);
               }
             },
             exec: async (ctx, me) => {},
@@ -147,8 +144,8 @@ export default class TwitterFeature {
     me.exec = null;
     if (result.status === 0) {
       me.img = BOX_DEFAULT[lootbox.pictureId];
-      me.exec = () => {
-        this.getClaimLoot(me, numIndex, lootbox);
+      me.exec = async () => {
+        await this.getClaimLoot(me, numIndex, lootbox);
       };
     } else if (result.status === 1) {
       me.img = BOX_EMPTY[lootbox.pictureId];
@@ -168,33 +165,27 @@ export default class TwitterFeature {
     await this._api
       ._claimLootbox(numIndex, wallet.accountId)
       .then((x) => {
+        console.log(x);
+
         if (x.status === 2 || x.status === 0) {
           me.img = BOX_OPEN[lootbox.pictureId];
           me.text = this._formatWinningText(x);
           me.exec = null;
+          console.log(x.status);
         } else if (x.status === 1) {
           me.img = BOX_EMPTY[lootbox.pictureId];
-          me.exec = null;
           me.text = 'Empty';
+          me.exec = null;
+          console.log(x.status);
         }
       })
       .catch((err) => {
-        me.img = BOX_DEFAULT[lootbox.pictureId];
+        me.img = BOX_EMPTY[lootbox.pictureId];
         me.exec = null;
-        me.text = 'breaking transaction, refresh page';
+        me.text = 'Empty';
         console.log(err);
       });
   }
-  // } catch (error) {
-  //   // me.text = 'Empty';
-  //   me.img = BOX_DEFAULT[lootbox.pictureId];
-  //   me.exec = async () => {
-  //     this.getClaimLoot(me, numIndex, lootbox);
-  //   };
-  //   console.error(error);
-  //   console.log('lolo');
-  //   return null;
-  // }
 
   async openOverlay(props?: any): Promise<void> {
     this._overlay.send('data', props);

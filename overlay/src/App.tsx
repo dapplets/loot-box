@@ -84,13 +84,6 @@ export default () => {
   const [newMetadata, setMetadata] = useState<FtMetadata | null>();
   // const [isLoadLootbox, setLoadLootbox] = useState(false);
 
-  // const [imgSelect, setImgSelect] = useState('');
-
-  // const updateImgSelect = (x: string) => {
-  //   setImgSelect(x);
-  //   console.log(imgSelect);
-  // };
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
   };
@@ -111,11 +104,6 @@ export default () => {
       setLoader(false);
     });
     console.log(lootboxes.length);
-
-    // const contract = await Core.contract('near', 'dev-1634890606019-41631155713650', {
-    //   viewMethods: ['getTweets'],
-    //   changeMethods: ['addTweet', 'removeTweet'],
-    // });
   }, []);
   let navigate = useNavigate();
 
@@ -124,9 +112,6 @@ export default () => {
   };
 
   const doneClickHandler = async () => {
-    // show loader
-    // console.log('done');
-
     if (!nearAccount) throw new Error('Not logged in.');
 
     setLoader(true);
@@ -144,10 +129,6 @@ export default () => {
     } finally {
       setLoader(false);
     }
-
-    // console.log(EMPTY_FORM);
-
-    // if (selectedLootboxId === null) return;
   };
 
   useEffect(() => {
@@ -171,7 +152,7 @@ export default () => {
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
-
+    // setWinners(winners);
     Promise.all([
       api.getLootboxClaims(selectedLootboxId.toString()),
       dappletApi.getLootboxWinners(selectedLootboxId),
@@ -192,16 +173,17 @@ export default () => {
 
         // ToDo: show error to user
       });
-  }, [selectedLootboxId]);
+  }, [selectedLootboxId, winners]);
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
-    setLoader(true);
+
     dappletApi
       .getLootboxStat(selectedLootboxId)
       .then((x) => {
+        // setLoader(true);
         setStat(x);
-        setLoader(false);
+        // setLoader(false);
       })
 
       .catch((e) => {
@@ -209,7 +191,7 @@ export default () => {
 
         // ToDo: show error to user
       });
-  }, [selectedLootboxId]);
+  }, [selectedLootboxId, stat]);
 
   useEffect(() => {
     dappletApi
@@ -243,7 +225,7 @@ export default () => {
     }
     setNearAccount(accountName);
   };
-  // console.log(selectedLootboxId);
+
   const getWin = async (y: any) => {
     lootboxes.map((x) => {
       if (+x.ftContentItems[y].tokenAmount !== 0) {
@@ -255,7 +237,6 @@ export default () => {
       }
     });
   };
-  // console.log(getWin(selectedLootboxId));
 
   return (
     <>

@@ -9,6 +9,7 @@ import { Winner } from '../Winners';
 import { Statistics } from '../Statistics';
 import { Lootbox } from '../../../../common/interfaces';
 import BigNumber from 'bignumber.js';
+import { useEffect } from 'react';
 
 export interface StatisticsNearProps {
   creationForm: Lootbox;
@@ -27,7 +28,9 @@ export interface StatisticsNearPropsStat {
 
 export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) => {
   const { stat } = props;
-
+  // useEffect(() => {
+  //   stat;
+  // });
   if (stat === null) {
     return <div>Loading</div>;
   }
@@ -66,10 +69,12 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
   props: StatisticsNearPropsWinner,
 ) => {
   const { winners, id } = props;
-  console.log(id);
+  // useEffect(() => {
+  //   winners;
+  // });
+
   // getWin(id);
   // console.log(winInfo);
-  console.log(winners);
 
   return (
     <div className={cn(styles.wrapper)}>
