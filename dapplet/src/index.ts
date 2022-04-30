@@ -140,20 +140,26 @@ export default class TwitterFeature {
     });
   }
   async getClaimStatus(me, numIndex, lootbox): Promise<void> {
-    me.img = { DARK: boxDef, LIGHT: White };
+    // me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
     const result = await this._api._getLootboxClaimStatus(numIndex, wallet.accountId);
     me.exec = null;
     if (result.status === 0) {
       me.img = BOX_DEFAULT[lootbox.pictureId];
       me.exec = () => {
+        me.img = { DARK: boxDef, LIGHT: White };
+        // console.log('lala');
+        // me.img = BOX_DEFAULT[lootbox.pictureId];
         this.getClaimLoot(me, numIndex, lootbox);
+        // console.log(result.status);
       };
     } else if (result.status === 1) {
+      console.log(result.status);
       me.img = BOX_EMPTY[lootbox.pictureId];
       me.text = 'Empty';
       me.exec = null;
     } else if (result.status === 2) {
+      console.log(result.status);
       me.img = BOX_OPEN[lootbox.pictureId];
       me.text = this._formatWinningText(result);
       me.exec = null;
@@ -161,37 +167,69 @@ export default class TwitterFeature {
   }
 
   async getClaimLoot(me, numIndex, lootbox): Promise<void> {
-    me.img = { DARK: boxDef, LIGHT: White };
-    me.exec = null;
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-    const getLootboxClaim = await this._api
-      ._claimLootbox(numIndex, wallet.accountId)
-      .catch((err) => {
-        me.img = BOX_EMPTY[lootbox.pictureId];
-        me.text = 'The lootbox is opened already';
+    try {
+      // me.exec = null;
+
+      const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+      const getLootboxClaim = await this._api._claimLootbox(numIndex, wallet.accountId);
+      if (getLootboxClaim.status === 0) {
+        me.img = BOX_OPEN[lootbox.pictureId];
+        this._api
+          ._getLootboxClaimStatus(numIndex, wallet.accountId)
+          .then((x) => {
+            me.text = this._formatWinningText(x);
+          })
+          .catch((err) => {
+            me.img = BOX_EMPTY[lootbox.pictureId];
+            me.text = 'Empty';
+            me.exec = () => {};
+            console.error(err);
+          });
         me.exec = () => {};
-        console.error(err);
-        return null;
-      });
-    if (getLootboxClaim.status === 2 || getLootboxClaim.status === 0) {
-      me.img = BOX_OPEN[lootbox.pictureId];
-      this._api
-        ._getLootboxClaimStatus(numIndex, wallet.accountId)
-        .then((x) => {
-          me.text = this._formatWinningText(x);
-        })
-        .catch((err) => {
-          me.img = BOX_EMPTY[lootbox.pictureId];
-          me.text = 'The lootbox is opened already';
-          me.exec = () => {};
-          console.error(err);
-        });
-      me.exec = () => {};
-    } else {
-      me.img = BOX_EMPTY[lootbox.pictureId];
-      me.text = 'Empty';
-      me.exec = () => {};
+      } else {
+        me.img = BOX_EMPTY[lootbox.pictureId];
+        me.text = 'Empty';
+        me.exec = () => {};
+      }
+    } catch (error) {
+      // me.text = 'Empty';
+      me.img = BOX_DEFAULT[lootbox.pictureId];
+      me.exec = async () => {
+        this.getClaimLoot(me, numIndex, lootbox);
+      };
+      console.error(error);
+      console.log('lolo');
+      return null;
     }
+    // .catch((err) => {
+    //   // console.log(getLootboxClaim.status);å
+    //   me.img = BOX_DEFAULT[lootbox.pictureId];
+    //   // me.text = 'Empty';
+    //   me.exec = () => {
+    //     this.getClaimStatus(me, numIndex, lootbox);
+    //   };
+    //   console.error(err);
+    //   return null;
+    // });
+    // if (getLootboxClaim.status === 0) {
+    //   me.img = BOX_OPEN[lootbox.pictureId];
+    //   this._api
+    //     ._getLootboxClaimStatus(numIndex, wallet.accountId)
+    //     .then((x) => {
+    //       me.text = this._formatWinningText(x);
+    //     })
+    //     .catch((err) => {
+    //       me.img = BOX_EMPTY[lootbox.pictureId];
+    //       me.text = 'Empty';
+    //       me.exec = () => {};
+    //       console.error(err);
+    //     });
+    //   me.exec = () => {};
+    // } else {
+    //   me.img = BOX_EMPTY[lootbox.pictureId];
+    //   me.text = 'Empty';
+    //   me.exec = () => {};
+    // }
   }
 
   async openOverlay(props?: any): Promise<void> {

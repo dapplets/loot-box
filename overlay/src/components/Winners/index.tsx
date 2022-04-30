@@ -22,33 +22,37 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
 
   return (
     <div className={styles.wrapper}>
-      <table className={styles.blockInfo}>
-        <thead>
-          <tr className={styles.listTitle}>
-            {/* <span className={styles.itemTitle}>Twitter:</span> */}
-            <th className={styles.itemTitle}>Near</th>
-            <th className={styles.itemTitle}>Amount</th>
-            <th className={styles.itemTitle}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {winners.map((item: any, index: number) => (
-            <tr className={cn(styles.winnersList)} key={index}>
-              {/* <div className={styles.winnersLink}> */}
-              {/* <div className={styles.itemLink}>{'@dilman'}</div> */}
-
-              <td className={styles.itemLink}>{item.nearAccount}</td>
-              <td className={styles.itemLink}>{item.amount}</td>
-              <td>
-                <a href={item.txLink} target="_blank" className={styles.label}>
-                  OPEN TX
-                </a>
-              </td>
-              {/* </div> */}
+      <div className={styles.blockInfo}>
+        <table
+        //  className={styles.blockInfo}
+        >
+          <thead>
+            <tr
+            // className={styles.listTitle}
+            >
+              {/* <span className={styles.itemTitle}>Twitter:</span> */}
+              <th className={styles.itemTitle}>Near</th>
+              <th className={styles.itemTitle}>Amount</th>
+              <th className={styles.itemTitle}>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {winners.map((item: any, index: number) => (
+              <tr key={index}>
+                <td className={styles.itemLink}>
+                  <span>{item.nearAccount}</span>
+                </td>
+                <td className={styles.itemLink}>{item.amount}</td>
+                <td>
+                  <a href={item.txLink} target="_blank" className={styles.label}>
+                    OPEN TX
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className={cn(styles.link)}>
         <Link to="/">
           <StatisticsLink label="Copy winners" />

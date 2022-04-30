@@ -42,12 +42,14 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
         <Preloader />
       ) : (
         <div className={cn(styles.wrapper)} onClick={onClick}>
-          {/* <Link to="/statistics"> */}
-          <div className={cn(styles.img)}>
-            <img src={imageBox} />
-            {WinInfo && WinInfo !== '' ? <span className={styles.winInfo}> {WinInfo}</span> : null}
-          </div>
-          {/* </Link> */}
+          <Link to="/statistics">
+            <div className={cn(styles.img)}>
+              <img src={imageBox} />
+              {WinInfo && WinInfo !== '' ? (
+                <span className={styles.winInfo}> {WinInfo}</span>
+              ) : null}
+            </div>
+          </Link>
           <div className={cn(styles.description)}>
             <span className={cn(styles.Blocklink)}>
               <span className={cn(styles.label)}>{label}</span>

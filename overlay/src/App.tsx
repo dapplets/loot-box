@@ -3,7 +3,7 @@ import cn from 'classnames';
 import styles from './App.module.scss';
 
 import { useToggle } from './hooks/useToggle';
-import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 import GeneralBridge from '@dapplets/dapplet-overlay-bridge';
 import {
@@ -78,7 +78,7 @@ export default () => {
 
   const [winInfo, setWinInfo] = useState('');
 
-  const [good, setGood] = useState(false);
+  const [messageError, setMessageError] = useState(false);
   // const [isLoadLootbox, setLoadLootbox] = useState(false);
 
   // const [imgSelect, setImgSelect] = useState('');
@@ -114,6 +114,11 @@ export default () => {
     //   changeMethods: ['addTweet', 'removeTweet'],
     // });
   }, []);
+  let navigate = useNavigate();
+
+  const navigationDeploy = () => {
+    navigate('/deploy_your_box');
+  };
 
   const doneClickHandler = async () => {
     // show loader
@@ -129,11 +134,10 @@ export default () => {
       await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
         setLootboxes(x);
       });
-      // <Link to="/deploy_your_box"></Link>;
-      // setCreationForm(EMPTY_FORM);
+      navigationDeploy();
     } catch (error) {
       console.log(error);
-      <Navigate to="/select_box" />;
+      setMessageError(true);
     } finally {
       setLoader(false);
     }
@@ -357,6 +361,8 @@ export default () => {
                     winInfo={winInfo}
                     setWinInfo={(x) => setWinInfo(x)}
                     onCreationFormUpdate={(x) => setCreationForm(x)}
+                    setMessageError={setMessageError}
+                    messageError={messageError}
                   />
                 )
               }
