@@ -3,7 +3,7 @@ import cn from 'classnames';
 import styles from './App.module.scss';
 
 import { useToggle } from './hooks/useToggle';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
 
 import GeneralBridge from '@dapplets/dapplet-overlay-bridge';
 import {
@@ -32,6 +32,7 @@ import { SettingsNFT } from './components/boxSettings/settingsNft';
 
 import { Preloader } from './components/atoms/Preloader';
 import { Api } from './api';
+import { MessageMain } from './components/atoms/MessageMain';
 
 interface ICtx {
   authorFullname: string;
@@ -76,7 +77,9 @@ export default () => {
   const [loader, setLoader] = useState(false);
 
   const [winInfo, setWinInfo] = useState('');
-  const [isLoadLootbox, setLoadLootbox] = useState(false);
+
+  const [good, setGood] = useState(false);
+  // const [isLoadLootbox, setLoadLootbox] = useState(false);
 
   // const [imgSelect, setImgSelect] = useState('');
 
@@ -90,9 +93,9 @@ export default () => {
   };
 
   useEffect(() => {
+    setLoader(true);
     dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
     dappletApi.isWalletConnected().then(async (isWalletConnected) => {
-      setLoadLootbox(true);
       let accountName: string | undefined;
       if (isWalletConnected) {
         accountName = await dappletApi.getCurrentNearAccount();
@@ -100,9 +103,12 @@ export default () => {
           setLootboxes(x);
         });
       }
-      setLoadLootbox(false);
+
       setNearAccount(accountName);
+      setLoader(false);
     });
+    console.log(lootboxes.length);
+
     // const contract = await Core.contract('near', 'dev-1634890606019-41631155713650', {
     //   viewMethods: ['getTweets'],
     //   changeMethods: ['addTweet', 'removeTweet'],
@@ -123,9 +129,11 @@ export default () => {
       await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
         setLootboxes(x);
       });
-      setCreationForm(EMPTY_FORM);
+      // <Link to="/deploy_your_box"></Link>;
+      // setCreationForm(EMPTY_FORM);
     } catch (error) {
       console.log(error);
+      <Navigate to="/select_box" />;
     } finally {
       setLoader(false);
     }
@@ -137,6 +145,7 @@ export default () => {
 
   useEffect(() => {
     doneClickHandler;
+
     selectedLootboxId;
   }, [doneClickHandler, selectedLootboxId]);
 
@@ -230,7 +239,7 @@ export default () => {
 
   return (
     <>
-      {isLoadLootbox ? (
+      {loader ? (
         <Preloader />
       ) : (
         <div className={cn(styles.app)}>
@@ -256,22 +265,34 @@ export default () => {
               element={
                 (loader && <Preloader />) || (
                   <CreateNewBox winInfo={winInfo} imgVal={imgBox} label={valueLabel}>
-                    {lootboxes.map((item, index) => (
-                      <ChildComponent
-                        onClick={() => {
-                          setLootboxes(lootboxes);
-                          setSelectedLootboxId(item.id!);
-                        }}
-                        imgVal={IMG[item.pictureId]}
-                        label={String(item.id!)}
-                        number={index}
-                        key={index}
-                        id={item.id!}
-                        creationForm={creationForm}
-                        status={item.status!}
-                        winInfo={item}
-                      />
-                    ))}
+                    {lootboxes.length !== 0 ? (
+                      lootboxes.map((item, index) => (
+                        <ChildComponent
+                          onClick={() => {
+                            console.log(lootboxes.length);
+
+                            setLootboxes(lootboxes);
+                            setSelectedLootboxId(item.id!);
+                          }}
+                          imgVal={IMG[item.pictureId]}
+                          label={String(item.id!)}
+                          number={index}
+                          key={index}
+                          id={item.id!}
+                          creationForm={creationForm}
+                          status={item.status!}
+                          winInfo={item}
+                          loader={loader}
+                        />
+                      ))
+                    ) : (
+                      <div className={styles.messageNewBox}>
+                        <MessageMain
+                          title="There is no lootboxes in youre extention"
+                          subtitle="You can create them "
+                        />
+                      </div>
+                    )}
                   </CreateNewBox>
                 )
               }

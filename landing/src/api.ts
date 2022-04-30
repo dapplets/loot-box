@@ -1,160 +1,121 @@
-import {
-  IDappletApi,
-  Lootbox,
-  BoxCreationPrice,
-  LootboxStat,
-  LootboxWinner,
-  LootboxClaimStatus,
-  LootboxClaimResult,
-} from '../../common/interfaces';
-import {} from '@dapplets/dapplet-extension';
-function _createFakeLootbox(id: string): Lootbox {
-  return {
-    id: id,
-    pictureId: id,
-    dropChance: 0.5,
-    status: 'created',
-    nearContentItems: [],
-    ftContentItems: [],
-    nftContentItems: [
-      {
-        contractAddress: 'nft.testnet',
-        tokenId: '',
-      },
-      {
-        contractAddress: 'nft.testnet',
-        tokenId: '',
-      },
-      {
-        contractAddress: 'nft.testnet',
-        tokenId: '',
-      },
-    ],
-  };
-}
+import { IDappletApiForLanding, Lootbox, LootboxStat } from '../../common/interfaces';
+import * as nearAPI from 'near-api-js';
+import * as format from './format';
 
-export class DappletApi implements IDappletApi {
-  getLootboxById(lootboxId: string): Promise<Lootbox> {
-    throw new Error('Method not implemented.');
-  }
-  _getLootboxClaimStatus(lootboxId: string, accountId: string): Promise<LootboxClaimResult> {
-    throw new Error('Method not implemented.');
-  }
-  _claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimResult> {
-    throw new Error('Method not implemented.');
-  }
-  async connectWallet() {
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-    await wallet.connect();
-    return wallet.accountId;
+const { connect, keyStores, WalletConnection, Contract } = nearAPI;
+const { formatNearAmount, parseNearAmount } = nearAPI.utils.format;
+
+export class DappletApi implements IDappletApiForLanding {
+  async getLootboxById(lootboxId: string): Promise<Lootbox | null> {
+    if (lootboxId === undefined) return null;
+    const contract = await this.getContract();
+    const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
+    return lootbox ? this._convertLootboxFromContract(lootbox) : null;
   }
 
-  async disconnectWallet() {
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-    wallet.disconnect();
-  }
+  async getLootboxStat(lootboxId: string): Promise<LootboxStat | null> {
+    if (lootboxId === undefined) return null;
+    const contract = await this.getContract();
+    const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
 
-  async isWalletConnected() {
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-    return wallet.isConnected();
-  }
+    const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
 
-  async getCurrentNearAccount() {
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-    return wallet.accountId;
-  }
-
-  async getBoxesByAccount(account: string): Promise<Lootbox[]> {
-    await new Promise((r) => setTimeout(r, 300));
-    const lootboxes = this._getValue('lootboxes', []);
-    if (lootboxes.length === 0) {
-      return [1, 2, 3, 4, 5].map((x) => _createFakeLootbox(x));
-    } else {
-      return lootboxes;
+    let totalAmount = 0;
+    for (const item of all_loot_items) {
+      if (item.Near !== undefined) {
+        totalAmount += Number(formatNearAmount(item.Near.total_amount));
+      } else if (item.Ft !== undefined) {
+        console.error('Total amount calculation is not implemented for FT.');
+      } else if (item.Nft !== undefined) {
+        // console.error('Total amount calculation is not implemented for NFT.');
+        totalAmount += 1; // ToDo: how to calculate statistics of NFT?
+      } else {
+        console.error('Unknown loot item');
+      }
     }
-  }
 
-  async createNewBox(lootbox: Lootbox): Promise<string> {
-    await new Promise((r) => setTimeout(r, 3000));
-    const lootboxes = this._getValue('lootboxes', []);
-    const id = lootboxes.length + 1;
-    lootbox.id = id;
-    lootboxes.push(lootbox);
-    this._setValue('lootboxes', lootboxes);
-    return id;
-  }
+    const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
 
-  async calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice> {
-    await new Promise((r) => setTimeout(r, 300));
+    let winAmount = 0;
+
+    for (const item of claims) {
+      if (item.WinNear !== undefined) {
+        winAmount += Number(formatNearAmount(item.WinNear.total_amount));
+      } else if (item.WinFt !== undefined) {
+        console.error('Total amount calculation is not implemented for FT.');
+      } else if (item.WinNft !== undefined) {
+        // console.error('Total amount calculation is not implemented for NFT.');
+        winAmount += 1; // ToDo: how to calculate statistics of NFT?
+      } else if (item.NotWin !== undefined) {
+        // Nothing to do
+      } else {
+        console.error('Unknown loot item');
+      }
+    }
+
     return {
-      feeAmount: "0.1",
-      fillAmount: "10",
-      gasAmount: "0.003",
-      totalAmount: "0"
+      totalAmount: totalAmount,
+      winAmount: winAmount,
+      currentBalance: totalAmount - winAmount,
+      totalViews: claims.length,
     };
   }
 
-  async getLootboxStat(lootboxId: string): Promise<LootboxStat> {
-    await new Promise((r) => setTimeout(r, 1000));
-    return {
-      totalAmount: lootboxId * 10,
-      winAmount: lootboxId * 2,
-      currentBalance: lootboxId * 8,
-      totalViews: lootboxId * 17,
+  async getContract(): Promise<any> {
+    const config = {
+      networkId: 'testnet',
+      keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+      nodeUrl: 'https://rpc.testnet.near.org',
+      walletUrl: 'https://wallet.testnet.near.org',
+      helperUrl: 'https://helper.testnet.near.org',
+      explorerUrl: 'https://explorer.testnet.near.org',
+      headers: {},
     };
-  }
 
-  async getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]> {
-    await new Promise((r) => setTimeout(r, 1000));
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((x) => ({
-      nearAccount: `tester_${x}.testnet`,
-      amount: x / 10,
-      txLink:
-        'https://explorer.testnet.near.org/transactions/59S6ZUhgjnCXKiu7rWcf3N2tMkGrDjDysqZSQ2dJUnmy',
-    }));
-  }
+    const near = await connect(config);
 
-  async getLootboxClaimStatus(lootboxId: string, accountId: string): Promise<LootboxClaimStatus> {
-    await new Promise((r) => setTimeout(r, 500));
-    const lootboxStatuses = this._getValue('lootboxes-status', []);
-    const entry = lootboxStatuses.find(
-      (x: any) => x.lootboxId === lootboxId && x.accountId === accountId,
-    );
-    return entry?.status ?? 0;
-  }
+    // create wallet connection
+    const wallet = new WalletConnection(near, null);
 
-  async claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimStatus> {
-    await new Promise((r) => setTimeout(r, 4000));
-    if ((await this.getLootboxClaimStatus(lootboxId, accountId)) !== 0) {
-      throw new Error('The lootbox is opened already.');
-    }
-
-    const lootboxStatuses = this._getValue('lootboxes-status', []);
-
-    const status: LootboxClaimStatus = getRandomIntInclusive(0, 2);
-
-    lootboxStatuses.push({
-      lootboxId,
-      accountId,
-      status,
+    const contract = new Contract(wallet.account(), 'dev-1651162408741-46233879712819', {
+      viewMethods: ['get_lootbox_by_id', 'get_claims_by_lootbox'],
+      changeMethods: [],
     });
 
-    this._setValue('lootboxes-status', lootboxStatuses);
-
-    return status;
+    return contract;
   }
 
-  private _getValue(key: string, defaultValue: any): any {
-    return localStorage[key] ? JSON.parse(localStorage[key]) : defaultValue;
+  private _convertLootboxFromContract(x: any): Lootbox {
+    const all_loot_items = [...x.loot_items, ...x.distributed_items];
+    return {
+      id: x.id,
+      pictureId: x.picture_id,
+      dropChance: Math.floor((x.drop_chance * 100) / 255),
+      // ownerId: x.owner_id,
+      status: x.status.toLowerCase(),
+      nearContentItems: all_loot_items
+        .filter((x) => x['Near'])
+        .map((x) => ({
+          tokenAmount: formatNearAmount(x.Near.total_amount),
+          dropAmountFrom: formatNearAmount(x.Near.drop_amount_from),
+          dropAmountTo: formatNearAmount(x.Near.drop_amount_to),
+          dropType: x.Near.drop_amount_from === x.Near.drop_amount_to ? 'fixed' : 'variable',
+        })),
+      ftContentItems: all_loot_items
+        .filter((x) => x['Ft'])
+        .map((x) => ({
+          contractAddress: x.Ft.token_contract,
+          tokenAmount: format.formatNearAmount(x.Ft.total_amount, 6),
+          dropAmountFrom: format.formatNearAmount(x.Ft.drop_amount_from, 6),
+          dropAmountTo: format.formatNearAmount(x.Ft.drop_amount_to, 6),
+          dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
+        })),
+      nftContentItems: all_loot_items
+        .filter((x) => x['Nft'])
+        .map((x) => ({
+          contractAddress: x.Nft.token_contract,
+          tokenId: x.Nft.token_id,
+        })),
+    };
   }
-
-  private _setValue(key: string, value: any) {
-    localStorage[key] = JSON.stringify(value);
-  }
-}
-
-function getRandomIntInclusive(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
 }

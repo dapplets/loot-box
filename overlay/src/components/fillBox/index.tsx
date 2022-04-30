@@ -101,13 +101,17 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
           </div>
         </div>
         <div className={cn(styles.payBtn)}>
-          <Link to="/deploy_your_box">
-            <ButtonPay
-              onClick={onDoneClick}
-              styleBtn="default"
-              title={`PAY ${price.totalAmount} NEAR`}
-            />
-          </Link>
+          {/* <Link to="/deploy_your_box"> */}
+          <ButtonPay
+            onClick={() => {
+              onDoneClick();
+
+              // onDoneClick;
+            }}
+            styleBtn="default"
+            title={`PAY ${price.totalAmount} NEAR`}
+          />
+          {/* </Link> */}
         </div>
       </div>
       <div className={cn(styles.navigation)}>

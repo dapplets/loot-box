@@ -8,6 +8,8 @@ import { Code } from '../Code';
 import { Winner } from '../Winners';
 import { Statistics } from '../Statistics';
 import { Lootbox } from '../../../../common/interfaces';
+import BigNumber from 'bignumber.js';
+
 export interface StatisticsNearProps {
   creationForm: Lootbox;
   onCreationFormUpdate: (x: Lootbox) => void;

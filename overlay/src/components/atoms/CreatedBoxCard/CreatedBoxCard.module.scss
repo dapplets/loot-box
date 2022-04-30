@@ -17,9 +17,12 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 14px;
+
   position: relative;
   img {
-    width: 100%;
+    // width: 100%;
+    width: 163px;
+    height: 163px;
   }
 }
 .winInfo {

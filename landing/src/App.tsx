@@ -33,8 +33,10 @@ export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 
 const _api = new DappletApi();
 
+console.log('_api', _api);
+
 export default function App(AppProps: any) {
-  const [selectedLootboxId, setSelectedLootboxId] = useState<number | null>(null);
+  const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
   const [loader, setLoader] = useState(false);
   return (
     <>
@@ -91,12 +93,12 @@ export default function App(AppProps: any) {
 
 function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }) {
   const { lootboxId } = useParams();
-  const [statCur, setStat] = useState(Number);
+  const [statCur, setStat] = useState<number | null>(null);
   const [loader, setLoader] = useState(false);
   useEffect(() => {
     setLoader(true);
-    _api.getLootboxStat(Number(lootboxId!)).then((x) => {
-      setStat(x.currentBalance);
+    _api.getLootboxStat(lootboxId!).then((x) => {
+      setStat(x?.currentBalance ?? null);
       setLoader(false);
     });
   }, [lootboxId]);
