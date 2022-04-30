@@ -80,7 +80,7 @@ export default () => {
   const [winInfo, setWinInfo] = useState('');
 
   const [messageError, setMessageError] = useState(false);
-  const [ftMetadata, setFtMetadata] = useState('');
+  const [ftMetadata, setFtMetadata] = useState(null);
   const [newMetadata, setMetadata] = useState<FtMetadata | null>();
   // const [isLoadLootbox, setLoadLootbox] = useState(false);
 
@@ -157,25 +157,17 @@ export default () => {
   }, [doneClickHandler, selectedLootboxId]);
 
   useEffect(() => {
-    const init = async () => {
-      const banana = 'banana.ft-fin.testnet';
-      await dappletApi
-        .getFtMetadata(banana)
-        .then((x) => {
-          console.log(x?.symbol);
-        })
-        .catch((e) => {
-          console.error(e);
+    if (ftMetadata === null) return;
+    Promise.all([dappletApi.getFtMetadata(ftMetadata)])
 
-          // ToDo: show error to user
-        });
-    };
-    init();
-    // console.log(dappletApi.getFtMetadata);
+      .then(([x]) => {
+        setMetadata(x);
+      })
 
-    console.log(newMetadata);
-    console.log(ftMetadata);
-  }, [newMetadata, ftMetadata]);
+      .catch((e) => {
+        console.error(e);
+      });
+  }, [ftMetadata]);
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
@@ -361,6 +353,7 @@ export default () => {
                 <SettingsToken
                   setFtMetadata={setFtMetadata}
                   creationForm={creationForm}
+                  newMetadata={newMetadata}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
                 />
               }

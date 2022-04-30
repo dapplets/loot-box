@@ -38,6 +38,7 @@ export interface BoxSettingsProps {
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
   setFtMetadata: (x: any) => void;
+  newMetadata: any;
 }
 const DEFAULT_NEAR_ITEM: NearContentItem = {
   tokenAmount: '',
@@ -54,7 +55,7 @@ const DEFAULT_FT_ITEM: FtContentItem = {
   dropAmountTo: '',
 };
 export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { creationForm, onCreationFormUpdate, setFtMetadata } = props;
+  const { creationForm, onCreationFormUpdate, setFtMetadata, newMetadata } = props;
   const [isShowDescription_tokenAmount, onShowDescription_tokenAmount] = useToggle(false);
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
 
@@ -404,18 +405,20 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="small"
                   placeholder="Token ticker "
                   innerRef={nodeTokenTicer}
-                  onChange={(e) => {
-                    if (
-                      (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                      (e.target.value[0] !== '0' ||
-                        (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                      +e.target.value !== 0
-                    ) {
-                      nodeTokenTicer.current?.classList.remove('invalid');
-                    } else {
-                      nodeTokenTicer.current?.classList.add('invalid');
-                    }
-                  }}
+                  readOnly
+                  value={newMetadata ? newMetadata.symbol : ''}
+                  // onChange={(e) => {
+                  //   if (
+                  //     (e.target.value === '.' || isNaN(+e.target.value) === false) &&
+                  //     (e.target.value[0] !== '0' ||
+                  //       (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
+                  //     +e.target.value !== 0
+                  //   ) {
+                  //     nodeTokenTicer.current?.classList.remove('invalid');
+                  //   } else {
+                  //     nodeTokenTicer.current?.classList.add('invalid');
+                  //   }
+                  // }}
                 />
               </div>
               <div className={cn(styles.LabelSettings)}>
