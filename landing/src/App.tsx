@@ -37,16 +37,18 @@ console.log('_api', _api);
 
 export default function App(AppProps: any) {
   const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
+  const { lootboxId } = useParams();
   const [loader, setLoader] = useState(false);
-  // useEffect(() => {
-  //   // setLoader(true);
-  //   // _api.getLootboxStat(lootboxId!).then((x) => {
-  //   //   setStat(x?.currentBalance ?? null);
-  //   //   setLoader(false);
-  //   // });
-  //   _api.getLootboxById(String(selectedLootboxId)).then((x) => setSelectedLootboxId(x?.id!));
-  //   console.log(selectedLootboxId);
-  // }, [selectedLootboxId]);
+  useEffect(() => {
+    // setLoader(true);
+    // _api.getLootboxStat(lootboxId!).then((x) => {
+    //   setStat(x?.currentBalance ?? null);
+    //   setLoader(false);
+    // });
+    _api.getLootboxById(lootboxId!).then((x) => setSelectedLootboxId(x?.id!));
+    console.log(lootboxId);
+    console.log(selectedLootboxId);
+  }, [lootboxId, selectedLootboxId]);
 
   return (
     <>
@@ -142,6 +144,8 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
     transform: scaleX(0);
     animation: ${pulse} 2s forwards;
   `;
+  console.log(pictureId);
+  console.log(selectedLootboxId);
 
   return (
     // <main>
@@ -150,21 +154,27 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
         <div className={styles.postLoader}>
           <h1 className={styles.boxTitle}>Sed egestas et est amet </h1>
           <div className={styles.boxImg}>
-            <img src={selectedLootboxId === null ? IMG[pictureId!] : boxDef} />
+            {pictureId !== null && selectedLootboxId !== null ? (
+              <img src={IMG[pictureId!]} />
+            ) : (
+              <img src={boxDef} />
+            )}
+
             {/* <img src={selectedLootboxId === null ? boxDef : IMG[Number(lootboxId)!]} /> */}
           </div>
-
-          <div className={styles.radialBarBlock}>
-            <h2 className={styles.radialBarTitle}>
-              <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
-            </h2>
-            {/* <h2 className={styles.radialBarTitle}>
+          {selectedLootboxId !== null ? (
+            <div className={styles.radialBarBlock}>
+              <h2 className={styles.radialBarTitle}>
+                <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
+              </h2>
+              {/* <h2 className={styles.radialBarTitle}>
               <span className={styles.statCurNum}>{40} / 100 tokens left</span>
             </h2> */}
-            <div className={styles.radialBarGraph}>
-              <Bar />
+              <div className={styles.radialBarGraph}>
+                <Bar />
+              </div>
             </div>
-          </div>
+          ) : null}
 
           <div className={styles.description}>
             Sed egestas et est amet convallis lectus congue cursus. Risus bibendum ornare vitae,
