@@ -38,6 +38,16 @@ console.log('_api', _api);
 export default function App(AppProps: any) {
   const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
   const [loader, setLoader] = useState(false);
+  // useEffect(() => {
+  //   // setLoader(true);
+  //   // _api.getLootboxStat(lootboxId!).then((x) => {
+  //   //   setStat(x?.currentBalance ?? null);
+  //   //   setLoader(false);
+  //   // });
+  //   _api.getLootboxById(String(selectedLootboxId)).then((x) => setSelectedLootboxId(x?.id!));
+  //   console.log(selectedLootboxId);
+  // }, [selectedLootboxId]);
+
   return (
     <>
       <Routes>
@@ -95,12 +105,14 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
   const { lootboxId } = useParams();
   const [statCur, setStat] = useState<number | null>(null);
   const [loader, setLoader] = useState(false);
+  const [pictureId, setPictureId] = useState<number | null>(null);
   useEffect(() => {
     setLoader(true);
     _api.getLootboxStat(lootboxId!).then((x) => {
       setStat(x?.currentBalance ?? null);
       setLoader(false);
     });
+    _api.getLootboxById(lootboxId!).then((x) => setPictureId(Number(x?.pictureId)));
   }, [lootboxId]);
   const pulse = keyframes`
   0% {
@@ -138,17 +150,17 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
         <div className={styles.postLoader}>
           <h1 className={styles.boxTitle}>Sed egestas et est amet </h1>
           <div className={styles.boxImg}>
-            {/* <img src={selectedLootboxId === null ? IMG[Number(lootboxId)!] : boxDef} /> */}
-            <img src={selectedLootboxId === null ? boxDef : IMG[Number(lootboxId)!]} />
+            <img src={selectedLootboxId === null ? IMG[pictureId!] : boxDef} />
+            {/* <img src={selectedLootboxId === null ? boxDef : IMG[Number(lootboxId)!]} /> */}
           </div>
 
           <div className={styles.radialBarBlock}>
-            {/* <h2 className={styles.radialBarTitle}>
-              <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
-            </h2> */}
             <h2 className={styles.radialBarTitle}>
-              <span className={styles.statCurNum}>{40} / 100 tokens left</span>
+              <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
             </h2>
+            {/* <h2 className={styles.radialBarTitle}>
+              <span className={styles.statCurNum}>{40} / 100 tokens left</span>
+            </h2> */}
             <div className={styles.radialBarGraph}>
               <Bar />
             </div>
