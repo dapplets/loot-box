@@ -33,9 +33,23 @@ export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 
 const _api = new DappletApi();
 
+console.log('_api', _api);
+
 export default function App(AppProps: any) {
-  const [selectedLootboxId, setSelectedLootboxId] = useState<number | null>(null);
+  const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
+  const { lootboxId } = useParams();
   const [loader, setLoader] = useState(false);
+  useEffect(() => {
+    // setLoader(true);
+    // _api.getLootboxStat(lootboxId!).then((x) => {
+    //   setStat(x?.currentBalance ?? null);
+    //   setLoader(false);
+    // });
+    _api.getLootboxById(lootboxId!).then((x) => setSelectedLootboxId(x?.id!));
+    console.log(lootboxId);
+    console.log(selectedLootboxId);
+  }, [lootboxId, selectedLootboxId]);
+
   return (
     <>
       <Routes>
@@ -91,14 +105,16 @@ export default function App(AppProps: any) {
 
 function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }) {
   const { lootboxId } = useParams();
-  const [statCur, setStat] = useState(Number);
+  const [statCur, setStat] = useState<number | null>(null);
   const [loader, setLoader] = useState(false);
+  const [pictureId, setPictureId] = useState<number | null>(null);
   useEffect(() => {
     setLoader(true);
-    _api.getLootboxStat(Number(lootboxId!)).then((x) => {
-      setStat(x.currentBalance);
+    _api.getLootboxStat(lootboxId!).then((x) => {
+      setStat(x?.currentBalance ?? null);
       setLoader(false);
     });
+    _api.getLootboxById(lootboxId!).then((x) => setPictureId(Number(x?.pictureId)));
   }, [lootboxId]);
   const pulse = keyframes`
   0% {
@@ -128,6 +144,8 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
     transform: scaleX(0);
     animation: ${pulse} 2s forwards;
   `;
+  console.log(pictureId);
+  console.log(selectedLootboxId);
 
   return (
     // <main>
@@ -136,21 +154,27 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
         <div className={styles.postLoader}>
           <h1 className={styles.boxTitle}>Sed egestas et est amet </h1>
           <div className={styles.boxImg}>
-            {/* <img src={selectedLootboxId === null ? IMG[Number(lootboxId)!] : boxDef} /> */}
-            <img src={selectedLootboxId === null ? boxDef : IMG[Number(lootboxId)!]} />
-          </div>
+            {pictureId !== null && selectedLootboxId !== null ? (
+              <img src={IMG[pictureId!]} />
+            ) : (
+              <img src={boxDef} />
+            )}
 
-          <div className={styles.radialBarBlock}>
-            {/* <h2 className={styles.radialBarTitle}>
-              <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
-            </h2> */}
-            <h2 className={styles.radialBarTitle}>
-              <span className={styles.statCurNum}>{40} / 100 tokens left</span>
-            </h2>
-            <div className={styles.radialBarGraph}>
-              <Bar />
-            </div>
+            {/* <img src={selectedLootboxId === null ? boxDef : IMG[Number(lootboxId)!]} /> */}
           </div>
+          {selectedLootboxId !== null ? (
+            <div className={styles.radialBarBlock}>
+              <h2 className={styles.radialBarTitle}>
+                <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
+              </h2>
+              {/* <h2 className={styles.radialBarTitle}>
+              <span className={styles.statCurNum}>{40} / 100 tokens left</span>
+            </h2> */}
+              <div className={styles.radialBarGraph}>
+                <Bar />
+              </div>
+            </div>
+          ) : null}
 
           <div className={styles.description}>
             Sed egestas et est amet convallis lectus congue cursus. Risus bibendum ornare vitae,

@@ -3,7 +3,7 @@ import cn from 'classnames';
 import styles from './App.module.scss';
 
 import { useToggle } from './hooks/useToggle';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 import GeneralBridge from '@dapplets/dapplet-overlay-bridge';
 import {
@@ -12,6 +12,7 @@ import {
   LootboxStat,
   LootboxWinner,
   BoxCreationPrice,
+  FtMetadata,
 } from '../../common/interfaces';
 import {} from '@dapplets/dapplet-extension';
 import Avatar from './icons/Lootbox.png';
@@ -32,6 +33,7 @@ import { SettingsNFT } from './components/boxSettings/settingsNft';
 
 import { Preloader } from './components/atoms/Preloader';
 import { Api } from './api';
+import { MessageMain } from './components/atoms/MessageMain';
 
 interface ICtx {
   authorFullname: string;
@@ -76,23 +78,20 @@ export default () => {
   const [loader, setLoader] = useState(false);
 
   const [winInfo, setWinInfo] = useState('');
-  const [isLoadLootbox, setLoadLootbox] = useState(false);
 
-  // const [imgSelect, setImgSelect] = useState('');
-
-  // const updateImgSelect = (x: string) => {
-  //   setImgSelect(x);
-  //   console.log(imgSelect);
-  // };
+  const [messageError, setMessageError] = useState(false);
+  const [ftMetadata, setFtMetadata] = useState(null);
+  const [newMetadata, setMetadata] = useState<FtMetadata | null>();
+  // const [isLoadLootbox, setLoadLootbox] = useState(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
   };
 
   useEffect(() => {
+    setLoader(true);
     dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
     dappletApi.isWalletConnected().then(async (isWalletConnected) => {
-      setLoadLootbox(true);
       let accountName: string | undefined;
       if (isWalletConnected) {
         accountName = await dappletApi.getCurrentNearAccount();
@@ -100,19 +99,19 @@ export default () => {
           setLootboxes(x);
         });
       }
-      setLoadLootbox(false);
+
       setNearAccount(accountName);
+      setLoader(false);
     });
-    // const contract = await Core.contract('near', 'dev-1634890606019-41631155713650', {
-    //   viewMethods: ['getTweets'],
-    //   changeMethods: ['addTweet', 'removeTweet'],
-    // });
+    console.log(lootboxes.length);
   }, []);
+  let navigate = useNavigate();
+
+  const navigationDeploy = () => {
+    navigate('/deploy_your_box');
+  };
 
   const doneClickHandler = async () => {
-    // show loader
-    // console.log('done');
-
     if (!nearAccount) throw new Error('Not logged in.');
 
     setLoader(true);
@@ -123,26 +122,37 @@ export default () => {
       await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
         setLootboxes(x);
       });
-      setCreationForm(EMPTY_FORM);
+      navigationDeploy();
     } catch (error) {
       console.log(error);
+      setMessageError(true);
     } finally {
       setLoader(false);
     }
-
-    // console.log(EMPTY_FORM);
-
-    // if (selectedLootboxId === null) return;
   };
 
   useEffect(() => {
     doneClickHandler;
+
     selectedLootboxId;
   }, [doneClickHandler, selectedLootboxId]);
 
   useEffect(() => {
-    if (selectedLootboxId === null) return;
+    if (ftMetadata === null) return;
+    Promise.all([dappletApi.getFtMetadata(ftMetadata)])
 
+      .then(([x]) => {
+        setMetadata(x);
+      })
+
+      .catch((e) => {
+        console.error(e);
+      });
+  }, [ftMetadata]);
+
+  useEffect(() => {
+    if (selectedLootboxId === null) return;
+    // setWinners(winners);
     Promise.all([
       api.getLootboxClaims(selectedLootboxId.toString()),
       dappletApi.getLootboxWinners(selectedLootboxId),
@@ -163,16 +173,17 @@ export default () => {
 
         // ToDo: show error to user
       });
-  }, [selectedLootboxId]);
+  }, [selectedLootboxId, winners]);
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
-    setLoader(true);
+
     dappletApi
       .getLootboxStat(selectedLootboxId)
       .then((x) => {
+        // setLoader(true);
         setStat(x);
-        setLoader(false);
+        // setLoader(false);
       })
 
       .catch((e) => {
@@ -180,7 +191,7 @@ export default () => {
 
         // ToDo: show error to user
       });
-  }, [selectedLootboxId]);
+  }, [selectedLootboxId, stat]);
 
   useEffect(() => {
     dappletApi
@@ -214,7 +225,7 @@ export default () => {
     }
     setNearAccount(accountName);
   };
-  // console.log(selectedLootboxId);
+
   const getWin = async (y: any) => {
     lootboxes.map((x) => {
       if (+x.ftContentItems[y].tokenAmount !== 0) {
@@ -226,11 +237,10 @@ export default () => {
       }
     });
   };
-  // console.log(getWin(selectedLootboxId));
 
   return (
     <>
-      {isLoadLootbox ? (
+      {loader ? (
         <Preloader />
       ) : (
         <div className={cn(styles.app)}>
@@ -256,22 +266,34 @@ export default () => {
               element={
                 (loader && <Preloader />) || (
                   <CreateNewBox winInfo={winInfo} imgVal={imgBox} label={valueLabel}>
-                    {lootboxes.map((item, index) => (
-                      <ChildComponent
-                        onClick={() => {
-                          setLootboxes(lootboxes);
-                          setSelectedLootboxId(item.id!);
-                        }}
-                        imgVal={IMG[item.pictureId]}
-                        label={String(item.id!)}
-                        number={index}
-                        key={index}
-                        id={item.id!}
-                        creationForm={creationForm}
-                        status={item.status!}
-                        winInfo={item}
-                      />
-                    ))}
+                    {lootboxes.length !== 0 ? (
+                      lootboxes.map((item, index) => (
+                        <ChildComponent
+                          onClick={() => {
+                            console.log(lootboxes.length);
+
+                            setLootboxes(lootboxes);
+                            setSelectedLootboxId(item.id!);
+                          }}
+                          imgVal={IMG[item.pictureId]}
+                          label={String(item.id!)}
+                          number={index}
+                          key={index}
+                          id={item.id!}
+                          creationForm={creationForm}
+                          status={item.status!}
+                          winInfo={item}
+                          loader={loader}
+                        />
+                      ))
+                    ) : (
+                      <div className={styles.messageNewBox}>
+                        <MessageMain
+                          title="There is no lootboxes in youre extention"
+                          subtitle="You can create them "
+                        />
+                      </div>
+                    )}
                   </CreateNewBox>
                 )
               }
@@ -310,7 +332,9 @@ export default () => {
               path="/settings_token"
               element={
                 <SettingsToken
+                  setFtMetadata={setFtMetadata}
                   creationForm={creationForm}
+                  newMetadata={newMetadata}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
                 />
               }
@@ -336,6 +360,8 @@ export default () => {
                     winInfo={winInfo}
                     setWinInfo={(x) => setWinInfo(x)}
                     onCreationFormUpdate={(x) => setCreationForm(x)}
+                    setMessageError={setMessageError}
+                    messageError={messageError}
                   />
                 )
               }

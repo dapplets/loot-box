@@ -128,9 +128,6 @@ export default class TwitterFeature {
                 me.hidden = false;
                 me.replace = `ltbx.app/${numIndex}`;
                 await this.getClaimStatus(me, numIndex, lootboxId);
-                // me.exec = null;
-                // me.img = BOX_DEFAULT[lootboxId.pictureId];
-                // const getClaim = await this._api.claimLootbox(numIndex, wallet.accountId);
               }
             },
             exec: async (ctx, me) => {},
@@ -139,6 +136,7 @@ export default class TwitterFeature {
       ],
     });
   }
+
   async getClaimStatus(me, numIndex, lootbox): Promise<void> {
     me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
@@ -146,8 +144,8 @@ export default class TwitterFeature {
     me.exec = null;
     if (result.status === 0) {
       me.img = BOX_DEFAULT[lootbox.pictureId];
-      me.exec = () => {
-        this.getClaimLoot(me, numIndex, lootbox);
+      me.exec = async () => {
+        await this.getClaimLoot(me, numIndex, lootbox);
       };
     } else if (result.status === 1) {
       me.img = BOX_EMPTY[lootbox.pictureId];
@@ -164,34 +162,29 @@ export default class TwitterFeature {
     me.img = { DARK: boxDef, LIGHT: White };
     me.exec = null;
     const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
-    const getLootboxClaim = await this._api
+    await this._api
       ._claimLootbox(numIndex, wallet.accountId)
+      .then((x) => {
+        console.log(x);
+
+        if (x.status === 2 || x.status === 0) {
+          me.img = BOX_OPEN[lootbox.pictureId];
+          me.text = this._formatWinningText(x);
+          me.exec = null;
+          console.log(x.status);
+        } else if (x.status === 1) {
+          me.img = BOX_EMPTY[lootbox.pictureId];
+          me.text = 'Empty';
+          me.exec = null;
+          console.log(x.status);
+        }
+      })
       .catch((err) => {
         me.img = BOX_EMPTY[lootbox.pictureId];
-        me.text = 'The lootbox is opened already';
-        me.exec = () => {};
-        console.error(err);
-        return null;
+        me.exec = null;
+        me.text = 'Empty';
+        console.log(err);
       });
-    if (getLootboxClaim.status === 2 || getLootboxClaim.status === 0) {
-      me.img = BOX_OPEN[lootbox.pictureId];
-      this._api
-        ._getLootboxClaimStatus(numIndex, wallet.accountId)
-        .then((x) => {
-          me.text = this._formatWinningText(x);
-        })
-        .catch((err) => {
-          me.img = BOX_EMPTY[lootbox.pictureId];
-          me.text = 'The lootbox is opened already';
-          me.exec = () => {};
-          console.error(err);
-        });
-      me.exec = () => {};
-    } else {
-      me.img = BOX_EMPTY[lootbox.pictureId];
-      me.text = 'Empty';
-      me.exec = () => {};
-    }
   }
 
   async openOverlay(props?: any): Promise<void> {

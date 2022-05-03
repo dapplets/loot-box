@@ -87,19 +87,22 @@ export interface FtMetadata {
   decimals: number;
 }
 
-export interface IDappletApi {
+export interface IDappletApiForLanding {
+  getLootboxById(lootboxId: string): Promise<Lootbox | null>;
+  getLootboxStat(lootboxId: string): Promise<LootboxStat | null>;
+}
+
+export interface IDappletApi extends IDappletApiForLanding {
   connectWallet: () => Promise<string>;
   disconnectWallet: () => Promise<void>;
   isWalletConnected: () => Promise<boolean>;
   getCurrentNearAccount: () => Promise<string>;
-  
+
   getBoxesByAccount(account: string): Promise<Lootbox[]>;
   createNewBox(lootbox: Lootbox): Promise<string>;
 
   calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice>;
-  getLootboxStat(lootboxId: string): Promise<LootboxStat>;
   getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]>;
-  getLootboxById(lootboxId: string): Promise<Lootbox>;
 
   _getLootboxClaimStatus(lootboxId: string, accountId: string): Promise<LootboxClaimResult>;
   _claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimResult>;

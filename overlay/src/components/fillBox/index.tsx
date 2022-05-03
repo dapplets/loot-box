@@ -13,6 +13,7 @@ import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
 import { Lootbox } from '../../../../common/interfaces';
 import { useEffect } from 'react';
+import { Modal } from '../atoms/Modal';
 
 export interface FillBoxProps {
   // onSetId?: () => void;
@@ -25,6 +26,8 @@ export interface FillBoxProps {
   onCreationFormUpdate: (x: any) => void;
   winInfo: string;
   setWinInfo: (x: string) => void;
+  setMessageError: (x: any) => void;
+  messageError: boolean;
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const {
@@ -37,6 +40,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     onCreationFormUpdate,
     setWinInfo,
     winInfo,
+    messageError,
+    setMessageError,
   } = props;
   // const newForm = Object.assign({}, creationForm);
   const [winInfoToken, setWinInfoToken] = useState(winInfo);
@@ -63,35 +68,9 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
 
         <div className={cn(styles.img)} onClick={() => {}}>
           <img src={imgVal} />
-          <span className={styles.spanWin}>
-            {winInfoToken}
-            {/* {+winAmount !== 0 ? winAmountParse : winAmountTickerParse} */}
-          </span>
+          <span className={styles.spanWin}>{winInfoToken}</span>
         </div>
-        {/* <div className={cn(styles.distributeDrop)}>
-          <LabelSettings
-            title="How would you like to distribute drop?"
-            support="You can choose between one transaction for one winner or one transaction for all winners. 
 
-            The first option will require an additional amount of gas"
-            isActive
-          />
-          <div className={cn(styles.distributeDropRadio)}>
-            <RadioButton
-              value="1 transaction per 1 win"
-              name="distribute Drop"
-              title="1 transaction per 1 win"
-              id="1_DISTRIBUTE"
-            />
-            <span />
-            <RadioButton
-              name="distribute Drop"
-              title="1 transaction for all wins"
-              value="1 transaction for all wins"
-              id="2_DISTRIBUTE"
-            />
-          </div>
-        </div> */}
         <div className={cn(styles.payBlock)}>
           <LabelSettings title="You need to pay" />
           <div className={cn(styles.payInfo)}>
@@ -101,13 +80,17 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
           </div>
         </div>
         <div className={cn(styles.payBtn)}>
-          <Link to="/deploy_your_box">
-            <ButtonPay
-              onClick={onDoneClick}
-              styleBtn="default"
-              title={`PAY ${price.totalAmount} NEAR`}
-            />
-          </Link>
+          {/* <Link to="/deploy_your_box"> */}
+          <ButtonPay
+            onClick={() => {
+              onDoneClick();
+
+              // onDoneClick;
+            }}
+            styleBtn="default"
+            title={`PAY ${price.totalAmount} NEAR`}
+          />
+          {/* </Link> */}
         </div>
       </div>
       <div className={cn(styles.navigation)}>
@@ -115,6 +98,13 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
           <LinksStep step="prev" label="Back" />
         </Link>
       </div>
+      <Modal
+        visible={messageError}
+        title={'Transaction error'}
+        content={''}
+        footer={''}
+        onClose={() => setMessageError(false)}
+      />
     </div>
   );
 };
