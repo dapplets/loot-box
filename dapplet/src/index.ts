@@ -72,6 +72,7 @@ export default class TwitterFeature {
           calcBoxCreationPrice: this._api.calcBoxCreationPrice.bind(this._api),
           getLootboxStat: this._api.getLootboxStat.bind(this._api),
           getLootboxWinners: this._api.getLootboxWinners.bind(this._api),
+          getFtMetadata: this._api.getFtMetadata.bind(this._api),
           // getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
           // claimLootbox: this._api.claimLootbox.bind(this._api),
           _getLootboxClaimStatus: this._api._getLootboxClaimStatus.bind(this._api),
