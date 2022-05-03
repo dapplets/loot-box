@@ -101,7 +101,7 @@ pub struct Lootbox {
 }
 
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)] // ToDo: check what's Default means
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
     pub lootboxes_by_id: Vector<Lootbox>,
     pub lootboxes_per_owner: LookupMap<AccountId, Vector<LootboxId>>,
@@ -445,8 +445,6 @@ impl Contract {
                 claims_vector.push(&claim_result_id);
                 self.claims_per_lootbox.insert(&lootbox_id, &claims_vector);
 
-                // ToDo: change lootbox status on completed if items are over.
-
                 match claim_result {
                     ClaimResult::NotExists => Either::Right(claim_result),
                     ClaimResult::NotOpened => Either::Right(claim_result),
@@ -481,8 +479,6 @@ impl Contract {
                                 GAS_FOR_NFT_CHECK_OWNERSHIP,
                             )
                         ))
-
-                        // ToDo: catch error from promise
                     },
                     ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id } => {
                         Either::Left(ext_nft::nft_transfer(
