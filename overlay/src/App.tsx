@@ -332,8 +332,8 @@ export default () => {
                       <div className={styles.messageNewBox}>
                         <MessageMain
                           className={styles.messageNewBoxTitle}
-                          title="There is no lootboxes in youre extention"
-                          subtitle="You can create them "
+                          title="Welcome to the Lootbox Dapplet"
+                          subtitle={"Get started by creating a lootbox! All of your lootboxes will be displayed on this page. Learn more about lootboxes at " + networkConfig.landingUrl}
                         />
                       </div>
                     )}

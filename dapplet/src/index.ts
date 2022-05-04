@@ -169,8 +169,10 @@ export default class TwitterFeature {
       })
       .catch((err) => {
         me.img = BOX_EMPTY[lootbox.pictureId];
-        me.exec = null;
-        me.text = 'Empty';
+        me.exec = async () => {
+          await this.getClaimLoot(me, numIndex, lootbox);
+        };
+        me.text = 'Transaction rejected';
         console.log(err);
       });
   }

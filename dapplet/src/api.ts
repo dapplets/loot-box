@@ -477,6 +477,7 @@ export class DappletApi implements IDappletApi {
         nftContentItems: [],
       };
     } else {
+      console.error("Unknown claim result", claim_status);
       throw new Error('Unknown claim result');
     }
   }
