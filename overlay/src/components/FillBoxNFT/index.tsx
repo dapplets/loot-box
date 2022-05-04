@@ -43,8 +43,8 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
         <span className={styles.spanWin}>1 NFT</span>
       </div>
       <div className={styles.textNft}>
-        You need to tranfer selected NFTs to dev-1651241153572-71089672213750 account. 
-        When all NFTs are tranferred, please click the button below.
+        You need to tranfer selected NFTs to dev-1651241153572-71089672213750 account. When all NFTs
+        are tranferred, please click the button below.
       </div>
       <div className={cn(styles.payBtn_block)}>
         <ButtonPay styleBtn="disable" title="NFTs transferred" />
@@ -82,7 +82,7 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
       </div>
 
       <div className={cn(styles.navigation)}>
-        <Link to="/box_settings_value">
+        <Link to="/settings_NFT">
           <LinksStep step="prev" label="Back" />
         </Link>
       </div>

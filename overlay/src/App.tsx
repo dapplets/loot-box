@@ -83,31 +83,59 @@ export default () => {
   const [ftMetadata, setFtMetadata] = useState(null);
   const [newMetadata, setMetadata] = useState<FtMetadata | null>();
   // const [isLoadLootbox, setLoadLootbox] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const debouncedSearchTerm = useDebounce(creationForm, 300);
+  const [isFetching, setFetching] = useState(false);
+  const [currentLootboxes, setCurrentLootboxes] = useState(8);
+  const [totalCount, setTotalCount] = useState(0);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
   };
 
   useEffect(() => {
-    setLoader(true);
+    // setLoader(true);
     dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
+
     dappletApi.isWalletConnected().then(async (isWalletConnected) => {
       let accountName: string | undefined;
-      if (isWalletConnected) {
-        accountName = await dappletApi.getCurrentNearAccount();
-        await dappletApi.getBoxesByAccount(accountName).then((x) => {
-          setLootboxes(x);
-          console.log(lootboxes);
-        });
-      }
 
+      if (isWalletConnected || isFetching) {
+        accountName = await dappletApi.getCurrentNearAccount();
+
+        await dappletApi
+          .getBoxesByAccount(accountName, 0, 8 + currentLootboxes)
+          .then((x) => {
+            setLootboxes(x);
+
+            setCurrentLootboxes((prevState) => prevState + 8);
+            setTotalCount(x.length);
+            // console.log(totalCount);
+          })
+          .finally(() => setFetching(false));
+      }
+      // setLoader(false);
       setNearAccount(accountName);
-      setLoader(false);
     });
-    // console.log('1');
+  }, [isFetching]);
+
+  useEffect(() => {
+    document.addEventListener('scroll', scrollHandler);
+    return function () {
+      document.removeEventListener('scroll', scrollHandler);
+    };
   }, []);
+  const scrollHandler = (e: any) => {
+    if (
+      e.target.documentElement.scrollHeight -
+        (e.target.documentElement.scrollTop + window.innerHeight) <
+        100 &&
+      lootboxes.length === totalCount
+    ) {
+      setFetching(true);
+    } else {
+      setFetching(false);
+    }
+  };
+
   let navigate = useNavigate();
 
   const navigationDeploy = () => {
@@ -135,19 +163,10 @@ export default () => {
     }
   };
 
-  useEffect(
-    () => {
-      doneClickHandler;
-
-      selectedLootboxId;
-      // console.log('2', lootboxes);
-      // console.log('2', doneClickHandler);
-      // console.log('2', selectedLootboxId);
-    },
-    [
-      // doneClickHandler, selectedLootboxId
-    ],
-  );
+  useEffect(() => {
+    // doneClickHandler;
+    // selectedLootboxId;
+  }, []);
 
   useEffect(() => {
     if (ftMetadata === null) return;
