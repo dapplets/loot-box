@@ -1,9 +1,7 @@
 import { DappletApi } from './api';
 import { Routes, Route, Link } from 'react-router-dom';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { Lootbox, LootboxStat } from '@loot-box/common/interfaces';
-import React, { FC, useState, useEffect, useMemo } from 'react';
-import cn from 'classnames';
+import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import styles from './App.module.scss';
 import styled, { keyframes } from 'styled-components';
 
@@ -24,11 +22,11 @@ import { Footer } from './components/Footer/index';
 import { About } from './components/About';
 import { Instruction } from './components/Instruction';
 import { getNetworkConfig } from '@loot-box/common/helpers';
+import { LootboxStat } from '@loot-box/common/interfaces';
 
 export interface AppProps {
   completed: number;
   bgcolor: string;
-  // stat: number;
 }
 export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 
@@ -37,16 +35,8 @@ const _api = new DappletApi(getNetworkConfig(process.env.NETWORK as string));
 export default function App() {
   const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
   const { lootboxId } = useParams();
-  const [loader, setLoader] = useState(false);
   useEffect(() => {
-    // setLoader(true);
-    // _api.getLootboxStat(lootboxId!).then((x) => {
-    //   setStat(x?.currentBalance ?? null);
-    //   setLoader(false);
-    // });
     _api.getLootboxById(lootboxId!).then((x) => setSelectedLootboxId(x?.id!));
-    console.log(lootboxId);
-    console.log(selectedLootboxId);
   }, [lootboxId, selectedLootboxId]);
 
   return (
@@ -104,28 +94,30 @@ export default function App() {
 
 function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }) {
   const { lootboxId } = useParams();
-  const [statCur, setStat] = useState<number | null>(null);
+  const [statCur, setStat] = useState<LootboxStat | null>(null);
   const [loader, setLoader] = useState(false);
   const [pictureId, setPictureId] = useState<number | null>(null);
+
   useEffect(() => {
     setLoader(true);
     _api.getLootboxStat(lootboxId!).then((x) => {
-      setStat(x?.currentBalance ?? null);
+      setStat(x);
       setLoader(false);
     });
     _api.getLootboxById(lootboxId!).then((x) => setPictureId(Number(x?.pictureId)));
   }, [lootboxId]);
-  const pulse = keyframes`
-  0% {
-    transform: scaleX(0);
-  }
-  100% {
-    transform: scaleX(1);
-  }
-`;
 
-  const Bar = styled.div`
-    width: ${100 - 40}%;
+  const pulse = keyframes`
+    0% {
+      transform: scaleX(0);
+    }
+    100% {
+      transform: scaleX(1);
+    }
+  `;
+
+  const Bar = styled.div<{ completedPercents: string }>`
+    width: ${(props) => props.completedPercents}%;
     height: 100%;
 
     background: linear-gradient(
@@ -143,50 +135,53 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
     transform: scaleX(0);
     animation: ${pulse} 2s forwards;
   `;
-  console.log(pictureId);
-  console.log(selectedLootboxId);
 
   return (
-    // <main>
     <div className={styles.BoxBlock}>
-      {(loader && <Preloader />) || (
-        <div className={styles.postLoader}>
-          <h1 className={styles.boxTitle}>Sed egestas et est amet </h1>
-          <div className={styles.boxImg}>
-            {pictureId !== null && selectedLootboxId !== null ? (
-              <img src={IMG[pictureId!]} />
-            ) : (
-              <img src={boxDef} />
-            )}
-
-            {/* <img src={selectedLootboxId === null ? boxDef : IMG[Number(lootboxId)!]} /> */}
-          </div>
-          {selectedLootboxId !== null ? (
-            <div className={styles.radialBarBlock}>
-              <h2 className={styles.radialBarTitle}>
-                <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
-              </h2>
-              {/* <h2 className={styles.radialBarTitle}>
-              <span className={styles.statCurNum}>{40} / 100 tokens left</span>
-            </h2> */}
-              <div className={styles.radialBarGraph}>
-                <Bar />
-              </div>
+      {(loader && <Preloader />) ||
+        (statCur != null ? (
+          <div className={styles.postLoader}>
+            <h1 className={styles.boxTitle}>Sed egestas et est amet </h1>
+            <div className={styles.boxImg}>
+              {pictureId !== null && selectedLootboxId !== null ? (
+                <img src={IMG[pictureId!]} />
+              ) : (
+                <img src={boxDef} />
+              )}
             </div>
-          ) : null}
+            {selectedLootboxId !== null ? (
+              <div className={styles.radialBarBlock}>
+                <h2 className={styles.radialBarTitle}>
+                  <span className={styles.statCurNum}>{statCur?.completedPercents}</span> / 100 %
+                </h2>
+                <div className={styles.radialBarGraph}>
+                  <Bar completedPercents={statCur!.completedPercents} />
+                </div>
+              </div>
+            ) : null}
 
-          <div className={styles.description}>
-            Sed egestas et est amet convallis lectus congue cursus. Risus bibendum ornare vitae,
-            risus turpis interdum. Imperdiet nulla proin faucibus molestie. Eleifend lacinia posuere
-            posuere dolor est feugiat eu adipiscing.
+            <div className={styles.description}>
+              Sed egestas et est amet convallis lectus congue cursus. Risus bibendum ornare vitae,
+              risus turpis interdum. Imperdiet nulla proin faucibus molestie. Eleifend lacinia
+              posuere posuere dolor est feugiat eu adipiscing.
+            </div>
+            <div className={styles.buttonBlock}>
+              <Link to="/instruction">
+                <button className={styles.button}>How to collect?</button>
+              </Link>
+            </div>
           </div>
-          <div className={styles.buttonBlock}>
-            <Link to="/instruction">
-              <button className={styles.button}>How to collect?</button>
-            </Link>
+        ) : (
+          <div>
+            <div className={styles.description}>The lootbox doesn't exist.</div>
+
+            <div className={styles.buttonBlock}>
+              <Link to="/instruction">
+                <button className={styles.button}>How to collect?</button>
+              </Link>
+            </div>
           </div>
-        </div>
-      )}
+        ))}
     </div>
   );
 }

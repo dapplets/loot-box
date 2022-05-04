@@ -4,12 +4,12 @@
   "description": "_",
   "main": "",
   "scripts": {
-    "postinstall": "concurrently -c magenta,cyan -n dapplet,overlay \"npm run install:dapplet\" \"npm run install:overlay\"",
-    "install:dapplet": "cd dapplet && npm i",
-    "install:overlay": "cd overlay && npm i",
-    "start": "concurrently -c magenta,cyan -n dapplet,overlay \"npm run start:dapplet\" \"npm run start:overlay\"",
-    "start:dapplet": "cd dapplet && npm start",
-    "start:overlay": "cd overlay && npm start",
+    "postinstall": "concurrently -c magenta,cyan -n dapplet,overlay \"yarn install:dapplet\" \"yarn install:overlay\"",
+    "install:dapplet": "cd dapplet && yarn",
+    "install:overlay": "cd overlay && yarn",
+    "start": "concurrently -c magenta,cyan -n dapplet,overlay \"yarn start:dapplet\" \"yarn start:overlay\"",
+    "start:dapplet": "cd dapplet && yarn start",
+    "start:overlay": "cd overlay && yarn start",
     "prettier": "npx prettier --write ."
   },
   "repository": {

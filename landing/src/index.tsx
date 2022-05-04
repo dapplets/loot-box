@@ -6,7 +6,7 @@ import App from './App';
 import { Buffer } from 'buffer';
 
 // Polyfill for near-api-js
-window.Buffer = Buffer;
+Object.defineProperty(window, "Buffer", { value: Buffer });
 
 ReactDOM.render(
   <BrowserRouter>

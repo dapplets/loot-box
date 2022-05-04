@@ -6,7 +6,8 @@
   "scripts": {
     "start": "rollup -w --config rollup.config.js",
     "build": "rollup --config rollup.config.js",
-    "linter": "npx eslint ."
+    "linter": "npx eslint .",
+    "postinstall": "npm link ../common"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,6 @@
   "license": "MIT",
   "devDependencies": {
     "@dapplets/dapplet-extension": "^0.48.0",
-    "@loot-box/common": "../common",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
