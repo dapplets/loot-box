@@ -30,7 +30,7 @@ import CreateNewBox from './components/createNewBox';
 import { SettingDef } from './components/boxSettings';
 import { SettingsToken } from './components/boxSettings/settingsToken';
 import { SettingsNFT } from './components/boxSettings/settingsNft';
-
+import useDebounce from './hooks/useDebounce';
 import { Preloader } from './components/atoms/Preloader';
 import { Api } from './api';
 import { MessageMain } from './components/atoms/MessageMain';
@@ -83,6 +83,8 @@ export default () => {
   const [ftMetadata, setFtMetadata] = useState(null);
   const [newMetadata, setMetadata] = useState<FtMetadata | null>();
   // const [isLoadLootbox, setLoadLootbox] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const debouncedSearchTerm = useDebounce(creationForm, 300);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
@@ -97,13 +99,14 @@ export default () => {
         accountName = await dappletApi.getCurrentNearAccount();
         await dappletApi.getBoxesByAccount(accountName).then((x) => {
           setLootboxes(x);
+          console.log(lootboxes);
         });
       }
 
       setNearAccount(accountName);
       setLoader(false);
     });
-    console.log(lootboxes.length);
+    // console.log('1');
   }, []);
   let navigate = useNavigate();
 
@@ -123,6 +126,7 @@ export default () => {
         setLootboxes(x);
       });
       navigationDeploy();
+      console.log(lootboxes);
     } catch (error) {
       console.log(error);
       setMessageError(true);
@@ -131,11 +135,19 @@ export default () => {
     }
   };
 
-  useEffect(() => {
-    doneClickHandler;
+  useEffect(
+    () => {
+      doneClickHandler;
 
-    selectedLootboxId;
-  }, [doneClickHandler, selectedLootboxId]);
+      selectedLootboxId;
+      // console.log('2', lootboxes);
+      // console.log('2', doneClickHandler);
+      // console.log('2', selectedLootboxId);
+    },
+    [
+      // doneClickHandler, selectedLootboxId
+    ],
+  );
 
   useEffect(() => {
     if (ftMetadata === null) return;
@@ -148,6 +160,7 @@ export default () => {
       .catch((e) => {
         console.error(e);
       });
+    console.log('3');
   }, [ftMetadata]);
 
   useEffect(() => {
@@ -173,6 +186,7 @@ export default () => {
 
         // ToDo: show error to user
       });
+    // console.log('4');
   }, [selectedLootboxId, winners]);
 
   useEffect(() => {
@@ -191,6 +205,7 @@ export default () => {
 
         // ToDo: show error to user
       });
+    // console.log('5');
   }, [selectedLootboxId, stat]);
 
   useEffect(() => {
@@ -204,6 +219,7 @@ export default () => {
 
         // ToDo: show error to user
       });
+    // console.log('6');
   }, []);
 
   const handleLogIn = async () => {
@@ -289,6 +305,7 @@ export default () => {
                     ) : (
                       <div className={styles.messageNewBox}>
                         <MessageMain
+                          className={styles.messageNewBoxTitle}
                           title="There is no lootboxes in youre extention"
                           subtitle="You can create them "
                         />

@@ -13,6 +13,7 @@ import React, {
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 import { useToggle } from '../../hooks/useToggle';
+import useDebounce from '../../hooks/useDebounce';
 
 import { LabelSettings } from '../atoms/LabelSettings';
 import { LinksStep } from '../atoms/LinksStep';
@@ -76,6 +77,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const newForm = Object.assign({}, creationForm);
 
   const NearReg = new RegExp(/^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/gm);
+  // const [isSearching, setIsSearching] = useState(false)
+  // const debouncedSearchTerm = useDebounce(creationForm, 300);
 
   useEffect(() => {
     creationForm.dropChance = value;
