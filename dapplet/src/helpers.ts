@@ -44,3 +44,7 @@ export function groupBy<T>(xs: T[], key: string): { [group_key: string]: T[] } {
     return rv;
   }, {});
 };
+
+export function toPrecision(value: string, precision: number): string {
+  return (new BigNumber(value)).toPrecision(precision);
+}

@@ -32,6 +32,7 @@ import safeOpen from './icons/boxOpen/safe_open.png';
 import { LootboxClaimResult } from '@loot-box/common/interfaces';
 import { getNetworkConfig, NetworkConfig } from '@loot-box/common/helpers';
 import { DappletApi } from './api';
+import { sum, toPrecision } from './helpers';
 
 export const BOX_DEFAULT = [blueBox, redBox, safe, box, bag, pinata, pig];
 export const BOX_OPEN = [blueBoxOpen, redBoxOpen, safeOpen, boxOpen, bagOpen, pinataOpen, pigOpen];
@@ -140,7 +141,7 @@ export default class TwitterFeature {
       me.exec = null;
     } else if (result.status === 2) {
       me.img = BOX_OPEN[lootbox.pictureId];
-      me.text = this._formatWinningText(result);
+      me.text = await this._formatWinningText(result);
       me.exec = null;
     }
   }
@@ -151,12 +152,12 @@ export default class TwitterFeature {
     const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
     await this._api
       ._claimLootbox(numIndex, wallet.accountId)
-      .then((x) => {
+      .then(async (x) => {
         console.log(x);
 
         if (x.status === 2 || x.status === 0) {
           me.img = BOX_OPEN[lootbox.pictureId];
-          me.text = this._formatWinningText(x);
+          me.text = await this._formatWinningText(x);
           me.exec = null;
           console.log(x.status);
         } else if (x.status === 1) {
@@ -178,19 +179,27 @@ export default class TwitterFeature {
     this._overlay.send('data', props);
   }
 
-  private _formatWinningText(x: LootboxClaimResult): string {
-    let text = undefined;
+  private async _formatWinningText(claim: LootboxClaimResult): Promise<string> {
+    const winLoots: string[] = [];
 
-    if (x.ftContentItems.length !== 0) {
-      x.ftContentItems.map(
-        (x) => (text = `You win: ${x.tokenAmount} tokens - Contract Address: ${x.contractAddress}`),
-      );
-    } else if (x.nearContentItems.length !== 0) {
-      x.nearContentItems.map((x) => (text = `You win: ${x.tokenAmount} $NEAR`));
-    } else if (x.nftContentItems.length !== 0) {
-      text = `You win: ${x.nftContentItems.length} NFT`;
+    // NEAR
+    let nearTotal = null;
+    claim.nearContentItems.forEach(x => nearTotal = sum(nearTotal ?? '0', x.tokenAmount));
+    if (nearTotal) {
+      winLoots.push(toPrecision(nearTotal, 6) + ' NEAR');
     }
 
-    return text;
+    // FT
+    for (const ft of claim.ftContentItems) {
+      const { symbol } = await this._api.getFtMetadata(ft.contractAddress);
+      winLoots.push(toPrecision(ft.tokenAmount, 6) + ' ' + symbol);
+    }
+
+    // NFT
+    if (claim.nftContentItems.length > 0) {
+      winLoots.push(claim.nftContentItems.length + ' NFTs');
+    }
+
+    return (winLoots.length > 0) ? `You win: ${winLoots.join(', ')}` : "Empty";
   }
 }
