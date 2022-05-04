@@ -8,7 +8,7 @@ import {
   FtMetadata
 } from '@loot-box/common/interfaces';
 import { NetworkConfig } from '@loot-box/common/helpers';
-import { sum, groupBy, sub, div, mul, toPrecision } from './helpers';
+import { sum, groupBy, sub, div, mul, toPrecision, zerofyEmptyString } from './helpers';
 import { BN } from './bn.js';
 import * as format from './format';
 
@@ -199,12 +199,14 @@ export class DappletApi implements IDappletApi {
       }
     }
 
-    return {
+    const result = {
       feeAmount: '0',
       fillAmount: formatNearAmount(fillAmount),
       gasAmount: formatNearAmount(MAX_GAS_PER_TX.toString()),
-      totalAmount: formatNearAmount(sum('0', fillAmount, parseNearAmount('0.01'))),
+      totalAmount: formatNearAmount(sum('0', fillAmount, MAX_GAS_PER_TX.toString())),
     };
+
+    return result;
   }
 
   async getLootboxStat(lootboxId: string): Promise<LootboxStat> {
@@ -399,19 +401,19 @@ export class DappletApi implements IDappletApi {
       loot_items: [
         ...lootbox.nearContentItems.map((x) => ({
           Near: {
-            total_amount: parseNearAmount(x.tokenAmount),
-            drop_amount_from: parseNearAmount(x.dropAmountFrom),
-            drop_amount_to: parseNearAmount(x.dropAmountTo),
-            balance: parseNearAmount(x.tokenAmount),
+            total_amount: parseNearAmount(zerofyEmptyString(x.tokenAmount)),
+            drop_amount_from: parseNearAmount(zerofyEmptyString(x.dropAmountFrom)),
+            drop_amount_to: parseNearAmount(zerofyEmptyString(x.dropAmountTo)),
+            balance: parseNearAmount(zerofyEmptyString(x.tokenAmount)),
           },
         })),
         ...lootbox.ftContentItems.map((x) => ({
           Ft: {
             token_contract: x.contractAddress,
-            total_amount: format.parseNearAmount(x.tokenAmount, 6),
-            drop_amount_from: format.parseNearAmount(x.dropAmountFrom, 6),
-            drop_amount_to: format.parseNearAmount(x.dropAmountTo, 6),
-            balance: format.parseNearAmount(x.tokenAmount, 6),
+            total_amount: format.parseNearAmount(zerofyEmptyString(x.tokenAmount), 6),
+            drop_amount_from: format.parseNearAmount(zerofyEmptyString(x.dropAmountFrom), 6),
+            drop_amount_to: format.parseNearAmount(zerofyEmptyString(x.dropAmountTo), 6),
+            balance: format.parseNearAmount(zerofyEmptyString(x.tokenAmount), 6),
           },
         })),
         ...lootbox.nftContentItems.map((x) => ({

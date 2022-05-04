@@ -246,7 +246,7 @@ export default () => {
         // ToDo: show error to user
       });
     // console.log('6');
-  }, []);
+  }, [creationForm]);
 
   const handleLogIn = async () => {
     const isWalletConnected = await dappletApi.isWalletConnected();

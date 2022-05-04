@@ -13,15 +13,15 @@ export function sum(...values: string[]): string {
 }
 
 export function sub(a: string, b: string): string {
-  return (new BigNumber(a)).minus(new BigNumber(b)).toFixed();
+  return new BigNumber(a).minus(new BigNumber(b)).toFixed();
 }
 
 export function div(a: string, b: string): string {
-  return (new BigNumber(a)).div(new BigNumber(b)).toFixed();
+  return new BigNumber(a).div(new BigNumber(b)).toFixed();
 }
 
 export function mul(a: string, b: string): string {
-  return (new BigNumber(a)).multipliedBy(new BigNumber(b)).toFixed();
+  return new BigNumber(a).multipliedBy(new BigNumber(b)).toFixed();
 }
 
 export function lte(a: string, b: string): boolean {
@@ -51,12 +51,16 @@ export function getMilliseconds(seconds: number): number {
 }
 
 export function groupBy<T>(xs: T[], key: string): { [group_key: string]: T[] } {
-  return xs.reduce(function(rv, x) {
+  return xs.reduce(function (rv, x) {
     (rv[x[key]] = rv[x[key]] || []).push(x);
     return rv;
   }, {});
-};
+}
 
 export function toPrecision(value: string, precision: number): string {
-  return (new BigNumber(value)).toPrecision(precision);
+  return new BigNumber(value).toPrecision(precision);
+}
+
+export function zerofyEmptyString(value: string): string {
+  return value === '' ? '0' : value;
 }
