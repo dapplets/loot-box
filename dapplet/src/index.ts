@@ -1,6 +1,5 @@
 import {} from '@dapplets/dapplet-extension';
 import EXAMPLE_IMG from './icons/near_dapplet_icon.svg';
-import { IDappletApi } from '../../common/interfaces';
 
 import boxDef from './icons/LightsOut.gif';
 import boxDim from './icons/Dim.gif';
@@ -30,7 +29,8 @@ import pinataOpen from './icons/boxOpen/pinata_open.png';
 import redBoxOpen from './icons/boxOpen/red_box_open.png';
 import safeOpen from './icons/boxOpen/safe_open.png';
 
-import { LootboxClaimResult } from '../../common/interfaces';
+import { LootboxClaimResult } from '@loot-box/common/interfaces';
+import { getNetworkConfig, NetworkConfig } from '@loot-box/common/helpers';
 import { DappletApi } from './api';
 
 export const BOX_DEFAULT = [blueBox, redBox, safe, box, bag, pinata, pig];
@@ -47,12 +47,19 @@ export const BOX_EMPTY = [
 
 @Injectable
 export default class TwitterFeature {
-  @Inject('twitter-adapter.dapplet-base.eth') public adapter: any;
-  private _overlay: any;
+  @Inject('twitter-adapter.dapplet-base.eth')
+  public adapter: any;
 
-  private _api = new DappletApi();
+  private _overlay: any;
+  private _api: DappletApi;
+  private _config: NetworkConfig;
 
   async activate(): Promise<void> {
+    const networkId = await Core.storage.get('network');
+
+    this._config = getNetworkConfig(networkId);
+    this._api = new DappletApi(this._config);
+
     if (!this._overlay) {
       this._overlay = (<any>Core)
         .overlay({
@@ -73,8 +80,7 @@ export default class TwitterFeature {
           getLootboxStat: this._api.getLootboxStat.bind(this._api),
           getLootboxWinners: this._api.getLootboxWinners.bind(this._api),
           getFtMetadata: this._api.getFtMetadata.bind(this._api),
-          // getLootboxClaimStatus: this._api.getLootboxClaimStatus.bind(this._api),
-          // claimLootbox: this._api.claimLootbox.bind(this._api),
+          
           _getLootboxClaimStatus: this._api._getLootboxClaimStatus.bind(this._api),
           _claimLootbox: this._api._claimLootbox.bind(this._api),
         });

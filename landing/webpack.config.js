@@ -1,7 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const WebpackAssetsManifest = require('webpack-assets-manifest');
+const webpack = require('webpack');
+
+require('dotenv').config();
 
 module.exports = {
   mode: 'development',
@@ -9,6 +11,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     clean: true,
+    publicPath: '/',
   },
   entry: './src/index.tsx',
   module: {
@@ -23,7 +26,10 @@ module.exports = {
             },
           },
         ],
-        include: path.resolve(__dirname, 'src'),
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'node_modules/@loot-box/common'),
+        ],
       },
       {
         test: /\.s[ac]ss$/i,
@@ -40,20 +46,24 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js']
   },
   plugins: [
     new HtmlWebpackPlugin({ template: 'public/index.html' }),
     new ForkTsCheckerWebpackPlugin(),
-    new WebpackAssetsManifest(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NETWORK': JSON.stringify(process.env.NETWORK)
+      }
+    })
   ],
   devServer: {
     contentBase: path.join(__dirname, 'build'),
-    port: 3000,
-    https: true,
+    port: 3002,
     hot: false,
     inline: false,
     liveReload: false,
     open: false,
+    historyApiFallback: true,
   },
 };

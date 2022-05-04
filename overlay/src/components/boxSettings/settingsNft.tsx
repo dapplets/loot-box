@@ -8,7 +8,7 @@ import { Button } from '../atoms/Button';
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
 import { DropChance } from '../atoms/DropChance';
-import { Lootbox, NftContentItem } from '../../../../common/interfaces';
+import { Lootbox, NftContentItem } from '@loot-box/common/interfaces';
 import { ChildComponent } from './childComponent';
 import './invalid.scss';
 

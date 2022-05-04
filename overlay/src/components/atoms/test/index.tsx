@@ -37,7 +37,7 @@ import { useKeenSlider, KeenSliderPlugin, KeenSliderInstance } from 'keen-slider
 import './Test.module.scss';
 import copy from 'copy-to-clipboard';
 import classNames from 'classnames';
-import { Lootbox } from '../../../../../common/interfaces';
+import { Lootbox } from '@loot-box/common/interfaces';
 import styles from './Test.module.scss';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';

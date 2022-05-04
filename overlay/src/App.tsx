@@ -13,7 +13,7 @@ import {
   LootboxWinner,
   BoxCreationPrice,
   FtMetadata,
-} from '../../common/interfaces';
+} from '@loot-box/common/interfaces';
 import {} from '@dapplets/dapplet-extension';
 import Avatar from './icons/Lootbox.png';
 
@@ -34,6 +34,9 @@ import useDebounce from './hooks/useDebounce';
 import { Preloader } from './components/atoms/Preloader';
 import { Api } from './api';
 import { MessageMain } from './components/atoms/MessageMain';
+import { getNetworkConfig } from '@loot-box/common/helpers';
+
+console.log(getNetworkConfig('testnet'))
 
 interface ICtx {
   authorFullname: string;

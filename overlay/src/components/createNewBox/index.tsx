@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { useToggle } from '../../hooks/useToggle';
 import { Preloader } from '../atoms/Preloader';
 
-import { Lootbox } from '../../../../common/interfaces';
+import { Lootbox } from '@loot-box/common/interfaces';
 export interface CreateNewBoxProps {
   children: ReactNode;
   label: string;

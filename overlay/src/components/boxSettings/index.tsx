@@ -2,7 +2,7 @@ import React, { ReactNode, FC } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 import { ButtonsSetting } from './buttonsSetting';
-import { Lootbox } from '../../../../common/interfaces';
+import { Lootbox } from '@loot-box/common/interfaces';
 export interface BoxSettingsProps {
   children?: ReactNode;
   onChange?: () => void;

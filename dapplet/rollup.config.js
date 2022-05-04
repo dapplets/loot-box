@@ -1,10 +1,10 @@
-import typescript from '@rollup/plugin-typescript';
 import image from '@rollup/plugin-image';
 import serve from 'rollup-plugin-serve';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import fs from 'fs';
+import typescript from 'rollup-plugin-typescript2';
 
 const showAddress = () => ({
   load: () =>

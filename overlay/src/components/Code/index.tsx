@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { Link } from 'react-router-dom';
 import { LabelSettings } from '../atoms/LabelSettings';
 import { StatisticsLink } from '../atoms/StatisticsLink';
-import { Lootbox } from '../../../../common/interfaces';
+import { Lootbox } from '@loot-box/common/interfaces';
 import { Message } from '../atoms/Message';
 
 export interface CodeProps {

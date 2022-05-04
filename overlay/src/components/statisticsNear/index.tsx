@@ -7,7 +7,7 @@ import { StatisticsTitle } from '../atoms/StatisticsTitle';
 import { Code } from '../Code';
 import { Winner } from '../Winners';
 import { Statistics } from '../Statistics';
-import { Lootbox } from '../../../../common/interfaces';
+import { Lootbox } from '@loot-box/common/interfaces';
 import BigNumber from 'bignumber.js';
 import { useEffect } from 'react';
 

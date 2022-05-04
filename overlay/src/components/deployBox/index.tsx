@@ -21,7 +21,7 @@ import { Message } from '../atoms/Message';
 import { TextArea } from '../atoms/TextArea';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Lootbox } from '../../../../common/interfaces';
+import { Lootbox } from '@loot-box/common/interfaces';
 
 export interface DeployBoxProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {

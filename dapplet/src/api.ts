@@ -6,7 +6,7 @@ import {
   LootboxWinner,
   LootboxClaimResult,
   FtMetadata,
-} from '../../common/interfaces';
+} from '@loot-box/common/interfaces';
 import { sum, groupBy } from './helpers';
 import { BN } from './bn.js';
 import * as format from './format';
@@ -17,17 +17,21 @@ const { transactions } = Core.near;
 const MAX_GAS_PER_TX = 300000000000000;
 
 export class DappletApi implements IDappletApi {
-  private _contract = Core.contract('near', 'dev-1651241153572-71089672213750', {
-    viewMethods: [
-      'get_lootbox_by_id',
-      'get_lootboxes_by_account',
-      'get_claim_by_id',
-      'get_lootbox_claim_status',
-      'get_claims_by_lootbox',
-    ],
-    changeMethods: ['create_lootbox', 'claim_lootbox'],
-    network: 'testnet',
-  });
+  private _contract;
+
+  constructor(private _config: { networkId: 'mainnet' | 'testnet'; contractAddress: string }) {
+    this._contract = Core.contract('near', _config.contractAddress, {
+      viewMethods: [
+        'get_lootbox_by_id',
+        'get_lootboxes_by_account',
+        'get_claim_by_id',
+        'get_lootbox_claim_status',
+        'get_claims_by_lootbox',
+      ],
+      changeMethods: ['create_lootbox', 'claim_lootbox'],
+      network: _config.networkId,
+    });
+  }
 
   async getLootboxById(lootboxId: string): Promise<Lootbox> {
     if (lootboxId === undefined) return null;
@@ -37,23 +41,23 @@ export class DappletApi implements IDappletApi {
   }
 
   async connectWallet(): Promise<string> {
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+    const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
     await wallet.connect();
     return wallet.accountId;
   }
 
   async disconnectWallet(): Promise<void> {
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+    const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
     wallet.disconnect();
   }
 
   async isWalletConnected(): Promise<boolean> {
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+    const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
     return wallet.isConnected();
   }
 
   async getCurrentNearAccount(): Promise<string> {
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+    const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
     return wallet.accountId;
   }
 
@@ -300,7 +304,7 @@ export class DappletApi implements IDappletApi {
       const contract = await Core.contract('near', address, {
         viewMethods: ['ft_metadata'],
         changeMethods: [],
-        network: 'testnet',
+        network: this._config.networkId,
       });
 
       return contract.ft_metadata();

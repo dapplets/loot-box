@@ -11,7 +11,7 @@ import { SettingTitle } from '../atoms/SettingTitle';
 import { LinksStep } from '../atoms/LinksStep';
 
 import { Link } from 'react-router-dom';
-import { Lootbox } from '../../../../common/interfaces';
+import { Lootbox } from '@loot-box/common/interfaces';
 import { useEffect } from 'react';
 import { Modal } from '../atoms/Modal';
 

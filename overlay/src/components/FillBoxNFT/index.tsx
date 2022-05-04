@@ -9,7 +9,7 @@ import { PayInfo } from '../atoms/PayInfo/PayInfo';
 import { ButtonPay } from '../atoms/ButtonPay';
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
-import { Lootbox } from '../../../../common/interfaces';
+import { Lootbox } from '@loot-box/common/interfaces';
 import { useEffect } from 'react';
 
 export interface FillBoxProps_Nft {
@@ -40,15 +40,15 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
       <SettingTitle title="Fill your box" isActive />
       <div className={cn(styles.img)}>
         <img src={imgVal} />
-        <span className={styles.spanWin}>1 NFT</span>
+        <span className={styles.spanWin}>{creationForm.nftContentItems.length} NFT</span>
       </div>
-      <div className={styles.textNft}>
-        You need to tranfer selected NFTs to dev-1651241153572-71089672213750 account. 
+      {/* <div className={styles.textNft}>
+        You need to tranfer selected NFTs to app.ltbx.testnet account. 
         When all NFTs are tranferred, please click the button below.
       </div>
       <div className={cn(styles.payBtn_block)}>
         <ButtonPay styleBtn="disable" title="NFTs transferred" />
-      </div>
+      </div> */}
 
       <div className={cn(styles.payBlock)}>
         <div className={cn(styles.payBtn)}>

@@ -1,7 +1,7 @@
 import { DappletApi } from './api';
 import { Routes, Route, Link } from 'react-router-dom';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Lootbox, LootboxStat } from '../../common/interfaces';
+import { Lootbox, LootboxStat } from '@loot-box/common/interfaces';
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import cn from 'classnames';
 import styles from './App.module.scss';
@@ -23,6 +23,7 @@ import { Header } from './components/Header/index';
 import { Footer } from './components/Footer/index';
 import { About } from './components/About';
 import { Instruction } from './components/Instruction';
+import { getNetworkConfig } from '@loot-box/common/helpers';
 
 export interface AppProps {
   completed: number;
@@ -31,11 +32,9 @@ export interface AppProps {
 }
 export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 
-const _api = new DappletApi();
+const _api = new DappletApi(getNetworkConfig(process.env.NETWORK as string));
 
-console.log('_api', _api);
-
-export default function App(AppProps: any) {
+export default function App() {
   const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
   const { lootboxId } = useParams();
   const [loader, setLoader] = useState(false);

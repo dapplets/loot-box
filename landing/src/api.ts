@@ -1,4 +1,4 @@
-import { IDappletApiForLanding, Lootbox, LootboxStat } from '../../common/interfaces';
+import { IDappletApiForLanding, Lootbox, LootboxStat } from '@loot-box/common/interfaces';
 import * as nearAPI from 'near-api-js';
 import * as format from './format';
 
@@ -6,6 +6,17 @@ const { connect, keyStores, WalletConnection, Contract } = nearAPI;
 const { formatNearAmount, parseNearAmount } = nearAPI.utils.format;
 
 export class DappletApi implements IDappletApiForLanding {
+  constructor(
+    private _config: {
+      networkId: 'mainnet' | 'testnet';
+      contractAddress: string;
+      nodeUrl: string;
+      walletUrl: string;
+      helperUrl: string;
+      explorerUrl: string;
+    },
+  ) {}
+
   async getLootboxById(lootboxId: string): Promise<Lootbox | null> {
     if (lootboxId === undefined) return null;
     const contract = await this.getContract();
@@ -63,12 +74,8 @@ export class DappletApi implements IDappletApiForLanding {
 
   async getContract(): Promise<any> {
     const config = {
-      networkId: 'testnet',
+      ...this._config,
       keyStore: new keyStores.BrowserLocalStorageKeyStore(),
-      nodeUrl: 'https://rpc.testnet.near.org',
-      walletUrl: 'https://wallet.testnet.near.org',
-      helperUrl: 'https://helper.testnet.near.org',
-      explorerUrl: 'https://explorer.testnet.near.org',
       headers: {},
     };
 
@@ -77,7 +84,7 @@ export class DappletApi implements IDappletApiForLanding {
     // create wallet connection
     const wallet = new WalletConnection(near, null);
 
-    const contract = new Contract(wallet.account(), 'dev-1651162408741-46233879712819', {
+    const contract = new Contract(wallet.account(), this._config.contractAddress, {
       viewMethods: ['get_lootbox_by_id', 'get_claims_by_lootbox'],
       changeMethods: [],
     });

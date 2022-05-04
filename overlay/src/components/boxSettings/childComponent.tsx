@@ -22,7 +22,7 @@ import { useToggle } from '../../hooks/useToggle';
 import { InputPanel } from '../atoms/Input';
 import { RadioButton } from '../atoms/RadioButton';
 import { DropChance } from '../atoms/DropChance';
-import { NftContentItem } from '../../../../common/interfaces';
+import { NftContentItem } from '@loot-box/common/interfaces';
 import './invalid.scss';
 import classNames from 'classnames';
 

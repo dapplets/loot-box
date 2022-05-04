@@ -1,11 +1,14 @@
 {
   "type": "object",
-  "required": ["overlayUrl"],
+  "required": ["network"],
   "properties": {
-    "overlayUrl": {
+    "network": {
       "type": "string",
-      "title": "URL of the overlay",
-      "hidden": true
+      "title": "Target network",
+      "enum": [
+        "testnet",
+        "mainnet"
+      ]
     }
   }
 }

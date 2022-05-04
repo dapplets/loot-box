@@ -16,7 +16,7 @@
 
 6. Initialize
 
-    `near call dev-1651241153572-71089672213750 new '' --accountId buidler.testnet`
+    `near call app.ltbx.testnet new '' --accountId ltbx.testnet`
 
 **Get more info at:**
 
