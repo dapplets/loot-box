@@ -5,8 +5,9 @@ import {
   LootboxStat,
   LootboxWinner,
   LootboxClaimResult,
-  FtMetadata,
+  FtMetadata
 } from '@loot-box/common/interfaces';
+import { NetworkConfig } from '@loot-box/common/helpers';
 import { sum, groupBy } from './helpers';
 import { BN } from './bn.js';
 import * as format from './format';
@@ -19,7 +20,7 @@ const MAX_GAS_PER_TX = 300000000000000;
 export class DappletApi implements IDappletApi {
   private _contract;
 
-  constructor(private _config: { networkId: 'mainnet' | 'testnet'; contractAddress: string }) {
+  constructor(private _config: NetworkConfig) {
     this._contract = Core.contract('near', _config.contractAddress, {
       viewMethods: [
         'get_lootbox_by_id',
@@ -312,6 +313,10 @@ export class DappletApi implements IDappletApi {
       console.error('Unknown address', _);
       return null;
     }
+  }
+
+  public async getNetworkConfig(): Promise<NetworkConfig> {
+    return this._config;
   }
 
   public async _getLootboxClaimStatus(

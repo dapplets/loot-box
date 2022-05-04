@@ -61,32 +61,10 @@ export default class TwitterFeature {
     this._api = new DappletApi(this._config);
 
     if (!this._overlay) {
-      this._overlay = (<any>Core)
-        .overlay({
-          name: 'overlay',
-          title: 'LootBox',
-        })
-        .declare({
-          connectWallet: this._api.connectWallet.bind(this._api),
-          disconnectWallet: this._api.disconnectWallet.bind(this._api),
-          isWalletConnected: this._api.isWalletConnected.bind(this._api),
-          getCurrentNearAccount: this._api.getCurrentNearAccount.bind(this._api),
-
-          getBoxesByAccount: this._api.getBoxesByAccount.bind(this._api),
-          createNewBox: this._api.createNewBox.bind(this._api),
-
-          getBoxesById: this._api.getLootboxById.bind(this._api),
-          calcBoxCreationPrice: this._api.calcBoxCreationPrice.bind(this._api),
-          getLootboxStat: this._api.getLootboxStat.bind(this._api),
-          getLootboxWinners: this._api.getLootboxWinners.bind(this._api),
-          getFtMetadata: this._api.getFtMetadata.bind(this._api),
-          
-          _getLootboxClaimStatus: this._api._getLootboxClaimStatus.bind(this._api),
-          _claimLootbox: this._api._claimLootbox.bind(this._api),
-        });
+      this._overlay = Core.overlay({ name: 'overlay', title: 'LootBox' }).declare(this._api);
     }
 
-    const regExpLootbox = new RegExp(/.*(https:\/\/ltbx\.app\/\d+)/);
+    const regExpLootbox = new RegExp(this._config.landingUrlRegexp);
     const regExpIndex = new RegExp(/\d+/);
     const getTweetParse = (tweet) => {
       if (tweet.search(regExpLootbox) != -1) {
@@ -116,7 +94,7 @@ export default class TwitterFeature {
           DEFAULT: {
             img: { DARK: boxDef, LIGHT: White },
             hidden: true,
-            replace: `ltbx.app/`,
+            replace: this._config.landingUrlReplace,
             position: 'bottom',
             text: '',
             init: async (ctx, me) => {
@@ -126,18 +104,20 @@ export default class TwitterFeature {
 
               const numIndex = getNumIndex(tweetParse);
 
-              const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+              const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
 
               const lootboxId = await this._api.getLootboxById(numIndex);
               if (lootboxId === null || lootboxId === undefined) {
                 return;
               } else {
                 me.hidden = false;
-                me.replace = `ltbx.app/${numIndex}`;
+                me.replace = `${this._config.landingUrlReplace}${numIndex}`;
                 await this.getClaimStatus(me, numIndex, lootboxId);
               }
             },
-            exec: async (ctx, me) => {},
+            exec: async (ctx, me) => { 
+              // empty
+            },
           },
         }),
       ],
@@ -146,7 +126,7 @@ export default class TwitterFeature {
 
   async getClaimStatus(me, numIndex, lootbox): Promise<void> {
     me.img = { DARK: boxDef, LIGHT: White };
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+    const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
     const result = await this._api._getLootboxClaimStatus(numIndex, wallet.accountId);
     me.exec = null;
     if (result.status === 0) {
@@ -168,7 +148,7 @@ export default class TwitterFeature {
   async getClaimLoot(me, numIndex, lootbox): Promise<void> {
     me.img = { DARK: boxDef, LIGHT: White };
     me.exec = null;
-    const wallet = await Core.wallet({ type: 'near', network: 'testnet' });
+    const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
     await this._api
       ._claimLootbox(numIndex, wallet.accountId)
       .then((x) => {

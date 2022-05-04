@@ -12,10 +12,11 @@ export interface CodeProps {
   onSubmit?: () => void;
   id: any;
   winInfo: any;
+  landingUrl: string;
 }
 
 export const Code: FC<CodeProps> = (props: CodeProps) => {
-  const { id, winInfo } = props;
+  const { id, winInfo, landingUrl } = props;
   const [infoWin, setInfoWin] = useState<Lootbox[]>([]);
 
   return (
@@ -24,8 +25,8 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         <div className={styles.lootboxCode}>
           <Message
             message={`We are holding the ${winInfo} #Giveaway. Click on the lootbox picture and get your prize!`}
-            link={`https://ltbx.app/${id}/`}
-            instruction="Don’t see the Box? Install this dapp: https://ltbx.app/how-to/"
+            link={`${landingUrl}/${id}/`}
+            instruction={`Don’t see the Box? Install this dapp: ${landingUrl}/how-to/`}
             project="The gift box is made with the LootBox Dapplet @lootboxdapp by @dappletsproject"
           />
         </div>

@@ -34,9 +34,6 @@ import useDebounce from './hooks/useDebounce';
 import { Preloader } from './components/atoms/Preloader';
 import { Api } from './api';
 import { MessageMain } from './components/atoms/MessageMain';
-import { getNetworkConfig } from '@loot-box/common/helpers';
-
-console.log(getNetworkConfig('testnet'))
 
 interface ICtx {
   authorFullname: string;
@@ -87,6 +84,7 @@ export default () => {
   const [newMetadata, setMetadata] = useState<FtMetadata | null>();
   // const [isLoadLootbox, setLoadLootbox] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [networkConfig, setNetworkConfig] = useState<any>({});
   const debouncedSearchTerm = useDebounce(creationForm, 300);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +107,9 @@ export default () => {
       setNearAccount(accountName);
       setLoader(false);
     });
-    // console.log('1');
+    dappletApi.getNetworkConfig().then((config: any) => {
+      setNetworkConfig(config);
+    });
   }, []);
   let navigate = useNavigate();
 
@@ -179,7 +179,7 @@ export default () => {
             const txHash = claims.find((y: any) => y.signerId === x.nearAccount)?.hash;
             return {
               ...x,
-              txLink: txHash ? `https://explorer.testnet.near.org/transactions/${txHash}` : '',
+              txLink: txHash ? `${networkConfig?.explorerUrl}/transactions/${txHash}` : '',
             };
           }),
         );
@@ -406,7 +406,7 @@ export default () => {
               path="/deploy_your_box"
               element={
                 (loader && <Preloader />) || (
-                  <DeployBox winInfo={winInfo} id={selectedLootboxId} onChange={onChange} />
+                  <DeployBox winInfo={winInfo} id={selectedLootboxId} onChange={onChange} landingUrl={networkConfig.landingUrl}/>
                 )
               }
             />
@@ -431,7 +431,7 @@ export default () => {
               path="/code"
               element={
                 (loader && <Preloader />) || (
-                  <StatisticsCode id={selectedLootboxId} winInfo={winInfo} />
+                  <StatisticsCode id={selectedLootboxId} winInfo={winInfo} landingUrl={networkConfig.landingUrl} />
                 )
               }
             />

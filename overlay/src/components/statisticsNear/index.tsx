@@ -103,9 +103,10 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
 export interface StatisticsNearPropsCode {
   id: any;
   winInfo: any;
+  landingUrl: string;
 }
 export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNearPropsCode) => {
-  const { id, winInfo } = props;
+  const { id, winInfo, landingUrl } = props;
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -126,7 +127,7 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
           </Link>
         </div>
       </div>
-      <Code winInfo={winInfo} id={id} />
+      <Code winInfo={winInfo} id={id} landingUrl={landingUrl}/>
     </div>
   );
 };

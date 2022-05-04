@@ -27,10 +27,11 @@ export interface DeployBoxProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   id: any;
   winInfo: string;
+  landingUrl: string;
 }
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
-  const { id, winInfo } = props;
+  const { id, winInfo, landingUrl } = props;
   const [valueMessage, setValueMessage] = useState('');
   const [valueName, setValueName] = useState('');
   const [lootboxes, setLootboxes] = useState<Lootbox[]>([]);
@@ -42,8 +43,8 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <div className={cn(styles.message)}>
         <Message
           message={`We are holding the ${winInfo}  #Giveaway. Click on the lootbox picture and get your prize!`}
-          link={`https://ltbx.app/${id}/`}
-          instruction="Don’t see the Box? Install this dapp: https://ltbx.app/how-to/"
+          link={`${landingUrl}/${id}/`}
+          instruction={`Don’t see the Box? Install this dapp: ${landingUrl}/how-to/`}
           project="The gift box is made with the LootBox Dapplet @lootboxdapp by @dappletsproject"
         />
       </div>

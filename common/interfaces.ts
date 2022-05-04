@@ -1,3 +1,5 @@
+import { NetworkConfig } from './helpers'
+
 export type NftContentItem = {
   contractAddress: string;
   tokenId: string;
@@ -108,4 +110,5 @@ export interface IDappletApi extends IDappletApiForLanding {
   _claimLootbox(lootboxId: string, accountId: string): Promise<LootboxClaimResult>;
 
   getFtMetadata(address: string): Promise<FtMetadata | null>;
+  getNetworkConfig(): Promise<NetworkConfig>;
 }
