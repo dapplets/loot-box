@@ -12,6 +12,18 @@ export function sum(...values: string[]): string {
   return _sum.toFixed();
 }
 
+export function sub(a: string, b: string): string {
+  return (new BigNumber(a)).minus(new BigNumber(b)).toFixed();
+}
+
+export function div(a: string, b: string): string {
+  return (new BigNumber(a)).div(new BigNumber(b)).toFixed();
+}
+
+export function mul(a: string, b: string): string {
+  return (new BigNumber(a)).multipliedBy(new BigNumber(b)).toFixed();
+}
+
 export function lte(a: string, b: string): boolean {
   const _a = new BigNumber(a);
   const _b = new BigNumber(b);

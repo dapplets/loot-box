@@ -35,14 +35,11 @@ export interface StatisticsProps {
 export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
   const { stat } = props;
 
-  const completed_percent = stat.totalAmount === 0 ? 0 : stat.winAmount / stat.totalAmount * 100;
-  const remaining_percent = stat.totalAmount === 0 ? 0 : (1 - stat.winAmount / stat.totalAmount) * 100;
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.wrapperStatistics}>
         {/* ToDo: what's total amount? */}
-        <Progress completed={completed_percent} bgcolor="#F26680" />
+        <Progress completed={stat.completedPercents} bgcolor="#F26680" />
         <div className={cn(styles.Chart)}>
           <div className={cn(styles.ChartAmount)}>
             <LabelSettings title="Win Amount" />
@@ -50,7 +47,7 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
               width={'174px'}
               height={'174px'}
               options={options}
-              series={[completed_percent as any]}
+              series={[stat.completedPercents as any]}
             ></ChartProgress>
             <span className={styles.span} />
           </div>
@@ -60,7 +57,7 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
               width={'174px'}
               height={'174px'}
               options={options}
-              series={[remaining_percent as any]}
+              series={[stat.remainingPercents as any]}
             />
           </div>
         </div>

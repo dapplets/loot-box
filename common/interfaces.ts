@@ -40,10 +40,12 @@ export type BoxCreationPrice = {
 };
 
 export type LootboxStat = {
-  totalAmount: number;
-  winAmount: number;
-  currentBalance: number;
+  totalAmount: string;
+  winAmount: string;
+  currentBalance: string;
   totalViews: number;
+  completedPercents: string;
+  remainingPercents: string;
 };
 
 export type LootboxWinner = {

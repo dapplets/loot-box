@@ -213,7 +213,7 @@ export default () => {
         // ToDo: show error to user
       });
     // console.log('4');
-  }, [selectedLootboxId, winners]);
+  }, [selectedLootboxId]);
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
@@ -232,7 +232,7 @@ export default () => {
         // ToDo: show error to user
       });
     // console.log('5');
-  }, [selectedLootboxId, stat]);
+  }, [selectedLootboxId]);
 
   useEffect(() => {
     dappletApi
