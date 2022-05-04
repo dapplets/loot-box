@@ -57,7 +57,11 @@ export class DappletApi implements IDappletApi {
     return wallet.accountId;
   }
 
-  async getBoxesByAccount(account_id: string): Promise<Lootbox[]> {
+  async getBoxesByAccount(
+    account_id: string,
+    from_index?: number,
+    limit?: number,
+  ): Promise<Lootbox[]> {
     const contract = await this._contract;
     const lootboxes_ = await contract.get_lootboxes_by_account({
       account_id,
