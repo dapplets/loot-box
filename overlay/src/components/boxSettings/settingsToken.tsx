@@ -340,6 +340,11 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 appearance="default"
                 placeholder="Token amount"
                 innerRef={nodeTokenAmount}
+                // defaultValue={
+                //   DEFAULT_NEAR_ITEM.tokenAmount.length > 0
+                //     ? DEFAULT_NEAR_ITEM.tokenAmount
+                //     : DEFAULT_FT_ITEM.tokenAmount
+                // }
                 onInput={(e) => func(e)}
                 onChange={(e) => {
                   if (

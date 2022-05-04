@@ -50,6 +50,9 @@ export const DropChance: FC<DropChanceProps> = (props) => {
       <input
         type={type}
         value={`${valueDropChance}%`}
+        onFocus={() => {
+          onValueDropChance('');
+        }}
         onChange={(e: any) => {
           const { data, inputType } = e.nativeEvent;
 
@@ -72,6 +75,9 @@ export const DropChance: FC<DropChanceProps> = (props) => {
             default:
               break;
           }
+        }}
+        onBlur={() => {
+          valueDropChance === '0' ? onValueDropChance('20') : onValueDropChance(valueDropChance);
         }}
         max={maxValueDropChance}
         min={minValueDropChance}

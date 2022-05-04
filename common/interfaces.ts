@@ -100,7 +100,7 @@ export interface IDappletApi extends IDappletApiForLanding {
   isWalletConnected: () => Promise<boolean>;
   getCurrentNearAccount: () => Promise<string>;
 
-  getBoxesByAccount(account: string): Promise<Lootbox[]>;
+  getBoxesByAccount(account: string, from_index?: number, limit?: number): Promise<Lootbox[]>;
   createNewBox(lootbox: Lootbox): Promise<string>;
 
   calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice>;
