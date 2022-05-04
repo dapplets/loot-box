@@ -16,6 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "@dapplets/dapplet-extension": "^0.48.0",
+    "@loot-box/common": "../common",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
@@ -29,10 +30,9 @@
     "eslint-plugin-react": "^7.29.4",
     "rollup": "^2.71.1",
     "rollup-plugin-serve": "^1.1.0",
-    "rollup-plugin-typescript2": "^0.31.2",
+    "rollup-plugin-typescript": "^1.0.1",
     "tslib": "^2.4.0",
-    "typescript": "^4.6.4",
-    "@loot-box/common": "../common"
+    "typescript": "^4.6.4"
   },
   "dependencies": {
     "@dapplets/dapplet-overlay-bridge": "^0.1.3",

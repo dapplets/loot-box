@@ -8,7 +8,7 @@ import {
   FtMetadata
 } from '@loot-box/common/interfaces';
 import { NetworkConfig } from '@loot-box/common/helpers';
-import { sum, groupBy } from './helpers';
+import { sum, groupBy, sub, div, mul, toPrecision, zerofyEmptyString } from './helpers';
 import { BN } from './bn.js';
 import * as format from './format';
 
@@ -199,12 +199,14 @@ export class DappletApi implements IDappletApi {
       }
     }
 
-    return {
+    const result = {
       feeAmount: '0',
       fillAmount: formatNearAmount(fillAmount),
       gasAmount: formatNearAmount(MAX_GAS_PER_TX.toString()),
-      totalAmount: formatNearAmount(sum('0', fillAmount, parseNearAmount('0.01'))),
+      totalAmount: formatNearAmount(sum('0', fillAmount, MAX_GAS_PER_TX.toString())),
     };
+
+    return result;
   }
 
   async getLootboxStat(lootboxId: string): Promise<LootboxStat> {
@@ -214,15 +216,15 @@ export class DappletApi implements IDappletApi {
 
     const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
 
-    let totalAmount = 0;
+    let totalAmount = "0";
     for (const item of all_loot_items) {
       if (item.Near !== undefined) {
-        totalAmount += Number(formatNearAmount(item.Near.total_amount));
+        totalAmount = sum(totalAmount, formatNearAmount(item.Near.total_amount));
       } else if (item.Ft !== undefined) {
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.Nft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
-        totalAmount += 1; // ToDo: how to calculate statistics of NFT?
+        totalAmount = sum(totalAmount, "1"); // ToDo: how to calculate statistics of NFT?
       } else {
         console.error('Unknown loot item');
       }
@@ -230,16 +232,16 @@ export class DappletApi implements IDappletApi {
 
     const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
 
-    let winAmount = 0;
+    let winAmount = "0";
 
     for (const item of claims) {
       if (item.WinNear !== undefined) {
-        winAmount += Number(formatNearAmount(item.WinNear.total_amount));
+        winAmount = sum(winAmount, formatNearAmount(item.WinNear.total_amount));
       } else if (item.WinFt !== undefined) {
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
-        winAmount += 1; // ToDo: how to calculate statistics of NFT?
+        winAmount = sum(winAmount, "1"); // ToDo: how to calculate statistics of NFT?
       } else if (item.NotWin !== undefined) {
         // Nothing to do
       } else {
@@ -247,12 +249,19 @@ export class DappletApi implements IDappletApi {
       }
     }
 
-    return {
+    const completedPercents = (totalAmount === "0") ? "0" : mul(div(winAmount, totalAmount), '100');
+    const remainingPercents = (totalAmount === "0") ? "0" : sub("100", completedPercents);
+
+    const result = {
       totalAmount: totalAmount,
       winAmount: winAmount,
-      currentBalance: totalAmount - winAmount,
+      currentBalance: sub(totalAmount, winAmount),
       totalViews: claims.length,
+      completedPercents: toPrecision(completedPercents, 3),
+      remainingPercents: toPrecision(remainingPercents, 3),
     };
+
+    return result;
   }
 
   async getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]> {
@@ -275,14 +284,14 @@ export class DappletApi implements IDappletApi {
         return {
           lootboxId: x.WinNear.lootbox_id,
           nearAccount: x.WinNear.claimer_id,
-          amount: formatNearAmount(x.WinNear.total_amount),
+          amount: toPrecision(formatNearAmount(x.WinNear.total_amount), 6),
           txLink: null,
         };
       } else if (typeof x === 'object' && x.WinFt !== undefined) {
         return {
           lootboxId: x.WinFt.lootbox_id,
           nearAccount: x.WinFt.claimer_id,
-          amount: format.formatNearAmount(x.WinFt.total_amount, 6),
+          amount: toPrecision(format.formatNearAmount(x.WinFt.total_amount, 6), 6), // ToDo: get metadata
           txLink: null,
         };
       } else if (typeof x === 'object' && x.WinNft !== undefined) {
@@ -392,19 +401,19 @@ export class DappletApi implements IDappletApi {
       loot_items: [
         ...lootbox.nearContentItems.map((x) => ({
           Near: {
-            total_amount: parseNearAmount(x.tokenAmount),
-            drop_amount_from: parseNearAmount(x.dropAmountFrom),
-            drop_amount_to: parseNearAmount(x.dropAmountTo),
-            balance: parseNearAmount(x.tokenAmount),
+            total_amount: parseNearAmount(zerofyEmptyString(x.tokenAmount)),
+            drop_amount_from: parseNearAmount(zerofyEmptyString(x.dropAmountFrom)),
+            drop_amount_to: parseNearAmount(zerofyEmptyString(x.dropAmountTo)),
+            balance: parseNearAmount(zerofyEmptyString(x.tokenAmount)),
           },
         })),
         ...lootbox.ftContentItems.map((x) => ({
           Ft: {
             token_contract: x.contractAddress,
-            total_amount: format.parseNearAmount(x.tokenAmount, 6),
-            drop_amount_from: format.parseNearAmount(x.dropAmountFrom, 6),
-            drop_amount_to: format.parseNearAmount(x.dropAmountTo, 6),
-            balance: format.parseNearAmount(x.tokenAmount, 6),
+            total_amount: format.parseNearAmount(zerofyEmptyString(x.tokenAmount), 6),
+            drop_amount_from: format.parseNearAmount(zerofyEmptyString(x.dropAmountFrom), 6),
+            drop_amount_to: format.parseNearAmount(zerofyEmptyString(x.dropAmountTo), 6),
+            balance: format.parseNearAmount(zerofyEmptyString(x.tokenAmount), 6),
           },
         })),
         ...lootbox.nftContentItems.map((x) => ({
