@@ -23,13 +23,13 @@
     "react-router-dom": "6",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.5",
-    "typescript": "^4.6.4"
+    "typescript": "^4.6.4",
+    "@loot-box/common": "../common"
   },
   "scripts": {
     "start": "webpack serve",
     "watch": "webpack --watch",
-    "build": "webpack",
-    "postinstall": "npm link ../common"
+    "build": "webpack"
   },
   "devDependencies": {
     "@types/node": "^15.14.9",

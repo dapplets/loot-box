@@ -25,13 +25,13 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.1.2",
     "slick-carousel": "^1.8.1",
-    "swiper": "^8.1.4"
+    "swiper": "^8.1.4",
+    "@loot-box/common": "../common"
   },
   "scripts": {
     "start": "webpack serve",
     "watch": "webpack --watch",
-    "build": "webpack",
-    "postinstall": "npm link ../common"
+    "build": "webpack"
   },
   "devDependencies": {
     "@types/node": "^15.14.9",
