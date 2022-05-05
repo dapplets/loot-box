@@ -429,8 +429,9 @@
   "resolved" "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   "version" "1.2.1"
 
-"@loot-box/common@../common":
+"@loot-box/common@file:../common":
   "resolved" "file:../common"
+  "version" "0.1.0"
 
 "@popperjs/core@^2.0.0", "@popperjs/core@^2.6.0":
   "integrity" "sha512-IXf3XA7+XyN7CP9gGh/XB0UxVMlvARGEgGXLubFICsUMGz6Q+DU+i4gGlpOxTjKvXjkJDJC8YdqdKkDj9qZHEQ=="
