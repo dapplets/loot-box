@@ -2,7 +2,6 @@ import React, { ReactNode, FC, useEffect, useMemo, useState, useRef } from 'reac
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 
-import { SettingTitle } from '../atoms/SettingTitle';
 import { LabelSettings } from '../atoms/LabelSettings';
 import { Button } from '../atoms/Button';
 import { LinksStep } from '../atoms/LinksStep';
@@ -37,13 +36,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const nodeNftContract = useRef<HTMLInputElement>();
   const nodeQuanity = useRef<HTMLInputElement>();
 
-  // const validInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-  //   if (e.target.value === '.' || isNaN(+e.target.value) === false) {
-  //     setNameClassInput('0');
-  //   } else {
-  //     setNameClassInput('invalid');
-  //   }
-  // };
   const newForm = Object.assign({}, creationForm);
 
   const booleanNodeNftContract = nodeNftContract.current?.classList.contains('invalid');
@@ -51,7 +43,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const LinkBlock = useMemo(() => {
     if (
       creationForm.nftContentItems.length !== 0 &&
-      // && nameClassInput === '0'
       booleanNodeNftContract != true &&
       booleanNodeQuanity != true
     ) {
@@ -61,16 +52,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         creationForm.nftContentItems[0].tokenId !== null &&
         creationForm.nftContentItems[0].contractAddress.length >= 1 &&
         creationForm.nftContentItems[0].contractAddress !== null
-        // &&
-        // nameClassInput === '0'
       ) {
-        // console.log(nameClassInput);
-        // console.log(DEFAULT_NFT_ITEM);
-        // console.log(newForm);
-        console.log(nodeQuanity);
-
-        console.log(booleanNodeQuanity);
-
         onLink(false);
       } else {
         onLink(true);
@@ -78,20 +60,11 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     } else {
       onLink(true);
     }
-  }, [
-    creationForm,
-    link,
-    nodeNftContract,
-    nodeQuanity,
-    DEFAULT_NFT_ITEM,
-    //  node
-    // nameClassInput,
-  ]);
+  }, [creationForm, link, nodeNftContract, nodeQuanity, DEFAULT_NFT_ITEM]);
 
   useEffect(() => {
     creationForm.dropChance = value;
     onCreationFormUpdate(creationForm);
-    // console.log({ value });
   });
 
   const addButtonClickHandler = () => {
@@ -133,9 +106,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     newForm.dropChance = value;
     onCreationFormUpdate(creationForm);
     onCreationFormUpdate(newForm);
-    // console.log(newForm);
-
-    // console.log(creationForm);
   }, []);
   return (
     <div className={cn(styles.wrapper)}>
@@ -161,8 +131,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
                 onNftUpdated={nftUpdatedHandler.bind(null, i)}
                 nodeNftContract={nodeNftContract}
                 nodeQuanity={nodeQuanity}
-                // onChange={(e: any) => validInput(e)}
-                // className={nameClassInput}
               />
             ))}
             <div className={styles.addNFTBtn}>
@@ -202,7 +170,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             to="/fill_your_box_nft"
             onClick={() => {
               handleClick();
-              console.log(creationForm);
+
               creationForm.ftContentItems = [];
               creationForm.nearContentItems = [];
             }}

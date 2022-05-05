@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactElement, ReactNode, FC, useState, useEffect } from 'react';
+import React, { FC } from 'react';
 import cn from 'classnames';
 import styles from './Message.module.scss';
 import { LabelSettings } from '../LabelSettings';

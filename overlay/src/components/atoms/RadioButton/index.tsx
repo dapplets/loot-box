@@ -1,15 +1,6 @@
-import React, {
-  FC,
-  ButtonHTMLAttributes,
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  HTMLAttributes,
-  useState,
-  useEffect,
-} from 'react';
+import React, { FC, DetailedHTMLProps, InputHTMLAttributes } from 'react';
 import cn from 'classnames';
 import styles from './RadioButton.module.scss';
-import { Label } from 'semantic-ui-react';
 
 export interface RadioButtonProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {

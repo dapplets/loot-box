@@ -26,15 +26,7 @@ const Image = ({ onClick, item, index, clicked }: ImageProps) => {
     [clicked, index],
   );
 
-  return (
-    <img
-      // style={{ maxWidth: '10px !important' }}
-      onClick={() => onClick(index)}
-      className={imgClassName}
-      src={item}
-      id={item}
-    />
-  );
+  return <img onClick={() => onClick(index)} className={imgClassName} src={item} id={item} />;
 };
 
 interface SliderProps {
@@ -104,12 +96,7 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
   return (
     <>
       <div className={cn(styles.navigationWrapper)}>
-        <div
-          ref={sliderRef}
-          className={cn(styles.keenSlider)}
-          // className="keen-slider"
-          // "keen-slider"
-        >
+        <div ref={sliderRef} className={cn(styles.keenSlider)}>
           <Imges
             clicked={clicked}
             setClicked={setClicked}
@@ -118,8 +105,6 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
             imgs={IMG}
             onChange_IMG={IMG[id]}
             onCreationFormUpdate={onCreationFormUpdate}
-
-            // onClick={() => onChange_IMG}
           />
         </div>
         {loaded && instanceRef.current && (

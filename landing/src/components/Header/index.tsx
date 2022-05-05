@@ -1,7 +1,7 @@
 import React from 'react';
-import cn from 'classnames';
+
 import styles from './Header.module.scss';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from '../../img/header/Logo.svg';
 import { Burger } from '../Burger';
 export const Header = () => {

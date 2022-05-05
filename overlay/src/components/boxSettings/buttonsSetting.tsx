@@ -14,8 +14,6 @@ export interface BoxSettingsProps {
   classNameNft?: string;
   classNameToken?: string;
   onClick?: any;
-  // creationForm: Lootbox;
-  // onCreationFormUpdate: (x: any) => void;
 }
 export const ButtonsSetting: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { classNameNft, classNameToken, onClick } = props;

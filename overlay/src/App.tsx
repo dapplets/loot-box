@@ -30,7 +30,7 @@ import CreateNewBox from './components/createNewBox';
 import { SettingDef } from './components/boxSettings';
 import { SettingsToken } from './components/boxSettings/settingsToken';
 import { SettingsNFT } from './components/boxSettings/settingsNft';
-import useDebounce from './hooks/useDebounce';
+
 import { Preloader } from './components/atoms/Preloader';
 import { Api } from './api';
 import { MessageMain } from './components/atoms/MessageMain';
@@ -61,7 +61,7 @@ const EMPTY_FORM: Lootbox = {
 export default () => {
   const [parsedCtx, setParsedCtx] = useState<ICtx>();
   const [nearAccount, setNearAccount] = useState<string>();
-  const [nearAccountImg, setNearAccountImg] = useState<string>();
+
   const [isOpenProfile, onOpenProfile] = useToggle(false);
   const [valueLabel, setValueLabel] = useState('');
   const [imgBox, setImgBox] = useState('');
@@ -82,10 +82,9 @@ export default () => {
   const [messageError, setMessageError] = useState(false);
   const [ftMetadata, setFtMetadata] = useState(null);
   const [newMetadata, setMetadata] = useState<FtMetadata | null>();
-  // const [isLoadLootbox, setLoadLootbox] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
+
   const [networkConfig, setNetworkConfig] = useState<any>({});
-  const debouncedSearchTerm = useDebounce(creationForm, 300);
+
   const [isFetching, setFetching] = useState(false);
   const [currentLootboxes, setCurrentLootboxes] = useState(8);
   const [totalCount, setTotalCount] = useState(0);
@@ -95,7 +94,6 @@ export default () => {
   };
 
   useEffect(() => {
-    // setLoader(true);
     dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
 
     dappletApi.isWalletConnected().then(async (isWalletConnected) => {
@@ -129,7 +127,7 @@ export default () => {
       document.removeEventListener('scroll', scrollHandler);
     };
   }, []);
-  
+
   const scrollHandler = (e: any) => {
     if (
       e.target.documentElement.scrollHeight -
@@ -171,11 +169,6 @@ export default () => {
   };
 
   useEffect(() => {
-    // doneClickHandler;
-    // selectedLootboxId;
-  }, []);
-
-  useEffect(() => {
     if (ftMetadata === null) return;
     Promise.all([dappletApi.getFtMetadata(ftMetadata)])
 
@@ -191,7 +184,7 @@ export default () => {
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
-    // setWinners(winners);
+
     Promise.all([
       api.getLootboxClaims(selectedLootboxId.toString()),
       dappletApi.getLootboxWinners(selectedLootboxId),
@@ -212,7 +205,6 @@ export default () => {
 
         // ToDo: show error to user
       });
-    // console.log('4');
   }, [selectedLootboxId]);
 
   useEffect(() => {
@@ -221,9 +213,7 @@ export default () => {
     dappletApi
       .getLootboxStat(selectedLootboxId)
       .then((x) => {
-        // setLoader(true);
         setStat(x);
-        // setLoader(false);
       })
 
       .catch((e) => {
@@ -231,7 +221,6 @@ export default () => {
 
         // ToDo: show error to user
       });
-    // console.log('5');
   }, [selectedLootboxId]);
 
   useEffect(() => {
@@ -245,7 +234,6 @@ export default () => {
 
         // ToDo: show error to user
       });
-    // console.log('6');
   }, [creationForm]);
 
   const handleLogIn = async () => {
@@ -259,7 +247,7 @@ export default () => {
   const handleLogInBtn = async () => {
     const isWalletConnected = await dappletApi.isWalletConnected();
     let accountName: string;
-    // let accountImg: string;
+
     if (!isWalletConnected) {
       accountName = await dappletApi.connectWallet();
     } else {
@@ -349,7 +337,6 @@ export default () => {
                   clicked={clickedBoxImg}
                   onChange_IMG={(x: string) => {
                     setImgBox(x);
-                    // updateImgSelect(x);
                   }}
                   creationFormId={creationForm.pictureId}
                   onCreationFormUpdate={(id: number) =>
@@ -429,7 +416,12 @@ export default () => {
               path="/deploy_your_box"
               element={
                 (loader && <Preloader />) || (
-                  <DeployBox winInfo={winInfo} id={selectedLootboxId} onChange={onChange} landingUrl={networkConfig.landingUrl}/>
+                  <DeployBox
+                    winInfo={winInfo}
+                    id={selectedLootboxId}
+                    onChange={onChange}
+                    landingUrl={networkConfig.landingUrl}
+                  />
                 )
               }
             />
@@ -441,12 +433,7 @@ export default () => {
               path="/winners"
               element={
                 (loader && <Preloader />) || (
-                  <StatisticsWinners
-                    id={selectedLootboxId}
-                    // getWin={getWin}
-                    // winInfo={winInfo}
-                    winners={winners}
-                  />
+                  <StatisticsWinners id={selectedLootboxId} winners={winners} />
                 )
               }
             />
@@ -454,7 +441,11 @@ export default () => {
               path="/code"
               element={
                 (loader && <Preloader />) || (
-                  <StatisticsCode id={selectedLootboxId} winInfo={winInfo} landingUrl={networkConfig.landingUrl} />
+                  <StatisticsCode
+                    id={selectedLootboxId}
+                    winInfo={winInfo}
+                    landingUrl={networkConfig.landingUrl}
+                  />
                 )
               }
             />

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState, useMemo, useEffect } from 'react';
+import React, { FC, ReactNode, useState, useEffect } from 'react';
 import cn from 'classnames';
 
 import styles from './CreateNewBox.module.scss';

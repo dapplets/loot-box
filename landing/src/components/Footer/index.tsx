@@ -1,23 +1,16 @@
 import React from 'react';
-import cn from 'classnames';
+
 import styles from './Footer.module.scss';
-import { Routes, Route, Link } from 'react-router-dom';
-import discord from '../../img/footer/discord.svg';
-import git from '../../img/footer/git.svg';
-import tg from '../../img/footer/tg.svg';
-import tweet from '../../img/footer/twit.svg';
 
 export const Footer = () => {
   return (
     <div className={styles.wrapper}>
-      {/* <div className={styles.content}> */}
       <div className={styles.blockFooter}>
         <div className={styles.copyBlock}>&copy;&nbsp;2022 LootBox Dapplet</div>
         <div className={styles.linkBlock}>
           <ul className={styles.list}>
             <li className={styles.listItem}>
               <a className={styles.link} href="https://github.com/dapplets" target="_blank">
-                {/* <img src={git} alt="github" /> */}
                 <svg
                   width="40"
                   height="40"
@@ -40,7 +33,6 @@ export const Footer = () => {
                 href="https://discord.com/invite/YcxbkcyjMV"
                 target="_blank"
               >
-                {/* <img src={discord} alt="discord" /> */}
                 <svg
                   width="40"
                   height="40"
@@ -59,7 +51,6 @@ export const Footer = () => {
             </li>
             <li className={styles.listItem}>
               <a className={styles.link} href="https://t.me/dapplets" target="_blank">
-                {/* <img src={tg} alt="telegram" /> */}
                 <svg
                   width="40"
                   height="40"
@@ -78,7 +69,6 @@ export const Footer = () => {
             </li>
             <li className={styles.listItem}>
               <a className={styles.link} href="https://twitter.com/dappletsproject" target="_blank">
-                {/* <img src={tweet} alt="twitter" /> */}
                 <svg
                   width="40"
                   height="40"
@@ -96,7 +86,6 @@ export const Footer = () => {
           </ul>
         </div>
       </div>
-      {/* </div> */}
     </div>
   );
 };

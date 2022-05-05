@@ -1,12 +1,4 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  FC,
-  useState,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { ReactNode, FC } from 'react';
 import { SettingTitle } from '../atoms/SettingTitle';
 import styles from './SelectBox.module.scss';
 import cn from 'classnames';

@@ -1,7 +1,7 @@
-import React, { FC, useState, useEffect, useMemo, useRef } from 'react';
-import cn from 'classnames';
+import React from 'react';
+
 import styles from './Instruction.module.scss';
-import { Preloader } from '../Preloader';
+
 import { Header } from '../Header';
 import { Footer } from '../Footer';
 
@@ -11,18 +11,15 @@ import connecting from '../../img/instruction/connecting.png';
 import continueImg from '../../img/instruction/continue.png';
 import downloads from '../../img/instruction/downloads.png';
 import drag_drop from '../../img/instruction/drag_drop.png';
-import instruction_bg from '../../img/instruction/instruction_bg.png';
+
 import load_unpuck from '../../img/instruction/load_unpuck.png';
 import near_wallet from '../../img/instruction/near_wallet.png';
 import wallets_connect from '../../img/instruction/walets_connect.png';
 import wallets from '../../img/instruction/walets.png';
 
-import { Routes, Route, Link } from 'react-router-dom';
-
 export interface InstructionProps {
   completed: number;
   bgcolor: string;
-  // stat: number;
 }
 
 export function Instruction(InstructionProps: any) {

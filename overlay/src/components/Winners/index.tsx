@@ -1,12 +1,4 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  FC,
-  useState,
-  ChangeEvent,
-  ChangeEventHandler,
-} from 'react';
+import React, { FC } from 'react';
 import styles from './Winner.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
@@ -15,7 +7,6 @@ import { StatisticsLink } from '../atoms/StatisticsLink';
 
 export interface WinnerProps {
   winners: any;
-  // getWin: any;
 }
 export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   const { winners } = props;
@@ -23,14 +14,9 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.blockInfo}>
-        <table
-        //  className={styles.blockInfo}
-        >
+        <table>
           <thead>
-            <tr
-            // className={styles.listTitle}
-            >
-              {/* <span className={styles.itemTitle}>Twitter:</span> */}
+            <tr>
               <th className={styles.itemTitle}>Near</th>
               <th className={styles.itemTitle}>Amount</th>
               <th className={styles.itemTitle}>Actions</th>

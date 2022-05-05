@@ -63,7 +63,6 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
         </div>
         <div className={cn(styles.statisticInfo)}>
           <StatisticsInfo title="Total Views" value={`${stat.totalViews}`} />
-          {/* <StatisticsInfo title="ESTIMATED END IN" value="5 min" /> */}
         </div>
       </div>
 

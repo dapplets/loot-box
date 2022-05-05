@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactElement, useState } from 'react';
+import React, { CSSProperties } from 'react';
 import styles from './LabelSettings.module.scss';
 import cn from 'classnames';
 

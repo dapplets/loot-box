@@ -2,7 +2,7 @@ import React, { FC, useState, useMemo } from 'react';
 import styles from './Code.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
-import { LabelSettings } from '../atoms/LabelSettings';
+
 import { StatisticsLink } from '../atoms/StatisticsLink';
 import { Lootbox } from '@loot-box/common/interfaces';
 import { Message } from '../atoms/Message';
@@ -17,7 +17,6 @@ export interface CodeProps {
 
 export const Code: FC<CodeProps> = (props: CodeProps) => {
   const { id, winInfo, landingUrl } = props;
-  const [infoWin, setInfoWin] = useState<Lootbox[]>([]);
 
   return (
     <div className={styles.wrapper}>

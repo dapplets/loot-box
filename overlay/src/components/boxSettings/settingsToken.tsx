@@ -1,19 +1,7 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  FC,
-  useState,
-  ChangeEventHandler,
-  ChangeEvent,
-  useMemo,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { ReactNode, FC, useState, useMemo, useEffect, useRef } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 import { useToggle } from '../../hooks/useToggle';
-import useDebounce from '../../hooks/useDebounce';
 
 import { LabelSettings } from '../atoms/LabelSettings';
 import { LinksStep } from '../atoms/LinksStep';
@@ -24,11 +12,9 @@ import { DropChance } from '../atoms/DropChance';
 import { Lootbox } from '@loot-box/common/interfaces';
 import { NearContentItem, FtContentItem } from '@loot-box/common/interfaces';
 import { ButtonsSetting } from './buttonsSetting';
-import { Test } from '../atoms/test';
-import classNames from 'classnames';
+
 import './invalid.scss';
 
-import { truncate } from 'fs/promises';
 import BigNumber from 'bignumber.js';
 
 export interface BoxSettingsProps {
@@ -65,7 +51,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const [value, setValue] = React.useState(20);
 
   const [link, onLink] = useState(true);
-  // console.log(creationForm);
+
   const nodeTokenAmount = useRef<HTMLInputElement>();
   const nodeTokenContract = useRef<HTMLInputElement>();
   const nodeTokenTicer = useRef<HTMLInputElement>();
@@ -77,8 +63,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const newForm = Object.assign({}, creationForm);
 
   const NearReg = new RegExp(/^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/gm);
-  // const [isSearching, setIsSearching] = useState(false)
-  // const debouncedSearchTerm = useDebounce(creationForm, 300);
 
   useEffect(() => {
     creationForm.dropChance = value;
@@ -89,14 +73,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     setValueRadioLoot(e.target.value);
     onShowDescription_tokenAmount();
   };
-
-  // const validInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-  //   if (e.target.value === '.' || isNaN(+e.target.value) === false) {
-  //     setNameClassInput('0');
-  //   } else {
-  //     setNameClassInput('invalid');
-  //   }
-  // };
 
   const booleanNodeTokenAmount = nodeTokenAmount.current?.classList.contains('invalid');
   nodeTokenContract;
@@ -137,44 +113,24 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     );
 
     newForm.ftContentItems[0][name] = value;
-    // console.log(value);
 
     onCreationFormUpdate(newForm);
   };
 
-  // const changeHandlerFTRadio = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.currentTarget;
-
-  //   // console.log(name, value);
-  //   onCreationFormUpdate((prevState: any) => ({
-  //     ...prevState,
-  //     ftContentItems: { ...prevState.ftContentItems, [name]: value },
-  //   }));
-  //   // console.log(e);
-  // };
   useEffect(() => {
     // ToDo: move to App.tsx
     // ToDo: how to get rid of object coping?
-    // DEFAULT_NEAR_ITEM.dropAmountFrom = '';
-    // DEFAULT_NEAR_ITEM.dropAmountTo = '';
+
     DEFAULT_NEAR_ITEM.tokenAmount = '';
 
-    // DEFAULT_FT_ITEM.contractAddress = '';
-    // DEFAULT_FT_ITEM.dropAmountFrom = '';
-    // DEFAULT_FT_ITEM.dropAmountTo = '';
     DEFAULT_FT_ITEM.tokenAmount = '';
 
     newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
     creationForm.nftContentItems = [];
     newForm.ftContentItems = [DEFAULT_FT_ITEM];
     onCreationFormUpdate(creationForm);
-    console.log(DEFAULT_NEAR_ITEM);
 
     onCreationFormUpdate(newForm);
-    // console.log(creationForm);
-    // console.log(newForm);
-    // console.log(DEFAULT_NEAR_ITEM);
-    // console.log(DEFAULT_FT_ITEM);
   }, []);
   const handleClick = () => {
     if (nodeTokenAmount && nodeTokenAmount.current) {
@@ -218,8 +174,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       } else if (
         (creationForm.nearContentItems[0] &&
           creationForm.nearContentItems[0].dropType === 'variable') ||
-        //  &&
-
         (creationForm.ftContentItems[0] && creationForm.ftContentItems[0].dropType === 'variable')
       ) {
         if (
@@ -238,38 +192,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     } else {
       return false;
     }
-    // console.log(result.c![0]);
-    // console.log(bigNum);
   };
 
-  // const checkValueMath = () => {
-  //   if (
-  //     (creationForm.nearContentItems[0] &&
-  //       Number(creationForm.nearContentItems[0].tokenAmount) >=
-  //         Number(creationForm.nearContentItems[0].dropAmountFrom) &&
-  //       Number(creationForm.nearContentItems[0].tokenAmount) %
-  //         Number(creationForm.nearContentItems[0].dropAmountFrom) ===
-  //         0 &&
-  //       creationForm.nearContentItems[0].dropType === 'fixed') ||
-  //     (creationForm.ftContentItems[0] &&
-  //       Number(creationForm.ftContentItems[0].tokenAmount) >=
-  //         Number(creationForm.ftContentItems[0].dropAmountFrom) &&
-  //       Number(creationForm.ftContentItems[0].tokenAmount) %
-  //         Number(creationForm.ftContentItems[0].dropAmountFrom) ===
-  //         0 &&
-  //       creationForm.ftContentItems[0].dropType === 'fixed')
-  //   ) {
-  //     return true;
-  //   } else if (
-  //     (creationForm.nearContentItems[0] &&
-  //       creationForm.nearContentItems[0].dropType === 'variable') ||
-  //     (creationForm.ftContentItems[0] && creationForm.ftContentItems[0].dropType === 'variable')
-  //   ) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
   const LinkBlock = useMemo(() => {
     if (
       (creationForm.nearContentItems.length !== 0 || creationForm.ftContentItems.length !== 0) &&
@@ -294,12 +218,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       ) {
         onLink(false);
       } else {
-        // console.log(nameClassInput);
         onLink(true);
       }
     } else {
       onLink(true);
-      // console.log(checkValueMath());
     }
   }, [
     creationForm,
@@ -340,11 +262,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 appearance="default"
                 placeholder="Token amount"
                 innerRef={nodeTokenAmount}
-                // defaultValue={
-                //   DEFAULT_NEAR_ITEM.tokenAmount.length > 0
-                //     ? DEFAULT_NEAR_ITEM.tokenAmount
-                //     : DEFAULT_FT_ITEM.tokenAmount
-                // }
                 onInput={(e) => func(e)}
                 onChange={(e) => {
                   if (
@@ -377,15 +294,12 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     handleClick();
                   }
                 }}
-
-                // onChange={onChangeRadioLoot}
               />
               <RadioButton
                 value="Custom token"
                 title="Custom token"
                 name="TokenAmount"
                 id="2_amount"
-                // onChange={onChangeRadioLoot}
                 onChange={(e) => {
                   if (e.target.checked !== undefined) {
                     creationForm.nearContentItems[0].tokenAmount = '';
@@ -405,7 +319,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   placeholder="Token contract"
                   defaultValue={DEFAULT_FT_ITEM.contractAddress}
                   innerRef={nodeTokenContract}
-                  // value={creationForm.ftContentItems[0].contractAddress}
                   onChange={(e) => {
                     if (
                       NearReg.test(e.target.value) &&
@@ -687,11 +600,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       (e.target.value[0] !== '0' ||
                         (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                       +e.target.value !== 0
-                      // &&
-                      // checkValueMath()
                     ) {
-                      // console.log(checkValueMath());
-
                       nodeDropAmount.current?.classList.remove('invalid');
                     } else {
                       nodeDropAmount.current?.classList.add('invalid');
@@ -710,11 +619,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
               )}
             </div>
           )}
-          {/* <Test
-            type="string"
-            valueDropChance={valTest}
-            onValueDropChance={(newValue: any) => onValTest(newValue)}
-          /> */}
+
           <div className={cn(styles.dropChance)}>
             <LabelSettings
               title="Drop Chance"
@@ -745,8 +650,6 @@ Please enter the amount in percentage."
               to="/fill_your_box"
               onClick={() => {
                 handleClick();
-                console.log(DEFAULT_NEAR_ITEM);
-                console.log(creationForm);
 
                 if (isShowDescription_tokenAmount) {
                   creationForm.nearContentItems = [];
@@ -756,10 +659,6 @@ Please enter the amount in percentage."
                   creationForm.nftContentItems = [];
                 }
                 onLink(false);
-                // } else {
-                //   onLink(true);
-                //   nodeDropAmount.current?.classList.add('invalid');
-                // }
               }}
             >
               <LinksStep step="next" label="Next step" />

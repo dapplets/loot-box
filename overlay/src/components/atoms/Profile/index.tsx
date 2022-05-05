@@ -15,22 +15,11 @@ export interface ProfileProps {
 export const Profile: FC<ProfileProps> = (props: ProfileProps) => {
   const { avatar, hash, isOpenProfile = true, openChange, onClick, mini = false } = props;
 
-  // const visible = (hash: string): string => {
-  //   const firstFourCharacters = hash.substring(0, 6);
-  //   const lastFourCharacters = hash.substring(hash.length - 1, hash.length - 5);
-
-  //   return `${firstFourCharacters}...${lastFourCharacters}`;
-  // };
   return (
     <div className={styles.wrapper}>
       <header className={cn(styles.header, { [styles.mini]: mini })} onClick={openChange}>
         <Avatar avatar={avatar} size="big" className={styles.avatar} />
-        {!mini && (
-          <p className={styles.hash}>
-            {/* {visible(hash)} */}
-            {hash}
-          </p>
-        )}
+        {!mini && <p className={styles.hash}>{hash}</p>}
         {!mini && <img src={Down} />}
       </header>
       {isOpenProfile && !mini && (
