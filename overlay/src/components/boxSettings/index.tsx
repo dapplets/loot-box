@@ -14,14 +14,7 @@ export interface BoxSettingsProps {
 
 export const SettingDef: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
-  // const changeHandler = () => {
-  //   onCreationFormUpdate((creationForm.ftContentItems = []));
-  //   onCreationFormUpdate((creationForm.nearContentItems = []));
-  //   onCreationFormUpdate((creationForm.nftContentItems = []));
-  //   // creationForm.ftContentItems = [];
-  //   // creationForm.nearContentItems = [];
-  //   // creationForm.nftContentItems = [];
-  // };
+
   return (
     <div className={cn(styles.wrapper)}>
       <ButtonsSetting />

@@ -1,26 +1,13 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  FC,
-  useState,
-  ChangeEvent,
-  FormEventHandler,
-  ChangeEventHandler,
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  useMemo,
-} from 'react';
+import React, { FC, useState, DetailedHTMLProps, InputHTMLAttributes } from 'react';
 import styles from './DeployBox.module.scss';
 import cn from 'classnames';
 
 import { SettingTitle } from '../atoms/SettingTitle';
-import { LabelSettings } from '../atoms/LabelSettings';
-import { InputPanel } from '../atoms/Input';
+
 import { Message } from '../atoms/Message';
-import { TextArea } from '../atoms/TextArea';
+
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+
 import { Lootbox } from '@loot-box/common/interfaces';
 
 export interface DeployBoxProps
@@ -32,10 +19,6 @@ export interface DeployBoxProps
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
   const { id, winInfo, landingUrl } = props;
-  const [valueMessage, setValueMessage] = useState('');
-  const [valueName, setValueName] = useState('');
-  const [lootboxes, setLootboxes] = useState<Lootbox[]>([]);
-  const [selectedLootboxId, setSelectedLootboxId] = useState<number | null>(null);
 
   return (
     <div className={cn(styles.wrapper)}>

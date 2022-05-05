@@ -1,12 +1,5 @@
 import cn from 'classnames';
-import React, {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  FC,
-  useState,
-  FunctionComponent,
-} from 'react';
+import React, { FC } from 'react';
 import styles from './LinksStep.module.scss';
 
 interface LinksStepProps {
@@ -14,17 +7,10 @@ interface LinksStepProps {
   label: string;
   className?: string;
   disabled?: boolean;
-  // icon: string;
 }
 
 export const LinksStep: FC<LinksStepProps> = (props: LinksStepProps) => {
-  const {
-    step,
-    label,
-    className,
-    disabled,
-    // icon
-  } = props;
+  const { step, label, className, disabled } = props;
   return (
     <button
       className={cn(
@@ -37,7 +23,7 @@ export const LinksStep: FC<LinksStepProps> = (props: LinksStepProps) => {
       )}
     >
       {label}
-      {/* <img src={icon} /> */}
+
       <span>
         <svg
           width="11"

@@ -1,9 +1,9 @@
-import React, { CSSProperties, ReactElement, ReactNode, FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import cn from 'classnames';
 import styles from './FillBox.module.scss';
 
 import { LabelSettings } from '../atoms/LabelSettings';
-import { RadioButton } from '../atoms/RadioButton';
+
 import { PayInfo } from '../atoms/PayInfo/PayInfo';
 import { ButtonPay } from '../atoms/ButtonPay';
 
@@ -16,10 +16,8 @@ import { useEffect } from 'react';
 import { Modal } from '../atoms/Modal';
 
 export interface FillBoxProps {
-  // onSetId?: () => void;
-
   imgVal: string;
-  // onClick?: () => void;
+
   price: any;
   onDoneClick: () => void;
   creationForm: Lootbox;
@@ -31,9 +29,8 @@ export interface FillBoxProps {
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const {
-    // onSetId,
     imgVal,
-    // onClick,
+
     price,
     onDoneClick,
     creationForm,
@@ -43,7 +40,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     messageError,
     setMessageError,
   } = props;
-  // const newForm = Object.assign({}, creationForm);
+
   const [winInfoToken, setWinInfoToken] = useState(winInfo);
   useEffect(() => {
     if (creationForm.nearContentItems[0]) {
@@ -80,17 +77,13 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
           </div>
         </div>
         <div className={cn(styles.payBtn)}>
-          {/* <Link to="/deploy_your_box"> */}
           <ButtonPay
             onClick={() => {
               onDoneClick();
-
-              // onDoneClick;
             }}
             styleBtn="default"
             title={`PAY ${price.totalAmount} NEAR`}
           />
-          {/* </Link> */}
         </div>
       </div>
       <div className={cn(styles.navigation)}>

@@ -1,21 +1,19 @@
-import React, { Component, useState } from 'react';
-import cn from 'classnames';
+import React, { useState } from 'react';
+
 import styles from './Burger.module.scss';
 import logo from '../../img/header/Logo.svg';
 import { Link } from 'react-router-dom';
 
 export const Burger = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [active, setActive] = useState('');
+
   const toggleMenu = () => {
     setIsMenuOpen((isOpen) => !isOpen);
-    // event.currentTarget.classList.toggle('active');
   };
   let classNameWrapper = '';
   if (isMenuOpen) {
     classNameWrapper += ' active';
   }
-  // target.classList.toggle('active');
 
   return (
     <div className={styles.wrapper + `${classNameWrapper}`}>
@@ -55,7 +53,6 @@ export const Burger = () => {
                     href="https://github.com/dapplets"
                     target="_blank"
                   >
-                    {/* <img src={git} alt="github" /> */}
                     <svg
                       width="40"
                       height="40"
@@ -78,7 +75,6 @@ export const Burger = () => {
                     href="https://discord.com/invite/YcxbkcyjMV"
                     target="_blank"
                   >
-                    {/* <img src={discord} alt="discord" /> */}
                     <svg
                       width="40"
                       height="40"
@@ -97,7 +93,6 @@ export const Burger = () => {
                 </li>
                 <li className={styles.listItemSocial}>
                   <a className={styles.linkSocial} href="https://t.me/dapplets" target="_blank">
-                    {/* <img src={tg} alt="telegram" /> */}
                     <svg
                       width="40"
                       height="40"
@@ -120,7 +115,6 @@ export const Burger = () => {
                     href="https://twitter.com/dappletsproject"
                     target="_blank"
                   >
-                    {/* <img src={tweet} alt="twitter" /> */}
                     <svg
                       width="40"
                       height="40"

@@ -1,8 +1,8 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
-import React, { FC, FunctionComponent, ReactNode } from 'react';
+import React, { FC } from 'react';
 import cn from 'classnames';
 import styles from './Button.module.scss';
-import { Link } from 'react-router-dom';
+
 export interface ButtonProps
   extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   disabled?: boolean;

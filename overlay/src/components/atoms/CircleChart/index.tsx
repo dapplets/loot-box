@@ -1,6 +1,5 @@
-import React, { useState, useEffect, FC, CSSProperties } from 'react';
-import styles from './CircleChart.module.scss';
-import cn from 'classnames';
+import React, { FC } from 'react';
+
 import Chart from 'react-apexcharts';
 
 export interface ChartProps {

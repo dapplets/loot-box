@@ -28,7 +28,6 @@ import { getNetworkConfig } from '@loot-box/common/helpers';
 export interface AppProps {
   completed: number;
   bgcolor: string;
-  // stat: number;
 }
 export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 
@@ -39,11 +38,6 @@ export default function App() {
   const { lootboxId } = useParams();
   const [loader, setLoader] = useState(false);
   useEffect(() => {
-    // setLoader(true);
-    // _api.getLootboxStat(lootboxId!).then((x) => {
-    //   setStat(x?.currentBalance ?? null);
-    //   setLoader(false);
-    // });
     _api.getLootboxById(lootboxId!).then((x) => setSelectedLootboxId(x?.id!));
     console.log(lootboxId);
     console.log(selectedLootboxId);
@@ -158,17 +152,13 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
             ) : (
               <img src={boxDef} />
             )}
-
-            {/* <img src={selectedLootboxId === null ? boxDef : IMG[Number(lootboxId)!]} /> */}
           </div>
           {selectedLootboxId !== null ? (
             <div className={styles.radialBarBlock}>
               <h2 className={styles.radialBarTitle}>
                 <span className={styles.statCurNum}>{statCur}</span> / 100 tokens left
               </h2>
-              {/* <h2 className={styles.radialBarTitle}>
-              <span className={styles.statCurNum}>{40} / 100 tokens left</span>
-            </h2> */}
+
               <div className={styles.radialBarGraph}>
                 <Bar />
               </div>

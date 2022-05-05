@@ -34,7 +34,6 @@ export const Preloader = () => {
         stagger: {
           each: 0.16,
           repeat: -1,
-          // repeatRefresh: false,
         },
         ease: 'linear',
       })
@@ -49,7 +48,6 @@ export const Preloader = () => {
         stagger: {
           each: 0.16,
           repeat: -1,
-          // repeatRefresh: false,
         },
         ease: 'sine.in',
       })
@@ -64,7 +62,6 @@ export const Preloader = () => {
         stagger: {
           each: 0.16,
           repeat: -1,
-          // repeatRefresh: false,
         },
         ease: 'sine.in',
       })
@@ -79,7 +76,6 @@ export const Preloader = () => {
         stagger: {
           each: 0.16,
           repeat: -1,
-          // repeatRefresh: false,
         },
         ease: 'sine.in',
       })
@@ -95,7 +91,6 @@ export const Preloader = () => {
         stagger: {
           each: 0.16,
           repeat: -1,
-          // repeatRefresh: false,
         },
         ease: 'power2.in',
       })

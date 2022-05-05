@@ -8,8 +8,6 @@ import { Code } from '../Code';
 import { Winner } from '../Winners';
 import { Statistics } from '../Statistics';
 import { Lootbox } from '@loot-box/common/interfaces';
-import BigNumber from 'bignumber.js';
-import { useEffect } from 'react';
 
 export interface StatisticsNearProps {
   creationForm: Lootbox;
@@ -28,9 +26,7 @@ export interface StatisticsNearPropsStat {
 
 export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) => {
   const { stat } = props;
-  // useEffect(() => {
-  //   stat;
-  // });
+
   if (stat === null) {
     return <div>Loading</div>;
   }
@@ -61,20 +57,13 @@ export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNea
 };
 export interface StatisticsNearPropsWinner {
   winners: any;
-  // getWin?: any;
+
   id?: any;
-  // winInfo: any;
 }
 export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
   props: StatisticsNearPropsWinner,
 ) => {
   const { winners, id } = props;
-  // useEffect(() => {
-  //   winners;
-  // });
-
-  // getWin(id);
-  // console.log(winInfo);
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -127,7 +116,7 @@ export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNea
           </Link>
         </div>
       </div>
-      <Code winInfo={winInfo} id={id} landingUrl={landingUrl}/>
+      <Code winInfo={winInfo} id={id} landingUrl={landingUrl} />
     </div>
   );
 };

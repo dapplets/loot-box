@@ -1,12 +1,4 @@
-import React, {
-  useState,
-  FC,
-  DetailedHTMLProps,
-  ButtonHTMLAttributes,
-  InputHTMLAttributes,
-  ChangeEventHandler,
-  useMemo,
-} from 'react';
+import React, { FC, DetailedHTMLProps, InputHTMLAttributes, useMemo } from 'react';
 import styles from './DropChance.module.scss';
 import cn from 'classnames';
 import less from '../../../icons/Input/less.svg';
@@ -67,8 +59,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
               break;
             case 'deleteContentBackward':
               const newValue = valueDropChance.slice(0, -2);
-              // if (newValue.length === 0) onValueDropChance('1');
-              // else
+
               onValueDropChance(newValue);
               break;
 

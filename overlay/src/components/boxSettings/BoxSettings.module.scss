@@ -4,7 +4,7 @@
 
 .wrapper {
   padding: 60px 0px 0px 0px;
-  // height: 100vh;
+
   display: flex;
   flex: 1 0 auto;
   justify-content: start;
@@ -41,7 +41,6 @@
   display: flex;
   width: 100%;
   justify-content: space-between;
-  // flex: 1 0 auto;
 }
 
 .wrapperTokenAmount {
@@ -50,10 +49,7 @@
   flex-direction: column;
   justify-content: start;
   position: relative;
-  // flex: 1 0 auto;
 }
-
-// between buttons and token amount
 
 .tokenAmount {
   display: flex;
@@ -63,18 +59,14 @@
   padding: 0px 0px 0px 0px;
 }
 
-// between label and input token amount
-
 .tokenInput {
   display: flex;
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  // position: relative;
+
   padding: 0px 0px 0px 0px;
 }
-
-// between customtoken and input
 
 .inputDropAmount {
   display: flex;
@@ -96,12 +88,6 @@
   }
 }
 
-// between input tokenamount and custom token // between customtoken and dropamount
-.dropAmount {
-}
-
-//between label tokenamount ant input
-
 .dropAmountButtons {
   display: flex;
   width: 153px;
@@ -111,8 +97,6 @@
   padding: 0px 0px 18px 0px;
 }
 
-// between variable dropamount and his input
-
 .dropAmountInput {
   display: flex;
   width: 100%;
@@ -121,7 +105,6 @@
   padding: 0px 0px 0px 0px;
 }
 
-// between dropchance and dropamount
 .dropChance {
   display: flex;
   flex-direction: column;
@@ -145,7 +128,6 @@
   }
 }
 
-// nft
 .btnToken {
   background: $Primary;
   color: #fff;
@@ -197,7 +179,6 @@
   height: 100%;
   flex-direction: column;
   width: 100%;
-  // flex: 1 0 auto;
 }
 
 .addNFT {
@@ -207,13 +188,12 @@
 .inputCustomNFT {
   display: flex;
   justify-content: space-between;
-  // padding: 0px 0px 9px 0px;
 }
 
 .dropChance_nft {
   display: flex;
   width: 100%;
-  // flex: 1 0 auto;
+
   padding: 0px 0px 20px 0px;
   flex-direction: column;
   position: relative;
@@ -226,9 +206,6 @@
     height: 3px;
     background: $WebBG;
   }
-}
-
-.navigation {
 }
 
 .addNftBlock {

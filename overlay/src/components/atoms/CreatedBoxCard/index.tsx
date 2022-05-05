@@ -1,15 +1,15 @@
-import React, { FC, ReactNode, useState, useEffect } from 'react';
+import React, { FC } from 'react';
 import cn from 'classnames';
 import styles from './CreatedBoxCard.module.scss';
 import { Link } from 'react-router-dom';
-import copy from '../../../icons/createNewBox/copy.svg';
+
 import { Preloader } from '../Preloader';
 
 import useCopied from '../../../hooks/useCopyed';
 
 export interface CreatedBoxProps {
   label: string;
-  // iconCopy: string;
+
   imageBox: string;
   status: string;
   id: number;
@@ -60,9 +60,6 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
                   <span></span>
                 </button>
               )}
-              {/* <a href="#" className={cn(styles.link)}>
-            <span></span>
-          </a> */}
             </span>
             <span className={cn(styles.created)}>{status}</span>
           </div>

@@ -1,5 +1,4 @@
-import classNames from 'classnames';
-import React, { useState, useEffect, FC, CSSProperties } from 'react';
+import React, { FC } from 'react';
 import styles from './Progress.module.scss';
 import cn from 'classnames';
 import prog from '../../../icons/progress/progress.svg';

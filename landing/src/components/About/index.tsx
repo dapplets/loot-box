@@ -1,14 +1,13 @@
-import React, { FC, useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import cn from 'classnames';
 import styles from './About.module.scss';
 import { Preloader } from '../Preloader';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import imgDef from '../../img/about/img_def.png';
 
 export interface AboutProps {
   completed: number;
   bgcolor: string;
-  // stat: number;
 }
 export function About(AboutProps: any) {
   const [loader, setLoader] = useState(false);

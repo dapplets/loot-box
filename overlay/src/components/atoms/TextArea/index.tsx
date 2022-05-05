@@ -1,14 +1,4 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  FC,
-  useState,
-  ChangeEvent,
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  ChangeEventHandler,
-} from 'react';
+import React, { FC, DetailedHTMLProps, ChangeEventHandler } from 'react';
 import cn from 'classnames';
 import styles from './TextArea.module.scss';
 

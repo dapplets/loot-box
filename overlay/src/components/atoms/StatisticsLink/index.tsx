@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC, CSSProperties } from 'react';
+import React, { FC } from 'react';
 import styles from './StatisticsLink.module.scss';
 import cn from 'classnames';
 import { LinksStep } from '../LinksStep';
