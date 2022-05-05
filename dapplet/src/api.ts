@@ -5,7 +5,7 @@ import {
   LootboxStat,
   LootboxWinner,
   LootboxClaimResult,
-  FtMetadata
+  FtMetadata,
 } from '@loot-box/common/interfaces';
 import { NetworkConfig } from '@loot-box/common/helpers';
 import { sum, groupBy, sub, div, mul, toPrecision, zerofyEmptyString } from './helpers';
@@ -220,7 +220,7 @@ export class DappletApi implements IDappletApi {
 
     const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
 
-    let totalAmount = "0";
+    let totalAmount = '0';
     for (const item of all_loot_items) {
       if (item.Near !== undefined) {
         totalAmount = sum(totalAmount, formatNearAmount(item.Near.total_amount));
@@ -228,7 +228,7 @@ export class DappletApi implements IDappletApi {
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.Nft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
-        totalAmount = sum(totalAmount, "1"); // ToDo: how to calculate statistics of NFT?
+        totalAmount = sum(totalAmount, '1'); // ToDo: how to calculate statistics of NFT?
       } else {
         console.error('Unknown loot item');
       }
@@ -236,7 +236,7 @@ export class DappletApi implements IDappletApi {
 
     const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
 
-    let winAmount = "0";
+    let winAmount = '0';
 
     for (const item of claims) {
       if (item.WinNear !== undefined) {
@@ -245,7 +245,7 @@ export class DappletApi implements IDappletApi {
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
-        winAmount = sum(winAmount, "1"); // ToDo: how to calculate statistics of NFT?
+        winAmount = sum(winAmount, '1'); // ToDo: how to calculate statistics of NFT?
       } else if (item.NotWin !== undefined) {
         // Nothing to do
       } else {
@@ -253,8 +253,8 @@ export class DappletApi implements IDappletApi {
       }
     }
 
-    const completedPercents = (totalAmount === "0") ? "0" : mul(div(winAmount, totalAmount), '100');
-    const remainingPercents = (totalAmount === "0") ? "0" : sub("100", completedPercents);
+    const completedPercents = totalAmount === '0' ? '0' : mul(div(winAmount, totalAmount), '100');
+    const remainingPercents = totalAmount === '0' ? '0' : sub('100', completedPercents);
 
     const result = {
       totalAmount: totalAmount,
@@ -481,7 +481,7 @@ export class DappletApi implements IDappletApi {
         nftContentItems: [],
       };
     } else {
-      console.error("Unknown claim result", claim_status);
+      console.error('Unknown claim result', claim_status);
       throw new Error('Unknown claim result');
     }
   }

@@ -1,4 +1,4 @@
-import { NetworkConfig } from './helpers'
+import { NetworkConfig } from './helpers';
 
 export type NftContentItem = {
   contractAddress: string;
@@ -24,6 +24,7 @@ export type Lootbox = {
   id?: string;
   // name: string;
   // message: string;
+  ownerId?: string;
   pictureId: number;
   dropChance: number;
   nearContentItems: NearContentItem[];
