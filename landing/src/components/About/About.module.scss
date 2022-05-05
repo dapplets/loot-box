@@ -61,39 +61,39 @@
   justify-content: center;
   position: relative;
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 15px;
-    right: -140px;
-    width: 140px;
-    height: 140px;
-    background: url('../../img/MadeForDapplets.svg') 0 0 /100% 100% no-repeat;
-  }
+  // &::after {
+  //   content: '';
+  //   position: absolute;
+  //   top: 15px;
+  //   right: -140px;
+  //   width: 140px;
+  //   height: 140px;
+  //   background: url('../../img/MadeForDapplets.svg') 0 0 /100% 100% no-repeat;
+  // }
   @media (max-width: 1024px) {
     max-width: 93.59%;
     padding: 0px 0px 4.3% 0px;
-    &::after {
-      content: '';
-      position: absolute;
-      top: 22%;
-      right: -65px;
-      width: 120px;
-      height: 120px;
-      background: url('../../img/MadeForDapplets.svg') 0 0 /120px 120px no-repeat;
-    }
+    // &::after {
+    //   content: '';
+    //   position: absolute;
+    //   top: 22%;
+    //   right: -65px;
+    //   width: 120px;
+    //   height: 120px;
+    //   background: url('../../img/MadeForDapplets.svg') 0 0 /120px 120px no-repeat;
+    // }
   }
 
   @media (max-width: 600px) {
-    &::after {
-      content: '';
-      position: absolute;
-      top: -1%;
-      right: -15px;
-      width: 70px;
-      height: 70px;
-      background: url('../../img/MadeForDapplets.svg') 0 0 /70px 70px no-repeat;
-    }
+    // &::after {
+    //   content: '';
+    //   position: absolute;
+    //   top: -1%;
+    //   right: -15px;
+    //   width: 70px;
+    //   height: 70px;
+    //   // background: url('../../img/MadeForDapplets.svg') 0 0 /70px 70px no-repeat;
+    // }
   }
 
   animation: fadein 2s;

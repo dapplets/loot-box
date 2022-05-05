@@ -7,7 +7,6 @@ const { connect, keyStores, WalletConnection, Contract } = nearAPI;
 const { formatNearAmount, parseNearAmount } = nearAPI.utils.format;
 
 export class DappletApi implements IDappletApiForLanding {
-
   private _contract = this.getContract();
 
   constructor(
@@ -36,7 +35,7 @@ export class DappletApi implements IDappletApiForLanding {
 
     const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
 
-    let totalAmount = "0";
+    let totalAmount = '0';
     for (const item of all_loot_items) {
       if (item.Near !== undefined) {
         totalAmount = sum(totalAmount, formatNearAmount(item.Near.total_amount));
@@ -44,7 +43,7 @@ export class DappletApi implements IDappletApiForLanding {
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.Nft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
-        totalAmount = sum(totalAmount, "1"); // ToDo: how to calculate statistics of NFT?
+        totalAmount = sum(totalAmount, '1'); // ToDo: how to calculate statistics of NFT?
       } else {
         console.error('Unknown loot item');
       }
@@ -52,7 +51,7 @@ export class DappletApi implements IDappletApiForLanding {
 
     const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
 
-    let winAmount = "0";
+    let winAmount = '0';
 
     for (const item of claims) {
       if (item.WinNear !== undefined) {
@@ -61,7 +60,7 @@ export class DappletApi implements IDappletApiForLanding {
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
-        winAmount = sum(winAmount, "1"); // ToDo: how to calculate statistics of NFT?
+        winAmount = sum(winAmount, '1'); // ToDo: how to calculate statistics of NFT?
       } else if (item.NotWin !== undefined) {
         // Nothing to do
       } else {
@@ -69,8 +68,8 @@ export class DappletApi implements IDappletApiForLanding {
       }
     }
 
-    const completedPercents = (totalAmount === "0") ? "0" : mul(div(winAmount, totalAmount), '100');
-    const remainingPercents = (totalAmount === "0") ? "0" : sub("100", completedPercents);
+    const completedPercents = totalAmount === '0' ? '0' : mul(div(winAmount, totalAmount), '100');
+    const remainingPercents = totalAmount === '0' ? '0' : sub('100', completedPercents);
 
     const result = {
       totalAmount: totalAmount,
@@ -110,7 +109,7 @@ export class DappletApi implements IDappletApiForLanding {
       id: x.id,
       pictureId: x.picture_id,
       dropChance: Math.floor((x.drop_chance * 100) / 255),
-      // ownerId: x.owner_id,
+      ownerId: x.owner_id,
       status: x.status.toLowerCase(),
       nearContentItems: all_loot_items
         .filter((x) => x['Near'])

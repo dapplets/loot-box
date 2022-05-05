@@ -3,7 +3,7 @@ import cn from 'classnames';
 import styles from './About.module.scss';
 import { Preloader } from '../Preloader';
 import { Link } from 'react-router-dom';
-import imgDef from '../../img/about/img_def.png';
+import imgDef from '../../img/about/about.png';
 
 export interface AboutProps {
   completed: number;
@@ -15,19 +15,12 @@ export function About(AboutProps: any) {
     <div className={styles.BoxBlock}>
       {(loader && <Preloader />) || (
         <div className={styles.postLoader}>
-          <h1 className={styles.boxTitle}>Sed egestas et est amet </h1>
+          <h1 className={styles.boxTitle}>About </h1>
           <div className={styles.boxContent}>
             <div className={styles.description}>
               <p className={styles.text}>
-                Sapien, dui dictum cras amet sed in eget cras lacus. Vitae a egestas ornare ut nisl
-                imperdiet. Sit eget rhoncus eget volutpat. Sit posuere enim urna fringilla. Laoreet
-                velit luctus dui non. Dis et ullamcorper feugiat sollicitudin sed sed lectus dictum.
-                Egestas aliquam leo non elit consectetur eu aliquam, non viverra. Ultrices magna
-                mattis eu mattis magna in varius. Cum dolor donec in augue. Nulla laoreet proin
-                risus magna ultrices mollis tincidunt praesent. Pharetra, massa lectus nunc, aenean
-                in nullam a imperdiet maecenas. Odio duis at sapien consectetur nullam ac gravida
-                velit urna. Quam arcu vulputate eget dolor viverra volutpat. Purus ultrices duis
-                morbi fames risus nulla tempor. Praesent tellus eu a pharetra sit.
+                The Lootbox dapplet allows you to host airdrops and giveaways directly on your
+                social media page, where all of your followers can participate.
               </p>
             </div>
             <div className={styles.boxImg}>
@@ -35,27 +28,21 @@ export function About(AboutProps: any) {
             </div>
             <div className={styles.description}>
               <p className={styles.text}>
-                Neque faucibus ut sed neque. Pellentesque nec, lorem massa diam sed ut nibh sed
-                aliquet. Mattis eleifend nisl, ac vitae risus duis donec. Mauris bibendum vitae enim
-                amet velit ut. Mi ipsum adipiscing ut erat interdum congue proin non. Quisque
-                convallis id gravida imperdiet ultrices. Massa egestas tellus euismod molestie
-                ultrices fermentum sit. Turpis adipiscing blandit in ornare nulla tortor amet.
-                Volutpat duis velit proin ut proin. Platea sit tellus vitae enim turpis donec eu id
-                dolor. Quis tempor at massa neque nunc, fringilla vitae.
+                The airdrop is presented as a clickable image of a special box. When the Lootbox is
+                made, the creator loads it with tokens or NFTs and selects the number of possible
+                winners. Once the Lootbox has been posted anyone who can view your social media page
+                is able to participate in the lottery.
               </p>
               <p className={styles.text}>
-                Ultrices nunc consectetur magna sodales vivamus iaculis nam. Aenean netus volutpat
-                praesent et vel. Adipiscing volutpat velit velit pellentesque eu sed. Tortor lacinia
-                duis elementum sed consectetur.
+                The Lootbox dapp is a great tool that helps facilitate airdrops and giveaways,
+                making them more fun and convenient. No more complicated mechanisms, and
+                randomizers, your followers simply need to click on the Lootbox once to receive
+                their prize.
               </p>
 
               <p className={styles.text}>
-                Dignissim id mi euismod quis. Donec vestibulum imperdiet nunc quam morbi vel
-                aliquam. Tortor, dolor vitae, massa lobortis leo, rutrum. Est, placerat venenatis,
-                massa diam luctus quam arcu. Tristique ornare nisl duis nisl at viverra nulla.
-                Venenatis egestas hac habitasse condimentum id viverra. Donec est, pharetra dictum
-                aliquet faucibus tellus quis. Id duis consequat, at mauris et sit. Integer arcu
-                pellentesque id scelerisque feugiat aliquam praesent.
+                The dapplet can be used by community managers, companies, or just really generous
+                individuals.
               </p>
             </div>
           </div>
