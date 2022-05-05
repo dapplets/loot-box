@@ -139,7 +139,6 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
   return (
     <div className={styles.BoxBlock}>
       {(loader && <Preloader />) ||
-        (statCur != null ? (
           <div className={styles.postLoader}>
             <h1 className={styles.boxTitle}>Sed egestas et est amet </h1>
             <div className={styles.boxImg}>
@@ -170,18 +169,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                 <button className={styles.button}>How to collect?</button>
               </Link>
             </div>
-          </div>
-        ) : (
-          <div>
-            <div className={styles.description}>The lootbox doesn't exist.</div>
-
-            <div className={styles.buttonBlock}>
-              <Link to="/instruction">
-                <button className={styles.button}>How to collect?</button>
-              </Link>
-            </div>
-          </div>
-        ))}
+          </div>}
     </div>
   );
 }

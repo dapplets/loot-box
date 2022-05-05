@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 require('dotenv').config();
 
@@ -47,16 +48,17 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js']
+    extensions: ['.tsx', '.ts', '.js'],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: 'public/index.html' }),
+    new CopyWebpackPlugin({ patterns: [{ from: 'public' }] }),
+    new HtmlWebpackPlugin({ template: 'src/index.html' }),
     new ForkTsCheckerWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NETWORK': JSON.stringify(process.env.NETWORK)
-      }
-    })
+        NETWORK: JSON.stringify(process.env.NETWORK),
+      },
+    }),
   ],
   devServer: {
     contentBase: path.join(__dirname, 'build'),
