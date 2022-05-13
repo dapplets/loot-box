@@ -11,6 +11,23 @@
   min-height: 626px;
   max-height: 710px;
   padding: 0 0px;
+  @media (max-width: 1024px) {
+    min-width: 90vw;
+    max-width: 90vw;
+    min-height: 100%;
+    max-height: 100%;
+  }
+
+  @media (max-width: 600px) {
+    // font-family: 'Montserrat';
+    // font-style: normal;
+    // font-weight: 700;
+    // font-size: 36px;
+    // line-height: 149%;
+
+    // color: #2d1a0e;
+    // width: 100%;
+  }
 }
 svg {
   width: 100%;
