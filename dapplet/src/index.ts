@@ -94,6 +94,7 @@ export default class TwitterFeature {
           initial: 'DEFAULT',
           DEFAULT: {
             img: { DARK: boxDef, LIGHT: White },
+            width: '60%',
             hidden: true,
             replace: this._config.landingUrlReplace,
             position: 'bottom',
