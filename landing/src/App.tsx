@@ -175,9 +175,9 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
         <div className={styles.postLoader}>
           {!Number.isNaN(pictureId) ? (
             <h1 className={styles.boxTitle}>
-              LootBox by
-              <br />
-              <a target="_blank" href={ownerAddress}>
+              LootBox <span className={styles.wrap} />
+              <span className={styles.authorTitleSpan}>{` by `}</span>
+              <a className={styles.authorTitleLink} target="_blank" href={ownerAddress}>
                 {owner}
               </a>
             </h1>
@@ -185,14 +185,27 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
             <h1 className={styles.boxTitle}>
               The LootBox Dapplet
               <br />
-              <a target="_blank" href="https://dapplets.org/">
-                (module for Dapplets Extension)
-              </a>
+              <span className={styles.defaultTitleSpan}>
+                {`module for `}
+                <a className={styles.defaultTitleLink} target="_blank" href="https://dapplets.org/">
+                  Dapplets Extension
+                </a>
+              </span>
             </h1>
           )}
 
           <div className={styles.boxImg}>
-            {!Number.isNaN(pictureId) ? <img src={IMG[pictureId!]} /> : <img src={boxDef} />}
+            {!Number.isNaN(pictureId) ? (
+              <>
+                <span className={styles.imgLabel}>
+                  <span className={styles.imgLabelSum}> {statCur?.totalAmount}</span>
+                  {nameWin}
+                </span>
+                <img src={IMG[pictureId!]} />
+              </>
+            ) : (
+              <img src={boxDef} />
+            )}
           </div>
           {selectedLootboxId !== null && statCur !== null ? (
             <div className={styles.radialBarBlock}>
@@ -208,23 +221,25 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
 
           {!Number.isNaN(pictureId) ? (
             <div className={styles.description}>
-              <p>
+              <p className={styles.textDescription}>
                 <span className={styles.nameOwner}>{owner}</span> is hosting a giveaway on Twitter.
                 Join now for a chance to win
                 <span className={styles.totalSum}> {statCur?.totalAmount}</span>
                 <span className={styles.labelSum}> {nameWin}</span>
               </p>
 
-              <p>Read “How to collect?” to participate and win the prize!</p>
+              <p className={styles.textDescription}>
+                Read “How to collect?” to participate and win the prize!
+              </p>
             </div>
           ) : (
             <div className={styles.description}>
-              <p>
+              <p className={styles.textDescription}>
                 The LootBox Dapplet allows you to host airdrops and giveaways directly on your
                 social media page, where all of your followers can participate.
               </p>
-
-              <p>
+              <br />
+              <p className={styles.textDescription}>
                 The Lootbox dapp is a great tool that helps facilitate airdrops and giveaways,
                 making them more fun and convenient. No more complicated mechanisms, and
                 randomizers, your followers simply need to click on the Lootbox once to receive

@@ -136,29 +136,36 @@
 .boxTitle {
   display: flex;
   justify-content: flex-start;
-  padding: 0px 0px 2.51% 0px;
+  padding: 20px 0px 0 0px;
 
   font-family: 'Montserrat', sans-serif;
 
   font-weight: 700;
   font-size: 36px;
-  line-height: 149%;
+  // line-height: 149%;
   color: #2d1a0e;
   @media (min-width: 1280px) and (max-height: 910px) {
-    font-size: 30px;
-    padding: 0px 0px 4.51% 0px;
+    // font-size: 30px;
+    // padding: 0px 0px 4.51% 0px;
   }
   @media (max-width: 1024px) {
-    padding: 3.51% 0px 2.51% 0px;
   }
 
   @media (max-width: 600px) {
     font-family: Montserrat, sans-serif;
     font-weight: 700;
-    font-size: 18px;
-    line-height: 149%;
+
     color: #2d1a0e;
   }
+}
+.boxTitleSpan {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 149%;
+
+  color: #2d1a0e;
 }
 
 .boxContent {
@@ -249,5 +256,28 @@
   @media (max-width: 600px) {
     font-size: 14px;
     padding: 7.5px 23px;
+  }
+}
+
+.boxTitleMini {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 100%;
+
+  color: #2d1a0e;
+  display: inline-block;
+  margin-bottom: 20px;
+
+  @media (min-width: 1280px) and (max-height: 910px) {
+    font-size: 24px;
+    line-height: 100%;
+  }
+  @media (max-width: 1024px) {
+    // padding: 3.51% 0px 2.51% 0px;
+  }
+
+  @media (max-width: 600px) {
   }
 }
