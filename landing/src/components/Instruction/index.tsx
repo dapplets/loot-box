@@ -27,22 +27,22 @@ import inst_13 from '../../img/instruction/instruction_13.png';
 import inst_13_1 from '../../img/instruction/instruction_13_1.png';
 import inst_14 from '../../img/instruction/instruction_14.png';
 
-import m_inst_1 from '../../img/instruction/mobile/mobile_inst_1.png';
-import m_inst_2 from '../../img/instruction/mobile/mobile_inst_2.png';
-import m_inst_3 from '../../img/instruction/mobile/mobile_inst_3.png';
-import m_inst_4 from '../../img/instruction/mobile/mobile_inst_4.png';
-import m_inst_5 from '../../img/instruction/mobile/mobile_inst_5.png';
-import m_inst_6 from '../../img/instruction/mobile/mobile_inst_6.png';
-import m_inst_7 from '../../img/instruction/mobile/mobile_inst_7.png';
-import m_inst_8 from '../../img/instruction/mobile/mobile_inst_8.png';
-import m_inst_9 from '../../img/instruction/mobile/mobile_inst_9.png';
-import m_inst_10 from '../../img/instruction/mobile/mobile_inst_10.png';
-import m_inst_11 from '../../img/instruction/mobile/mobile_inst_11.png';
-import m_inst_12 from '../../img/instruction/mobile/mobile_inst_12.png';
-import m_inst_13 from '../../img/instruction/mobile/mobile_inst_13.png';
-import m_inst_14 from '../../img/instruction/mobile/mobile_inst_14.png';
-import m_inst_15 from '../../img/instruction/mobile/mobile_inst_15.png';
-import m_inst_16 from '../../img/instruction/mobile/mobile_inst_16.png';
+import m_inst_1 from '../../img/instruction/mobile/mobile_inst_1.svg';
+import m_inst_2 from '../../img/instruction/mobile/mobile_inst_2.svg';
+import m_inst_3 from '../../img/instruction/mobile/mobile_inst_3.svg';
+import m_inst_4 from '../../img/instruction/mobile/mobile_inst_4.svg';
+import m_inst_5 from '../../img/instruction/mobile/mobile_inst_5.svg';
+import m_inst_6 from '../../img/instruction/mobile/mobile_inst_6.svg';
+import m_inst_7 from '../../img/instruction/mobile/mobile_inst_7.svg';
+import m_inst_8 from '../../img/instruction/mobile/mobile_inst_8.svg';
+import m_inst_9 from '../../img/instruction/mobile/mobile_inst_9.svg';
+import m_inst_10 from '../../img/instruction/mobile/mobile_inst_10.svg';
+import m_inst_11 from '../../img/instruction/mobile/mobile_inst_11.svg';
+import m_inst_12 from '../../img/instruction/mobile/mobile_inst_12.svg';
+import m_inst_13 from '../../img/instruction/mobile/mobile_inst_13.svg';
+import m_inst_14 from '../../img/instruction/mobile/mobile_inst_14.svg';
+import m_inst_15 from '../../img/instruction/mobile/mobile_inst_15.svg';
+import m_inst_16 from '../../img/instruction/mobile/mobile_inst_16.svg';
 
 import load_unpuck from '../../img/instruction/load_unpuck.png';
 

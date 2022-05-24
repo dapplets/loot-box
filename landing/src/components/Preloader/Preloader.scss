@@ -4,12 +4,12 @@
 
 .wrapper__preloader {
   display: flex;
-  flex: 1 1 auto;
-  margin: 0 auto;
-  min-width: 780px;
-  max-width: 815px;
-  min-height: 626px;
-  max-height: 710px;
+  // flex: 1 1 auto;
+  // margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  width: 50vh;
+  height: 50vh;
   padding: 0 0px;
   @media (max-width: 1024px) {
     min-width: 90vw;
