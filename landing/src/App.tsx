@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import styles from './App.module.scss';
 import styled, { keyframes } from 'styled-components';
+import cn from 'classnames';
 
 import boxDef from './img/box.png';
 
@@ -170,11 +171,15 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
   `;
 
   return (
-    <div className={styles.BoxBlock}>
+    <div
+      className={cn(styles.BoxBlock, {
+        [styles.BoxBlockWinners]: !Number.isNaN(pictureId),
+      })}
+    >
       {(loader && <Preloader />) || (
         <div className={styles.postLoader}>
           {!Number.isNaN(pictureId) ? (
-            <h1 className={styles.boxTitle}>
+            <h1 className={cn(styles.boxTitle, styles.boxTitleWinner)}>
               LootBox <span className={styles.wrap} />
               <span className={styles.authorTitleSpan}>{` by `}</span>
               <a className={styles.authorTitleLink} target="_blank" href={ownerAddress}>
@@ -187,7 +192,11 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
               <br />
               <span className={styles.defaultTitleSpan}>
                 {`module for `}
-                <a className={styles.defaultTitleLink} target="_blank" href="https://dapplets.org/">
+                <a
+                  className={styles.defaultTitleLink}
+                  target="_blank"
+                  href="https://github.com/dapplets/dapplet-extension/releases/tag/v0.48.0"
+                >
                   Dapplets Extension
                 </a>
               </span>
@@ -198,13 +207,14 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
             {!Number.isNaN(pictureId) ? (
               <>
                 <span className={styles.imgLabel}>
-                  <span className={styles.imgLabelSum}> {statCur?.totalAmount}</span>
+                  <span className={styles.imgLabelSum}>{statCur?.totalAmount}</span>
+
                   {nameWin}
                 </span>
-                <img src={IMG[pictureId!]} />
+                <img className={styles.mainImg} src={IMG[pictureId!]} />
               </>
             ) : (
-              <img src={boxDef} />
+              <img className={styles.mainImgDef} src={boxDef} />
             )}
           </div>
           {selectedLootboxId !== null && statCur !== null ? (
@@ -221,7 +231,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
 
           {!Number.isNaN(pictureId) ? (
             <div className={styles.description}>
-              <p className={styles.textDescription}>
+              <p className={cn(styles.textDescription, styles.textDescriptionWinner)}>
                 <span className={styles.nameOwner}>{owner}</span>is&nbsp;hosting a&nbsp;giveaway
                 on&nbsp;Twitter. Join now for a&nbsp;chance to&nbsp;win
                 <span className={styles.totalSum}> {statCur?.totalAmount}</span>

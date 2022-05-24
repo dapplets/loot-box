@@ -13,11 +13,12 @@
   @media (max-width: 1024px) {
     max-width: 1024px;
     margin: 0;
-    padding: 0px 0px 0px 0px;
+    padding: 20px 0px;
   }
   @media (max-width: 600px) {
     width: 320px;
     margin: 0 auto;
+    padding: 10px 0px;
   }
 }
 
@@ -58,6 +59,9 @@
 .linkBlock {
   display: flex;
   align-items: center;
+  @media (max-width: 600px) {
+    padding-top: 10px;
+  }
 }
 .list {
   display: flex;

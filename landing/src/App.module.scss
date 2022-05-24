@@ -7,6 +7,7 @@
   flex: 1 1 auto;
 
   align-items: center;
+
   flex-direction: column;
 
   min-height: 100vh;
@@ -27,6 +28,7 @@
 }
 header {
   display: flex;
+  flex: 0 0 auto;
   width: 100%;
 
   margin: 0 auto;
@@ -63,7 +65,7 @@ header {
 
 footer {
   display: flex;
-
+  flex: 0 0 auto;
   width: 100%;
 
   position: relative;
@@ -86,8 +88,8 @@ footer {
 
 .BoxBlock {
   display: flex;
-  max-width: 56.63%;
-  max-height: 100%;
+  max-width: 780px;
+  height: calc(100vh - 3% - 3% - 70px - 80px);
 
   flex: 1 1 auto;
   flex-direction: column;
@@ -95,8 +97,8 @@ footer {
   align-items: center;
   justify-content: center;
 
-  padding: 1.3% 40px 35px 40px;
-  margin: 4% 0px 4% 0px;
+  padding: 5px;
+  margin: 3% 0px 3% 0px;
 
   border: 2px solid #e3dfb7;
   box-sizing: border-box;
@@ -122,9 +124,7 @@ footer {
   }
 
   @media (max-width: 1024px) {
-    max-width: 89.59%;
-    margin: 2.6% 0px 15.63% 0px;
-    padding: 0% 2px 0px 2px;
+    margin: 66px 0px 76px 0px;
   }
 
   @media (max-width: 600px) {
@@ -135,17 +135,36 @@ footer {
   }
 }
 
+.BoxBlockWinners {
+  width: 815px;
+  @media (max-width: 1024px) {
+    width: 57vh;
+    margin: 3.5% 0px 8% 0px;
+
+    .postLoader {
+      padding: 0px 0px 0px 0px;
+    }
+    .description {
+      width: 80%;
+    }
+  }
+  @media (max-width: 600px) {
+    width: 95%;
+    // padding: 1.459% 0px 20px 0px;
+    // margin: 1.59% 0px 1.59% 0px;
+  }
+}
+
 .postLoader {
   display: flex;
-  max-width: 801px;
-  flex: 1 1 auto;
+
   flex-direction: column;
 
   align-items: center;
   justify-content: center;
   position: relative;
   border-radius: 40px;
-  // padding: 35px 0px 35px 0px;
+
   &::after {
     content: '';
     position: absolute;
@@ -157,6 +176,7 @@ footer {
   }
   @media (max-width: 1024px) {
     width: 90vw;
+    padding: 30px 80px;
     &::after {
       content: '';
       position: absolute;
@@ -169,6 +189,7 @@ footer {
   }
 
   @media (max-width: 600px) {
+    padding: 0px 0px 0px 0px;
     &::after {
       content: '';
       position: absolute;
@@ -218,27 +239,37 @@ footer {
 // ====
 .boxTitle {
   margin: 0 auto;
-  padding: 0px 0px 2.51% 0px;
 
   font-family: 'Montserrat', sans-serif;
   text-align: center;
   font-weight: 700;
   font-size: 36px;
-  // line-height: 149%;
+
   color: #2d1a0e;
   @media (min-width: 1280px) and (max-height: 910px) {
     font-size: 30px;
-    padding: 0px 0px 4.51% 0px;
   }
   @media (max-width: 1024px) {
     padding: 0px 0px 3.51% 0px;
     display: flex;
     flex-wrap: wrap;
-    width: 50%;
+    width: 80%;
     justify-content: center;
     white-space: pre-wrap;
   }
 
+  @media (max-width: 600px) {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 149%;
+
+    color: #2d1a0e;
+    width: 100%;
+  }
+}
+.boxTitleWinner {
   @media (max-width: 600px) {
     font-family: 'Montserrat';
     font-style: normal;
@@ -298,9 +329,14 @@ footer {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  line-height: 149%;
+
   text-align: center;
   color: #313131;
+  @media (max-width: 1024px) {
+    line-height: 149%;
+    display: inline-block;
+    padding-top: 10px;
+  }
 }
 
 .defaultTitleLink {
@@ -318,40 +354,46 @@ footer {
 // ====
 .boxImg {
   display: flex;
-  width: 55%;
-  max-height: 55%;
-  flex: 1 1 auto;
 
-  padding: 0px 0px 2.51% 0px;
   position: relative;
 
   img {
-    width: 100%;
-    height: 100%;
   }
   @media (min-width: 1280px) and (max-height: 910px) {
-    max-width: 30%;
-    max-height: 30%;
   }
   @media (max-width: 1024px) {
     max-width: 320px;
     max-height: 320px;
   }
   @media (max-width: 600px) {
-    max-width: 56.25%;
-    max-height: 40%;
+    img {
+      width: 180px;
+      height: 180px;
+    }
   }
 }
+
+.mainImg {
+  width: 320px;
+  height: 320px;
+  @media (max-width: 600px) {
+    width: 180px;
+    height: 180px;
+  }
+}
+
 .imgLabel {
   position: absolute;
   display: inline-block;
   min-width: 88px;
-  // padding: 20px 5px 31px 5px;
+  padding: 10px 5px 31px 5px;
   height: 96px;
   top: 20px;
   left: 0;
   z-index: 1;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='96' viewBox='0 0 100 109' fill='none'%3E%3Cg filter='url(%23filter0_d_315_1202)'%3E%3Cpath d='M11.5 68.5L50 96L88.5 68.5V12C88.4647 6.85886 89.8017 4.2611 94 0H50H6C10.1983 4.2611 11.5353 6.85886 11.5 12V68.5Z' fill='%23CA4242'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_d_315_1202' x='0' y='0' width='100' height='109' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset dy='7'/%3E%3CfeGaussianBlur stdDeviation='3'/%3E%3CfeComposite in2='hardAlpha' operator='out'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0'/%3E%3CfeBlend mode='normal' in2='BackgroundImageFix' result='effect1_dropShadow_315_1202'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='effect1_dropShadow_315_1202' result='shape'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: cover;
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
@@ -370,7 +412,7 @@ footer {
   font-style: normal;
   font-weight: 700;
   font-size: 36px;
-  // line-height: 90%;
+
   display: inline-block;
   width: 100%;
   text-align: center;
@@ -381,14 +423,14 @@ footer {
 // ====
 .radialBarBlock {
   display: flex;
-  width: 800px;
+  width: 100%;
 
   flex-direction: column;
   align-items: center;
-  padding: 0px 0px 22px 0px;
+  padding: 0px 20px 22px 20px;
 
   @media (max-width: 1024px) {
-    width: 95.3%;
+    width: 80%;
     padding: 0px 0px 0px 0px;
   }
 
@@ -398,7 +440,6 @@ footer {
 }
 
 .radialBarTitle {
-  padding: 0px 0px 2.6% 0px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 24px;
@@ -428,15 +469,14 @@ footer {
 }
 
 .description {
-  width: 87.85%;
-  margin: 0px 0px 2.51% 0px;
-
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 149%;
   text-align: center;
   color: #313131;
+  display: inline-block;
+  padding: 0px 20px 0px 20px;
 
   @media (max-width: 1024px) {
     width: 100%;
@@ -448,6 +488,12 @@ footer {
     width: 100%;
   }
 }
+.textDescriptionWinner {
+  &:first-child {
+    display: inline-block;
+    padding-bottom: 10px;
+  }
+}
 
 .statCurNum {
   animation: fadein 4.5s;
@@ -455,14 +501,10 @@ footer {
 
 // ====
 .buttonBlock {
-  max-width: 250px;
-  height: 50px;
-
   @media (max-width: 1024px) {
   }
 
   @media (max-width: 600px) {
-    height: 36px;
   }
 }
 
@@ -470,7 +512,7 @@ footer {
 .button {
   display: block;
   padding: 13px 40px;
-
+  margin: 30px 0px 0px 0px;
   background: #ff774b;
   border-radius: 50px;
 
@@ -496,5 +538,6 @@ footer {
   @media (max-width: 600px) {
     font-size: 14px;
     padding: 7.5px 23px;
+    margin: 20px 0px 0px 0px;
   }
 }

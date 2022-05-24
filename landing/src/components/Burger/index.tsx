@@ -34,7 +34,7 @@ export const Burger = () => {
 
           <ul className={styles.menuList}>
             <li className={styles.menuItem}>
-              <Link to="/instruction" className={styles.menuLink} onClick={toggleMenu}>
+              <Link to="/how-to" className={styles.menuLink} onClick={toggleMenu}>
                 How to&nbsp;collect
               </Link>
             </li>

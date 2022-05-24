@@ -6,10 +6,6 @@ import styles from './Instruction.module.scss';
 import { Header } from '../Header';
 import { Footer } from '../Footer';
 
-import bg from '../../img/instruction/bg.png';
-import connect_near from '../../img/instruction/connect_near.png';
-import connecting from '../../img/instruction/connecting.png';
-import continueImg from '../../img/instruction/continue.png';
 import downloads from '../../img/instruction/downloads.png';
 import drag_drop from '../../img/instruction/drag_drop.png';
 
@@ -31,10 +27,24 @@ import inst_13 from '../../img/instruction/instruction_13.png';
 import inst_13_1 from '../../img/instruction/instruction_13_1.png';
 import inst_14 from '../../img/instruction/instruction_14.png';
 
+import m_inst_1 from '../../img/instruction/mobile/mobile_inst_1.png';
+import m_inst_2 from '../../img/instruction/mobile/mobile_inst_2.png';
+import m_inst_3 from '../../img/instruction/mobile/mobile_inst_3.png';
+import m_inst_4 from '../../img/instruction/mobile/mobile_inst_4.png';
+import m_inst_5 from '../../img/instruction/mobile/mobile_inst_5.png';
+import m_inst_6 from '../../img/instruction/mobile/mobile_inst_6.png';
+import m_inst_7 from '../../img/instruction/mobile/mobile_inst_7.png';
+import m_inst_8 from '../../img/instruction/mobile/mobile_inst_8.png';
+import m_inst_9 from '../../img/instruction/mobile/mobile_inst_9.png';
+import m_inst_10 from '../../img/instruction/mobile/mobile_inst_10.png';
+import m_inst_11 from '../../img/instruction/mobile/mobile_inst_11.png';
+import m_inst_12 from '../../img/instruction/mobile/mobile_inst_12.png';
+import m_inst_13 from '../../img/instruction/mobile/mobile_inst_13.png';
+import m_inst_14 from '../../img/instruction/mobile/mobile_inst_14.png';
+import m_inst_15 from '../../img/instruction/mobile/mobile_inst_15.png';
+import m_inst_16 from '../../img/instruction/mobile/mobile_inst_16.png';
+
 import load_unpuck from '../../img/instruction/load_unpuck.png';
-import near_wallet from '../../img/instruction/near_wallet.png';
-import wallets_connect from '../../img/instruction/walets_connect.png';
-import wallets from '../../img/instruction/walets.png';
 
 export interface InstructionProps {
   completed: number;
@@ -44,7 +54,7 @@ export interface InstructionProps {
 export function Instruction(InstructionProps: any) {
   return (
     <div className={styles.wrapper}>
-      <header>
+      <header className={styles.header}>
         <Header />
       </header>
       <div className={styles.content}>
@@ -65,35 +75,6 @@ export function Instruction(InstructionProps: any) {
   );
 }
 
-// export function Start(InstructionProps: any) {
-//   return (
-//     <div className={styles.start}>
-//       <h1 className={styles.titleInstruction}>Install the Dapplets Extension</h1>
-//       <ol className={styles.list}>
-//         <li className={styles.item}>Open the Google Chrome browser.</li>
-//         <li className={styles.item}>
-//           Download the&nbsp;
-//           <a className={styles.link}>Dapplet Browser Extension.</a>
-//         </li>
-//         <li className={styles.item}>
-//           Open&nbsp;
-//           <a className={styles.link}> chrome://extensions </a>&nbsp;in a new tab.
-//         </li>
-//         <li className={styles.item}>
-//           Switch the Developer mode on and press F5 to refresh the page.
-//         </li>
-//       </ol>
-//       <div className={styles.description}>
-//         Lorem libero volutpat in condimentum nisl sem suspendisse netus. Suspendisse nulla semper
-//         sollicitudin cursus ipsum. Eu gravida laoreet fringilla placerat tellus lectus. Ultrices dui
-//         urna quis commodo. Fringilla felis morbi feugiat ullamcorper fermentum enim tortor turpis
-//         pellentesque. Et tristique purus amet, vitae suspendisse integer est mauris. Enim, fusce
-//         nisi, sagittis posuere.
-//       </div>
-//     </div>
-//   );
-// }
-
 export function Installation(InstructionProps: any) {
   return (
     <div className={styles.installation}>
@@ -104,12 +85,27 @@ export function Installation(InstructionProps: any) {
         </li>
         <li className={styles.item}>
           <span className={styles.itemText}>
-            Download the <a className={styles.link}>Dapplet Browser Extension</a> .
+            Download the&nbsp;
+            <a
+              target={'_blank'}
+              href="https://github.com/dapplets/dapplet-extension/releases/tag/v0.48.0"
+              className={styles.link}
+            >
+              Dapplet Browser Extension
+            </a>
+            .
           </span>
         </li>
         <li className={styles.item}>
           <span className={styles.itemText}>
-            Open <a className={styles.link}>chrome://extensions </a> in&nbsp;a&nbsp;new tab.
+            Open&nbsp;
+            <a
+              style={{ color: ' #ff720d', textDecoration: 'underline', cursor: 'default' }}
+              // className={styles.link}
+            >
+              chrome://extensions
+            </a>
+            &nbsp;in&nbsp;a&nbsp;new tab.
           </span>
         </li>
         <li className={styles.item}>
@@ -123,6 +119,9 @@ export function Installation(InstructionProps: any) {
 
         <img src={drag_drop} className={styles.dragDropImg} />
       </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_1} className={styles.mobileImg} />
+      </div>
       <div className={styles.description}>
         P.S. If&nbsp;you are using Ubuntu or&nbsp;possibly another Linux OS&nbsp;the Dapplets
         extension can disappear from the Chrome Extensions after restarting the PC. To&nbsp;avoid
@@ -132,6 +131,9 @@ export function Installation(InstructionProps: any) {
         <img src={load_unpuck} className={styles.loadUnpuck} />
 
         <img src={downloads} className={styles.downloads} />
+      </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_2} className={styles.mobileImg} />
       </div>
     </div>
   );
@@ -163,6 +165,9 @@ export function Activate(InstructionProps: any) {
         </h3>
         <img src={inst_1} className={styles.dragDropImg} />
       </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_3} className={styles.mobileImg} />
+      </div>
 
       <div className={styles.description}>
         The home button opens an&nbsp;overlay where you can create a&nbsp;new lootbox or&nbsp;see
@@ -192,6 +197,9 @@ export function Claming(InstructionProps: any) {
         </h3>
         <img src={inst_2} className={styles.dragDropImg} />
       </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_4} className={styles.mobileImg} />
+      </div>
       <div className={styles.description}>
         To&nbsp;open a&nbsp;lootbox you need to&nbsp;click on&nbsp;the picture. It&nbsp;opens
         a&nbsp;NEAR wallet where a&nbsp;claiming transaction should be&nbsp;confirmed. After that
@@ -204,6 +212,9 @@ export function Claming(InstructionProps: any) {
           Example of&nbsp;a&nbsp;<span className={styles.highlightTitle}>winning lootbox</span>
         </h3>
         <img src={inst_3} className={styles.dragDropImg} />
+      </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_5} className={styles.mobileImg} />
       </div>
     </div>
   );
@@ -225,8 +236,11 @@ export function Creation(InstructionProps: any) {
             <span className={styles.highlightTitle}>&laquo;Create new box&raquo;</span> button.
           </span>
         </h3>
-        {/* TODO: EDIT IMG!!! */}
+
         <img src={inst_4} className={styles.dragDropImg} />
+      </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_6} className={styles.mobileImg} />
       </div>
       <div className={styles.description}>
         Select a&nbsp;picture which will be&nbsp;displayed in&nbsp;your lootbox tweet.
@@ -240,6 +254,9 @@ export function Creation(InstructionProps: any) {
           </span>
         </h3>
         <img src={inst_5} className={styles.dragDropImg} />
+      </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_7} className={styles.mobileImg} />
       </div>
       <div className={styles.description}>
         The next step is&nbsp;choosing your type of&nbsp;loot. There are three loots available:
@@ -288,6 +305,9 @@ export function NearToken(InstructionProps: any) {
 
         <img src={inst_6} className={styles.dragDropImg} />
       </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_8} className={styles.mobileImg} />
+      </div>
     </div>
   );
 }
@@ -302,14 +322,23 @@ export function FungibleTokens(InstructionProps: any) {
       </div>
       <div className={styles.description}>
         A&nbsp;list of&nbsp;tokens that you own is&nbsp;available in&nbsp;your NEAR wallet &nbsp;(
-        <a className={styles.link}>https://wallet.testnet.near.org/</a>&nbsp; for testnet,&nbsp;
-        <a className={styles.link}>https://wallet.mainnet.near.org/</a>&nbsp; for mainnet).
+        <a target={'_blank'} href="https://wallet.testnet.near.org/" className={styles.link}>
+          https://wallet.testnet.near.org/
+        </a>
+        &nbsp; for testnet,&nbsp;
+        <a target={'_blank'} href="https://wallet.near.org/" className={styles.link}>
+          https://wallet.mainnet.near.org/
+        </a>
+        &nbsp; for mainnet).
       </div>
       <div
         className={cn(styles.walletConnectionBlock, styles.block_7, styles.blockImgFungibleTokens)}
       >
         <span className={cn(styles.labelImg, styles.labelImgFungibleTokens)}></span>
         <img src={inst_7} className={cn(styles.dragDropImg, styles.imgFungibleTokens)} />
+      </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_9} className={styles.mobileImg} />
       </div>
       <div className={styles.description}>
         For example BANANA token is&nbsp;available here. Its smart contract address is
@@ -330,6 +359,9 @@ export function FungibleTokens(InstructionProps: any) {
         </div>
 
         <img src={inst_8} className={styles.dragDropImg} />
+      </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_10} className={styles.mobileImg} />
       </div>
       <div className={styles.description}>
         Other parameters stay the same and are described in&nbsp;previous section.
@@ -367,6 +399,9 @@ export function NonFungibleTokens(InstructionProps: any) {
         </h3>
         <img src={inst_9} className={styles.dragDropImg} />
       </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_11} className={styles.mobileImg} />
+      </div>
       <div className={styles.description}>
         Each NFT collection has its own smart contract address, which you can find in&nbsp;the URL
         of this token.
@@ -394,6 +429,9 @@ export function NonFungibleTokens(InstructionProps: any) {
         <img src={inst_10} className={cn(styles.loadUnpuck, styles.img_10)} />
         <img src={inst_10_1} className={cn(styles.downloads, styles.img_10_1)} />
       </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_12} className={styles.mobileImg} />
+      </div>
       <div className={styles.description}>
         At&nbsp;the end you have to&nbsp;send multiple transactions. The first one will create
         a&nbsp;lootbox at the least the another one will transfer the NFT token to&nbsp;the lootbox.
@@ -402,8 +440,8 @@ export function NonFungibleTokens(InstructionProps: any) {
         After creating a&nbsp;lootbox you need to&nbsp;post a&nbsp;tweet with a&nbsp;text
         that&rsquo;s shown in&nbsp;the next step. It&nbsp;contains a&nbsp;link&nbsp;
         <a
-          style={{ cursor: 'default' }}
-          className={styles.link}
+          style={{ color: ' #ff720d', textDecoration: 'underline', cursor: 'default' }}
+          // className={styles.link}
         >{`https://ltbx.app/<lootbox_id>`}</a>
         &nbsp; which will be&nbsp;replaced with a&nbsp;lootbox picture.
       </div>
@@ -424,6 +462,9 @@ export function NonFungibleTokens(InstructionProps: any) {
         </h3>
         <img src={inst_11} className={styles.dragDropImg} />
       </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_13} className={styles.mobileImg} />
+      </div>
       <div className={styles.description}>
         What the process of&nbsp;a&nbsp;lootbox twitter post looks like:
       </div>
@@ -443,6 +484,9 @@ export function NonFungibleTokens(InstructionProps: any) {
         </h3>
         <img src={inst_12} className={styles.dragDropImg} />
       </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_14} className={styles.mobileImg} />
+      </div>
       <div className={styles.description}>
         A&nbsp;user that doesn&rsquo;t have the extension installed and/or the dapplet activated
         will see a tweet like this. A&nbsp;user with an&nbsp;activated dapplet will see
@@ -460,16 +504,16 @@ export function NonFungibleTokens(InstructionProps: any) {
 
         <h3 className={cn(styles.dragDropTitle, styles.blockTitleImgNonFungibleTokens)}>
           <span style={{ paddingBottom: '20px' }}>
-            A&nbsp;user that
+            A&nbsp;user that&nbsp;
             <span className={styles.highlightTitle}>
               doesn&rsquo;t have the extension installed
             </span>
-            and/or the dapplet activated will see a&nbsp;tweet like this.
+            &nbsp;and/or the dapplet activated will see a&nbsp;tweet like this.
           </span>
           <span>
             A&nbsp;user with an&nbsp;
-            <span className={styles.highlightTitle}>activated dapplet</span>
-            will see a lootbox picture and will be&nbsp;able to&nbsp;open a&nbsp;lootbox and
+            <span className={styles.highlightTitle}>activated dapplet</span>&nbsp;will see a lootbox
+            picture and will be&nbsp;able to&nbsp;open a&nbsp;lootbox and
             <span className={styles.highlightTitle}>receive a&nbsp;prize</span> .
           </span>
         </h3>
@@ -477,6 +521,9 @@ export function NonFungibleTokens(InstructionProps: any) {
           <img src={inst_13} className={styles.dragDropImg} />
           <img src={inst_13_1} className={styles.dragDropImg} />
         </div>
+      </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_15} className={styles.mobileImg} />
       </div>
     </div>
   );
@@ -493,6 +540,9 @@ export function Status(InstructionProps: any) {
       <div className={cn(styles.walletConnectionBlock, styles.block_14, styles.blockImgStatus)}>
         <span className={cn(styles.labelImg, styles.labelImgStatus)}></span>
         <img src={inst_14} className={styles.dragDropImg} />
+      </div>
+      <div className={styles.mobileBlock}>
+        <img src={m_inst_16} className={styles.mobileImg} />
       </div>
     </div>
   );
