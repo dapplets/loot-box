@@ -20,7 +20,7 @@ export function About(AboutProps: any) {
       {(loader && <Preloader />) || (
         <div className={styles.postLoader}>
           <h1 className={styles.boxTitle}>The Lootbox dapplet</h1>
-          <span className={styles.boxTitleSpan}>by Dapplets Project</span>
+          <span className={styles.boxTitleSpan}>by&nbsp;Dapplets Project</span>
           <div className={styles.boxImg}>
             <img src={imgDef} />
           </div>
@@ -28,35 +28,38 @@ export function About(AboutProps: any) {
             <h3 className={styles.boxTitleMini}>About</h3>
             <div className={styles.description}>
               <p className={styles.text}>
-                The Lootbox dapplet allows you to host airdrops and giveaways directly on your
-                social media page, where all of your followers can participate.
+                The Lootbox dapplet allows you to&nbsp;host airdrops and giveaways directly
+                on&nbsp;your social media page, where all of&nbsp;your followers can participate.
               </p>
             </div>
 
             <div className={styles.description}>
               <p className={styles.text}>
-                The airdrop is presented as a clickable image of a special box. When the Lootbox is
-                made, the creator loads it with tokens or NFTs and selects the number of possible
-                winners. Once the Lootbox has been posted anyone who can view your social media page
-                is able to participate in the lottery.
+                The airdrop is&nbsp;presented as&nbsp;a&nbsp;clickable image of&nbsp;a&nbsp;special
+                box. When the Lootbox is made, the creator loads it&nbsp;with tokens or&nbsp;NFTs
+                and selects the number of&nbsp;possible winners. Once the Lootbox has been posted
+                anyone who can view your social media page is&nbsp;able to&nbsp;participate
+                in&nbsp;the lottery.
               </p>
               <p className={styles.text}>
-                The Lootbox dapp is a great tool that helps facilitate airdrops and giveaways,
-                making them more fun and convenient. No more complicated mechanisms, and
-                randomizers, your followers simply need to click on the Lootbox once to receive
-                their prize.
+                The Lootbox dapp is&nbsp;a&nbsp;great tool that helps facilitate airdrops and
+                giveaways, making them more fun and convenient. No&nbsp;more complicated mechanisms,
+                and randomizers, your followers simply need to&nbsp;click on&nbsp;the Lootbox once
+                to&nbsp;receive their prize.
               </p>
 
               <p className={styles.text}>
-                The dapplet can be used by community managers, companies, or just really generous
-                individuals.
+                The dapplet can be&nbsp;used by&nbsp;community managers, companies, or&nbsp;just
+                really generous individuals.
               </p>
             </div>
-            <h3 className={styles.boxTitleMini}>How to</h3>
+            <h3 className={styles.boxTitleMini}>How&nbsp;to</h3>
             <div className={styles.description}>
-              <p className={styles.text}>To create the airdrop all you need to do is:</p>
               <p className={styles.text}>
-                1.select a Lootbox design (currently there are 5 available)
+                To&nbsp;create the airdrop all you need to&nbsp;do&nbsp;is:
+              </p>
+              <p className={styles.text}>
+                1.select a&nbsp;Lootbox design (currently there are 5&nbsp;available)
               </p>
               <div className={styles.boxImg}>
                 <img src={how_1} />
@@ -66,21 +69,23 @@ export function About(AboutProps: any) {
               <div className={styles.boxImg}>
                 <img src={how_2} />
               </div>
-              <p className={styles.text}>3. fill it with tokens or even NFTs.</p>
+              <p className={styles.text}>3. fill it&nbsp;with tokens or&nbsp;even NFTs.</p>
               <div className={styles.boxImg}>
                 <img src={how_3} />
               </div>
               <p className={styles.text}>
-                You then need to post a small code in the form of a link on your social media page.
-                Users who have the dapplet installed will see a clickable Lootbox image instead of
-                the code. To start the lottery process the user simply needs to click on the
-                Lootbox. If the user wins, the prize is sent directly to their crypto-wallet. Every
-                user is only able to play the lottery once. The dapplet prevents malpractice by
-                users with multiple accounts. The dapp links your social media account to your
-                crypto-wallet, thereby making it impossible to use different accounts to play more
-                than once. If the user doesn’t have the dapplets extension installed, he will see a
-                link instead of the Lootbox. The link will redirect him to the airdrop webpage,
-                where a set of instructions will explain how to join the lottery.
+                You then need to&nbsp;post a&nbsp;small code in&nbsp;the form of&nbsp;a&nbsp;link
+                on&nbsp;your social media page. Users who have the dapplet installed will see
+                a&nbsp;clickable Lootbox image instead of the code. To&nbsp;start the lottery
+                process the user simply needs to&nbsp;click on&nbsp;the Lootbox. If&nbsp;the user
+                wins, the prize is&nbsp;sent directly to&nbsp;their crypto-wallet. Every user
+                is&nbsp;only able to&nbsp;play the lottery once. The dapplet prevents malpractice by
+                users with multiple accounts. The dapp links your social media account to&nbsp;your
+                crypto-wallet, thereby making it&nbsp;impossible to&nbsp;use different accounts
+                to&nbsp;play more than once. If&nbsp;the user doesn&rsquo;t have the dapplets
+                extension installed, he&nbsp;will see a link instead of&nbsp;the Lootbox. The link
+                will redirect him to&nbsp;the airdrop webpage, where a&nbsp;set of&nbsp;instructions
+                will explain how to&nbsp;join the lottery.
               </p>
             </div>
             <h3 className={styles.boxTitleMini}>Future development</h3>
@@ -90,21 +95,23 @@ export function About(AboutProps: any) {
               </div>
 
               <p className={styles.text}>
-                The dapplet is a useful tool for community managers and can also be used as a
-                loyalty-building mechanism. Right now the dapplet is in the final stages of
-                development. After testing and releasing the dapp on the mainnet, we’d primarily
-                like to see mass adoption by different communities and platforms.
+                The dapplet is&nbsp;a&nbsp;useful tool for community managers and can also
+                be&nbsp;used as&nbsp;a loyalty-building mechanism. Right now the dapplet
+                is&nbsp;in&nbsp;the final stages of development. After testing and releasing the
+                dapp on&nbsp;the mainnet, we&rsquo;d primarily like to&nbsp;see mass adoption
+                by&nbsp;different communities and platforms.
               </p>
               <p className={styles.text}>
-                We believe it significantly facilitates the airdrop process and makes it much more
-                entertaining for the community. In the future we see the dapp being used by crypto
-                investment communities, enterprises (for internal HR needs), and NFT marketplaces.
+                We&nbsp;believe it&nbsp;significantly facilitates the airdrop process and makes
+                it&nbsp;much more entertaining for the community. In&nbsp;the future we&nbsp;see the
+                dapp being used by&nbsp;crypto investment communities, enterprises (for
+                internal&nbsp;HR needs), and NFT marketplaces.
               </p>
             </div>
           </div>
           {/* 
           <div className={styles.buttonBlock}>
-            <Link to="/instruction">
+            <Link to="/how-to">
               <button className={styles.button}>How to collect?</button>
             </Link>
           </div> */}

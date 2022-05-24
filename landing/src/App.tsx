@@ -86,7 +86,7 @@ export default function App() {
             </div>
           }
         />
-        <Route path="/instruction" element={<Instruction />} />{' '}
+        <Route path="/how-to" element={<Instruction />} />
       </Routes>
     </>
   );
@@ -222,35 +222,35 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
           {!Number.isNaN(pictureId) ? (
             <div className={styles.description}>
               <p className={styles.textDescription}>
-                <span className={styles.nameOwner}>{owner}</span> is hosting a giveaway on Twitter.
-                Join now for a chance to win
+                <span className={styles.nameOwner}>{owner}</span>is&nbsp;hosting a&nbsp;giveaway
+                on&nbsp;Twitter. Join now for a&nbsp;chance to&nbsp;win
                 <span className={styles.totalSum}> {statCur?.totalAmount}</span>
                 <span className={styles.labelSum}> {nameWin}</span>
               </p>
 
               <p className={styles.textDescription}>
-                Read “How to collect?” to participate and win the prize!
+                Read &laquo;How to&nbsp;collect?&raquo; to&nbsp;participate and win the prize!
               </p>
             </div>
           ) : (
             <div className={styles.description}>
               <p className={styles.textDescription}>
-                The LootBox Dapplet allows you to host airdrops and giveaways directly on your
-                social media page, where all of your followers can participate.
+                The LootBox Dapplet allows you to&nbsp;host airdrops and giveaways directly
+                on&nbsp;your social media page, where all of&nbsp;your followers can participate.
               </p>
               <br />
               <p className={styles.textDescription}>
-                The Lootbox dapp is a great tool that helps facilitate airdrops and giveaways,
-                making them more fun and convenient. No more complicated mechanisms, and
-                randomizers, your followers simply need to click on the Lootbox once to receive
-                their prize.
+                The Lootbox dapp is&nbsp;a&nbsp;great tool that helps facilitate airdrops and
+                giveaways, making them more fun and convenient. No&nbsp;more complicated mechanisms,
+                and randomizers, your followers simply need to&nbsp;click on&nbsp;the Lootbox once
+                to&nbsp;receive their prize.
               </p>
             </div>
           )}
 
           <div className={styles.buttonBlock}>
-            <Link to="/instruction">
-              <button className={styles.button}>How to collect?</button>
+            <Link to="/how-to">
+              <button className={styles.button}>How to&nbsp;collect?</button>
             </Link>
           </div>
         </div>

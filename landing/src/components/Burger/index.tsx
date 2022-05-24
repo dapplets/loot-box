@@ -35,7 +35,7 @@ export const Burger = () => {
           <ul className={styles.menuList}>
             <li className={styles.menuItem}>
               <Link to="/instruction" className={styles.menuLink} onClick={toggleMenu}>
-                How to collect
+                How to&nbsp;collect
               </Link>
             </li>
             <li className={styles.menuItem}>

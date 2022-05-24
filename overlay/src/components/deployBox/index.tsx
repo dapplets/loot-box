@@ -25,7 +25,7 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
       <SettingTitle title="Deploy your box" isActive />
       <div className={cn(styles.message)}>
         <Message
-          message={`We are holding the ${winInfo}  #Giveaway. Click on the lootbox picture and get your prize!`}
+          message={`We are holding a ${winInfo}  #Giveaway. Click on the lootbox picture and get your prize!`}
           link={`${landingUrl}/${id}/`}
           instruction={`Don’t see the Box? Install this dapp: ${landingUrl}/how-to/`}
           project="The gift box is made with the LootBox Dapplet @lootboxdapp by @dappletsproject"

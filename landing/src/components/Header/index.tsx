@@ -17,8 +17,8 @@ export const Header = () => {
         <div className={styles.linkBlock}>
           <ul className={styles.list}>
             <li className={styles.listItem}>
-              <Link to="/instruction" className={styles.link}>
-                How to collect
+              <Link to="/how-to" className={styles.link}>
+                How to&nbsp;collect
               </Link>
             </li>
             <li className={styles.listItem}>
