@@ -321,7 +321,13 @@ export default () => {
                         <MessageMain
                           className={styles.messageNewBoxTitle}
                           title="Welcome to the Lootbox Dapplet"
-                          subtitle={"Get started by creating a lootbox! All of your lootboxes will be displayed on this page. Learn more about lootboxes at " + networkConfig.landingUrl}
+                          subtitle={
+                            'Get started by creating a lootbox! All of your lootboxes will be displayed on this page. Learn more about lootboxes at '
+                            // +
+                            // networkConfig.landingUrl
+                          }
+                          link={networkConfig.landingUrl}
+                          linkText={networkConfig.landingUrl}
                         />
                       </div>
                     )}

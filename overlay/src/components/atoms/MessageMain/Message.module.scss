@@ -33,7 +33,7 @@
 
 .subtitle {
   display: block;
-  padding: 0px 0px 10px 0px;
+  // padding: 0px 0px 10px 0px;
 
   font-family: 'Roboto';
 
@@ -47,7 +47,7 @@
 .link {
   display: block;
 
-  margin-top: 9px;
+  // margin-top: 9px;
 
   text-align: center;
 
@@ -56,10 +56,11 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 100%;
+  background: inherit;
   &:hover {
-    background: $PrimaryHover;
+    color: $PrimaryHover;
   }
   &:active {
-    background: $PrimaryPressed;
+    color: $PrimaryPressed;
   }
 }

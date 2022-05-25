@@ -101,7 +101,9 @@ export function Installation(InstructionProps: any) {
             Open&nbsp;
             <a
               style={{ color: ' #ff720d', textDecoration: 'underline', cursor: 'default' }}
-              // className={styles.link}
+              // target={'_blank'}
+              // href="chrome://extensions/"
+              className={styles.link}
             >
               chrome://extensions
             </a>

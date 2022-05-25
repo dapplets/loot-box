@@ -43,7 +43,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
         type={type}
         value={`${valueDropChance}%`}
         onFocus={() => {
-          onValueDropChance('');
+          onValueDropChance(valueDropChance);
         }}
         onChange={(e: any) => {
           const { data, inputType } = e.nativeEvent;

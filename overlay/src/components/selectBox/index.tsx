@@ -1,4 +1,4 @@
-import React, { ReactNode, FC } from 'react';
+import React, { ReactNode, FC, useEffect } from 'react';
 import { SettingTitle } from '../atoms/SettingTitle';
 import styles from './SelectBox.module.scss';
 import cn from 'classnames';
@@ -14,6 +14,8 @@ import pig from '../../icons/createNewBox/pig.png';
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
 import { Slider } from '../atoms/Slider';
+import { Preloader } from '../atoms/Preloader';
+import { start } from 'repl';
 
 export interface SelectBoxProps {
   children?: ReactNode;
@@ -43,6 +45,7 @@ export interface CetBoxProps {
 
 export const GetBox: FC<CetBoxProps> = (props: CetBoxProps) => {
   const { icon, onChange_IMG, id, onCreationFormUpdate, clicked, setClicked } = props;
+
   return (
     <div className={cn(styles.wrapperImage)}>
       <div className={cn(styles.firstLine)}>
@@ -83,6 +86,7 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
   return (
     <div className={cn(styles.wrapper)}>
       <SettingTitle isActive={true} title="Select box" />
+      {/* {creationFormId ? ( */}
       <GetBox
         clicked={clicked}
         setClicked={setClicked}
@@ -90,6 +94,9 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
         id={creationFormId}
         onCreationFormUpdate={onCreationFormUpdate}
       />
+      {/* ) : (
+        <Preloader />
+      )} */}
 
       <div className={styles.navigation}>
         <Link to="/" className={cn(styles.prevStep)}>

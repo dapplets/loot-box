@@ -83,7 +83,7 @@ export default class TwitterFeature {
       }
     };
 
-    this.openOverlay();
+    // this.openOverlay();
     Core.onAction(() => this.openOverlay());
 
     const { box } = this.adapter.exports;
@@ -106,7 +106,10 @@ export default class TwitterFeature {
 
               const numIndex = getNumIndex(tweetParse);
 
-              const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
+              const wallet = await Core.wallet({
+                type: 'near',
+                network: this._config.networkId as any,
+              });
 
               const lootboxId = await this._api.getLootboxById(numIndex);
               if (lootboxId === null || lootboxId === undefined) {
@@ -117,7 +120,7 @@ export default class TwitterFeature {
                 await this.getClaimStatus(me, numIndex, lootboxId);
               }
             },
-            exec: async (ctx, me) => { 
+            exec: async (ctx, me) => {
               // empty
             },
           },
@@ -187,7 +190,7 @@ export default class TwitterFeature {
 
     // NEAR
     let nearTotal = null;
-    claim.nearContentItems.forEach(x => nearTotal = sum(nearTotal ?? '0', x.tokenAmount));
+    claim.nearContentItems.forEach((x) => (nearTotal = sum(nearTotal ?? '0', x.tokenAmount)));
     if (nearTotal) {
       winLoots.push(toPrecision(nearTotal, 6) + ' NEAR');
     }
@@ -203,6 +206,6 @@ export default class TwitterFeature {
       winLoots.push(claim.nftContentItems.length + ' NFTs');
     }
 
-    return (winLoots.length > 0) ? `You win: ${winLoots.join(', ')}` : "Empty";
+    return winLoots.length > 0 ? `You win: ${winLoots.join(', ')}` : 'Empty';
   }
 }

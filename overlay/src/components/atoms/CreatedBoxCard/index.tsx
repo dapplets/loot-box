@@ -51,7 +51,7 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
           <div className={cn(styles.description)}>
             <span className={cn(styles.Blocklink)}>
               <span className={cn(styles.label)}>{label}</span>
-              {copied ? (
+              {/* {copied ? (
                 <button className={cn(styles.linkGood)}>
                   <span></span>
                 </button>
@@ -59,7 +59,7 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
                 <button className={cn(styles.link)} onClick={copyText}>
                   <span></span>
                 </button>
-              )}
+              )} */}
             </span>
             <span className={cn(styles.created)}>{status}</span>
           </div>

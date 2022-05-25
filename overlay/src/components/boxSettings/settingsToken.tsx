@@ -253,8 +253,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
               title="Token amount"
               isActive
               support={`Please enter the number of tokens you want to distribute.
-              You can select a NEAR token or any custom token in the NEAR blockchain.
-              Minimum quantity: 1 token`}
+              You can select a NEAR token or any custom token in the NEAR blockchain.`}
             />
             <div className={cn(styles.tokenInput)}>
               <InputPanel

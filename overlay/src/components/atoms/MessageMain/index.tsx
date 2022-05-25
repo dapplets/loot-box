@@ -25,7 +25,7 @@ export const MessageMain = ({
       {subtitle && subtitle?.length > 0 && <p className={styles.subtitle}>{subtitle}</p>}
       {children && <div className={styles.children}>{children}</div>}
       {link && link?.length > 0 && (
-        <a href={link} className={styles.link}>
+        <a href={link} target="_blank" className={styles.link}>
           {linkText}
         </a>
       )}
