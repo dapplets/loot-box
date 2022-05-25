@@ -27,6 +27,7 @@ export interface FillBoxProps {
   setMessageError: (x: any) => void;
   messageError: boolean;
   newMetadata: any;
+  nearAccount: string | undefined;
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const {
@@ -41,9 +42,11 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     messageError,
     setMessageError,
     newMetadata,
+    nearAccount,
   } = props;
 
   const [winInfoToken, setWinInfoToken] = useState(winInfo);
+  const [isNotAccount, setNotAccount] = useState(false);
   useEffect(() => {
     if (creationForm.nearContentItems[0]) {
       const winAmount = creationForm.nearContentItems[0].tokenAmount;
@@ -58,7 +61,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       setWinInfoToken(winAmountTickerParse);
       setWinInfo(winAmountTickerParse);
     }
-  }, []);
+  }, [nearAccount, isNotAccount]);
   // console.log(creationForm);
   // console.log(newMetadata);
 
@@ -85,7 +88,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         <div className={cn(styles.payBtn)}>
           <ButtonPay
             onClick={() => {
-              onDoneClick();
+              nearAccount ? onDoneClick() : setNotAccount(true);
             }}
             styleBtn="default"
             title={`PAY ${price.totalAmount} NEAR`}
@@ -103,6 +106,13 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         content={''}
         footer={''}
         onClose={() => setMessageError(false)}
+      />
+      <Modal
+        visible={isNotAccount}
+        title={'Please LogIn'}
+        content={''}
+        footer={''}
+        onClose={() => setNotAccount(false)}
       />
     </div>
   );

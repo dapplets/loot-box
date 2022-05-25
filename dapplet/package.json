@@ -1,6 +1,6 @@
 {
   "name": "lootbox-dapplet",
-  "version": "0.6.15",
+  "version": "0.6.16",
   "description": "The Lootbox dapplet allows to host token airdrops and NFT giveaways directly on your social media page, where all of your followers can participate.",
   "main": "lib/index.js",
   "scripts": {

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import styles from './FillBoxNFT.module.scss';
 import cn from 'classnames';
@@ -10,6 +10,7 @@ import { ButtonPay } from '../atoms/ButtonPay';
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
 import { Lootbox } from '@loot-box/common/interfaces';
+import { Modal } from '../atoms/Modal';
 
 export interface FillBoxProps_Nft {
   onSetId?: any;
@@ -19,10 +20,25 @@ export interface FillBoxProps_Nft {
   onDoneClick: () => void;
   winInfo: string;
   setWinInfo: (x: string) => void;
+  setMessageError: (x: any) => void;
+  messageError: boolean;
+  nearAccount: string | undefined;
 }
 export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
-  const { imgVal, price, onDoneClick, creationForm, winInfo, setWinInfo } = props;
+  const {
+    imgVal,
+    price,
+    onDoneClick,
+    creationForm,
+    winInfo,
+    setWinInfo,
+    messageError,
+    setMessageError,
+    nearAccount,
+  } = props;
   const [winInfoNft, setWinInfoNft] = useState(winInfo);
+  const [isNotAccount, setNotAccount] = useState(false);
+  useEffect(() => {}, [messageError, isNotAccount, nearAccount]);
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -42,13 +58,15 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
           <PayInfo title="Service Fee" value={`${price.feeAmount} NEAR`} size="big" />
         </div>
         <div className={cn(styles.payBtn_block)}>
-          <Link to="/deploy_your_box">
-            <ButtonPay
-              onClick={onDoneClick}
-              styleBtn="default"
-              title={`PAY ${price.totalAmount} NEAR`}
-            />
-          </Link>
+          {/* <Link to="/deploy_your_box"> */}
+          <ButtonPay
+            onClick={() => {
+              nearAccount ? onDoneClick() : setNotAccount(true);
+            }}
+            styleBtn="default"
+            title={`PAY ${price.totalAmount} NEAR`}
+          />
+          {/* </Link> */}
         </div>
       </div>
 
@@ -57,6 +75,20 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
           <LinksStep step="prev" label="Back" />
         </Link>
       </div>
+      <Modal
+        visible={messageError}
+        title={'Transaction error'}
+        content={''}
+        footer={''}
+        onClose={() => setMessageError(false)}
+      />
+      <Modal
+        visible={isNotAccount}
+        title={'Please LogIn'}
+        content={''}
+        footer={''}
+        onClose={() => setNotAccount(false)}
+      />
     </div>
   );
 };

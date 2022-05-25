@@ -35,6 +35,15 @@ const DEFAULT_NEAR_ITEM: NearContentItem = {
   dropAmountTo: '',
 };
 
+enum DropType {
+  Variable = 0,
+  Fixed = 1,
+}
+enum DropTypeFt {
+  Variable = 0,
+  Fixed = 1,
+}
+
 const DEFAULT_FT_ITEM: FtContentItem = {
   contractAddress: '',
   tokenAmount: '',
@@ -68,6 +77,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const regExpIndex = new RegExp(/\d+(\.?\d+)?/gm);
   const reg2 = new RegExp(/^[0-9]*[.,][0-9]+$/gm);
   const newForm = Object.assign({}, creationForm);
+  const [activeDropType, setActiveDropType] = useState(DropType.Fixed);
+  const [activeDropTypeFt, setActiveDropTypeFt] = useState(DropTypeFt.Fixed);
 
   const NearReg = new RegExp(/^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/gm);
 
@@ -369,13 +380,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Fixed"
                   name="dropAmount"
                   id="3_Drop"
-                  defaultChecked={true}
+                  // defaultChecked={true}
+                  checked={activeDropTypeFt === DropTypeFt.Fixed}
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
                       creationForm.ftContentItems[0].dropAmountFrom = '';
                       creationForm.ftContentItems[0].dropAmountTo = '';
                       changeHandlerFT.call(null, 'dropType', 'fixed');
-                      onShowDescription_dropAmount();
+                      // onShowDescription_dropAmount();
+                      setActiveDropTypeFt(DropTypeFt.Fixed);
                     }
                   }}
                 />
@@ -384,17 +397,50 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
+                  checked={activeDropTypeFt === DropTypeFt.Variable}
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
                       creationForm.ftContentItems[0].dropAmountFrom = '';
                       creationForm.ftContentItems[0].dropAmountTo = '';
                       changeHandlerFT.call(null, 'dropType', 'variable');
-                      onShowDescription_dropAmount();
+                      // onShowDescription_dropAmount();
+                      setActiveDropTypeFt(DropTypeFt.Variable);
                     }
                   }}
                 />
               </div>
-              {(isShowDescription_dropAmount && (
+              {activeDropTypeFt === DropTypeFt.Fixed && (
+                <InputPanel
+                  type="text"
+                  appearance="biggest"
+                  placeholder="Drop amount"
+                  innerRef={nodeDropAmount}
+                  defaultValue={DEFAULT_FT_ITEM.dropAmountFrom}
+                  onInput={(e) => func(e)}
+                  onChange={(e) => {
+                    if (
+                      (e.target.value === '.' || isNaN(+e.target.value) === false) &&
+                      (e.target.value[0] !== '0' ||
+                        (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
+                      +e.target.value !== 0
+                    ) {
+                      nodeDropAmount.current?.classList.remove('invalid');
+                    } else {
+                      nodeDropAmount.current?.classList.add('invalid');
+                    }
+                    changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
+                    changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
+                    if (!check()) {
+                      onLink(true);
+                      nodeDropAmount.current?.classList.add('invalid');
+                    } else {
+                      onLink(false);
+                      nodeDropAmount.current?.classList.remove('invalid');
+                    }
+                  }}
+                />
+              )}
+              {activeDropTypeFt === DropTypeFt.Variable && (
                 <div className={cn(styles.dropAmountInput)}>
                   <InputPanel
                     type="text"
@@ -457,36 +503,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     }}
                   />
                 </div>
-              )) || (
-                <InputPanel
-                  type="text"
-                  appearance="biggest"
-                  placeholder="Drop amount"
-                  innerRef={nodeDropAmount}
-                  defaultValue={DEFAULT_FT_ITEM.dropAmountFrom}
-                  onInput={(e) => func(e)}
-                  onChange={(e) => {
-                    if (
-                      (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                      (e.target.value[0] !== '0' ||
-                        (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                      +e.target.value !== 0
-                    ) {
-                      nodeDropAmount.current?.classList.remove('invalid');
-                    } else {
-                      nodeDropAmount.current?.classList.add('invalid');
-                    }
-                    changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
-                    changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
-                    if (!check()) {
-                      onLink(true);
-                      nodeDropAmount.current?.classList.add('invalid');
-                    } else {
-                      onLink(false);
-                      nodeDropAmount.current?.classList.remove('invalid');
-                    }
-                  }}
-                />
               )}
             </div>
           )) || (
@@ -508,13 +524,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Fixed"
                   name="dropAmount"
                   id="3_Drop"
-                  defaultChecked
+                  checked={activeDropType === DropType.Fixed}
+                  // defaultChecked
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
                       creationForm.nearContentItems[0].dropAmountFrom = '';
                       creationForm.nearContentItems[0].dropAmountTo = '';
                       changeHandler.call(null, 'dropType', 'fixed');
-                      onShowDescription_dropAmount();
+                      // onShowDescription_dropAmount();
+                      setActiveDropType(DropType.Fixed);
                     }
                   }}
                 />
@@ -523,17 +541,50 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   title="Variable"
                   name="dropAmount"
                   id="4_Drop"
+                  checked={activeDropType === DropType.Variable}
                   onChange={(e) => {
                     if (e.target.checked !== undefined) {
                       creationForm.nearContentItems[0].dropAmountFrom = '';
                       creationForm.nearContentItems[0].dropAmountTo = '';
                       changeHandler.call(null, 'dropType', 'variable');
-                      onShowDescription_dropAmount();
+                      // onShowDescription_dropAmount();
+                      setActiveDropType(DropType.Variable);
                     }
                   }}
                 />
               </div>
-              {(isShowDescription_dropAmount && (
+              {activeDropType === DropType.Fixed && (
+                <InputPanel
+                  type="text"
+                  appearance="biggest"
+                  placeholder="Drop amount"
+                  innerRef={nodeDropAmount}
+                  defaultValue={DEFAULT_NEAR_ITEM.dropAmountFrom}
+                  onInput={(e) => func(e)}
+                  onChange={(e) => {
+                    if (
+                      (e.target.value === '.' || isNaN(+e.target.value) === false) &&
+                      (e.target.value[0] !== '0' ||
+                        (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
+                      +e.target.value !== 0
+                    ) {
+                      nodeDropAmount.current?.classList.remove('invalid');
+                    } else {
+                      nodeDropAmount.current?.classList.add('invalid');
+                    }
+                    changeHandler.call(null, 'dropAmountTo', e.target.value);
+                    changeHandler.call(null, 'dropAmountFrom', e.target.value);
+                    if (!check()) {
+                      onLink(true);
+                      nodeDropAmount.current?.classList.add('invalid');
+                    } else {
+                      onLink(false);
+                      nodeDropAmount.current?.classList.remove('invalid');
+                    }
+                  }}
+                />
+              )}
+              {activeDropType === DropType.Variable && (
                 <div className={cn(styles.dropAmountInput)}>
                   <InputPanel
                     type="text"
@@ -596,36 +647,6 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     }}
                   />
                 </div>
-              )) || (
-                <InputPanel
-                  type="text"
-                  appearance="biggest"
-                  placeholder="Drop amount"
-                  innerRef={nodeDropAmount}
-                  defaultValue={DEFAULT_NEAR_ITEM.dropAmountFrom}
-                  onInput={(e) => func(e)}
-                  onChange={(e) => {
-                    if (
-                      (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                      (e.target.value[0] !== '0' ||
-                        (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                      +e.target.value !== 0
-                    ) {
-                      nodeDropAmount.current?.classList.remove('invalid');
-                    } else {
-                      nodeDropAmount.current?.classList.add('invalid');
-                    }
-                    changeHandler.call(null, 'dropAmountTo', e.target.value);
-                    changeHandler.call(null, 'dropAmountFrom', e.target.value);
-                    if (!check()) {
-                      onLink(true);
-                      nodeDropAmount.current?.classList.add('invalid');
-                    } else {
-                      onLink(false);
-                      nodeDropAmount.current?.classList.remove('invalid');
-                    }
-                  }}
-                />
               )}
             </div>
           )}

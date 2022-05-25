@@ -161,9 +161,9 @@ export default () => {
         setLootboxes(x);
       });
       navigationDeploy();
-      // console.log(lootboxes);
+      console.log(lootboxes);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       setMessageError(true);
     } finally {
       setLoader(false);
@@ -413,6 +413,7 @@ export default () => {
                     setMessageError={setMessageError}
                     messageError={messageError}
                     newMetadata={newMetadata}
+                    nearAccount={nearAccount}
                   />
                 )
               }
@@ -429,6 +430,9 @@ export default () => {
                     setWinInfo={(x) => setWinInfo(x)}
                     imgVal={IMG[creationForm.pictureId]}
                     onDoneClick={doneClickHandler}
+                    setMessageError={setMessageError}
+                    messageError={messageError}
+                    nearAccount={nearAccount}
                   />
                 )
               }

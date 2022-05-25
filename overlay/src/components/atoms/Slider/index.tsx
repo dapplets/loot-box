@@ -77,6 +77,7 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  // const [load, setLoad] = useState<boolean[]>([]);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: true,
