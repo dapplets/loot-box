@@ -47,6 +47,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
 
   const [winInfoToken, setWinInfoToken] = useState(winInfo);
   const [isNotAccount, setNotAccount] = useState(false);
+  const [isWarningTransaction, setWarningTransaction] = useState(false);
   useEffect(() => {
     if (creationForm.nearContentItems[0]) {
       const winAmount = creationForm.nearContentItems[0].tokenAmount;
@@ -64,6 +65,9 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   }, [nearAccount, isNotAccount]);
   // console.log(creationForm);
   // console.log(newMetadata);
+  const getTransactionAndWarning = () => {
+    setWarningTransaction(true);
+  };
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -88,7 +92,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         <div className={cn(styles.payBtn)}>
           <ButtonPay
             onClick={() => {
-              nearAccount ? onDoneClick() : setNotAccount(true);
+              nearAccount ? getTransactionAndWarning() : setNotAccount(true);
             }}
             styleBtn="default"
             title={`PAY ${price.totalAmount} NEAR`}
@@ -113,6 +117,21 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         content={''}
         footer={''}
         onClose={() => setNotAccount(false)}
+      />
+      <Modal
+        visible={isWarningTransaction}
+        title={'Two transactions are required'}
+        content={
+          <ButtonPay
+            onClick={() => {
+              nearAccount ? onDoneClick() : setNotAccount(true);
+            }}
+            styleBtn="default"
+            title={`Ok`}
+          />
+        }
+        footer={''}
+        onClose={() => setWarningTransaction(false)}
       />
     </div>
   );
