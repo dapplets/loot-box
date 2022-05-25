@@ -30,7 +30,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
   const [link, onLink] = useState(true);
   // const node = useRef<HTMLInputElement>();
-  const [value, setValue] = React.useState(20);
+  const [value, setValue] = useState(creationForm.dropChance);
   // const [nameClassInput, setNameClassInput] = useState('');
 
   const nodeNftContract = useRef<HTMLInputElement>();

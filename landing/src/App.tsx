@@ -47,7 +47,7 @@ export default function App() {
           <Route
             index
             element={
-              <div className={styles.wrapper}>
+              <div className={styles.wrapperFullscreen}>
                 <header>
                   <Header />
                 </header>
@@ -61,7 +61,7 @@ export default function App() {
           <Route
             path=":lootboxId"
             element={
-              <div className={styles.wrapper}>
+              <div className={styles.wrapperFullscreen}>
                 <header>
                   <Header />
                 </header>
@@ -171,100 +171,102 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
   `;
 
   return (
-    <div
-      className={cn(styles.BoxBlock, {
-        [styles.BoxBlockWinners]: !Number.isNaN(pictureId),
-      })}
-    >
-      {(loader && <Preloader />) || (
-        <div className={styles.postLoader}>
-          {!Number.isNaN(pictureId) ? (
-            <h1 className={cn(styles.boxTitle, styles.boxTitleWinner)}>
-              LootBox <span className={styles.wrap} />
-              <span className={styles.authorTitleSpan}>{` by `}</span>
-              <a className={styles.authorTitleLink} target="_blank" href={ownerAddress}>
-                {owner}
-              </a>
-            </h1>
-          ) : (
-            <h1 className={styles.boxTitle}>
-              The LootBox Dapplet
-              <br />
-              <span className={styles.defaultTitleSpan}>
-                {`module for `}
-                <a
-                  className={styles.defaultTitleLink}
-                  target="_blank"
-                  href="https://github.com/dapplets/dapplet-extension/releases/tag/v0.48.0"
-                >
-                  Dapplets Extension
-                </a>
-              </span>
-            </h1>
-          )}
-
-          <div className={styles.boxImg}>
+    <div className={styles.boxBlockWrapper}>
+      <div
+        className={cn(styles.BoxBlock, {
+          [styles.BoxBlockWinners]: !Number.isNaN(pictureId),
+        })}
+      >
+        {(loader && <Preloader />) || (
+          <div className={styles.postLoader}>
             {!Number.isNaN(pictureId) ? (
-              <>
-                <span className={styles.imgLabel}>
-                  <span className={styles.imgLabelSum}>{statCur?.totalAmount}</span>
-
-                  {nameWin}
-                </span>
-                <img className={styles.mainImg} src={IMG[pictureId!]} />
-              </>
+              <h1 className={cn(styles.boxTitle, styles.boxTitleWinner)}>
+                LootBox <span className={styles.wrap} />
+                <span className={styles.authorTitleSpan}>{` by `}</span>
+                <a className={styles.authorTitleLink} target="_blank" href={ownerAddress}>
+                  {owner}
+                </a>
+              </h1>
             ) : (
-              <img className={styles.mainImgDef} src={boxDef} />
+              <h1 className={styles.boxTitle}>
+                The LootBox Dapplet
+                <br />
+                <span className={styles.defaultTitleSpan}>
+                  {`module for `}
+                  <a
+                    className={styles.defaultTitleLink}
+                    target="_blank"
+                    href="https://github.com/dapplets/dapplet-extension/releases/tag/v0.48.0"
+                  >
+                    Dapplets Extension
+                  </a>
+                </span>
+              </h1>
             )}
-          </div>
-          {selectedLootboxId !== null && statCur !== null ? (
-            <div className={styles.radialBarBlock}>
-              <h2 className={styles.radialBarTitle}>
-                <span className={styles.statCurNum}>{statCur && statCur?.completedPercents}</span> /
-                100 %
-              </h2>
-              <div className={styles.radialBarGraph}>
-                <Bar completedPercents={statCur?.completedPercents} />
+
+            <div className={styles.boxImg}>
+              {!Number.isNaN(pictureId) ? (
+                <>
+                  <span className={styles.imgLabel}>
+                    <span className={styles.imgLabelSum}>{statCur?.totalAmount}</span>
+
+                    {nameWin}
+                  </span>
+                  <img className={styles.mainImg} src={IMG[pictureId!]} />
+                </>
+              ) : (
+                <img className={styles.mainImgDef} src={boxDef} />
+              )}
+            </div>
+            {selectedLootboxId !== null && statCur !== null ? (
+              <div className={styles.radialBarBlock}>
+                <h2 className={styles.radialBarTitle}>
+                  <span className={styles.statCurNum}>{statCur && statCur?.completedPercents}</span>{' '}
+                  / 100 %
+                </h2>
+                <div className={styles.radialBarGraph}>
+                  <Bar completedPercents={statCur?.completedPercents} />
+                </div>
               </div>
-            </div>
-          ) : null}
+            ) : null}
 
-          {!Number.isNaN(pictureId) ? (
-            <div className={styles.description}>
-              <p className={cn(styles.textDescription, styles.textDescriptionWinner)}>
-                <span className={styles.nameOwner}>{owner}</span>is&nbsp;hosting a&nbsp;giveaway
-                on&nbsp;Twitter. Join now for a&nbsp;chance to&nbsp;win
-                <span className={styles.totalSum}> {statCur?.totalAmount}</span>
-                <span className={styles.labelSum}> {nameWin}</span>
-              </p>
+            {!Number.isNaN(pictureId) ? (
+              <div className={styles.description}>
+                <p className={cn(styles.textDescription, styles.textDescriptionWinner)}>
+                  <span className={styles.nameOwner}>{owner}</span>is&nbsp;hosting a&nbsp;giveaway
+                  on&nbsp;Twitter. Join now for a&nbsp;chance to&nbsp;win
+                  <span className={styles.totalSum}> {statCur?.totalAmount}</span>
+                  <span className={styles.labelSum}> {nameWin}</span>
+                </p>
 
-              <p className={styles.textDescription}>
-                Read &laquo;How to&nbsp;collect?&raquo; to&nbsp;participate and win the prize!
-              </p>
-            </div>
-          ) : (
-            <div className={styles.description}>
-              <p className={styles.textDescription}>
-                The LootBox Dapplet allows you to&nbsp;host airdrops and giveaways directly
-                on&nbsp;your social media page, where all of&nbsp;your followers can participate.
-              </p>
-              <br />
-              <p className={styles.textDescription}>
-                The Lootbox dapp is&nbsp;a&nbsp;great tool that helps facilitate airdrops and
-                giveaways, making them more fun and convenient. No&nbsp;more complicated mechanisms,
-                and randomizers, your followers simply need to&nbsp;click on&nbsp;the Lootbox once
-                to&nbsp;receive their prize.
-              </p>
-            </div>
-          )}
+                <p className={styles.textDescription}>
+                  Read &laquo;How to&nbsp;collect?&raquo; to&nbsp;participate and win the prize!
+                </p>
+              </div>
+            ) : (
+              <div className={styles.description}>
+                <p className={styles.textDescription}>
+                  The LootBox Dapplet allows you to&nbsp;host airdrops and giveaways directly
+                  on&nbsp;your social media page, where all of&nbsp;your followers can participate.
+                </p>
+                {/* <br /> */}
+                <p className={styles.textDescription}>
+                  The Lootbox dapp is&nbsp;a&nbsp;great tool that helps facilitate airdrops and
+                  giveaways, making them more fun and convenient. No&nbsp;more complicated
+                  mechanisms, and randomizers, your followers simply need to&nbsp;click on&nbsp;the
+                  Lootbox once to&nbsp;receive their prize.
+                </p>
+              </div>
+            )}
 
-          <div className={styles.buttonBlock}>
-            <Link to="/how-to">
-              <button className={styles.button}>How to&nbsp;collect?</button>
-            </Link>
+            <div className={styles.buttonBlock}>
+              <Link to="/how-to">
+                <button className={styles.button}>How to&nbsp;collect?</button>
+              </Link>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

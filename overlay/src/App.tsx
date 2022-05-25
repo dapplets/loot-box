@@ -169,6 +169,12 @@ export default () => {
       setLoader(false);
     }
   };
+  const refreshStat = async () => {
+    if (!nearAccount) throw new Error('Not logged in.');
+    await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
+      setLootboxes(x);
+    });
+  };
 
   useEffect(() => {
     if (ftMetadata === null) return;
@@ -306,6 +312,7 @@ export default () => {
                         <ChildComponent
                           onClick={() => {
                             // console.log(lootboxes.length);
+                            refreshStat();
                             getWin(item);
                             setLootboxes(lootboxes);
                             setSelectedLootboxId(item.id!);
@@ -441,13 +448,15 @@ export default () => {
             />
             <Route
               path="/statistics"
-              element={(loader && <Preloader />) || <StatisticsNear stat={stat} />}
+              element={
+                (loader && <Preloader />) || <StatisticsNear stat={stat} winInfo={winInfo} />
+              }
             />
             <Route
               path="/winners"
               element={
                 (loader && <Preloader />) || (
-                  <StatisticsWinners id={selectedLootboxId} winners={winners} />
+                  <StatisticsWinners id={selectedLootboxId} winners={winners} winInfo={winInfo} />
                 )
               }
             />

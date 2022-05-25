@@ -22,10 +22,11 @@ const titleList = [
 
 export interface StatisticsNearPropsStat {
   stat?: any;
+  winInfo: any;
 }
 
 export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) => {
-  const { stat } = props;
+  const { stat, winInfo } = props;
 
   if (stat === null) {
     return <div>Loading</div>;
@@ -52,7 +53,7 @@ export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNea
         </div>
       </div>
 
-      <Statistics stat={stat} />
+      <Statistics winInfo={winInfo} stat={stat} />
     </div>
   );
 };
@@ -60,11 +61,12 @@ export interface StatisticsNearPropsWinner {
   winners: any;
 
   id?: any;
+  winInfo: any;
 }
 export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
   props: StatisticsNearPropsWinner,
 ) => {
-  const { winners, id } = props;
+  const { winners, id, winInfo } = props;
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -86,7 +88,7 @@ export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
         </div>
       </div>
 
-      <Winner winners={winners} />
+      <Winner winners={winners} winInfo={winInfo} />
     </div>
   );
 };

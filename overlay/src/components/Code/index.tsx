@@ -18,7 +18,7 @@ export interface CodeProps {
 export const Code: FC<CodeProps> = (props: CodeProps) => {
   const { id, winInfo, landingUrl } = props;
   // console.log(winInfo);
-  useEffect(() => {}, [winInfo]);
+  // useEffect(() => {}, [winInfo]);
   // console.log(winInfo, 'Code');
 
   return (
@@ -35,7 +35,9 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
       </div>
       <div className={cn(styles.link)}>
         <Link to="/">
-          <StatisticsLink label="Done" />
+          <StatisticsLink
+          // label="Done"
+          />
         </Link>
       </div>
     </div>

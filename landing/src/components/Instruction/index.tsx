@@ -100,9 +100,14 @@ export function Installation(InstructionProps: any) {
           <span className={styles.itemText}>
             Open&nbsp;
             <a
-              style={{ color: ' #ff720d', textDecoration: 'underline', cursor: 'default' }}
+              style={{
+                color: '#131415',
+                textDecoration: 'none',
+                cursor: 'default',
+                fontWeight: 'bold',
+              }}
               // target={'_blank'}
-              // href="chrome://extensions/"
+              // href="chrome-extension://chrome-id/webpage.htmls"
               className={styles.link}
             >
               chrome://extensions

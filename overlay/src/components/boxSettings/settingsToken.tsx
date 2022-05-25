@@ -55,7 +55,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
 
   const [valueRadio, setValueRadioLoot] = useState('');
 
-  const [value, setValue] = React.useState(20);
+  const [value, setValue] = useState(creationForm.dropChance);
 
   const [link, onLink] = useState(true);
 

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import styles from './Winner.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
@@ -7,9 +7,15 @@ import { StatisticsLink } from '../atoms/StatisticsLink';
 
 export interface WinnerProps {
   winners: any;
+  winInfo: any;
 }
 export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
-  const { winners } = props;
+  const { winners, winInfo } = props;
+
+  const newStr = winInfo.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
+  // useEffect(() => {
+  //   winners;
+  // }, [winners]);
 
   return (
     <div className={styles.wrapper}>
@@ -28,7 +34,11 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
                 <td className={styles.itemLink}>
                   <span>{item.nearAccount}</span>
                 </td>
-                <td className={styles.itemLink}>{item.amount}</td>
+                <td className={styles.itemLink}>
+                  {item.amount % 1 === 0
+                    ? item.amount + newStr
+                    : item.amount.replace(/[,.]?0+$/, '') + newStr}
+                </td>
                 <td>
                   <a href={item.txLink} target="_blank" className={styles.label}>
                     OPEN TX
@@ -41,7 +51,9 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
       </div>
       <div className={cn(styles.link)}>
         <Link to="/">
-          <StatisticsLink label="Copy winners" />
+          <StatisticsLink
+          // label="Copy winners"
+          />
         </Link>
       </div>
     </div>

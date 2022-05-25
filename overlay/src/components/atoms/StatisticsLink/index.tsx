@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { LinksStep } from '../LinksStep';
 
 export interface StatisticsLinkProps {
-  label: string;
+  label?: string;
   className?: string;
 }
 export const StatisticsLink: FC<StatisticsLinkProps> = (props: StatisticsLinkProps) => {

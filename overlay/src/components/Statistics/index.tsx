@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import styles from './Statistics.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
@@ -13,13 +13,16 @@ import { StatisticsLink } from '../atoms/StatisticsLink';
 
 export interface StatisticsProps {
   stat: any;
+  winInfo: any;
 }
 export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
-  const { stat } = props;
-  // console.log(stat.winLabel, 'stat');
-  // if (stat.winLabel) {
-  //   return labels[0] = stat.winLabel
-  // }
+  const { stat, winInfo } = props;
+
+  const newWinInfo = (str: string) => {
+    const newStr = str.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
+    return newStr;
+  };
+
   const options = {
     chart: {
       height: 174,
@@ -37,7 +40,8 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
       },
     },
 
-    labels: [`${stat.winLabel.toUpperCase()}`],
+    // labels: [`${stat.winLabel.toUpperCase()}`],
+    labels: [`${newWinInfo(winInfo)}`],
   };
 
   return (
@@ -73,7 +77,9 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
 
       <div className={cn(styles.link)}>
         <Link to="/">
-          <StatisticsLink label="Copy code" />
+          <StatisticsLink
+          // label="Copy code"
+          />
         </Link>
       </div>
     </div>
