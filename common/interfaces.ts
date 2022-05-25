@@ -8,6 +8,7 @@ export type NftContentItem = {
 export type FtContentItem = {
   contractAddress: string;
   tokenAmount: string;
+  tokenTicker?: string;
   dropType: 'fixed' | 'variable';
   dropAmountFrom: string;
   dropAmountTo: string;

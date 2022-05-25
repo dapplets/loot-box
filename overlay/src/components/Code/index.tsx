@@ -1,4 +1,4 @@
-import React, { FC, useState, useMemo } from 'react';
+import React, { FC, useState, useMemo, useEffect } from 'react';
 import styles from './Code.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,9 @@ export interface CodeProps {
 
 export const Code: FC<CodeProps> = (props: CodeProps) => {
   const { id, winInfo, landingUrl } = props;
+  // console.log(winInfo);
+  useEffect(() => {}, [winInfo]);
+  // console.log(winInfo, 'Code');
 
   return (
     <div className={styles.wrapper}>

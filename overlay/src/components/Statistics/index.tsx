@@ -9,31 +9,36 @@ import { StatisticsInfo } from '../atoms/StatisticsInfo';
 import { ChartProgress } from '../atoms/CircleChart';
 import { StatisticsLink } from '../atoms/StatisticsLink';
 
-export const labels = ['NEAR'];
-export const options = {
-  chart: {
-    height: 174,
-    type: 'radialBar',
-    fontFamily: 'Roboto, sans-serif',
-    foreColor: '#747376',
-  },
-  colors: ['#F26680'],
+// export let labels = [''];
 
-  plotOptions: {
-    radialBar: {
-      hollow: {
-        size: '60%',
-      },
-    },
-  },
-
-  labels: ['NEAR'],
-};
 export interface StatisticsProps {
   stat: any;
 }
 export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
   const { stat } = props;
+  // console.log(stat.winLabel, 'stat');
+  // if (stat.winLabel) {
+  //   return labels[0] = stat.winLabel
+  // }
+  const options = {
+    chart: {
+      height: 174,
+      type: 'radialBar',
+      fontFamily: 'Roboto, sans-serif',
+      foreColor: '#747376',
+    },
+    colors: ['#F26680'],
+
+    plotOptions: {
+      radialBar: {
+        hollow: {
+          size: '60%',
+        },
+      },
+    },
+
+    labels: [`${stat.winLabel.toUpperCase()}`],
+  };
 
   return (
     <div className={styles.wrapper}>

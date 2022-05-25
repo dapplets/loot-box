@@ -19,6 +19,7 @@ const MAX_GAS_PER_TX = 300000000000000;
 
 export class DappletApi implements IDappletApi {
   private _contract;
+  private _cachedTokenMetadataPromises = new Map<string, Promise<FtMetadata | null>>();
 
   constructor(private _config: NetworkConfig) {
     this._contract = Core.contract('near', _config.contractAddress, {
@@ -38,7 +39,9 @@ export class DappletApi implements IDappletApi {
     if (lootboxId === undefined) return null;
     const contract = await this._contract;
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
-    return lootbox ? this._convertLootboxFromContract(lootbox) : null;
+    if (!lootbox) return null;
+
+    return this._fillTokenTickers(this._convertLootboxFromContract(lootbox));
   }
 
   async connectWallet(): Promise<string> {
@@ -68,13 +71,17 @@ export class DappletApi implements IDappletApi {
     limit?: number,
   ): Promise<Lootbox[]> {
     const contract = await this._contract;
-    const lootboxes_ = await contract.get_lootboxes_by_account({
+    const lootboxes_: any[] = await contract.get_lootboxes_by_account({
       account_id,
       from_index,
       limit,
     });
 
-    return lootboxes_.map((x) => this._convertLootboxFromContract(x));
+    return Promise.all(
+      lootboxes_
+        .map((x) => this._convertLootboxFromContract(x))
+        .map((x) => this._fillTokenTickers(x)),
+    );
   }
 
   async createNewBox(lootbox: Lootbox): Promise<string> {
@@ -221,12 +228,16 @@ export class DappletApi implements IDappletApi {
     const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
 
     let totalAmount = '0';
+    let winLabel = '';
     for (const item of all_loot_items) {
       if (item.Near !== undefined) {
+        winLabel = 'Near';
         totalAmount = sum(totalAmount, formatNearAmount(item.Near.total_amount));
       } else if (item.Ft !== undefined) {
+        winLabel = 'Token';
         console.error('Total amount calculation is not implemented for FT.');
       } else if (item.Nft !== undefined) {
+        winLabel = 'NFT';
         // console.error('Total amount calculation is not implemented for NFT.');
         totalAmount = sum(totalAmount, '1'); // ToDo: how to calculate statistics of NFT?
       } else {
@@ -263,6 +274,7 @@ export class DappletApi implements IDappletApi {
       totalViews: claims.length,
       completedPercents: toPrecision(completedPercents, 3),
       remainingPercents: toPrecision(remainingPercents, 3),
+      winLabel: winLabel,
     };
 
     return result;
@@ -312,8 +324,18 @@ export class DappletApi implements IDappletApi {
     });
   }
 
-  // @CacheMethod()
   public async getFtMetadata(address: string): Promise<FtMetadata | null> {
+    if (this._cachedTokenMetadataPromises.has(address)) {
+      return this._cachedTokenMetadataPromises.get(address);
+    } else {
+      const metadataPromise = this._getFtMetadata(address);
+      this._cachedTokenMetadataPromises.set(address, metadataPromise);
+      return metadataPromise;
+    }
+  }
+
+  private async _getFtMetadata(address: string): Promise<FtMetadata | null> {
+    console.log('send request to ' + address);
     try {
       const contract = await Core.contract('near', address, {
         viewMethods: ['ft_metadata'],
@@ -484,5 +506,19 @@ export class DappletApi implements IDappletApi {
       console.error('Unknown claim result', claim_status);
       throw new Error('Unknown claim result');
     }
+  }
+
+  private async _fillTokenTickers(lootbox: Lootbox) {
+    for (const loot of lootbox.ftContentItems) {
+      try {
+        const metadata = await this.getFtMetadata(loot.contractAddress);
+        if (!metadata) return lootbox;
+        loot.tokenTicker = metadata.symbol;
+      } catch (e) {
+        console.error(`Cannot fetch metadata of ${loot.contractAddress} token`, e);
+      }
+    }
+
+    return lootbox;
   }
 }

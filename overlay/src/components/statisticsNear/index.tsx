@@ -30,6 +30,7 @@ export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNea
   if (stat === null) {
     return <div>Loading</div>;
   }
+  // console.log(stat);
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -96,6 +97,8 @@ export interface StatisticsNearPropsCode {
 }
 export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNearPropsCode) => {
   const { id, winInfo, landingUrl } = props;
+
+  // console.log(winInfo, 'stat code');
 
   return (
     <div className={cn(styles.wrapper)}>

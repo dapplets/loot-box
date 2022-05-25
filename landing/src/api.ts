@@ -1,4 +1,9 @@
-import { IDappletApiForLanding, Lootbox, LootboxStat } from '@loot-box/common/interfaces';
+import {
+  FtMetadata,
+  IDappletApiForLanding,
+  Lootbox,
+  LootboxStat,
+} from '@loot-box/common/interfaces';
 import * as nearAPI from 'near-api-js';
 import * as format from './format';
 import { sum, groupBy, sub, div, mul, toPrecision, zerofyEmptyString } from './helpers';
@@ -24,7 +29,9 @@ export class DappletApi implements IDappletApiForLanding {
     if (lootboxId === undefined) return null;
     const contract = await this._contract;
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
-    return lootbox ? this._convertLootboxFromContract(lootbox) : null;
+    if (!lootbox) return null;
+
+    return this._fillTokenTickers(this._convertLootboxFromContract(lootbox));
   }
 
   async getLootboxStat(lootboxId: string): Promise<LootboxStat | null> {
@@ -103,6 +110,31 @@ export class DappletApi implements IDappletApiForLanding {
     return contract;
   }
 
+  public async getFtMetadata(address: string): Promise<FtMetadata | null> {
+    try {
+      const config = {
+        ...this._config,
+        keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+        headers: {},
+      };
+
+      const near = await connect(config);
+
+      // create wallet connection
+      const wallet = new WalletConnection(near, null);
+
+      const contract: any = new Contract(wallet.account(), address, {
+        viewMethods: ['ft_metadata'],
+        changeMethods: [],
+      });
+
+      return contract.ft_metadata();
+    } catch (_) {
+      console.error('Unknown address', _);
+      return null;
+    }
+  }
+
   private _convertLootboxFromContract(x: any): Lootbox {
     const all_loot_items = [...x.loot_items, ...x.distributed_items];
     return {
@@ -135,5 +167,19 @@ export class DappletApi implements IDappletApiForLanding {
           tokenId: x.Nft.token_id,
         })),
     };
+  }
+
+  private async _fillTokenTickers(lootbox: Lootbox) {
+    for (const loot of lootbox.ftContentItems) {
+      try {
+        const metadata = await this.getFtMetadata(loot.contractAddress);
+        if (!metadata) return lootbox;
+        loot.tokenTicker = metadata.symbol;
+      } catch (e) {
+        console.error(`Cannot fetch metadata of ${loot.contractAddress} token`, e);
+      }
+    }
+
+    return lootbox;
   }
 }

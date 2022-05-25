@@ -26,6 +26,7 @@ export interface FillBoxProps {
   setWinInfo: (x: string) => void;
   setMessageError: (x: any) => void;
   messageError: boolean;
+  newMetadata: any;
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const {
@@ -39,6 +40,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     winInfo,
     messageError,
     setMessageError,
+    newMetadata,
   } = props;
 
   const [winInfoToken, setWinInfoToken] = useState(winInfo);
@@ -50,11 +52,15 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       setWinInfo(winAmountParse);
     } else if (creationForm.ftContentItems[0]) {
       const winAmountTicker = creationForm.ftContentItems[0].tokenAmount;
-      const winAmountTickerParse = winAmountTicker + ` TOKEN`;
+      const winAmountTickerParse = newMetadata
+        ? `${winAmountTicker} ${newMetadata.symbol}`
+        : `${winAmountTicker} TOKEN`;
       setWinInfoToken(winAmountTickerParse);
       setWinInfo(winAmountTickerParse);
     }
   }, []);
+  // console.log(creationForm);
+  // console.log(newMetadata);
 
   return (
     <div className={cn(styles.wrapper)}>

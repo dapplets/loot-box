@@ -28,13 +28,13 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
     return `${firstFourCharacters}...${lastFourCharacters}`;
   };
 
-  const copyText = () => {
-    copy();
+  // const copyText = () => {
+  //   copy();
 
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
-  };
+  //   setTimeout(() => {
+  //     setCopied(false);
+  //   }, 2000);
+  // };
 
   return (
     <>

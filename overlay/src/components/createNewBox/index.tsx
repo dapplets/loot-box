@@ -47,10 +47,21 @@ export interface ChildComponentProps {
   status: string;
   winInfo: any;
   loader: boolean;
+  setWinInfo: (x: any) => void;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { number, label, imgVal, onClick, creationForm, winInfo, status, loader } = props;
+  const {
+    number,
+    label,
+    imgVal,
+    onClick,
+    creationForm,
+    winInfo,
+    status,
+    loader,
+    setWinInfo,
+  } = props;
 
   const [winAmount, setWinAmount] = useState('');
   const [load, setLoad] = useState(false);
@@ -58,7 +69,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
   useEffect(() => {
     setLoad(true);
     if (winInfo.ftContentItems.length !== 0) {
-      winInfo.ftContentItems.map((x: any) => setWinAmount(`${x.tokenAmount} TOKEN`));
+      winInfo.ftContentItems.map((x: any) => setWinAmount(`${x.tokenAmount} ${x.tokenTicker}`));
     } else if (winInfo.nearContentItems.length !== 0) {
       winInfo.nearContentItems.map((x: any) => setWinAmount(`${x.tokenAmount} NEAR`));
     } else if (winInfo.nftContentItems.length !== 0) {
@@ -66,7 +77,10 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
       setWinAmount(winNft);
     }
     setLoad(false);
-  });
+    // console.log(winAmount);
+  }, [winInfo]);
+  // console.log(winInfo, 'win Info');
+  // console.log(winInfoLabel, 'winInfoLabel');
 
   return (
     <>

@@ -89,6 +89,8 @@ export default () => {
   const [currentLootboxes, setCurrentLootboxes] = useState(8);
   const [totalCount, setTotalCount] = useState(0);
 
+  const [ticketName, setTicketName] = useState('');
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
   };
@@ -159,9 +161,9 @@ export default () => {
         setLootboxes(x);
       });
       navigationDeploy();
-      console.log(lootboxes);
+      // console.log(lootboxes);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setMessageError(true);
     } finally {
       setLoader(false);
@@ -179,7 +181,7 @@ export default () => {
       .catch((e) => {
         console.error(e);
       });
-    console.log('3');
+    // console.log('3');
   }, [ftMetadata]);
 
   useEffect(() => {
@@ -257,16 +259,19 @@ export default () => {
   };
 
   const getWin = async (y: any) => {
-    lootboxes.map((x) => {
-      if (+x.ftContentItems[y].tokenAmount !== 0) {
-        setWinInfo(x.ftContentItems[y].tokenAmount + `  TOKEN`);
-      } else if (+x.nearContentItems[y].tokenAmount !== 0) {
-        setWinInfo(x.nearContentItems[y].tokenAmount + ` NEAR`);
-      } else if (x.nftContentItems.length !== 0) {
-        setWinInfo(String(x.nftContentItems.length + `  NFT`));
-      }
-    });
+    if (y.ftContentItems.length !== 0) {
+      y.ftContentItems.map((x: any) => setWinInfo(`${x.tokenAmount} ${x.tokenTicker}`));
+    } else if (y.nearContentItems.length !== 0) {
+      y.nearContentItems.map((x: any) => setWinInfo(`${x.tokenAmount} NEAR`));
+    } else if (y.nftContentItems.length !== 0) {
+      const winNft = String(y.nftContentItems.length) + ` NFT`;
+      setWinInfo(winNft);
+    }
   };
+  // const winInfoUpdate = useMemo(() => {
+  //   return winInfo;
+  // }, [winInfo]);
+  // console.log(winInfoUpdate, 'App');
 
   return (
     <>
@@ -300,8 +305,8 @@ export default () => {
                       lootboxes.map((item, index) => (
                         <ChildComponent
                           onClick={() => {
-                            console.log(lootboxes.length);
-
+                            // console.log(lootboxes.length);
+                            getWin(item);
                             setLootboxes(lootboxes);
                             setSelectedLootboxId(item.id!);
                           }}
@@ -314,6 +319,7 @@ export default () => {
                           status={item.status!}
                           winInfo={item}
                           loader={loader}
+                          setWinInfo={setWinInfo}
                         />
                       ))
                     ) : (
@@ -372,6 +378,7 @@ export default () => {
                   creationForm={creationForm}
                   newMetadata={newMetadata}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
+                  // setTicketName={setTicketName}
                 />
               }
             />
@@ -398,6 +405,7 @@ export default () => {
                     onCreationFormUpdate={(x) => setCreationForm(x)}
                     setMessageError={setMessageError}
                     messageError={messageError}
+                    newMetadata={newMetadata}
                   />
                 )
               }

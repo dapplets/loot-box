@@ -26,6 +26,7 @@ export interface BoxSettingsProps {
   onCreationFormUpdate: (x: any) => void;
   setFtMetadata: (x: any) => void;
   newMetadata: any;
+  // setTicketName: (x: string) => void;
 }
 const DEFAULT_NEAR_ITEM: NearContentItem = {
   tokenAmount: '',
@@ -42,7 +43,13 @@ const DEFAULT_FT_ITEM: FtContentItem = {
   dropAmountTo: '',
 };
 export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { creationForm, onCreationFormUpdate, setFtMetadata, newMetadata } = props;
+  const {
+    creationForm,
+    onCreationFormUpdate,
+    setFtMetadata,
+    newMetadata,
+    //  setTicketName
+  } = props;
   const [isShowDescription_tokenAmount, onShowDescription_tokenAmount] = useToggle(false);
   const [isShowDescription_dropAmount, onShowDescription_dropAmount] = useToggle(false);
 
@@ -223,12 +230,16 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     } else {
       onLink(true);
     }
+    // if (newMetadata) {
+    //   setTicketName(newMetadata.symbol);
+    // }
   }, [
     creationForm,
     link,
     nodeTokenAmount,
     isShowDescription_tokenAmount,
     isShowDescription_dropAmount,
+    // newMetadata,
   ]);
 
   const func = (e: React.FormEvent<HTMLInputElement>) => {

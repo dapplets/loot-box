@@ -19,6 +19,7 @@ export interface DeployBoxProps
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
   const { id, winInfo, landingUrl } = props;
+  // console.log();
 
   return (
     <div className={cn(styles.wrapper)}>
