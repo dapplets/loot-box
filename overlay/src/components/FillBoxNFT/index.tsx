@@ -38,7 +38,18 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   } = props;
   const [winInfoNft, setWinInfoNft] = useState(winInfo);
   const [isNotAccount, setNotAccount] = useState(false);
-  useEffect(() => {}, [messageError, isNotAccount, nearAccount]);
+  const [isWarningTransaction, setWarningTransaction] = useState(false);
+  useEffect(() => {
+    if (creationForm.nftContentItems[0]) {
+      const winAmount = creationForm.nftContentItems.length;
+      const winAmountParse = winAmount + ` NFT`;
+      // setWinInfoToken(winAmountParse);
+      setWinInfo(winAmountParse);
+    }
+  }, [messageError, isNotAccount, nearAccount]);
+  const getTransactionAndWarning = () => {
+    setWarningTransaction(true);
+  };
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -61,7 +72,7 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
           {/* <Link to="/deploy_your_box"> */}
           <ButtonPay
             onClick={() => {
-              nearAccount ? onDoneClick() : setNotAccount(true);
+              nearAccount ? getTransactionAndWarning() : setNotAccount(true);
             }}
             styleBtn="default"
             title={`PAY ${price.totalAmount} NEAR`}
@@ -88,6 +99,21 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
         content={''}
         footer={''}
         onClose={() => setNotAccount(false)}
+      />
+      <Modal
+        visible={isWarningTransaction}
+        title={'Two transactions are required'}
+        content={
+          <ButtonPay
+            onClick={() => {
+              nearAccount ? onDoneClick() : setNotAccount(true);
+            }}
+            styleBtn="default"
+            title={`Ok`}
+          />
+        }
+        footer={''}
+        onClose={() => setWarningTransaction(false)}
       />
     </div>
   );

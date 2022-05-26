@@ -142,6 +142,14 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     DEFAULT_NEAR_ITEM.tokenAmount = '';
 
     DEFAULT_FT_ITEM.tokenAmount = '';
+    // if (activeDropTypeFt === DropTypeFt.Variable) {
+    //   DEFAULT_FT_ITEM.dropAmountFrom = '';
+    //   DEFAULT_FT_ITEM.dropAmountTo = '';
+    // }
+    // if (activeDropType === DropType.Variable) {
+    //   DEFAULT_NEAR_ITEM.dropAmountFrom = '';
+    //   DEFAULT_NEAR_ITEM.dropAmountTo = '';
+    // }
 
     newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
     creationForm.nftContentItems = [];
@@ -149,6 +157,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     onCreationFormUpdate(creationForm);
 
     onCreationFormUpdate(newForm);
+    console.log(DEFAULT_NEAR_ITEM);
+    console.log(DEFAULT_FT_ITEM);
   }, []);
   const handleClick = () => {
     if (nodeTokenAmount && nodeTokenAmount.current) {
@@ -159,10 +169,12 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     if (creationForm.nearContentItems[0] || creationForm.ftContentItems[0]) {
       if (
         (creationForm.nearContentItems[0] &&
+          creationForm.nearContentItems[0].dropType === 'fixed' &&
           creationForm.nearContentItems[0].tokenAmount &&
           Number(creationForm.nearContentItems[0].tokenAmount) >=
             Number(creationForm.nearContentItems[0].dropAmountFrom)) ||
         (creationForm.ftContentItems[0] &&
+          creationForm.ftContentItems[0].dropType === 'fixed' &&
           creationForm.ftContentItems[0].tokenAmount &&
           Number(creationForm.ftContentItems[0].tokenAmount) >=
             Number(creationForm.ftContentItems[0].dropAmountFrom))
@@ -185,8 +197,11 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           (result && result.c && result.c[0] === 0) ||
           (resultFt && resultFt.c && resultFt.c[0] === 0)
         ) {
+          console.log('1', true);
+
           return true;
         } else {
+          console.log('2', false);
           false;
         }
       } else if (
@@ -194,20 +209,25 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           creationForm.nearContentItems[0].dropType === 'variable') ||
         (creationForm.ftContentItems[0] && creationForm.ftContentItems[0].dropType === 'variable')
       ) {
-        if (
-          Number(creationForm.nearContentItems[0].tokenAmount) >=
-            Number(creationForm.nearContentItems[0].dropAmountTo) ||
-          Number(creationForm.ftContentItems[0].tokenAmount) >=
-            Number(creationForm.ftContentItems[0].dropAmountTo)
-        ) {
-          return true;
-        } else {
-          return false;
-        }
+        // if (
+        //   (creationForm.nearContentItems[0].tokenAmount &&
+        //     Number(creationForm.nearContentItems[0].tokenAmount) >=
+        //       Number(creationForm.nearContentItems[0].dropAmountTo)) ||
+        //   (creationForm.ftContentItems[0].tokenAmount &&
+        //     Number(creationForm.ftContentItems[0].tokenAmount) >=
+        //       Number(creationForm.ftContentItems[0].dropAmountTo))
+        // ) {
+        //   return true;
+        // } else {
+        console.log('3', true);
+        return true;
+        // }
       } else {
+        console.log('4', false);
         false;
       }
     } else {
+      console.log('5', false);
       return false;
     }
   };
@@ -234,22 +254,57 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           creationForm.ftContentItems[0].dropAmountTo.length >= 1 &&
           creationForm.ftContentItems[0].contractAddress.length >= 1)
       ) {
+        console.log('a');
+
         onLink(false);
       } else {
+        console.log('b');
+
         onLink(true);
       }
     } else {
+      console.log('c');
+
       onLink(true);
     }
-    // if (newMetadata) {
-    //   setTicketName(newMetadata.symbol);
-    // }
+    // ===
+    if (
+      nodeFrom &&
+      nodeFrom.current &&
+      nodeTo &&
+      nodeTo.current &&
+      nodeTokenAmount &&
+      nodeTokenAmount.current &&
+      // (activeDropType === DropType.Variable || activeDropTypeFt === DropTypeFt.Variable) &&
+      Number(nodeFrom.current.value) <= Number(nodeTo.current.value) &&
+      Number(nodeTo.current.value) <= Number(nodeTokenAmount.current.value)
+    ) {
+      nodeFrom.current?.classList.remove('invalid');
+      nodeTo.current?.classList.remove('invalid');
+      onLink(false);
+    } else if (activeDropType !== DropType.Variable && activeDropTypeFt !== DropTypeFt.Variable) {
+      onLink(false);
+    } else {
+      nodeFrom.current?.classList.add('invalid');
+      nodeTo.current?.classList.add('invalid');
+      console.log('in');
+
+      onLink(true);
+    }
+
+    console.log(link, 'link');
+    console.log(check(), 'check');
   }, [
     creationForm,
     link,
     nodeTokenAmount,
     isShowDescription_tokenAmount,
     isShowDescription_dropAmount,
+    nodeFrom,
+    nodeTo,
+    nodeTokenAmount,
+    activeDropType,
+    activeDropTypeFt,
     // newMetadata,
   ]);
 
@@ -291,6 +346,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                     +e.target.value !== 0
                   ) {
+                    // if(){}else{}
                     nodeTokenAmount.current?.classList.remove('invalid');
                   } else {
                     nodeTokenAmount.current?.classList.add('invalid');
@@ -415,7 +471,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="biggest"
                   placeholder="Drop amount"
                   innerRef={nodeDropAmount}
-                  defaultValue={DEFAULT_FT_ITEM.dropAmountFrom}
+                  defaultValue={
+                    DEFAULT_FT_ITEM.dropType === 'fixed' ? DEFAULT_FT_ITEM.dropAmountTo : ''
+                  }
                   onInput={(e) => func(e)}
                   onChange={(e) => {
                     if (
@@ -477,17 +535,17 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                           (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                         +e.target.value !== 0
                       ) {
-                        if (
-                          nodeFrom &&
-                          nodeFrom.current &&
-                          nodeTo &&
-                          nodeTo.current &&
-                          +nodeFrom.current.value <= +nodeTo.current.value
-                        ) {
-                          nodeFrom.current?.classList.remove('invalid');
-                        } else {
-                          nodeFrom.current?.classList.add('invalid');
-                        }
+                        // if (
+                        //   nodeFrom &&
+                        //   nodeFrom.current &&
+                        //   nodeTo &&
+                        //   nodeTo.current &&
+                        //   Number(nodeFrom.current.value) >= Number(nodeTo.current.value)
+                        // ) {
+                        //   nodeTo.current?.classList.remove('invalid');
+                        // } else {
+                        //   nodeTo.current?.classList.add('invalid');
+                        // }
                         nodeTo.current?.classList.remove('invalid');
                       } else {
                         nodeTo.current?.classList.add('invalid');
@@ -559,7 +617,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                   appearance="biggest"
                   placeholder="Drop amount"
                   innerRef={nodeDropAmount}
-                  defaultValue={DEFAULT_NEAR_ITEM.dropAmountFrom}
+                  defaultValue={
+                    DEFAULT_NEAR_ITEM.dropType === 'fixed' ? DEFAULT_NEAR_ITEM.dropAmountTo : ''
+                  }
                   onInput={(e) => func(e)}
                   onChange={(e) => {
                     if (
@@ -600,6 +660,17 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                           (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                         +e.target.value !== 0
                       ) {
+                        // if (
+                        //   nodeFrom &&
+                        //   nodeFrom.current &&
+                        //   nodeTo &&
+                        //   nodeTo.current &&
+                        //   Number(nodeFrom.current.value) >= Number(nodeTo.current.value)
+                        // ) {
+                        //   nodeFrom.current?.classList.remove('invalid');
+                        // } else {
+                        //   nodeFrom.current?.classList.add('invalid');
+                        // }
                         nodeFrom.current?.classList.remove('invalid');
                       } else {
                         nodeFrom.current?.classList.add('invalid');
@@ -621,17 +692,17 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                           (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
                         +e.target.value !== 0
                       ) {
-                        if (
-                          nodeFrom &&
-                          nodeFrom.current &&
-                          nodeTo &&
-                          nodeTo.current &&
-                          +nodeFrom.current.value <= +nodeTo.current.value
-                        ) {
-                          nodeFrom.current?.classList.remove('invalid');
-                        } else {
-                          nodeFrom.current?.classList.add('invalid');
-                        }
+                        // if (
+                        //   nodeFrom &&
+                        //   nodeFrom.current &&
+                        //   nodeTo &&
+                        //   nodeTo.current &&
+                        //   Number(nodeFrom.current.value) >= Number(nodeTo.current.value)
+                        // ) {
+                        //   nodeTo.current?.classList.remove('invalid');
+                        // } else {
+                        //   nodeTo.current?.classList.add('invalid');
+                        // }
                         nodeTo.current?.classList.remove('invalid');
                       } else {
                         nodeTo.current?.classList.add('invalid');
@@ -681,6 +752,8 @@ Please enter the amount in percentage."
               to="/fill_your_box"
               onClick={() => {
                 handleClick();
+                console.log(creationForm);
+                console.log(DEFAULT_NEAR_ITEM);
 
                 if (isShowDescription_tokenAmount) {
                   creationForm.nearContentItems = [];

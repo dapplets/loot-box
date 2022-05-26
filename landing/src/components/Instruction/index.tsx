@@ -58,15 +58,14 @@ export function Instruction(InstructionProps: any) {
         <Header />
       </header>
       <div className={styles.content}>
-        {/* <Start /> */}
         <Installation />
         <Activate />
         <Claming />
-        <Creation />
+        {/* <Creation />
         <NearToken />
         <FungibleTokens />
-        <NonFungibleTokens />
-        <Status />
+        <NonFungibleTokens /> */}
+        {/* <Status /> */}
       </div>
       <footer className={styles.footer}>
         <Footer />

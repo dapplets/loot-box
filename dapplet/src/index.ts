@@ -57,6 +57,7 @@ export default class TwitterFeature {
 
   async activate(): Promise<void> {
     const networkId = await Core.storage.get('network');
+    console.log(networkId);
 
     this._config = getNetworkConfig(networkId);
     this._api = new DappletApi(this._config);
@@ -112,8 +113,15 @@ export default class TwitterFeature {
               });
 
               const lootboxId = await this._api.getLootboxById(numIndex);
+              console.log(lootboxId);
               if (lootboxId === null || lootboxId === undefined) {
                 return;
+              } else if (lootboxId.status === 'dropped') {
+                me.hidden = false;
+                me.replace = `${this._config.landingUrlReplace}${numIndex}`;
+                me.img = BOX_EMPTY[lootboxId.pictureId];
+                me.text = 'Lootbox dropped already';
+                me.exec = null;
               } else {
                 me.hidden = false;
                 me.replace = `${this._config.landingUrlReplace}${numIndex}`;
@@ -132,20 +140,30 @@ export default class TwitterFeature {
   async getClaimStatus(me, numIndex, lootbox): Promise<void> {
     me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
-    const result = await this._api._getLootboxClaimStatus(numIndex, wallet.accountId);
-    me.exec = null;
-    if (result.status === 0) {
-      me.img = BOX_DEFAULT[lootbox.pictureId];
-      me.exec = async () => {
-        await this.getClaimLoot(me, numIndex, lootbox);
-      };
-    } else if (result.status === 1) {
-      me.img = BOX_EMPTY[lootbox.pictureId];
-      me.text = 'Empty';
+    if (wallet.accountId) {
+      const result = await this._api._getLootboxClaimStatus(numIndex, wallet.accountId);
       me.exec = null;
-    } else if (result.status === 2) {
-      me.img = BOX_OPEN[lootbox.pictureId];
-      me.text = await this._formatWinningText(result);
+
+      if (result.status === 0) {
+        me.img = BOX_DEFAULT[lootbox.pictureId];
+        me.exec = async () => {
+          console.log(result);
+          await this.getClaimLoot(me, numIndex, lootbox);
+        };
+      } else if (result.status === 1) {
+        console.log(result);
+        me.img = BOX_EMPTY[lootbox.pictureId];
+        me.text = 'Empty';
+        me.exec = null;
+      } else if (result.status === 2) {
+        console.log(result);
+        me.img = BOX_OPEN[lootbox.pictureId];
+        me.text = await this._formatWinningText(result);
+        me.exec = null;
+      }
+    } else {
+      me.img = BOX_DEFAULT[lootbox.pictureId];
+      me.text = 'Please, login in your wallet and refresh page';
       me.exec = null;
     }
   }
@@ -154,31 +172,41 @@ export default class TwitterFeature {
     me.img = { DARK: boxDef, LIGHT: White };
     me.exec = null;
     const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
-    await this._api
-      ._claimLootbox(numIndex, wallet.accountId)
-      .then(async (x) => {
-        console.log(x);
+    console.log(wallet.accountId);
+    if (wallet.accountId) {
+      // const num = await this._api._claimLootbox(numIndex, wallet.accountId).then((x) => x);
+      // console.log(num);
+      await this._api
+        ._claimLootbox(numIndex, wallet.accountId)
+        .then(async (x) => {
+          console.log(x);
 
-        if (x.status === 2) {
-          me.img = BOX_OPEN[lootbox.pictureId];
-          me.text = await this._formatWinningText(x);
-          me.exec = null;
-          console.log(x.status);
-        } else {
+          if (x.status === 2) {
+            me.img = BOX_OPEN[lootbox.pictureId];
+            me.text = await this._formatWinningText(x);
+            me.exec = null;
+            console.log(x.status);
+          } else {
+            me.img = BOX_EMPTY[lootbox.pictureId];
+            me.text = 'Empty';
+            me.exec = null;
+            console.log(x.status);
+          }
+        })
+        .catch((err) => {
           me.img = BOX_EMPTY[lootbox.pictureId];
-          me.text = 'Empty';
-          me.exec = null;
-          console.log(x.status);
-        }
-      })
-      .catch((err) => {
-        me.img = BOX_EMPTY[lootbox.pictureId];
-        me.exec = async () => {
-          await this.getClaimLoot(me, numIndex, lootbox);
-        };
-        me.text = 'Transaction rejected';
-        console.log(err);
-      });
+          me.exec = async () => {
+            // await this.getClaimLoot(me, numIndex, lootbox);
+            me.exec = null;
+          };
+          me.text = 'Transaction rejected , refresh page';
+          console.log(err);
+        });
+    } else {
+      me.img = BOX_DEFAULT[lootbox.pictureId];
+      me.text = 'Please, login in your wallet and refresh page';
+      me.exec = null;
+    }
   }
 
   async openOverlay(props?: any): Promise<void> {

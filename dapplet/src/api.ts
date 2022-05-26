@@ -70,6 +70,7 @@ export class DappletApi implements IDappletApi {
     from_index?: number,
     limit?: number,
   ): Promise<Lootbox[]> {
+    if (!account_id) return [];
     const contract = await this._contract;
     const lootboxes_: any[] = await contract.get_lootboxes_by_account({
       account_id,

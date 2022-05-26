@@ -66,7 +66,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   // console.log(creationForm);
   // console.log(newMetadata);
   const getTransactionAndWarning = () => {
-    setWarningTransaction(true);
+    creationForm.ftContentItems[0] ? setWarningTransaction(true) : onDoneClick();
   };
 
   return (

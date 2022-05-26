@@ -17,6 +17,11 @@ export const Header = () => {
         <div className={styles.linkBlock}>
           <ul className={styles.list}>
             <li className={styles.listItem}>
+              <Link to="/create" className={styles.link}>
+                How to&nbsp;create
+              </Link>
+            </li>
+            <li className={styles.listItem}>
               <Link to="/how-to" className={styles.link}>
                 How to&nbsp;collect
               </Link>

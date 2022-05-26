@@ -24,6 +24,7 @@ import { About } from './components/About';
 import { Instruction } from './components/Instruction';
 import { getNetworkConfig } from '@loot-box/common/helpers';
 import { LootboxStat, Lootbox } from '@loot-box/common/interfaces';
+import { Instruction_Create } from './components/Instruction/create';
 
 export interface AppProps {
   completed: number;
@@ -88,6 +89,7 @@ export default function App() {
           }
         />
         <Route path="/how-to" element={<Instruction />} />
+        <Route path="/create" element={<Instruction_Create />} />
       </Routes>
     </>
   );
