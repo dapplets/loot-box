@@ -157,18 +157,18 @@ export default class TwitterFeature {
     await this._api
       ._claimLootbox(numIndex, wallet.accountId)
       .then(async (x) => {
-        // console.log(x);
+        console.log(x);
 
-        if (x.status === 2 || x.status === 0) {
+        if (x.status === 2) {
           me.img = BOX_OPEN[lootbox.pictureId];
           me.text = await this._formatWinningText(x);
           me.exec = null;
-          // console.log(x.status);
-        } else if (x.status === 1) {
+          console.log(x.status);
+        } else {
           me.img = BOX_EMPTY[lootbox.pictureId];
           me.text = 'Empty';
           me.exec = null;
-          // console.log(x.status);
+          console.log(x.status);
         }
       })
       .catch((err) => {
@@ -177,7 +177,7 @@ export default class TwitterFeature {
           await this.getClaimLoot(me, numIndex, lootbox);
         };
         me.text = 'Transaction rejected';
-        // console.log(err);
+        console.log(err);
       });
   }
 

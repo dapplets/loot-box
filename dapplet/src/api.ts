@@ -495,7 +495,10 @@ export class DappletApi implements IDappletApi {
         ],
         nftContentItems: [],
       };
-    } else if (typeof claim_status === 'object' && claim_status.NotWin) {
+    } else if (
+      typeof claim_status === 'object' &&
+      (claim_status.NotWin || claim_status.Right?.NotWin)
+    ) {
       return {
         status: 1,
         nearContentItems: [],
