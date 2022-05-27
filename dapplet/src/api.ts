@@ -336,7 +336,6 @@ export class DappletApi implements IDappletApi {
   }
 
   private async _getFtMetadata(address: string): Promise<FtMetadata | null> {
-    console.log('send request to ' + address);
     try {
       const contract = await Core.contract('near', address, {
         viewMethods: ['ft_metadata'],

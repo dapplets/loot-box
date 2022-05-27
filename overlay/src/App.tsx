@@ -91,6 +91,10 @@ export default () => {
 
   const [ticketName, setTicketName] = useState('');
 
+  const [dropType, setDropType] = useState(null);
+
+  const [clearForm, setClearForm] = useState(false);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueLabel(e.target.value);
   };
@@ -111,7 +115,6 @@ export default () => {
 
             setCurrentLootboxes((prevState) => prevState + 8);
             setTotalCount(x.length);
-            // console.log(totalCount);
           })
           .finally(() => setFetching(false));
       }
@@ -161,7 +164,6 @@ export default () => {
         setLootboxes(x);
       });
       navigationDeploy();
-      console.log(lootboxes);
     } catch (error) {
       console.log(error);
       setMessageError(true);
@@ -187,7 +189,6 @@ export default () => {
       .catch((e) => {
         console.error(e);
       });
-    // console.log('3');
   }, [ftMetadata]);
 
   useEffect(() => {
@@ -274,10 +275,6 @@ export default () => {
       setWinInfo(winNft);
     }
   };
-  // const winInfoUpdate = useMemo(() => {
-  //   return winInfo;
-  // }, [winInfo]);
-  // console.log(winInfoUpdate, 'App');
 
   return (
     <>
@@ -311,7 +308,6 @@ export default () => {
                       lootboxes.map((item, index) => (
                         <ChildComponent
                           onClick={() => {
-                            // console.log(lootboxes.length);
                             refreshStat();
                             getWin(item);
                             setLootboxes(lootboxes);
@@ -386,6 +382,8 @@ export default () => {
                   newMetadata={newMetadata}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
                   // setTicketName={setTicketName}
+                  setDropType={setDropType}
+                  clearForm={clearForm}
                 />
               }
             />
@@ -408,12 +406,14 @@ export default () => {
                     onDoneClick={doneClickHandler}
                     creationForm={creationForm}
                     winInfo={winInfo}
+                    dropType={dropType}
                     setWinInfo={(x) => setWinInfo(x)}
                     onCreationFormUpdate={(x) => setCreationForm(x)}
                     setMessageError={setMessageError}
                     messageError={messageError}
                     newMetadata={newMetadata}
                     nearAccount={nearAccount}
+                    setClearForm={setClearForm}
                   />
                 )
               }

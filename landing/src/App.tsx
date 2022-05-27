@@ -135,13 +135,6 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
     };
   }, [lootboxId, owner, nameWin]);
 
-  // console.log(statCur);
-  // console.log(selectedLootboxId);
-  // console.log(pictureId);
-  // console.log(Number.isNaN(pictureId));
-  // console.log(owner);
-  // console.log(ownerAddress);
-
   const pulse = keyframes`
     0% {
       transform: scaleX(0);

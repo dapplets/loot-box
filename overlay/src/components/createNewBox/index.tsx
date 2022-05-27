@@ -77,10 +77,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
       setWinAmount(winNft);
     }
     setLoad(false);
-    // console.log(winAmount);
   }, [winInfo]);
-  // console.log(winInfo, 'win Info');
-  // console.log(winInfoLabel, 'winInfoLabel');
 
   return (
     <>

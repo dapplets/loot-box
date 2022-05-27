@@ -48,7 +48,6 @@ export const DropChance: FC<DropChanceProps> = (props) => {
         onChange={(e: any) => {
           const { data, inputType } = e.nativeEvent;
 
-          // console.log({ data, inputType, e });
           switch (inputType) {
             case 'insertText':
               if (isNaN(+data) === false && data !== ' ') {

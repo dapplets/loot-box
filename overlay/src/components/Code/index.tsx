@@ -17,9 +17,6 @@ export interface CodeProps {
 
 export const Code: FC<CodeProps> = (props: CodeProps) => {
   const { id, winInfo, landingUrl } = props;
-  // console.log(winInfo);
-  // useEffect(() => {}, [winInfo]);
-  // console.log(winInfo, 'Code');
 
   return (
     <div className={styles.wrapper}>

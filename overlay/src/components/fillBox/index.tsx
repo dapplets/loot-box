@@ -28,6 +28,8 @@ export interface FillBoxProps {
   messageError: boolean;
   newMetadata: any;
   nearAccount: string | undefined;
+  dropType: any;
+  setClearForm: (x: any) => void;
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const {
@@ -43,18 +45,20 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     setMessageError,
     newMetadata,
     nearAccount,
+    dropType,
+    setClearForm,
   } = props;
 
   const [winInfoToken, setWinInfoToken] = useState(winInfo);
   const [isNotAccount, setNotAccount] = useState(false);
   const [isWarningTransaction, setWarningTransaction] = useState(false);
   useEffect(() => {
-    if (creationForm.nearContentItems[0]) {
+    if (dropType === 0) {
       const winAmount = creationForm.nearContentItems[0].tokenAmount;
       const winAmountParse = winAmount + ` NEAR`;
       setWinInfoToken(winAmountParse);
       setWinInfo(winAmountParse);
-    } else if (creationForm.ftContentItems[0]) {
+    } else if (dropType === 1) {
       const winAmountTicker = creationForm.ftContentItems[0].tokenAmount;
       const winAmountTickerParse = newMetadata
         ? `${winAmountTicker} ${newMetadata.symbol}`
@@ -63,10 +67,15 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       setWinInfo(winAmountTickerParse);
     }
   }, [nearAccount, isNotAccount]);
-  // console.log(creationForm);
-  // console.log(newMetadata);
+
   const getTransactionAndWarning = () => {
-    creationForm.ftContentItems[0] ? setWarningTransaction(true) : onDoneClick();
+    if (dropType === 1) {
+      setWarningTransaction(true);
+    } else if (dropType === 0) {
+      creationForm.ftContentItems = [];
+      setClearForm(true);
+      onDoneClick();
+    }
   };
 
   return (
@@ -124,6 +133,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         content={
           <ButtonPay
             onClick={() => {
+              creationForm.nearContentItems = [];
+              setClearForm(true);
               nearAccount ? onDoneClick() : setNotAccount(true);
             }}
             styleBtn="default"
