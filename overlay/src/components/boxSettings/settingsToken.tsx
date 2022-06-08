@@ -27,6 +27,7 @@ export interface BoxSettingsProps {
   newMetadata: any;
   setDropType: (x: any) => void;
   clearForm: boolean;
+  setMetadata:(x:any)=>void
 }
 const DEFAULT_NEAR_ITEM: NearContentItem = {
   tokenAmount: '',
@@ -62,10 +63,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     setFtMetadata,
     newMetadata,
     setDropType,
-    clearForm,
+    clearForm,setMetadata
   } = props;
 
-  const [value, setValue] = useState(creationForm.dropChance);
+  const [value, setValue] = useState(20);
 
   const [link, onLink] = useState(true);
 
@@ -75,6 +76,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const nodeFrom = useRef<HTMLInputElement>();
   const nodeTo = useRef<HTMLInputElement>();
   const nodeDropAmount = useRef<HTMLInputElement>();
+  const nodeDropChance = useRef<HTMLInputElement>();
 
   const newForm = Object.assign({}, creationForm);
   const [activeDropType, setActiveDropType] = useState(DropType.Fixed);
@@ -91,9 +93,27 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   const booleanNodeFrom = nodeFrom.current?.classList.contains('invalid');
   const booleanNodeTo = nodeTo.current?.classList.contains('invalid');
   const booleanNodeDropAmount = nodeDropAmount.current?.classList.contains('invalid');
+  useEffect(() => {
+    creationForm.dropChance = value;
+    onCreationFormUpdate(creationForm);
+  });
+
+
 
   const changeHandler = (name: keyof NearContentItem, value: any) => {
     const newForm = Object.assign({}, creationForm);
+
+    // onCreationFormUpdate(
+    //   (creationForm.ftContentItems[0] = {
+    //     contractAddress: '',
+    //     tokenAmount: '',
+    //     dropType: 'fixed',
+    //     dropAmountFrom: '',
+    //     dropAmountTo: '',
+    //   }),
+    // );
+
+    // creationForm.ftContentItems = [];
 
     newForm.nearContentItems[0][name] = value;
 
@@ -101,48 +121,23 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
   };
 
   const changeHandlerFT = (name: keyof FtContentItem, value: any) => {
+    // onCreationFormUpdate(
+    //   (creationForm.nearContentItems[0] = {
+    //     tokenAmount: '',
+    //     dropType: 'fixed',
+    //     dropAmountFrom: '',
+    //     dropAmountTo: '',
+    //   }),
+    // );
+
     newForm.ftContentItems[0][name] = value;
+    // console.log(value);
 
     onCreationFormUpdate(newForm);
   };
+ 
 
-  useEffect(() => {
-    const init = async () => {
-      if (clearForm) {
-        setLoader(true);
-        creationForm.dropChance = value;
-        DEFAULT_NEAR_ITEM.dropAmountFrom = '';
-        DEFAULT_NEAR_ITEM.dropAmountTo = '';
-        DEFAULT_NEAR_ITEM.dropType = 'fixed';
-        DEFAULT_NEAR_ITEM.tokenAmount = '';
 
-        DEFAULT_FT_ITEM.contractAddress = '';
-        DEFAULT_FT_ITEM.dropAmountFrom = '';
-        DEFAULT_FT_ITEM.dropAmountTo = '';
-        DEFAULT_FT_ITEM.dropType = 'fixed';
-        DEFAULT_FT_ITEM.tokenAmount = '';
-        newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
-        creationForm.nftContentItems = [];
-        newForm.ftContentItems = [DEFAULT_FT_ITEM];
-        onCreationFormUpdate(creationForm);
-
-        onCreationFormUpdate(newForm);
-        setLoader(false);
-      } else {
-        setLoader(true);
-        creationForm.dropChance = value;
-        newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
-        creationForm.nftContentItems = [];
-        newForm.ftContentItems = [DEFAULT_FT_ITEM];
-        onCreationFormUpdate(creationForm);
-
-        onCreationFormUpdate(newForm);
-        setLoader(false);
-      }
-    };
-
-    init();
-  }, []);
   const handleClick = () => {
     if (nodeTokenAmount && nodeTokenAmount.current) {
       nodeTokenAmount.current.value = '';
@@ -204,6 +199,16 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     }
   };
 
+  
+
+  const func = (e: React.FormEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value.indexOf('.') !== -1) {
+      e.currentTarget.value = e.currentTarget.value.substring(
+        0,
+        e.currentTarget.value.indexOf('.') + 7,
+      );
+    }
+  };
   const LinkBlock = useMemo(() => {
     if (activeTokenType === 0) {
       if (
@@ -256,6 +261,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       }
     } else if (activeTokenType === 1) {
       if (
+        creationForm.ftContentItems&&
+        creationForm.ftContentItems[0]&&
         creationForm.ftContentItems[0].tokenAmount.length >= 1 &&
         creationForm.ftContentItems[0].dropAmountFrom.length >= 1 &&
         creationForm.ftContentItems[0].dropAmountTo.length >= 1 &&
@@ -288,6 +295,16 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
         onLink(true);
       }
     }
+    if (
+      value <100
+    ) {
+      nodeDropChance.current?.classList.remove('invalid');
+    
+    } else {
+      nodeDropChance.current?.classList.add('invalid');
+      
+    }
+   
 
     creationForm.dropChance = value;
     setDropType(activeTokenType);
@@ -306,30 +323,46 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     nodeTokenAmount,
     nodeFrom,
     nodeTo,
+    nodeDropChance,
 
     activeDropType,
     activeDropTypeFt,
     activeTokenType,
+    
   ]);
 
-  const func = (e: React.FormEvent<HTMLInputElement>) => {
-    if (e.currentTarget.value.indexOf('.') !== -1) {
-      e.currentTarget.value = e.currentTarget.value.substring(
-        0,
-        e.currentTarget.value.indexOf('.') + 7,
-      );
-    }
-  };
+ 
+  
+  useEffect(() => {
+  
+    DEFAULT_NEAR_ITEM.dropAmountFrom = '';
+    DEFAULT_NEAR_ITEM.dropAmountTo = '';
+    DEFAULT_NEAR_ITEM.tokenAmount = '';
+
+    DEFAULT_FT_ITEM.contractAddress = '';
+    DEFAULT_FT_ITEM.dropAmountFrom = '';
+    DEFAULT_FT_ITEM.dropAmountTo = '';
+    DEFAULT_FT_ITEM.tokenAmount = '';
+
+    newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
+    creationForm.nftContentItems = [];
+    newForm.ftContentItems = [DEFAULT_FT_ITEM];
+    onCreationFormUpdate(creationForm);
+
+    onCreationFormUpdate(newForm);
+
+  
+  }, []);
 
   return (
     <>
       {isLoader ? (
-        <div>lalal</div>
+        <div></div>
       ) : (
         <div className={cn(styles.wrapper)}>
           <div className={styles.div}>
             <div className={styles.divBtn}>
-              <ButtonsSetting classNameToken={styles.btnToken} />
+              <ButtonsSetting onClick={()=>setMetadata(null)} classNameToken={styles.btnToken} />
             </div>
 
             <div className={cn(styles.wrapperTokenAmount)}>
@@ -373,6 +406,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     id="1_amount"
                     checked={activeTokenType === TokenType.Near}
                     onChange={(e) => {
+                      setMetadata(null)
                       if (e.target.checked !== undefined) {
                         setActiveTokenType(TokenType.Near);
                         handleClick();
@@ -448,9 +482,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       appearance="biggest"
                       placeholder="Drop amount"
                       innerRef={nodeDropAmount}
-                      defaultValue={
-                        DEFAULT_NEAR_ITEM.dropType === 'fixed' ? DEFAULT_NEAR_ITEM.dropAmountTo : ''
-                      }
+                      // defaultValue={
+                      //   DEFAULT_NEAR_ITEM.dropType === 'fixed' ? DEFAULT_NEAR_ITEM.dropAmountTo : ''
+                      // }
                       onInput={(e) => func(e)}
                       onChange={(e) => {
                         if (
@@ -482,7 +516,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         appearance="small_medium"
                         placeholder="From"
                         innerRef={nodeFrom}
-                        defaultValue={DEFAULT_NEAR_ITEM.dropAmountFrom}
+                        // defaultValue={DEFAULT_NEAR_ITEM.dropAmountFrom}
                         onInput={(e) => func(e)}
                         onChange={(e) => {
                           if (
@@ -503,7 +537,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         appearance="small_medium"
                         placeholder="To"
                         innerRef={nodeTo}
-                        defaultValue={DEFAULT_NEAR_ITEM.dropAmountTo}
+                        // defaultValue={DEFAULT_NEAR_ITEM.dropAmountTo}
                         onInput={(e) => func(e)}
                         onChange={(e) => {
                           if (
@@ -535,7 +569,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       type="text"
                       appearance="medium"
                       placeholder="Token contract"
-                      defaultValue={DEFAULT_FT_ITEM.contractAddress}
+                      // defaultValue={DEFAULT_FT_ITEM.contractAddress}
                       innerRef={nodeTokenContract}
                       onChange={(e) => {
                         if (
@@ -611,9 +645,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       appearance="biggest"
                       placeholder="Drop amount"
                       innerRef={nodeDropAmount}
-                      defaultValue={
-                        DEFAULT_FT_ITEM.dropType === 'fixed' ? DEFAULT_FT_ITEM.dropAmountTo : ''
-                      }
+                      // defaultValue={
+                      //   DEFAULT_FT_ITEM.dropType === 'fixed' ? DEFAULT_FT_ITEM.dropAmountTo : ''
+                      // }
                       onInput={(e) => func(e)}
                       onChange={(e) => {
                         if (
@@ -640,9 +674,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     <div className={cn(styles.dropAmountInput)}>
                       <InputPanel
                         type="text"
+                     
                         appearance="small_medium"
                         placeholder="From"
-                        defaultValue={DEFAULT_FT_ITEM.dropAmountFrom}
+                        // defaultValue={DEFAULT_FT_ITEM.dropAmountFrom}
                         innerRef={nodeFrom}
                         onInput={(e) => func(e)}
                         onChange={(e) => {
@@ -663,7 +698,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         type="text"
                         appearance="small_medium"
                         placeholder="To"
-                        defaultValue={DEFAULT_FT_ITEM.dropAmountTo}
+                        // defaultValue={DEFAULT_FT_ITEM.dropAmountTo}
                         innerRef={nodeTo}
                         onInput={(e) => func(e)}
                         onChange={(e) => {
@@ -692,14 +727,16 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
 
               <div className={cn(styles.dropChance)}>
                 <LabelSettings
-                  title="Drop Chance"
+                  title="Drop Chance, %"
                   isActive
                   support="The chance a person has to get the drop. 
-Please enter the amount in percentage."
+                  Please enter the amount from 1 to 100."
                 />
 
                 <DropChance
                   type="string"
+                  innerRef={nodeDropChance}
+                 
                   maxValueDropChance="100"
                   minValueDropChance="1"
                   valueDropChance={`${value}`}
@@ -714,13 +751,21 @@ Please enter the amount in percentage."
             <Link to="/select_box" onClick={handleClick}>
               <LinksStep step="prev" label="Back" />
             </Link>
-            {(link && <div></div>) || (
+            {(link &&  <div></div>) || value <100 && (
               <Link
                 to="/fill_your_box"
                 onClick={() => {
                   handleClick();
 
-                  creationForm.nftContentItems = [];
+                
+                  if (activeTokenType === TokenType.Custom) {
+                    creationForm.nearContentItems = [];
+                    creationForm.nftContentItems = [];
+                    
+                  } else {
+                    creationForm.ftContentItems = [];
+                    creationForm.nftContentItems = [];
+                  }
                   onLink(false);
                 }}
               >

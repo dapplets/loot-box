@@ -58,9 +58,11 @@ import {
 export interface InstructionProps {
   completed: number;
   bgcolor: string;
+  title:string
 }
 
 export function Instruction_Create(InstructionProps: any) {
+  const{title} = InstructionProps
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
@@ -68,7 +70,7 @@ export function Instruction_Create(InstructionProps: any) {
       </header>
       <div className={styles.content}>
         {/* <Start /> */}
-        <Installation />
+        <Installation  title='How to create'/>
         <Activate />
         {/* <Claming />  */}
         <Creation />

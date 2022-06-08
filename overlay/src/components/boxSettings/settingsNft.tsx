@@ -35,6 +35,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
 
   const nodeNftContract = useRef<HTMLInputElement>();
   const nodeQuanity = useRef<HTMLInputElement>();
+  const nodeDropChance = useRef<HTMLInputElement>();
 
   const newForm = Object.assign({}, creationForm);
 
@@ -60,7 +61,16 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     } else {
       onLink(true);
     }
-  }, [creationForm, link, nodeNftContract, nodeQuanity, DEFAULT_NFT_ITEM]);
+    if (
+      value <100
+    ) {
+      nodeDropChance.current?.classList.remove('invalid');
+    
+    } else {
+      nodeDropChance.current?.classList.add('invalid');
+      
+    }
+  }, [creationForm, link, nodeNftContract, nodeQuanity, DEFAULT_NFT_ITEM,value,nodeDropChance]);
 
   useEffect(() => {
     creationForm.dropChance = value;
@@ -149,6 +159,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
               <DropChance
                 type="string"
                 maxValueDropChance="100"
+                innerRef={nodeDropChance}
                 minValueDropChance="0"
                 valueDropChance={`${value}`}
                 onValueDropChance={(newValue: any) => setValue(+newValue)}
@@ -165,7 +176,9 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         <Link to="/select_box">
           <LinksStep step="prev" label="Back" />
         </Link>
-        {(link && <div></div>) || (
+        {(link && <div></div>) || value <100 && nodeNftContract.current?.value
+        !=''&& nodeQuanity.current?.value
+        !=''&&(
           <Link
             to="/fill_your_box_nft"
             onClick={() => {

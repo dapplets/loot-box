@@ -16,6 +16,9 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   // useEffect(() => {
   //   winners;
   // }, [winners]);
+console.log(winners);
+console.log(winInfo);
+
 
   return (
     <div className={styles.wrapper}>

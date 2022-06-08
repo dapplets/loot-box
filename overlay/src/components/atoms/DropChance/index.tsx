@@ -17,6 +17,7 @@ export interface DropChanceProps
   onValueDropChance: any;
   valueButtonDropChance: any;
   setValueButtonDropChance: any;
+  innerRef?: any;
 }
 
 export const DropChance: FC<DropChanceProps> = (props) => {
@@ -28,11 +29,12 @@ export const DropChance: FC<DropChanceProps> = (props) => {
     valueButtonDropChance,
     setValueButtonDropChance,
     type,
+    innerRef
   } = props;
 
   const valueToShow = useMemo(
     () => () => {
-      `${valueDropChance}%`;
+      valueDropChance;
     },
     [valueDropChance],
   );
@@ -40,8 +42,9 @@ export const DropChance: FC<DropChanceProps> = (props) => {
   return (
     <div className={cn(styles.inputPanel)}>
       <input
+          ref={innerRef}
         type={type}
-        value={`${valueDropChance}%`}
+        value={valueDropChance}
         onFocus={() => {
           onValueDropChance(valueDropChance);
         }}
@@ -52,12 +55,13 @@ export const DropChance: FC<DropChanceProps> = (props) => {
             case 'insertText':
               if (isNaN(+data) === false && data !== ' ') {
                 const newValue = valueDropChance === '0' ? data : valueDropChance + data;
-                if (+newValue > 100) onValueDropChance('100');
-                else onValueDropChance(newValue);
+                // if (+newValue > 100) onValueDropChance('100');
+                // else 
+                onValueDropChance(newValue);
               }
               break;
             case 'deleteContentBackward':
-              const newValue = valueDropChance.slice(0, -2);
+              const newValue = valueDropChance.slice(0, -1);
 
               onValueDropChance(newValue);
               break;
@@ -65,6 +69,8 @@ export const DropChance: FC<DropChanceProps> = (props) => {
             default:
               break;
           }
+
+         
         }}
         onBlur={() => {
           valueDropChance === '0' ? onValueDropChance('20') : onValueDropChance(valueDropChance);

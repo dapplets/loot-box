@@ -59,7 +59,7 @@ export function About(AboutProps: any) {
                 To&nbsp;create the airdrop all you need to&nbsp;do&nbsp;is:
               </p>
               <p className={styles.text}>
-                1.select a&nbsp;Lootbox design (currently there are 7&nbsp;available)
+                1.&nbsp;select a&nbsp;Lootbox design (currently there are 7&nbsp;available)
               </p>
               <div className={styles.boxImg}>
                 <img src={how_1} />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import cn from 'classnames';
 
 import styles from './Instruction.module.scss';
@@ -47,8 +47,9 @@ import m_inst_16 from '../../img/instruction/mobile/mobile_inst_16.svg';
 import load_unpuck from '../../img/instruction/load_unpuck.png';
 
 export interface InstructionProps {
-  completed: number;
-  bgcolor: string;
+  completed?: number;
+  bgcolor?: string;
+  title?: string
 }
 
 export function Instruction(InstructionProps: any) {
@@ -58,7 +59,7 @@ export function Instruction(InstructionProps: any) {
         <Header />
       </header>
       <div className={styles.content}>
-        <Installation />
+        <Installation title='How to collect' />
         <Activate />
         <Claming />
         {/* <Creation />
@@ -74,10 +75,12 @@ export function Instruction(InstructionProps: any) {
   );
 }
 
-export function Installation(InstructionProps: any) {
+export const Installation: FC<InstructionProps> = (props) =>  {
+  const {title}= props
   return (
     <div className={styles.installation}>
-      <h2 className={styles.titleInstruction}>Install the Dapplets Extension</h2>
+      <h2 className={styles.titleInstruction} >{title}</h2>
+      <h3 className={styles.titleWallet}>Install the Dapplets Extension</h3>
       <ol className={styles.list}>
         <li className={styles.item}>
           <span className={styles.itemText}>Open the Google Chrome browser. </span>

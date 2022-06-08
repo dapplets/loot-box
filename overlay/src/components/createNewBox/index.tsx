@@ -78,6 +78,8 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
     }
     setLoad(false);
   }, [winInfo]);
+  // console.log(winInfo);
+  
 
   return (
     <>

@@ -199,6 +199,8 @@ export default () => {
       dappletApi.getLootboxWinners(selectedLootboxId),
     ])
       .then(([claims, winners]) => {
+     
+        console.log(winners);
         setWinners(
           winners.map((x) => {
             const txHash = claims.find((y: any) => y.signerId === x.nearAccount)?.hash;
@@ -214,6 +216,8 @@ export default () => {
 
         // ToDo: show error to user
       });
+     
+      
   }, [selectedLootboxId]);
 
   useEffect(() => {
@@ -275,6 +279,10 @@ export default () => {
       setWinInfo(winNft);
     }
   };
+ 
+
+  
+  
 
   return (
     <>
@@ -370,6 +378,7 @@ export default () => {
                 <SettingDef
                   creationForm={creationForm}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
+                 
                 />
               }
             />
@@ -384,6 +393,7 @@ export default () => {
                   // setTicketName={setTicketName}
                   setDropType={setDropType}
                   clearForm={clearForm}
+                  setMetadata={setMetadata}
                 />
               }
             />
@@ -393,6 +403,7 @@ export default () => {
                 <SettingsNFT
                   creationForm={creationForm}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
+
                 />
               }
             />
@@ -414,6 +425,7 @@ export default () => {
                     newMetadata={newMetadata}
                     nearAccount={nearAccount}
                     setClearForm={setClearForm}
+                    setMetadata={setMetadata}
                   />
                 )
               }

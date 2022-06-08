@@ -30,6 +30,7 @@ export interface FillBoxProps {
   nearAccount: string | undefined;
   dropType: any;
   setClearForm: (x: any) => void;
+  setMetadata:(x:any)=>void
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const {
@@ -47,6 +48,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     nearAccount,
     dropType,
     setClearForm,
+    setMetadata,
   } = props;
 
   const [winInfoToken, setWinInfoToken] = useState(winInfo);
@@ -109,8 +111,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         </div>
       </div>
       <div className={cn(styles.navigation)}>
-        <Link to="/settings_token">
-          <LinksStep step="prev" label="Back" />
+        <Link to="/settings_token" onClick={()=>setMetadata(null)}>
+          <LinksStep step="prev" label="Back"  />
         </Link>
       </div>
       <Modal
