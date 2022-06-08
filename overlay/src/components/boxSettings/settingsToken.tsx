@@ -150,7 +150,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
         creationForm.nearContentItems[0].dropType === 'fixed' &&
         creationForm.nearContentItems[0].tokenAmount &&
         Number(creationForm.nearContentItems[0].tokenAmount) >=
-          Number(creationForm.nearContentItems[0].dropAmountFrom)
+          Number(creationForm.nearContentItems[0].dropAmountFrom)&& Number(creationForm.nearContentItems[0].dropAmountFrom) >0 && Number(creationForm.nearContentItems[0].tokenAmount)>0
       ) {
         const bigNumTokenAmount = new BigNumber(
           creationForm.nearContentItems[0] && creationForm.nearContentItems[0].tokenAmount,
@@ -179,7 +179,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
         creationForm.ftContentItems[0].dropType === 'fixed' &&
         creationForm.ftContentItems[0].tokenAmount &&
         Number(creationForm.ftContentItems[0].tokenAmount) >=
-          Number(creationForm.ftContentItems[0].dropAmountFrom)
+          Number(creationForm.ftContentItems[0].dropAmountFrom) && Number(creationForm.ftContentItems[0].dropAmountFrom) >0 && Number(creationForm.ftContentItems[0].tokenAmount)>0
       ) {
         const bigNumTokenAmount = new BigNumber(
           creationForm.ftContentItems[0] && creationForm.ftContentItems[0].tokenAmount,
@@ -227,7 +227,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           nodeTokenAmount.current &&
           activeDropType === DropType.Variable &&
           Number(nodeFrom.current.value) <= Number(nodeTo.current.value) &&
-          Number(nodeTo.current.value) <= Number(nodeTokenAmount.current.value)
+          Number(nodeTo.current.value) <= Number(nodeTokenAmount.current.value) && Number(nodeFrom.current.value) >0 && Number(nodeTokenAmount.current.value)>0
         ) {
           nodeFrom.current?.classList.remove('invalid');
           nodeTo.current?.classList.remove('invalid');
@@ -242,14 +242,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           nodeTokenAmount.current &&
           activeDropTypeFt === DropTypeFt.Variable &&
           Number(nodeFrom.current.value) <= Number(nodeTo.current.value) &&
-          Number(nodeTo.current.value) <= Number(nodeTokenAmount.current.value)
+          Number(nodeTo.current.value) <= Number(nodeTokenAmount.current.value) && Number(nodeFrom.current.value) >0 && Number(nodeTokenAmount.current.value)>0
         ) {
           nodeFrom.current?.classList.remove('invalid');
           nodeTo.current?.classList.remove('invalid');
 
           onLink(false);
         } else if (activeDropType !== DropType.Variable) {
-          check() ? onLink(false) : onLink(true);
+          check() ? onLink(false)  : onLink(true);
+          link ?   nodeFrom.current?.classList.add('invalid') && nodeTo.current?.classList.add('invalid'):  nodeFrom.current?.classList.remove('invalid')&&nodeTo.current?.classList.remove('invalid')
         } else {
           nodeFrom.current?.classList.add('invalid');
           nodeTo.current?.classList.add('invalid');
@@ -277,14 +278,16 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
           nodeTokenAmount.current &&
           activeDropTypeFt === DropTypeFt.Variable &&
           Number(nodeFrom.current.value) <= Number(nodeTo.current.value) &&
-          Number(nodeTo.current.value) <= Number(nodeTokenAmount.current.value)
+          Number(nodeTo.current.value) <= Number(nodeTokenAmount.current.value) && Number(nodeFrom.current.value) >0 && Number(nodeTokenAmount.current.value)>0
         ) {
           nodeFrom.current?.classList.remove('invalid');
           nodeTo.current?.classList.remove('invalid');
 
+
           onLink(false);
         } else if (activeDropTypeFt !== DropTypeFt.Variable) {
           checkFT() ? onLink(false) : onLink(true);
+          link ?   nodeFrom.current?.classList.add('invalid') && nodeTo.current?.classList.add('invalid'):  nodeFrom.current?.classList.remove('invalid') &&nodeTo.current?.classList.remove('invalid');
         } else {
           nodeFrom.current?.classList.add('invalid');
           nodeTo.current?.classList.add('invalid');
@@ -304,9 +307,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       nodeDropChance.current?.classList.add('invalid');
       
     }
+    // if(Number(nodeFrom) < 0 ){
+    //   nodeFrom.current?.classList.add('invalid');
+    // }else {
+    //  nodeFrom.current?.classList.remove('invalid');
+      
+    // }
    
 
-    creationForm.dropChance = value;
+   
     setDropType(activeTokenType);
   }, [
     booleanNodeTokenAmount,
@@ -489,9 +498,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       onChange={(e) => {
                         if (
                           (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                          (e.target.value[0] !== '0' ||
+                          (e.target.value[0] !== '0'&& e.target.value[0] !== '-'  ||
                             (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                          +e.target.value !== 0
+                          +e.target.value > 0
                         ) {
                           nodeDropAmount.current?.classList.remove('invalid');
                         } else {
@@ -521,9 +530,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         onChange={(e) => {
                           if (
                             (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                            (e.target.value[0] !== '0' ||
+                            (e.target.value[0] !== '0' && e.target.value[0] !== '-'  ||
                               (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                            +e.target.value !== 0
+                            +e.target.value > 0
                           ) {
                             nodeFrom.current?.classList.remove('invalid');
                           } else {
@@ -542,9 +551,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         onChange={(e) => {
                           if (
                             (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                            (e.target.value[0] !== '0' ||
+                            (e.target.value[0] !== '0' && e.target.value[0] !== '-'  ||
                               (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                            +e.target.value !== 0
+                            +e.target.value> 0
                           ) {
                             nodeTo.current?.classList.remove('invalid');
                           } else {
@@ -652,9 +661,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       onChange={(e) => {
                         if (
                           (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                          (e.target.value[0] !== '0' ||
+                          (e.target.value[0] !== '0' && e.target.value[0] !== '-'  ||
                             (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                          +e.target.value !== 0
+                          +e.target.value > 0
                         ) {
                           nodeDropAmount.current?.classList.remove('invalid');
                         } else {
@@ -683,9 +692,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         onChange={(e) => {
                           if (
                             (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                            (e.target.value[0] !== '0' ||
+                            (e.target.value[0] !== '0' && e.target.value[0] !== '-' ||
                               (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                            +e.target.value !== 0
+                            +e.target.value > 0
                           ) {
                             nodeFrom.current?.classList.remove('invalid');
                           } else {
@@ -704,9 +713,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         onChange={(e) => {
                           if (
                             (e.target.value === '.' || isNaN(+e.target.value) === false) &&
-                            (e.target.value[0] !== '0' ||
+                            (e.target.value[0] !== '0'  && e.target.value[0] !== '-' ||
                               (e.target.value[1] === '.' && e.target.value.length >= 3)) &&
-                            +e.target.value !== 0
+                            +e.target.value > 0
                           ) {
                             nodeTo.current?.classList.remove('invalid');
                           } else {
