@@ -1,25 +1,23 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, Vector};
 use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, CryptoHash, Gas, Balance, PromiseOrValue, Promise };
-// promise_result_as_success, PromiseResult
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::json_types::{U64, U128};
 use near_sdk::{ext_contract};
 use near_sdk::{serde_json};
 use near_contract_standards::non_fungible_token::{TokenId};
+use near_sdk::{is_promise_success};
 
 const NO_DEPOSIT: Balance = 0;
 const ONE_YOCTO: Balance = 1;
 const BASE_GAS: Gas = Gas(20_000_000_000_000);
 const GAS_FOR_NFT_CHECK_OWNERSHIP: Gas = Gas(100_000_000_000_000);
-// const GAS_FOR_LOOTBOX_CREATION: Gas = Gas(20_000_000_000_000);
 
 #[ext_contract(ext_nft)]
 trait NonFungibleToken {
     fn nft_transfer(&mut self, receiver_id: String, token_id: String, approval_id: Option<u64>, memo: Option<String>);
     fn nft_transfer_call(&mut self, receiver_id: String, token_id: String, approval_id: Option<u64>, memo: Option<String>, msg: String) -> bool;
     fn nft_token(&self, token_id: String) -> Option<Token>;
-    // fn nft_is_approved(&self, token_id: TokenId, approved_account_id: AccountId, approval_id: Option<u64>) -> bool;
 }
 
 #[ext_contract(ext_ft)]
@@ -32,10 +30,7 @@ trait FungibleToken {
 
 #[ext_contract(ext_self)]
 trait SelfContract {
-    fn callback_assert_nft_ownership(&mut self, lootbox_creator_address: AccountId);
-    fn callback_transfer_tokens(&mut self, loot_items: Vec<LootItem>) -> Promise;
-    fn callback_return_claim_result(claim_result: ClaimResult) -> ClaimResult;
-    fn callback_register_lootbox(&mut self, owner_id: AccountId, picture_id: u16, drop_chance: u8, loot_items: Vec<LootItem>) -> U64;
+    fn callback_return_claim_result(&mut self, claim_result: ClaimResult) -> ClaimResult;
 }
 
 pub type LootboxId = u64;
@@ -390,6 +385,8 @@ impl Contract {
     //     }
     // }
 
+    // ToDo: check attach one yocto
+
     pub fn claim_lootbox(&mut self, lootbox_id: U64) -> Either<Promise, ClaimResult> {
         let mut _lootbox = self.get_lootbox_by_id(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
 
@@ -398,7 +395,7 @@ impl Contract {
         
         let lootbox_id: u64 = lootbox_id.0;
         let account_id = env::predecessor_account_id();
-        let mut lootboxes_map = self.claims_per_lootbox_and_account.get(&lootbox_id).unwrap_or_else(|| {
+        let lootboxes_map = self.claims_per_lootbox_and_account.get(&lootbox_id).unwrap_or_else(|| {
             LookupMap::new(
                 StorageKey::ClaimsPerLootboxAndOwnerInner {
                     lootbox_id_hash: hash_lootbox_id(&lootbox_id),
@@ -416,43 +413,14 @@ impl Contract {
                 // generate loot
                 let claim_result = self.internal_pull_random_loot(&mut _lootbox);
 
-                // change lootbox status
-                if _lootbox.loot_items.len() == 0 {
-                    _lootbox.status = LootboxStatus::Dropped;
-                } else {
-                    _lootbox.status = LootboxStatus::Dropping;
-                }
-
-                // update lootbox
-                self.lootboxes_by_id.replace(lootbox_id, &_lootbox);
-
-                // store claim result
-                self.claim_results.push(&claim_result);
-                let claim_result_id = self.claim_results.len() - 1;
-                lootboxes_map.insert(&account_id, &claim_result_id);
-                self.claims_per_lootbox_and_account.insert(&lootbox_id, &lootboxes_map);
-                
-                // store claim results per lootbox
-                let mut claims_vector = self.claims_per_lootbox.get(&lootbox_id).unwrap_or_else(|| {
-                    Vector::new(
-                        StorageKey::ClaimsPerLootboxInner {
-                            lootbox_id_hash: hash_lootbox_id(&lootbox_id),
-                        }
-                        .try_to_vec()
-                        .unwrap(),
-                    )
-                });
-                claims_vector.push(&claim_result_id);
-                self.claims_per_lootbox.insert(&lootbox_id, &claims_vector);
-
                 match claim_result {
-                    ClaimResult::NotExists => Either::Right(claim_result),
-                    ClaimResult::NotOpened => Either::Right(claim_result),
-                    ClaimResult::NotWin { lootbox_id: _, claimer_id: _ } => Either::Right(claim_result),
+                    ClaimResult::NotExists => Either::Right(self.callback_return_claim_result(claim_result)),
+                    ClaimResult::NotOpened => Either::Right(self.callback_return_claim_result(claim_result)),
+                    ClaimResult::NotWin { lootbox_id: _, claimer_id: _ } => Either::Right(self.callback_return_claim_result(claim_result)),
                     ClaimResult::WinNear { lootbox_id, claimer_id, total_amount } => {
                         Either::Left(
                             Promise::new(claimer_id.clone())
-                                .transfer(total_amount.0)
+                                .transfer(total_amount.0 + env::attached_deposit())
                                 .then(
                                     ext_self::callback_return_claim_result(
                                         ClaimResult::WinNear { lootbox_id, claimer_id, total_amount },
@@ -504,7 +472,61 @@ impl Contract {
     }
 
     #[private]
-    pub fn callback_return_claim_result(claim_result: ClaimResult) -> ClaimResult {
+    pub fn callback_return_claim_result(&mut self, claim_result: ClaimResult) -> ClaimResult {
+        if env::promise_results_count() == 1 && !is_promise_success() {
+            env::panic_str("Lootbox: token transfering error");
+        }
+
+        let (lootbox_id, account_id) = match claim_result {
+            ClaimResult::NotExists => env::panic_str("No lootbox"),
+            ClaimResult::NotOpened => env::panic_str("No lootbox"),
+            ClaimResult::NotWin { lootbox_id, ref claimer_id } => (lootbox_id.0, claimer_id),
+            ClaimResult::WinNear { lootbox_id, ref claimer_id, total_amount: _ } => (lootbox_id.0, claimer_id),
+            ClaimResult::WinFt { lootbox_id, ref claimer_id, token_contract: _, total_amount: _ } => (lootbox_id.0, claimer_id),
+            ClaimResult::WinNft { lootbox_id, ref claimer_id, token_contract: _, token_id: _ } => (lootbox_id.0, claimer_id)
+        };
+
+        let mut _lootbox = self.lootboxes_by_id.get(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
+
+        let mut lootboxes_map = self.claims_per_lootbox_and_account.get(&lootbox_id).unwrap_or_else(|| {
+            LookupMap::new(
+                StorageKey::ClaimsPerLootboxAndOwnerInner {
+                    lootbox_id_hash: hash_lootbox_id(&lootbox_id),
+                }
+                .try_to_vec()
+                .unwrap(),
+            )
+        });
+
+        // change lootbox status
+        if _lootbox.loot_items.len() == 0 {
+            _lootbox.status = LootboxStatus::Dropped;
+        } else {
+            _lootbox.status = LootboxStatus::Dropping;
+        }
+
+        // update lootbox
+        self.lootboxes_by_id.replace(lootbox_id, &_lootbox);
+
+        // store claim result
+        self.claim_results.push(&claim_result);
+        let claim_result_id = self.claim_results.len() - 1;
+        lootboxes_map.insert(&account_id, &claim_result_id);
+        self.claims_per_lootbox_and_account.insert(&lootbox_id, &lootboxes_map);
+        
+        // store claim results per lootbox
+        let mut claims_vector = self.claims_per_lootbox.get(&lootbox_id).unwrap_or_else(|| {
+            Vector::new(
+                StorageKey::ClaimsPerLootboxInner {
+                    lootbox_id_hash: hash_lootbox_id(&lootbox_id),
+                }
+                .try_to_vec()
+                .unwrap(),
+            )
+        });
+        claims_vector.push(&claim_result_id);
+        self.claims_per_lootbox.insert(&lootbox_id, &claims_vector);
+
         claim_result
     }
 
