@@ -6,6 +6,7 @@ use near_sdk::json_types::{U64, U128};
 use near_sdk::{ext_contract};
 use near_sdk::{serde_json};
 use near_contract_standards::non_fungible_token::{TokenId};
+use near_contract_standards::storage_management::{StorageBalanceBounds, StorageBalance};
 use near_sdk::{is_promise_success};
 
 const NO_DEPOSIT: Balance = 0;
@@ -26,6 +27,9 @@ trait FungibleToken {
     fn ft_transfer_call(&mut self, receiver_id: String, amount: U128, msg: String, memo: Option<String>) -> Promise;
     fn ft_total_supply(&self) -> U128;
     fn ft_balance_of(&self, account_id: String) -> U128;
+    fn storage_balance_bounds(&self) -> StorageBalanceBounds;
+    fn storage_balance_of(&self, account_id: AccountId) -> Option<StorageBalance>;
+    fn storage_deposit(&mut self, account_id: Option<AccountId>, registration_only: Option<bool>) -> StorageBalance;
 }
 
 #[ext_contract(ext_self)]
@@ -386,7 +390,7 @@ impl Contract {
     // }
 
     // ToDo: check attach one yocto
-
+    
     pub fn claim_lootbox(&mut self, lootbox_id: U64) -> Either<Promise, ClaimResult> {
         let mut _lootbox = self.get_lootbox_by_id(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
 
@@ -414,61 +418,77 @@ impl Contract {
                 let claim_result = self.internal_pull_random_loot(&mut _lootbox);
 
                 match claim_result {
-                    ClaimResult::NotExists => Either::Right(self.callback_return_claim_result(claim_result)),
-                    ClaimResult::NotOpened => Either::Right(self.callback_return_claim_result(claim_result)),
-                    ClaimResult::NotWin { lootbox_id: _, claimer_id: _ } => Either::Right(self.callback_return_claim_result(claim_result)),
+                    ClaimResult::NotExists => {
+                        Either::Right(self.callback_return_claim_result(claim_result))
+                    },
+                    ClaimResult::NotOpened => {
+                        Either::Right(self.callback_return_claim_result(claim_result))
+                    },
+                    ClaimResult::NotWin { lootbox_id: _, claimer_id: _ } => {
+                        Either::Right(self.callback_return_claim_result(claim_result))
+                    },
                     ClaimResult::WinNear { lootbox_id, claimer_id, total_amount } => {
-                        Either::Left(
-                            Promise::new(claimer_id.clone())
-                                .transfer(total_amount.0 + env::attached_deposit())
-                                .then(
-                                    ext_self::callback_return_claim_result(
-                                        ClaimResult::WinNear { lootbox_id, claimer_id, total_amount },
-                                        env::current_account_id(),
-                                        NO_DEPOSIT,
-                                        GAS_FOR_NFT_CHECK_OWNERSHIP,
-                                    )
-                                )
-                        )
+                        Either::Left(self.near_transfer_and_claim(lootbox_id, claimer_id, total_amount))
                     },
                     ClaimResult::WinFt { lootbox_id, claimer_id, token_contract, total_amount } => {
-                        Either::Left(ext_ft::ft_transfer(
-                            claimer_id.to_string(),
-                            total_amount,
-                            None,
-                            token_contract.clone(),
-                            ONE_YOCTO,
-                            BASE_GAS
-                        ).then(
-                            ext_self::callback_return_claim_result(
-                                ClaimResult::WinFt { lootbox_id, claimer_id, token_contract, total_amount },
-                                env::current_account_id(),
-                                NO_DEPOSIT,
-                                GAS_FOR_NFT_CHECK_OWNERSHIP,
-                            )
-                        ))
+                        Either::Left(self.ft_transfer_and_claim(lootbox_id, claimer_id, token_contract, total_amount))
                     },
                     ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id } => {
-                        Either::Left(ext_nft::nft_transfer(
-                            claimer_id.to_string(),
-                            token_id.clone(),
-                            None,
-                            None,
-                            token_contract.clone(),
-                            ONE_YOCTO,
-                            BASE_GAS
-                        ).then(
-                            ext_self::callback_return_claim_result(
-                                ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id },
-                                env::current_account_id(),
-                                NO_DEPOSIT,
-                                GAS_FOR_NFT_CHECK_OWNERSHIP,
-                            )
-                        ))
+                        Either::Left(self.nft_transfer_and_claim(lootbox_id, claimer_id, token_contract, token_id))
                     },
                 }
             }
         }
+    }
+
+    fn near_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, total_amount: U128) -> Promise {
+        Promise::new(claimer_id.clone())
+        .transfer(total_amount.0 + env::attached_deposit()) // ToDo: attached deposit?
+        .then(
+            ext_self::callback_return_claim_result(
+                ClaimResult::WinNear { lootbox_id, claimer_id, total_amount },
+                env::current_account_id(),
+                NO_DEPOSIT,
+                GAS_FOR_NFT_CHECK_OWNERSHIP,
+            )
+        )
+    }
+
+    fn ft_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, total_amount: U128) -> Promise {
+        ext_ft::ft_transfer(
+            claimer_id.to_string(),
+            total_amount,
+            None,
+            token_contract.clone(),
+            ONE_YOCTO,
+            BASE_GAS
+        ).then(
+            ext_self::callback_return_claim_result(
+                ClaimResult::WinFt { lootbox_id, claimer_id, token_contract, total_amount },
+                env::current_account_id(),
+                NO_DEPOSIT,
+                GAS_FOR_NFT_CHECK_OWNERSHIP,
+            )
+        )
+    }
+
+    fn nft_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, token_id: String) -> Promise {
+        ext_nft::nft_transfer(
+            claimer_id.to_string(),
+            token_id.clone(),
+            None,
+            None,
+            token_contract.clone(),
+            ONE_YOCTO,
+            BASE_GAS
+        ).then(
+            ext_self::callback_return_claim_result(
+                ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id },
+                env::current_account_id(),
+                NO_DEPOSIT,
+                GAS_FOR_NFT_CHECK_OWNERSHIP,
+            )
+        )
     }
 
     #[private]
