@@ -41,7 +41,7 @@ export class DappletApi implements IDappletApi {
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
     if (!lootbox) return null;
 
-    return this._fillTokenTickers(this._convertLootboxFromContract(lootbox));
+    return await this._convertLootboxFromContract(lootbox);
   }
 
   async connectWallet(): Promise<string> {
@@ -81,14 +81,15 @@ export class DappletApi implements IDappletApi {
     return Promise.all(
       lootboxes_
         .map((x) => this._convertLootboxFromContract(x))
-        .map((x) => this._fillTokenTickers(x)),
     );
   }
 
   async createNewBox(lootbox: Lootbox): Promise<string> {
+    console.log('lootbox', lootbox);
+
     const contract = await this._contract;
     const prices = await this.calcBoxCreationPrice(lootbox);
-    const lootboxStruct = this._convertLootboxToContract(lootbox);
+    const lootboxStruct = await this._convertLootboxToContract(lootbox);
 
     const nftItems = lootboxStruct.loot_items.filter((x) => 'Nft' in x).map((x) => x['Nft']);
     const ftItems = lootboxStruct.loot_items.filter((x) => 'Ft' in x).map((x) => x['Ft']);
@@ -195,7 +196,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async calcBoxCreationPrice(lootbox: Lootbox): Promise<BoxCreationPrice> {
-    const lootboxStruct = this._convertLootboxToContract(lootbox);
+    const lootboxStruct = await this._convertLootboxToContract(lootbox);
 
     let fillAmount = '0';
 
@@ -289,6 +290,9 @@ export class DappletApi implements IDappletApi {
       limit: null,
     });
 
+    const ft_token_contracts: string[] = claims.filter((x) => (typeof x === 'object' && x.WinFt !== undefined)).map(x => x.WinFt.token_contract);
+    const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
+
     return claims.map((x) => {
       if (typeof x === 'object' && x.NotWin !== undefined) {
         return {
@@ -305,10 +309,11 @@ export class DappletApi implements IDappletApi {
           txLink: null,
         };
       } else if (typeof x === 'object' && x.WinFt !== undefined) {
+        const metadata = metadataArray.find(y => y.address === x.WinFt.token_contract);
         return {
           lootboxId: x.WinFt.lootbox_id,
           nearAccount: x.WinFt.claimer_id,
-          amount: toPrecision(format.formatNearAmount(x.WinFt.total_amount, 6), 6), // ToDo: get metadata
+          amount: toPrecision(format.formatNearAmount(x.WinFt.total_amount, metadata.decimals), 6), // ToDo: get metadata
           txLink: null,
         };
       } else if (typeof x === 'object' && x.WinNft !== undefined) {
@@ -345,7 +350,7 @@ export class DappletApi implements IDappletApi {
 
       return contract.ft_metadata();
     } catch (_) {
-      console.error('Unknown address', _);
+      // console.error('Unknown address', _);
       return null;
     }
   }
@@ -365,7 +370,7 @@ export class DappletApi implements IDappletApi {
       account_id: accountId,
     });
 
-    const result = this._convertClaimResultFromContract(claim_status);
+    const result = await this._convertClaimResultFromContract(claim_status);
     return result;
   }
 
@@ -379,15 +384,21 @@ export class DappletApi implements IDappletApi {
         lootbox_id: lootboxId.toString(),
       },
       new BN(MAX_GAS_PER_TX.toString()),
+      parseNearAmount("0.005"), // stake for storage management NEP-145
     );
 
     const result = JSON.parse(atob(receipt.status.SuccessValue));
 
-    return this._convertClaimResultFromContract(result);
+    return await this._convertClaimResultFromContract(result);
   }
 
-  private _convertLootboxFromContract(x: any): Lootbox {
+  private async _convertLootboxFromContract(x: any): Promise<Lootbox> {
+    // _getFtMetadata
+
     const all_loot_items = [...x.loot_items, ...x.distributed_items];
+    const ft_token_contracts = all_loot_items.filter((x) => x['Ft']).map(x => x.Ft.token_contract);
+    const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
+
     return {
       id: x.id,
       pictureId: x.picture_id,
@@ -404,13 +415,19 @@ export class DappletApi implements IDappletApi {
         })),
       ftContentItems: all_loot_items
         .filter((x) => x['Ft'])
-        .map((x) => ({
-          contractAddress: x.Ft.token_contract,
-          tokenAmount: format.formatNearAmount(x.Ft.total_amount, 6),
-          dropAmountFrom: format.formatNearAmount(x.Ft.drop_amount_from, 6),
-          dropAmountTo: format.formatNearAmount(x.Ft.drop_amount_to, 6),
-          dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
-        })),
+        .map((x) => {
+          const metadata = metadataArray.find(y => y.address === x.Ft.token_contract);
+          if (!metadata) throw new Error("Lootbox: no metadata found.");
+
+          return ({
+            contractAddress: x.Ft.token_contract,
+            tokenAmount: format.formatNearAmount(x.Ft.total_amount, metadata.decimals),
+            dropAmountFrom: format.formatNearAmount(x.Ft.drop_amount_from, metadata.decimals),
+            dropAmountTo: format.formatNearAmount(x.Ft.drop_amount_to, metadata.decimals),
+            dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
+            tokenTicker: metadata.symbol
+          });
+        }),
       nftContentItems: all_loot_items
         .filter((x) => x['Nft'])
         .map((x) => ({
@@ -420,7 +437,10 @@ export class DappletApi implements IDappletApi {
     };
   }
 
-  private _convertLootboxToContract(lootbox: Lootbox) {
+  private async _convertLootboxToContract(lootbox: Lootbox) {
+    const ft_token_contracts = lootbox.ftContentItems.map(x => x.contractAddress);
+    const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
+
     return {
       picture_id: lootbox.pictureId,
       drop_chance: Math.floor((lootbox.dropChance * 255) / 100),
@@ -433,15 +453,19 @@ export class DappletApi implements IDappletApi {
             balance: parseNearAmount(zerofyEmptyString(x.tokenAmount)),
           },
         })),
-        ...lootbox.ftContentItems.map((x) => ({
-          Ft: {
-            token_contract: x.contractAddress,
-            total_amount: format.parseNearAmount(zerofyEmptyString(x.tokenAmount), 6),
-            drop_amount_from: format.parseNearAmount(zerofyEmptyString(x.dropAmountFrom), 6),
-            drop_amount_to: format.parseNearAmount(zerofyEmptyString(x.dropAmountTo), 6),
-            balance: format.parseNearAmount(zerofyEmptyString(x.tokenAmount), 6),
-          },
-        })),
+        ...lootbox.ftContentItems.map((x) => {
+          const metadata = metadataArray.find(y => y.address === x.contractAddress);
+
+          return ({
+            Ft: {
+              token_contract: x.contractAddress,
+              total_amount: format.parseNearAmount(zerofyEmptyString(x.tokenAmount), metadata.decimals),
+              drop_amount_from: format.parseNearAmount(zerofyEmptyString(x.dropAmountFrom), metadata.decimals),
+              drop_amount_to: format.parseNearAmount(zerofyEmptyString(x.dropAmountTo), metadata.decimals),
+              balance: format.parseNearAmount(zerofyEmptyString(x.tokenAmount), metadata.decimals),
+            },
+          })
+        }),
         ...lootbox.nftContentItems.map((x) => ({
           Nft: {
             token_contract: x.contractAddress,
@@ -452,7 +476,7 @@ export class DappletApi implements IDappletApi {
     };
   }
 
-  private _convertClaimResultFromContract(claim_status: any): LootboxClaimResult {
+  private async _convertClaimResultFromContract(claim_status: any): Promise<LootboxClaimResult> {
     if (claim_status === 'NotOpened') {
       return {
         status: 0, //LootboxClaimStatus.CLOSED,
@@ -484,13 +508,15 @@ export class DappletApi implements IDappletApi {
         ],
       };
     } else if (typeof claim_status === 'object' && claim_status.WinFt) {
+      const metadata = await this._getFtMetadata(claim_status.WinFt.token_contract);
+
       return {
         status: 2,
         nearContentItems: [],
         ftContentItems: [
           {
             contractAddress: claim_status.WinFt.token_contract,
-            tokenAmount: format.formatNearAmount(claim_status.WinFt.total_amount.toString(), 6),
+            tokenAmount: format.formatNearAmount(claim_status.WinFt.total_amount.toString(), metadata.decimals),
           },
         ],
         nftContentItems: [],
@@ -509,19 +535,5 @@ export class DappletApi implements IDappletApi {
       console.error('Unknown claim result', claim_status);
       throw new Error('Unknown claim result');
     }
-  }
-
-  private async _fillTokenTickers(lootbox: Lootbox) {
-    for (const loot of lootbox.ftContentItems) {
-      try {
-        const metadata = await this.getFtMetadata(loot.contractAddress);
-        if (!metadata) return lootbox;
-        loot.tokenTicker = metadata.symbol;
-      } catch (e) {
-        console.error(`Cannot fetch metadata of ${loot.contractAddress} token`, e);
-      }
-    }
-
-    return lootbox;
   }
 }
