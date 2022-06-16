@@ -46,7 +46,6 @@ interface ICtx {
 }
 
 const dappletApi = new GeneralBridge<IDappletApi>();
-const api = new Api();
 
 const EMPTY_FORM: Lootbox = {
   dropChance: 20,
@@ -194,30 +193,16 @@ export default () => {
   useEffect(() => {
     if (selectedLootboxId === null) return;
 
-    Promise.all([
-      api.getLootboxClaims(selectedLootboxId.toString()),
-      dappletApi.getLootboxWinners(selectedLootboxId),
-    ])
-      .then(([claims, winners]) => {
-     
-        // console.log(winners);
-        setWinners(
-          winners.map((x) => {
-            const txHash = claims.find((y: any) => y.signerId === x.nearAccount)?.hash;
-            return {
-              ...x,
-              txLink: txHash ? `${networkConfig?.explorerUrl}/transactions/${txHash}` : '',
-            };
-          }),
-        );
+    dappletApi
+      .getLootboxWinners(selectedLootboxId)
+      .then((winners) => {
+        setWinners(winners);
       })
       .catch((e) => {
         console.error('getLootboxWinners', e);
 
         // ToDo: show error to user
       });
-     
-      
   }, [selectedLootboxId]);
 
   useEffect(() => {
@@ -279,10 +264,6 @@ export default () => {
       setWinInfo(winNft);
     }
   };
- 
-
-  
-  
 
   return (
     <>
@@ -378,7 +359,6 @@ export default () => {
                 <SettingDef
                   creationForm={creationForm}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
-                 
                 />
               }
             />
@@ -403,7 +383,6 @@ export default () => {
                 <SettingsNFT
                   creationForm={creationForm}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
-
                 />
               }
             />

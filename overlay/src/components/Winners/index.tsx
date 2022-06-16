@@ -28,7 +28,7 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
             <tr>
               <th className={styles.itemTitle}>Near</th>
               <th className={styles.itemTitle}>Amount</th>
-              <th className={styles.itemTitle}>Actions</th>
+              {/* <th className={styles.itemTitle}>Actions</th> */}
             </tr>
           </thead>
           <tbody>
@@ -42,11 +42,11 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
                     ? item.amount + newStr
                     : item.amount.replace(/[,.]?0+$/, '') + newStr}
                 </td>
-                <td>
+                {/* <td>
                   <a href={item.txLink} target="_blank" className={styles.label}>
                     OPEN TX
                   </a>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
