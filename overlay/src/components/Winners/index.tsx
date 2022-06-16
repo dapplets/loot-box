@@ -16,8 +16,8 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   // useEffect(() => {
   //   winners;
   // }, [winners]);
-console.log(winners);
-console.log(winInfo);
+// console.log(winners);
+// console.log(winInfo);
 
 
   return (

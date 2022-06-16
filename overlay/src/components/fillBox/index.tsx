@@ -79,6 +79,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       onDoneClick();
     }
   };
+  // console.log(price);
+  
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -106,7 +108,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
               nearAccount ? getTransactionAndWarning() : setNotAccount(true);
             }}
             styleBtn="default"
-            title={`PAY ${price.totalAmount} NEAR`}
+            // title={`PAY ${price.totalAmount} NEAR`}
+            title={`PAY`}
           />
         </div>
       </div>
@@ -124,14 +127,14 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       />
       <Modal
         visible={isNotAccount}
-        title={'Please LogIn'}
+        title={'Please log in'}
         content={''}
         footer={''}
         onClose={() => setNotAccount(false)}
       />
       <Modal
         visible={isWarningTransaction}
-        title={'Two transactions are required'}
+        title={'Several transactions are required'}
         content={
           <ButtonPay
             onClick={() => {

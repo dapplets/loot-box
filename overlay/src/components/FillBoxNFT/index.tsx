@@ -75,7 +75,8 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
               nearAccount ? getTransactionAndWarning() : setNotAccount(true);
             }}
             styleBtn="default"
-            title={`PAY ${price.totalAmount} NEAR`}
+            // title={`PAY ${price.totalAmount} NEAR`}
+            title={`PAY`}
           />
           {/* </Link> */}
         </div>
@@ -95,14 +96,14 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
       />
       <Modal
         visible={isNotAccount}
-        title={'Please LogIn'}
+        title={'Please log in'}
         content={''}
         footer={''}
         onClose={() => setNotAccount(false)}
       />
       <Modal
         visible={isWarningTransaction}
-        title={'Two transactions are required'}
+        title={'Several transactions are required'}
         content={
           <ButtonPay
             onClick={() => {

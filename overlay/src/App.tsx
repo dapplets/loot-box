@@ -200,7 +200,7 @@ export default () => {
     ])
       .then(([claims, winners]) => {
      
-        console.log(winners);
+        // console.log(winners);
         setWinners(
           winners.map((x) => {
             const txHash = claims.find((y: any) => y.signerId === x.nearAccount)?.hash;
