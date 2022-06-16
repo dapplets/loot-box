@@ -83,7 +83,7 @@
   line-height: 100%;
   text-transform: uppercase;
   color: #588ca3;
-  // margin: 0px 0px 5px 0px;
+
 }
 table {
   table-layout: fixed;
@@ -112,8 +112,8 @@ table {
   span:hover {
     z-index: 3;
     position: absolute;
-    top: -30%;
-    left: 0;
+    top: -10px;
+    left: 40px;
     width: auto;
     padding: 10px;
     border: 1px solid #e3e3e3;
@@ -122,7 +122,7 @@ table {
   }
 }
 thead {
-  // text-align: center;
+
 }
 tbody {
   text-align: center;

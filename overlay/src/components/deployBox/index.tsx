@@ -8,7 +8,7 @@ import { Message } from '../atoms/Message';
 
 import { Link } from 'react-router-dom';
 
-import { Lootbox } from '@loot-box/common/interfaces';
+
 
 export interface DeployBoxProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {

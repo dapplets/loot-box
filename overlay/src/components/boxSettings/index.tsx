@@ -14,7 +14,6 @@ export interface BoxSettingsProps {
 
 export const SettingDef: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
-
   return (
     <div className={cn(styles.wrapper)}>
       <ButtonsSetting />

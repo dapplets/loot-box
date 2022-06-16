@@ -69,16 +69,16 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
           <PayInfo title="Service Fee" value={`${price.feeAmount} NEAR`} size="big" />
         </div>
         <div className={cn(styles.payBtn_block)}>
-          {/* <Link to="/deploy_your_box"> */}
+       
           <ButtonPay
             onClick={() => {
               nearAccount ? getTransactionAndWarning() : setNotAccount(true);
             }}
             styleBtn="default"
-            // title={`PAY ${price.totalAmount} NEAR`}
+          
             title={`PAY`}
           />
-          {/* </Link> */}
+  
         </div>
       </div>
 

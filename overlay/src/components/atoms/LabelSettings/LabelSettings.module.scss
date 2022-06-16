@@ -23,7 +23,7 @@
 span.supportHover::before {
   content: attr(data-title);
 }
-// span.support::before,
+
 span.supportHover::before {
   content: attr(data-title);
   display: none;
@@ -55,7 +55,7 @@ span.supportHover::before {
 span.supportHover:hover::before,
 span.supportHover:focus::before {
   display: flex;
-  // justify-content: center;
+ 
   align-items: center;
 }
 .supportHover {

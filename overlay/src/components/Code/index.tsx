@@ -1,10 +1,10 @@
-import React, { FC, useState, useMemo, useEffect } from 'react';
+import React, { FC,  } from 'react';
 import styles from './Code.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
 import { StatisticsLink } from '../atoms/StatisticsLink';
-import { Lootbox } from '@loot-box/common/interfaces';
+
 import { Message } from '../atoms/Message';
 
 export interface CodeProps {

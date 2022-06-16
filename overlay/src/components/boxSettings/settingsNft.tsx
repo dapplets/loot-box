@@ -29,16 +29,11 @@ const DEFAULT_NFT_ITEM: NftContentItem = {
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const { creationForm, onCreationFormUpdate } = props;
   const [link, onLink] = useState(true);
-  // const node = useRef<HTMLInputElement>();
   const [value, setValue] = useState(creationForm.dropChance);
-  // const [nameClassInput, setNameClassInput] = useState('');
-
   const nodeNftContract = useRef<HTMLInputElement>();
   const nodeQuanity = useRef<HTMLInputElement>();
   const nodeDropChance = useRef<HTMLInputElement>();
-
   const newForm = Object.assign({}, creationForm);
-
   const booleanNodeNftContract = nodeNftContract.current?.classList.contains('invalid');
   const booleanNodeQuanity = nodeQuanity.current?.classList.contains('invalid');
   const LinkBlock = useMemo(() => {
@@ -128,7 +123,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             }}
           />
         </div>
-
         <div className={styles.wrapper_nft}>
           <div className={styles.Marketplace}>
             {creationForm.nftContentItems.map((x, i) => (
@@ -146,16 +140,13 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             <div className={styles.addNFTBtn}>
               <Button onClick={addButtonClickHandler} btnText="Add NFT" appearance="small" />
             </div>
-
             <div className={styles.dropChance_nft}>
               <LabelSettings
                 title="Drop Chance"
                 isActive
                 support="The chance a person has to get the drop. 
-
                 Please enter the amount in percentage"
               />
-
               <DropChance
                 type="string"
                 maxValueDropChance="100"
@@ -171,7 +162,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
           </div>
         </div>
       </div>
-
       <div className={cn(styles.navigation)}>
         <Link to="/select_box">
           <LinksStep step="prev" label="Back" />
@@ -183,7 +173,6 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
             to="/fill_your_box_nft"
             onClick={() => {
               handleClick();
-
               creationForm.ftContentItems = [];
               creationForm.nearContentItems = [];
             }}

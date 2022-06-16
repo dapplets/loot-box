@@ -79,8 +79,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       onDoneClick();
     }
   };
-  // console.log(price);
-  
+
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -108,7 +107,6 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
               nearAccount ? getTransactionAndWarning() : setNotAccount(true);
             }}
             styleBtn="default"
-            // title={`PAY ${price.totalAmount} NEAR`}
             title={`PAY`}
           />
         </div>

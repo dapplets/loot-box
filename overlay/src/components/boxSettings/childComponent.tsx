@@ -3,27 +3,21 @@ import styles from './BoxSettings.module.scss';
 
 import { LabelSettings } from '../atoms/LabelSettings';
 import { Button } from '../atoms/Button';
-
 import { InputPanel } from '../atoms/Input';
 import { RadioButton } from '../atoms/RadioButton';
-
 import { NftContentItem } from '@loot-box/common/interfaces';
 import './invalid.scss';
-
 export interface ChildComponentProps {
   onDeleteChild?: () => void;
   nftItem: NftContentItem;
   onNftUpdated: (x: NftContentItem) => void;
-
   nodeNftContract: any;
   nodeQuanity: any;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
   const { onDeleteChild, nftItem, onNftUpdated, nodeNftContract, nodeQuanity } = props;
-
   const [id] = useState('radiogroup-' + Math.floor(Math.random() * 1_000_000));
-  const NearReg = new RegExp(/^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/gm);
 
   const changeHandler = (name: keyof NftContentItem, value: any) => {
     const newNft = Object.assign({}, nftItem);
@@ -37,9 +31,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
         title="Marketplace"
         isActive
         support="Please select the dropping NFT parameters:
-
 Marketplace - you can choose the Paras.id or custom NFT contract.
-
 Token ID - insert the marketplace NFT ID or NFT contract address."
       />
       <div className={styles.radiobtnMarketplace}>
@@ -55,7 +47,6 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
             }
           }}
         />
-
         <RadioButton
           id={`${id}-3`}
           value="Custom NFT"

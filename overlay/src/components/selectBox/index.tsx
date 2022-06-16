@@ -14,8 +14,7 @@ import pig from '../../icons/createNewBox/pig.png';
 import { LinksStep } from '../atoms/LinksStep';
 import { Link } from 'react-router-dom';
 import { Slider } from '../atoms/Slider';
-import { Preloader } from '../atoms/Preloader';
-import { start } from 'repl';
+
 
 export interface SelectBoxProps {
   children?: ReactNode;
@@ -86,7 +85,7 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
   return (
     <div className={cn(styles.wrapper)}>
       <SettingTitle isActive={true} title="Select box" />
-      {/* {creationFormId ? ( */}
+
       <GetBox
         clicked={clicked}
         setClicked={setClicked}
@@ -94,9 +93,7 @@ const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
         id={creationFormId}
         onCreationFormUpdate={onCreationFormUpdate}
       />
-      {/* ) : (
-        <Preloader />
-      )} */}
+  
 
       <div className={styles.navigation}>
         <Link to="/" className={cn(styles.prevStep)}>

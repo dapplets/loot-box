@@ -9,7 +9,7 @@ import { StatisticsInfo } from '../atoms/StatisticsInfo';
 import { ChartProgress } from '../atoms/CircleChart';
 import { StatisticsLink } from '../atoms/StatisticsLink';
 
-// export let labels = [''];
+
 
 export interface StatisticsProps {
   stat: any;
@@ -40,14 +40,18 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
       },
     },
 
-    // labels: [`${stat.winLabel.toUpperCase()}`],
+ 
     labels: [`${newWinInfo(winInfo)}`],
   };
+  // console.log(winInfo);
+  console.log(stat);
+  
+  
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.wrapperStatistics}>
-        {/* ToDo: what's total amount? */}
+  
         <Progress completed={stat.completedPercents} bgcolor="#F26680" />
         <div className={cn(styles.Chart)}>
           <div className={cn(styles.ChartAmount)}>
@@ -78,7 +82,7 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
       <div className={cn(styles.link)}>
         <Link to="/">
           <StatisticsLink
-          // label="Copy code"
+   
           />
         </Link>
       </div>

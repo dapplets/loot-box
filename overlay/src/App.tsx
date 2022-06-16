@@ -88,7 +88,7 @@ export default () => {
   const [currentLootboxes, setCurrentLootboxes] = useState(8);
   const [totalCount, setTotalCount] = useState(0);
 
-  const [ticketName, setTicketName] = useState('');
+
 
   const [dropType, setDropType] = useState(null);
 
@@ -117,7 +117,7 @@ export default () => {
           })
           .finally(() => setFetching(false));
       }
-      // setLoader(false);
+   
       setNearAccount(accountName);
     });
     dappletApi.getNetworkConfig().then((config: any) => {
@@ -473,10 +473,4 @@ export default () => {
     </>
   );
 };
-function then(arg0: (x: any) => void) {
-  throw new Error('Function not implemented.');
-}
 
-function winners(arg0: string, winners: any) {
-  throw new Error('Function not implemented.');
-}

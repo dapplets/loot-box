@@ -55,8 +55,6 @@ export const DropChance: FC<DropChanceProps> = (props) => {
             case 'insertText':
               if (isNaN(+data) === false && data !== ' ') {
                 const newValue = valueDropChance === '0' ? data : valueDropChance + data;
-                // if (+newValue > 100) onValueDropChance('100');
-                // else 
                 onValueDropChance(newValue);
               }
               break;

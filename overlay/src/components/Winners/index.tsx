@@ -13,11 +13,11 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   const { winners, winInfo } = props;
 
   const newStr = winInfo.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
-  // useEffect(() => {
-  //   winners;
-  // }, [winners]);
-// console.log(winners);
-// console.log(winInfo);
+  useEffect(() => {
+    winners;
+  }, [winners]);
+
+
 
 
   return (
@@ -55,7 +55,7 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
       <div className={cn(styles.link)}>
         <Link to="/">
           <StatisticsLink
-          // label="Copy winners"
+        
           />
         </Link>
       </div>
