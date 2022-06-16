@@ -119,7 +119,7 @@ export default class TwitterFeature {
                 me.hidden = false;
                 me.replace = `${this._config.landingUrlReplace}${numIndex}`;
                 me.img = BOX_EMPTY[lootboxId.pictureId];
-                me.text = 'Lootbox dropped already';
+                me.text = 'This Lootbox is empty';
                 me.exec = null;
               } else {
                 me.hidden = false;
@@ -150,7 +150,7 @@ export default class TwitterFeature {
         };
       } else if (result.status === 1) {
         me.img = BOX_EMPTY[lootbox.pictureId];
-        me.text = 'Empty';
+        me.text = 'This Lootbox is empty';
         me.exec = null;
       } else if (result.status === 2) {
         me.img = BOX_OPEN[lootbox.pictureId];
@@ -159,7 +159,7 @@ export default class TwitterFeature {
       }
     } else {
       me.img = BOX_DEFAULT[lootbox.pictureId];
-      me.text = 'Please, login in your wallet and refresh page';
+      me.text = 'Please log into your wallet and refresh the page';
       me.exec = null;
     }
   }
@@ -178,7 +178,7 @@ export default class TwitterFeature {
             me.exec = null;
           } else {
             me.img = BOX_EMPTY[lootbox.pictureId];
-            me.text = 'Empty';
+            me.text = 'This Lootbox is empty';
             me.exec = null;
           }
         })
@@ -187,11 +187,11 @@ export default class TwitterFeature {
           me.exec = async () => {
             me.exec = null;
           };
-          me.text = 'Transaction rejected , refresh page';
+          me.text = 'Transaction rejected, refresh the page';
         });
     } else {
       me.img = BOX_DEFAULT[lootbox.pictureId];
-      me.text = 'Please, login in your wallet and refresh page';
+      me.text = 'Please log into your wallet and refresh the page';
       me.exec = null;
     }
   }
@@ -221,6 +221,6 @@ export default class TwitterFeature {
       winLoots.push(claim.nftContentItems.length + ' NFTs');
     }
 
-    return winLoots.length > 0 ? `You win: ${winLoots.join(', ')}` : 'Empty';
+    return winLoots.length > 0 ? `You win: ${winLoots.join(', ')}` : 'This Lootbox is empty';
   }
 }

@@ -38,7 +38,7 @@ export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentPro
         isActive
         support="Please select the dropping NFT parameters:
 
-Marketplace - you can choose the Paras.id, Mintbase or custom NFT contract.
+Marketplace - you can choose the Paras.id or custom NFT contract.
 
 Token ID - insert the marketplace NFT ID or NFT contract address."
       />

@@ -62,7 +62,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
       onLink(true);
     }
     if (
-      value <100
+      value <101
     ) {
       nodeDropChance.current?.classList.remove('invalid');
     
@@ -176,7 +176,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         <Link to="/select_box">
           <LinksStep step="prev" label="Back" />
         </Link>
-        {(link && <div></div>) || value <100 && nodeNftContract.current?.value
+        {(link && <div></div>) || value <101 && nodeNftContract.current?.value
         !=''&& nodeQuanity.current?.value
         !=''&&(
           <Link

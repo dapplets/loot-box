@@ -299,7 +299,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
       }
     }
     if (
-      value <100
+      value <101
     ) {
       nodeDropChance.current?.classList.remove('invalid');
     
@@ -760,7 +760,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             <Link to="/select_box" onClick={handleClick}>
               <LinksStep step="prev" label="Back" />
             </Link>
-            {(link &&  <div></div>) || value <100 && (
+            {(link &&  <div></div>) || value <101 && (
               <Link
                 to="/fill_your_box"
                 onClick={() => {
