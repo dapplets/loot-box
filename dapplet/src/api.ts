@@ -85,7 +85,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async createNewBox(lootbox: Lootbox): Promise<string> {
-    console.log('lootbox', lootbox);
+  
 
     const contract = await this._contract;
     const prices = await this.calcBoxCreationPrice(lootbox);
@@ -288,7 +288,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]> {
-    console.log('getLootboxWinners:', lootboxId)
+  
     const contract = await this._contract;
     const claims = await contract.get_claims_by_lootbox({
       lootbox_id: lootboxId.toString(),
@@ -335,7 +335,7 @@ export class DappletApi implements IDappletApi {
       }
     });
 
-    console.log('get winners result', result)
+  
 
     return result;
   }

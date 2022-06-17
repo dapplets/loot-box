@@ -145,8 +145,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     onCreationFormUpdate(creationForm);
 
     onCreationFormUpdate(newForm);
-    console.log(creationForm,'creationForm');
-    console.log(newForm,'newForm');
+  
     
   }, []);
 

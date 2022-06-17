@@ -170,13 +170,13 @@ export default () => {
       setLoader(false);
     }
   };
-  const refreshStat = async () => {
-    if (!nearAccount) throw new Error('Not logged in.');
-    await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
+  // const refreshStat = async () => {
+  //   if (!nearAccount) throw new Error('Not logged in.');
+  //   await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
      
-      setLootboxes(x);
-    });
-  };
+  //     setLootboxes(x);
+  //   });
+  // };
 
   useEffect(() => {
     if (ftMetadata === null) return;
@@ -193,12 +193,12 @@ export default () => {
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
-    console.log('selectedLootboxId use effect', selectedLootboxId)
+   
 
     dappletApi
       .getLootboxWinners(selectedLootboxId)
       .then((winners) => {
-        console.log('selectedLootboxId use effect result', winners)
+      
         setWinners(winners);
       })
       .catch((e) => {
@@ -224,18 +224,18 @@ export default () => {
       });
   }, [selectedLootboxId]);
 
-  useEffect(() => {
-    dappletApi
-      .calcBoxCreationPrice(creationForm)
-      .then((x) => {
-        setPrice(x);
-      })
-      .catch((e) => {
-        console.error('getLootboxPrice', e);
+  // useEffect(() => {
+  //   dappletApi
+  //     .calcBoxCreationPrice(creationForm)
+  //     .then((x) => {
+  //       setPrice(x);
+  //     })
+  //     .catch((e) => {
+  //       console.error('getLootboxPrice', e);
 
-        // ToDo: show error to user
-      });
-  }, [creationForm]);
+  //       // ToDo: show error to user
+  //     });
+  // }, [creationForm]);
 
   const handleLogIn = async () => {
     const isWalletConnected = await dappletApi.isWalletConnected();
@@ -301,8 +301,8 @@ export default () => {
                         <ChildComponent
                           onClick={() => {
                             // refreshStat();
-                            // getWin(item);
-                            // setLootboxes(lootboxes);
+                            getWin(item);
+                            setLootboxes(lootboxes);
                             setSelectedLootboxId(item.id!);
                           }}
                           imgVal={IMG[item.pictureId]}

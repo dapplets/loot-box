@@ -64,9 +64,9 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
           <LabelSettings title="You need to pay" />
         </div>
         <div className={cn(styles.payInfo)}>
-          <PayInfo title="Gas Amount" value={`${price.gasAmount} NEAR`} size="big" />
+          {/* <PayInfo title="Gas Amount" value={`${price.gasAmount} NEAR`} size="big" /> */}
 
-          <PayInfo title="Service Fee" value={`${price.feeAmount} NEAR`} size="big" />
+          <PayInfo title="Service Fee" value={`0 NEAR`} size="big" />
         </div>
         <div className={cn(styles.payBtn_block)}>
        
@@ -76,7 +76,7 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
             }}
             styleBtn="default"
           
-            title={`PAY`}
+            title={`PAY & CREATE`}
           />
   
         </div>

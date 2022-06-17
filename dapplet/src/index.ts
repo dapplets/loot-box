@@ -99,6 +99,7 @@ export default class TwitterFeature {
             replace: this._config.landingUrlReplace,
             position: 'bottom',
             text: '',
+            // label:'l',
             init: async (ctx, me) => {
               const Tweet = ctx.text;
 
@@ -112,7 +113,7 @@ export default class TwitterFeature {
               });
 
               const lootboxId = await this._api.getLootboxById(numIndex);
-
+            
               if (lootboxId === null || lootboxId === undefined) {
                 return;
               } else if (lootboxId.status === 'dropped') {
@@ -123,6 +124,7 @@ export default class TwitterFeature {
                 me.exec = null;
               } else {
                 me.hidden = false;
+               
                 me.replace = `${this._config.landingUrlReplace}${numIndex}`;
                 await this.getClaimStatus(me, numIndex, lootboxId);
               }
@@ -139,12 +141,28 @@ export default class TwitterFeature {
   async getClaimStatus(me, numIndex, lootbox): Promise<void> {
     me.img = { DARK: boxDef, LIGHT: White };
     const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
+    const getWin = (y: any) => {
+      if (y.ftContentItems.length !== 0) {
+     const label =   y.ftContentItems.map((x: any) => (
+          `${x.tokenAmount} ${x.tokenTicker}`))
+          return label
+      } else if (y.nearContentItems.length !== 0) {
+        const label =  y.nearContentItems.map((x: any) => `${x.tokenAmount} NEAR`)
+        return label
+      } else if (y.nftContentItems.length !== 0) {
+        const winNft = String(y.nftContentItems.length) + ` NFT`;
+       return winNft
+      }
+    };
+   
     if (wallet.accountId) {
       const result = await this._api._getLootboxClaimStatus(numIndex, wallet.accountId);
       me.exec = null;
 
       if (result.status === 0) {
+        me.text = getWin(lootbox)
         me.img = BOX_DEFAULT[lootbox.pictureId];
+      
         me.exec = async () => {
           await this.getClaimLoot(me, numIndex, lootbox);
         };

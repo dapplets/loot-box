@@ -26,6 +26,7 @@ import inst_12 from '../../img/instruction/instruction_12.png';
 import inst_13 from '../../img/instruction/instruction_13.png';
 import inst_13_1 from '../../img/instruction/instruction_13_1.png';
 import inst_14 from '../../img/instruction/instruction_14.png';
+import login from '../../img/instruction/login.png'
 
 import m_inst_1 from '../../img/instruction/mobile/mobile_inst_1.svg';
 import m_inst_2 from '../../img/instruction/mobile/mobile_inst_2.svg';
@@ -43,6 +44,9 @@ import m_inst_13 from '../../img/instruction/mobile/mobile_inst_13.svg';
 import m_inst_14 from '../../img/instruction/mobile/mobile_inst_14.svg';
 import m_inst_15 from '../../img/instruction/mobile/mobile_inst_15.svg';
 import m_inst_16 from '../../img/instruction/mobile/mobile_inst_16.svg';
+import m_login from '../../img/instruction/mobile/login.svg'
+import m_login_claim_3 from '../../img/instruction/mobile/login_claim_3.svg'
+import m_login_claim_4 from '../../img/instruction/mobile/login_claim_4.svg'
 
 import load_unpuck from '../../img/instruction/load_unpuck.png';
 
@@ -50,6 +54,7 @@ export interface InstructionProps {
   completed?: number;
   bgcolor?: string;
   title?: string
+  isLogin?:boolean
 }
 
 export function Instruction(InstructionProps: any) {
@@ -60,13 +65,9 @@ export function Instruction(InstructionProps: any) {
       </header>
       <div className={styles.content}>
         <Installation title='How to collect' />
-        <Activate />
-        <Claming />
-        {/* <Creation />
-        <NearToken />
-        <FungibleTokens />
-        <NonFungibleTokens /> */}
-        {/* <Status /> */}
+        <Activate isLogin={true} />
+        <Claming isLogin={true}  />
+      
       </div>
       <footer className={styles.footer}>
         <Footer />
@@ -148,7 +149,8 @@ export const Installation: FC<InstructionProps> = (props) =>  {
   );
 }
 
-export function Activate(InstructionProps: any) {
+export const Activate: FC<InstructionProps> = (props) => {
+  const {isLogin }=props
   return (
     <div className={styles.walletConnection}>
       <h3 className={styles.titleWallet}>Activate the Lootbox Dapplet</h3>
@@ -184,11 +186,34 @@ export function Activate(InstructionProps: any) {
         or&nbsp;open a&nbsp;lootbox. Click on the &laquo;log&nbsp;in&raquo; button, select
         a&nbsp;wallet for dapplet interaction and go&nbsp;to&nbsp;the next step.
       </div>
+      {isLogin? 
+       <div className={cn(styles.walletConnectionBlock,styles.block_1, styles.block_login, styles.blockImgActivate)}>
+        <span className={cn(styles.labelImg, styles.labelImgActivate,styles.labelImgActivateLogin )}></span>
+        <h3 className={cn(styles.dragDropTitle, styles.blockTitleImgActivate)}>
+        <span>
+        Login to &nbsp;
+            <span className={styles.highlightTitle}>your wallet</span> 
+            <br />
+          </span>
+          <span className={styles.labelTitle}>
+          Click on the Lootbox "Home" button. It will open the overlay panel with the login option on it.
+          </span>
+         
+          <span className={styles.labelTitleHighlight}>Please login into your&nbsp;<span className={styles.highlightTitle}>Near wallet</span>  for opening the Lootboxes.</span>
+        </h3>
+        <img src={login} className={styles.dragDropImg} />
+      </div>
+      : null }
+     {isLogin? <div className={styles.mobileBlock}>
+        <img src={m_login} className={styles.mobileImg} />
+      </div>:null}
+     
     </div>
   );
 }
 
-export function Claming(InstructionProps: any) {
+export const Claming: FC<InstructionProps> = (props) => {
+  const {isLogin }=props
   return (
     <div className={styles.walletConnection}>
       <h3 className={styles.titleWallet}>Lootbox claiming</h3>
@@ -196,7 +221,9 @@ export function Claming(InstructionProps: any) {
         Find a&nbsp;tweet with a&nbsp;lootbox giveaway created by&nbsp;this dapplet. You will see
         a&nbsp;lootbox picture after installating the dapplet.
       </div>
-      <div className={cn(styles.walletConnectionBlock, styles.block_2, styles.blockImgClaming)}>
+      <div className={cn(styles.walletConnectionBlock, {[styles.block_2]:!isLogin}, styles.blockImgClaming,{
+          [styles.block_2_label]: isLogin
+      })}>
         <span className={cn(styles.labelImg, styles.labelImgClaming)}></span>
         <h3 className={cn(styles.dragDropTitle, styles.blockTitleImgClaming)}>
           <span>
@@ -206,25 +233,35 @@ export function Claming(InstructionProps: any) {
         </h3>
         <img src={inst_2} className={styles.dragDropImg} />
       </div>
-      <div className={styles.mobileBlock}>
+      {isLogin ?   <div className={styles.mobileBlock}>
+        <img src={m_login_claim_3} className={styles.mobileImg} />
+      </div> :  <div className={styles.mobileBlock}>
         <img src={m_inst_4} className={styles.mobileImg} />
+      </div>}
+     
+      <div className={styles.description}>
+      To&nbsp;open a&nbsp;lootbox you need to&nbsp;click on&nbsp;the picture. It&nbsp;opens a&nbsp;NEAR wallet where a&nbsp;claiming transaction should be&nbsp;confirmed. Be&nbsp;aware that claiming a&nbsp;custom token or&nbsp;NFT requires an&nbsp;additional fee (about 0.05&nbsp;NEAR) for gas payment. 
+
       </div>
       <div className={styles.description}>
-        To&nbsp;open a&nbsp;lootbox you need to&nbsp;click on&nbsp;the picture. It&nbsp;opens
-        a&nbsp;NEAR wallet where a&nbsp;claiming transaction should be&nbsp;confirmed. After that
-        the smart contract will return with a&nbsp;result. A lootbox can be&nbsp;full or&nbsp;empty,
-        depending on&nbsp;the giveaway&rsquo;s settings.
+      After that the smart contract will return with a&nbsp;result. A&nbsp;lootbox can be&nbsp;full or&nbsp;empty, depending on&nbsp;the giveaway&rsquo;s settings.
+
       </div>
-      <div className={cn(styles.walletConnectionBlock, styles.block_3, styles.blockImgClaming)}>
+      <div className={cn(styles.walletConnectionBlock,{ [styles.block_3]:!isLogin}, styles.blockImgClaming,{
+        [styles.block_3_label]: isLogin
+      })}>
         <span className={cn(styles.labelImg, styles.labelImgClaming)}></span>
         <h3 className={cn(styles.dragDropTitle, styles.blockTitleImgClaming)}>
           Example of&nbsp;a&nbsp;<span className={styles.highlightTitle}>winning lootbox</span>
         </h3>
         <img src={inst_3} className={styles.dragDropImg} />
       </div>
-      <div className={styles.mobileBlock}>
+      {isLogin ?   <div className={styles.mobileBlock}>
+        <img src={m_login_claim_4} className={styles.mobileImg} />
+      </div> : <div className={styles.mobileBlock}>
         <img src={m_inst_5} className={styles.mobileImg} />
-      </div>
+      </div>}
+     
     </div>
   );
 }

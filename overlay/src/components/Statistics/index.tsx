@@ -43,8 +43,7 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
  
     labels: [`${newWinInfo(winInfo)}`],
   };
-  // console.log(winInfo);
-  console.log(stat);
+
   
   
 

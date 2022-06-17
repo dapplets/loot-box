@@ -41,13 +41,19 @@ export class DappletApi implements IDappletApiForLanding {
     if (!lootbox) return null;
 
     const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
+    const ft_token_contracts = all_loot_items.filter((x) => x['Ft']).map(x => x.Ft.token_contract);
+    const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
 
     let totalAmount = '0';
     for (const item of all_loot_items) {
       if (item.Near !== undefined) {
         totalAmount = sum(totalAmount, formatNearAmount(item.Near.total_amount));
       } else if (item.Ft !== undefined) {
-        console.error('Total amount calculation is not implemented for FT.');
+       
+        const metadata = metadataArray.find(x => x.address === item.Ft.token_contract);
+        if (!metadata) throw new Error("Lootbox: no metadata found.");
+        totalAmount = sum(totalAmount, formatNearAmount(item.Ft.total_amount, metadata.decimals));
+       
       } else if (item.Nft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
         totalAmount = sum(totalAmount, '1'); // ToDo: how to calculate statistics of NFT?
@@ -64,7 +70,8 @@ export class DappletApi implements IDappletApiForLanding {
       if (item.WinNear !== undefined) {
         winAmount = sum(winAmount, formatNearAmount(item.WinNear.total_amount));
       } else if (item.WinFt !== undefined) {
-        console.error('Total amount calculation is not implemented for FT.');
+        winAmount = sum(winAmount, formatNearAmount(item.WinFt.total_amount));
+        // console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
         winAmount = sum(winAmount, '1'); // ToDo: how to calculate statistics of NFT?
@@ -131,6 +138,26 @@ export class DappletApi implements IDappletApiForLanding {
       return contract.ft_metadata();
     } catch (_) {
       console.error('Unknown address', _);
+      return null;
+    }
+  }
+  private async _getFtMetadata(address: string): Promise<FtMetadata | null> {
+    try {
+      const config = {
+        ...this._config,
+        keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+        headers: {},
+      };
+      const near = await connect(config);
+      const wallet = new WalletConnection(near, null);
+      const contract: any = new Contract(wallet.account(), address, {
+        viewMethods: ['ft_metadata'],
+        changeMethods: [],
+      });
+
+      return contract.ft_metadata();
+    } catch (_) {
+      // console.error('Unknown address', _);
       return null;
     }
   }

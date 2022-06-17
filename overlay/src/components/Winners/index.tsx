@@ -17,6 +17,7 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   //   winners;
   // }, [winners]);
 
+console.log(winners);
 
 
 

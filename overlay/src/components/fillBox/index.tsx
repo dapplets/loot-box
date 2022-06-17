@@ -80,7 +80,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     }
   };
 
-  console.log(price);
+
   
 
   return (
@@ -98,9 +98,9 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         <div className={cn(styles.payBlock)}>
           <LabelSettings title="You need to pay" />
           <div className={cn(styles.payInfo)}>
-            <PayInfo title="Fill Amount" value={`${[price.fillAmount]} NEAR`} size="big" />
-            <PayInfo title="Gas Amount" value={`${[price.gasAmount]} NEAR`} size="big" />
-            <PayInfo title="Service Fee" value={`${[price.feeAmount]} NEAR`} size="big" />
+            <PayInfo title="Fill Amount" value={`${winInfoToken}`} size="big" />
+            {/* <PayInfo title="Gas Amount" value={`${[price.gasAmount]} NEAR`} size="big" /> */}
+            <PayInfo title="Service Fee" value={`${0} NEAR`} size="big" />
           </div>
         </div>
         <div className={cn(styles.payBtn)}>
@@ -109,7 +109,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
               nearAccount ? getTransactionAndWarning() : setNotAccount(true);
             }}
             styleBtn="default"
-            title={`PAY`}
+            title={`PAY & CREATE`}
           />
         </div>
       </div>
