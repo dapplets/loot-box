@@ -13,9 +13,9 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
   const { winners, winInfo } = props;
 
   const newStr = winInfo.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
-  useEffect(() => {
-    winners;
-  }, [winners]);
+  // useEffect(() => {
+  //   winners;
+  // }, [winners]);
 
 
 

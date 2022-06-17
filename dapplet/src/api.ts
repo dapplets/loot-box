@@ -229,6 +229,9 @@ export class DappletApi implements IDappletApi {
 
     const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
 
+    const ft_token_contracts = all_loot_items.filter((x) => x['Ft']).map(x => x.Ft.token_contract);
+    const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
+
     let totalAmount = '0';
     let winLabel = '';
     for (const item of all_loot_items) {
@@ -237,7 +240,9 @@ export class DappletApi implements IDappletApi {
         totalAmount = sum(totalAmount, formatNearAmount(item.Near.total_amount));
       } else if (item.Ft !== undefined) {
         winLabel = 'Token';
-        console.error('Total amount calculation is not implemented for FT.');
+        const metadata = metadataArray.find(x => x.address === item.Ft.token_contract);
+        if (!metadata) throw new Error("Lootbox: no metadata found.");
+        totalAmount = sum(totalAmount, formatNearAmount(item.Ft.total_amount, metadata.decimals));
       } else if (item.Nft !== undefined) {
         winLabel = 'NFT';
         // console.error('Total amount calculation is not implemented for NFT.');
@@ -283,6 +288,7 @@ export class DappletApi implements IDappletApi {
   }
 
   async getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]> {
+    console.log('getLootboxWinners:', lootboxId)
     const contract = await this._contract;
     const claims = await contract.get_claims_by_lootbox({
       lootbox_id: lootboxId.toString(),
@@ -293,7 +299,7 @@ export class DappletApi implements IDappletApi {
     const ft_token_contracts: string[] = claims.filter((x) => (typeof x === 'object' && x.WinFt !== undefined)).map(x => x.WinFt.token_contract);
     const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
 
-    return claims.map((x) => {
+    const result = claims.map((x) => {
       if (typeof x === 'object' && x.NotWin !== undefined) {
         return {
           lootboxId: x.NotWin.lootbox_id,
@@ -328,6 +334,10 @@ export class DappletApi implements IDappletApi {
         throw new Error('Unknown claim result.');
       }
     });
+
+    console.log('get winners result', result)
+
+    return result;
   }
 
   public async getFtMetadata(address: string): Promise<FtMetadata | null> {

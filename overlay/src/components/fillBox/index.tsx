@@ -80,6 +80,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     }
   };
 
+  console.log(price);
+  
 
   return (
     <div className={cn(styles.wrapper)}>

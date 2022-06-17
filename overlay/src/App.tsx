@@ -173,6 +173,7 @@ export default () => {
   const refreshStat = async () => {
     if (!nearAccount) throw new Error('Not logged in.');
     await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
+     
       setLootboxes(x);
     });
   };
@@ -192,10 +193,12 @@ export default () => {
 
   useEffect(() => {
     if (selectedLootboxId === null) return;
+    console.log('selectedLootboxId use effect', selectedLootboxId)
 
     dappletApi
       .getLootboxWinners(selectedLootboxId)
       .then((winners) => {
+        console.log('selectedLootboxId use effect result', winners)
         setWinners(winners);
       })
       .catch((e) => {
@@ -254,7 +257,7 @@ export default () => {
     setNearAccount(accountName);
   };
 
-  const getWin = async (y: any) => {
+  const getWin = (y: any) => {
     if (y.ftContentItems.length !== 0) {
       y.ftContentItems.map((x: any) => setWinInfo(`${x.tokenAmount} ${x.tokenTicker}`));
     } else if (y.nearContentItems.length !== 0) {
@@ -297,9 +300,9 @@ export default () => {
                       lootboxes.map((item, index) => (
                         <ChildComponent
                           onClick={() => {
-                            refreshStat();
-                            getWin(item);
-                            setLootboxes(lootboxes);
+                            // refreshStat();
+                            // getWin(item);
+                            // setLootboxes(lootboxes);
                             setSelectedLootboxId(item.id!);
                           }}
                           imgVal={IMG[item.pictureId]}

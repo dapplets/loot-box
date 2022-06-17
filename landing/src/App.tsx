@@ -228,7 +228,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
             {!Number.isNaN(pictureId) ? (
               <div className={styles.description}>
                 <p className={cn(styles.textDescription, styles.textDescriptionWinner)}>
-                  <span className={styles.nameOwner}>{owner}</span>is&nbsp;hosting a&nbsp;giveaway
+                  <span className={styles.nameOwner}>{owner}</span>&nbsp;is&nbsp;hosting a&nbsp;giveaway
                   on&nbsp;Twitter. Join now for a&nbsp;chance to&nbsp;win
                   <span className={styles.totalSum}> {statCur?.totalAmount}</span>
                   <span className={styles.labelSum}> {nameWin}</span>
