@@ -1,7 +1,7 @@
 import {
   FtMetadata,
   IDappletApiForLanding,
-  Lootbox,
+  Lootbox,LootboxWinner,
   LootboxStat,
 } from '@loot-box/common/interfaces';
 import * as nearAPI from 'near-api-js';
@@ -115,6 +115,58 @@ export class DappletApi implements IDappletApiForLanding {
     });
 
     return contract;
+  }
+  async getLootboxWinners(lootboxId: string): Promise<LootboxWinner[]> {
+  
+    const contract = await this._contract;
+    const claims = await contract.get_claims_by_lootbox({
+      lootbox_id: lootboxId.toString(),
+      from_index: null,
+      limit: null,
+    });
+
+    const ft_token_contracts: string[] = claims.filter((x:any) => (typeof x === 'object' && x.WinFt !== undefined)).map((x:any) => x.WinFt.token_contract);
+    const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
+
+    const result = claims.map((x:any) => {
+      if (typeof x === 'object' && x.NotWin !== undefined) {
+        return {
+          lootboxId: x.NotWin.lootbox_id,
+          nearAccount: x.NotWin.claimer_id,
+          amount: '0',
+          txLink: null,
+        };
+      } else if (typeof x === 'object' && x.WinNear !== undefined) {
+        return {
+          lootboxId: x.WinNear.lootbox_id,
+          nearAccount: x.WinNear.claimer_id,
+          amount: toPrecision(formatNearAmount(x.WinNear.total_amount), 6),
+          txLink: null,
+        };
+      } else if (typeof x === 'object' && x.WinFt !== undefined) {
+        const metadata = metadataArray.find(y => y.address === x.WinFt.token_contract);
+        return {
+          lootboxId: x.WinFt.lootbox_id,
+          nearAccount: x.WinFt.claimer_id,
+          amount: toPrecision(format.formatNearAmount(x.WinFt.total_amount, metadata!.decimals), 6), // ToDo: get metadata
+          txLink: null,
+        };
+      } else if (typeof x === 'object' && x.WinNft !== undefined) {
+        return {
+          lootboxId: x.WinNft.lootbox_id,
+          nearAccount: x.WinNft.claimer_id,
+          amount: `NFT: ${x.WinNft.token_contract} / ${x.WinNft.token_id}`,
+          txLink: null,
+        };
+      } else {
+        console.error('Unknown claim result', x);
+        throw new Error('Unknown claim result.');
+      }
+    });
+
+  
+
+    return result;
   }
 
   public async getFtMetadata(address: string): Promise<FtMetadata | null> {

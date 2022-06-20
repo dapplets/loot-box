@@ -134,7 +134,10 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       />
       <Modal
         visible={isWarningTransaction}
-        title={'Several transactions are required'}
+        title={'You will now need to sign several transactions: one to create your Lootbox and another to fill it with the tokens you selected. '}
+        subtitle={'Transactions will open automatically, one after the other.'}
+        className={styles.modalTitle}
+        classNameSubtitle={styles.modalSubtitle}
         content={
           <ButtonPay
             onClick={() => {
@@ -143,7 +146,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
               nearAccount ? onDoneClick() : setNotAccount(true);
             }}
             styleBtn="default"
-            title={`Ok`}
+            title={`Proceed`}
           />
         }
         footer={''}

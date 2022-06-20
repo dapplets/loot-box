@@ -9,6 +9,8 @@ interface ModalProps {
   footer: ReactElement | string;
   onClose: () => void;
   className?: string;
+  subtitle?:string;
+  classNameSubtitle?:string
 }
 
 export const Modal = ({
@@ -17,7 +19,7 @@ export const Modal = ({
   content = '',
   footer = '',
   onClose,
-  className,
+  className,subtitle,classNameSubtitle
 }: ModalProps) => {
   const onKeydown = ({ key }: KeyboardEvent) => {
     switch (key) {
@@ -38,7 +40,8 @@ export const Modal = ({
     <div className={styles.modal} onClick={onClose}>
       <div className={styles.modalDialog} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h6 className={cn(styles.modalTitle, className)}>{title}</h6>
+         {!subtitle&&<h6 className={cn(styles.modalTitle, className)}>{title}</h6>}
+          {subtitle&&  <div className={styles.blockTitle}> <h6 className={cn(styles.modalTitle, className)}>{title}</h6><h6 className={cn(styles.modalTitle, classNameSubtitle)}>{subtitle}</h6></div> }
           <span className={styles.modalClose} onClick={onClose} />
         </div>
         <div className={styles.modalBody}>

@@ -103,12 +103,15 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
   const [owner, setOwner] = useState<string | undefined>('');
   const [ownerAddress, setOwnerAddress] = useState<string | undefined>('');
   const [nameWin, setNameWin] = useState<string | undefined>('');
+  const [ftMetadata, setFtMetadata] = useState<string | undefined>('')
 
   useEffect(() => {
     isMounted = true;
     setLoader(true);
     const init = async () => {
       await _api.getLootboxStat(lootboxId!).then((x) => {
+        console.log(x);
+        
         setStat(x);
         setLoader(false);
       });
@@ -121,20 +124,23 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
 
       await _api.getLootboxById(lootboxId!).then((x) => {
         if (x?.ftContentItems.length) {
-          setNameWin('TOKEN');
+         
+          setNameWin(x.ftContentItems[0].tokenTicker)
         } else if (x?.nearContentItems.length) {
           setNameWin('NEAR');
         } else if (x?.nftContentItems.length) {
           setNameWin('NFT');
         }
+      
       });
+  
+    
     };
     init();
     return () => {
       isMounted = false;
     };
   }, [lootboxId, owner, nameWin]);
-
   const pulse = keyframes`
     0% {
       transform: scaleX(0);
