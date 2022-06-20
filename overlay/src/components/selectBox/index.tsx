@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, useEffect } from 'react';
+import React, { ReactNode, FC } from 'react';
 import { SettingTitle } from '../atoms/SettingTitle';
 import styles from './SelectBox.module.scss';
 import cn from 'classnames';
@@ -18,7 +18,6 @@ import { Slider } from '../atoms/Slider';
 
 export interface SelectBoxProps {
   children?: ReactNode;
-  imgLink?: string;
   id?: number;
   setRef?: any;
   onClick?: () => void;
@@ -27,15 +26,14 @@ export interface SelectBoxProps {
   valueIMG?: string;
   creationFormId: number;
   onCreationFormUpdate: (id: number) => void;
-  clicked: number | null;
+  imgId: number | null;
   setClicked: any;
 }
 export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
 
 export interface CetBoxProps {
   onClick?: any;
-  icon?: string;
-  clicked: number | null;
+  imgId: number | null;
   setClicked: any;
   onChange_IMG: (x: string) => void;
   id: any;
@@ -43,7 +41,7 @@ export interface CetBoxProps {
 }
 
 export const GetBox: FC<CetBoxProps> = (props: CetBoxProps) => {
-  const { icon, onChange_IMG, id, onCreationFormUpdate, clicked, setClicked } = props;
+  const {  onChange_IMG, id, onCreationFormUpdate, imgId, setClicked } = props;
 
   return (
     <div className={cn(styles.wrapperImage)}>
@@ -58,7 +56,7 @@ export const GetBox: FC<CetBoxProps> = (props: CetBoxProps) => {
         }}
       >
         <Slider
-          clicked={clicked}
+          clicked={imgId}
           setClicked={setClicked}
           key={id}
           id={id}
@@ -73,21 +71,18 @@ export const GetBox: FC<CetBoxProps> = (props: CetBoxProps) => {
 
 const SelectBox: FC<SelectBoxProps> = (props: SelectBoxProps) => {
   const {
-    onClick,
     onChange_IMG,
-    imgLink,
     creationFormId,
     onCreationFormUpdate,
-    clicked,
+    imgId,
     setClicked,
   } = props;
 
   return (
     <div className={cn(styles.wrapper)}>
       <SettingTitle isActive={true} title="Select box" />
-
       <GetBox
-        clicked={clicked}
+        imgId={imgId}
         setClicked={setClicked}
         onChange_IMG={onChange_IMG}
         id={creationFormId}

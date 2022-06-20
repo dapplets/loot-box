@@ -16,13 +16,11 @@ import { useEffect } from 'react';
 import { Modal } from '../atoms/Modal';
 
 export interface FillBoxProps {
-  imgVal: string;
-
-  price: any;
+  imgValue: string;
   onDoneClick: () => void;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
-  winInfo: string;
+  winnersLabelInfo: string;
   setWinInfo: (x: string) => void;
   setMessageError: (x: any) => void;
   messageError: boolean;
@@ -34,14 +32,11 @@ export interface FillBoxProps {
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const {
-    imgVal,
-
-    price,
+    imgValue,
     onDoneClick,
     creationForm,
-    onCreationFormUpdate,
     setWinInfo,
-    winInfo,
+    winnersLabelInfo,
     messageError,
     setMessageError,
     newMetadata,
@@ -51,7 +46,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     setMetadata,
   } = props;
 
-  const [winInfoToken, setWinInfoToken] = useState(winInfo);
+  const [winInfoToken, setWinInfoToken] = useState(winnersLabelInfo);
   const [isNotAccount, setNotAccount] = useState(false);
   const [isWarningTransaction, setWarningTransaction] = useState(false);
   useEffect(() => {
@@ -79,10 +74,6 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       onDoneClick();
     }
   };
-
-
-  
-
   return (
     <div className={cn(styles.wrapper)}>
       <div className={styles.wrapperInfo}>
@@ -91,7 +82,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         </div>
 
         <div className={cn(styles.img)} onClick={() => {}}>
-          <img src={imgVal} />
+          <img src={imgValue} />
           <span className={styles.spanWin}>{winInfoToken}</span>
         </div>
 

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect, useMemo, FC, useRef } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import cn from 'classnames';
 import styles from './Modal.module.scss';
 

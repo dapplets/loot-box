@@ -14,11 +14,9 @@ import { Modal } from '../atoms/Modal';
 
 export interface FillBoxProps_Nft {
   onSetId?: any;
-  imgVal: string;
+  imgValue: string;
   creationForm: Lootbox;
-  price: any;
   onDoneClick: () => void;
-  winInfo: string;
   setWinInfo: (x: string) => void;
   setMessageError: (x: any) => void;
   messageError: boolean;
@@ -26,24 +24,21 @@ export interface FillBoxProps_Nft {
 }
 export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   const {
-    imgVal,
-    price,
+    imgValue,
     onDoneClick,
     creationForm,
-    winInfo,
     setWinInfo,
     messageError,
     setMessageError,
     nearAccount,
   } = props;
-  const [winInfoNft, setWinInfoNft] = useState(winInfo);
+  
   const [isNotAccount, setNotAccount] = useState(false);
   const [isWarningTransaction, setWarningTransaction] = useState(false);
   useEffect(() => {
     if (creationForm.nftContentItems[0]) {
       const winAmount = creationForm.nftContentItems.length;
       const winAmountParse = winAmount + ` NFT`;
-      // setWinInfoToken(winAmountParse);
       setWinInfo(winAmountParse);
     }
   }, [messageError, isNotAccount, nearAccount]);
@@ -55,7 +50,7 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
     <div className={cn(styles.wrapper)}>
       <SettingTitle title="Fill your box" isActive />
       <div className={cn(styles.img)}>
-        <img src={imgVal} />
+        <img src={imgValue} />
         <span className={styles.spanWin}>{creationForm.nftContentItems.length} NFT</span>
       </div>
 
@@ -65,7 +60,6 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
         </div>
         <div className={cn(styles.payInfo)}>
           {/* <PayInfo title="Gas Amount" value={`${price.gasAmount} NEAR`} size="big" /> */}
-
           <PayInfo title="Service Fee" value={`0 NEAR`} size="big" />
         </div>
         <div className={cn(styles.payBtn_block)}>
@@ -78,7 +72,6 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
           
             title={`PAY & CREATE`}
           />
-  
         </div>
       </div>
 
@@ -102,8 +95,11 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
         onClose={() => setNotAccount(false)}
       />
       <Modal
-        visible={isWarningTransaction}
-        title={'Several transactions are required'}
+       visible={isWarningTransaction}
+       title={'You will now need to sign several transactions: one to create your Lootbox and another to fill it with the tokens you selected. '}
+       subtitle={'Transactions will open automatically, one after the other.'}
+       className={styles.modalTitle}
+       classNameSubtitle={styles.modalSubtitle}
         content={
           <ButtonPay
             onClick={() => {

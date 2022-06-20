@@ -12,11 +12,14 @@ import { StatisticsLink } from '../atoms/StatisticsLink';
 
 
 export interface StatisticsProps {
-  stat: any;
-  winInfo: any;
+  statistics: any;
+  winnersLabelInfo: any;
 }
 export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
-  const { stat, winInfo } = props;
+  const { statistics, winnersLabelInfo } = props;
+  if (statistics === null || statistics === undefined) {
+    return <div>Loading</div>;
+  }
 
   const newWinInfo = (str: string) => {
     const newStr = str.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
@@ -41,7 +44,7 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
     },
 
  
-    labels: [`${newWinInfo(winInfo)}`],
+    labels: [`${newWinInfo(winnersLabelInfo)}`],
   };
 
   
@@ -51,7 +54,7 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
     <div className={styles.wrapper}>
       <div className={styles.wrapperStatistics}>
   
-        <Progress completed={stat.completedPercents} bgcolor="#F26680" />
+        <Progress completed={statistics.completedPercents} bgcolor="#F26680" />
         <div className={cn(styles.Chart)}>
           <div className={cn(styles.ChartAmount)}>
             <LabelSettings title="Win Amount" />
@@ -59,7 +62,7 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
               width={'174px'}
               height={'174px'}
               options={options}
-              series={[stat.completedPercents as any]}
+              series={[statistics.completedPercents as any]}
             ></ChartProgress>
             <span className={styles.span} />
           </div>
@@ -69,12 +72,12 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
               width={'174px'}
               height={'174px'}
               options={options}
-              series={[stat.remainingPercents as any]}
+              series={[statistics.remainingPercents as any]}
             />
           </div>
         </div>
         <div className={cn(styles.statisticInfo)}>
-          <StatisticsInfo title="Total Views" value={`${stat.totalViews}`} />
+          <StatisticsInfo title="Total Views" value={`${statistics.totalViews}`} />
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, useState, useMemo, useEffect, useRef } from 'react';
+import React, { ReactNode, FC, useState, useEffect, useRef } from 'react';
 import styles from './BoxSettings.module.scss';
 import cn from 'classnames';
 import { LabelSettings } from '../atoms/LabelSettings';
@@ -26,7 +26,6 @@ export interface BoxSettingsProps {
   setFtMetadata: (x: any) => void;
   newMetadata: any;
   setDropType: (x: any) => void;
-  clearForm: boolean;
   setMetadata: (x: any) => void;
 }
 const DEFAULT_NEAR_ITEM: NearContentItem = {
@@ -63,8 +62,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     setFtMetadata,
     newMetadata,
     setDropType,
-    clearForm,
-    setMetadata,
+    setMetadata
   } = props;
   const [value, setValue] = useState(20);
   const [link, onLink] = useState(true);

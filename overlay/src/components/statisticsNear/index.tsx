@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactChild, ReactNode } from 'react';
 import styles from './StatisticsNear.module.scss';
 import cn from 'classnames';
 
@@ -21,104 +21,34 @@ const titleList = [
 ];
 
 export interface StatisticsNearPropsStat {
-  stat?: any;
-  winInfo: any;
+  
+  children?:ReactChild| ReactNode
 }
-
-export const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) => {
-  const { stat, winInfo } = props;
-
-  if (stat === null) {
-    return <div>Loading</div>;
-  }
-
+export  const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) =>{
+ const {children, } = props
   return (
     <div className={cn(styles.wrapper)}>
-      <div className={cn(styles.titleLinks)}>
-        <div>
-          <Link to="/statistics">
-            <StatisticsTitle key={0} title={titleList[0].title} isActive />
-          </Link>
-        </div>
-        <div>
-          <Link to="/winners">
-            <StatisticsTitle key={1} title={titleList[1].title} />
-          </Link>
-        </div>
-        <div>
-          <Link to="/code">
-            <StatisticsTitle key={2} title={titleList[2].title} />
-          </Link>
-        </div>
+    <div className={cn(styles.titleLinks)}>
+      <div>
+        <Link to="/statistics">
+          <StatisticsTitle key={0} title={titleList[0].title} isActive />
+        </Link>
       </div>
-
-      <Statistics winInfo={winInfo} stat={stat} />
+      <div>
+        <Link to="/winners">
+          <StatisticsTitle key={1} title={titleList[1].title} />
+        </Link>
+      </div>
+      <div>
+        <Link to="/code">
+          <StatisticsTitle key={2} title={titleList[2].title} />
+        </Link>
+      </div>
     </div>
-  );
-};
-export interface StatisticsNearPropsWinner {
-  winners: any;
 
-  id?: any;
-  winInfo: any;
+    {children}
+  </div>
+  )
 }
-export const StatisticsWinners: FC<StatisticsNearPropsWinner> = (
-  props: StatisticsNearPropsWinner,
-) => {
-  const { winners, id, winInfo } = props;
 
-  return (
-    <div className={cn(styles.wrapper)}>
-      <div className={cn(styles.titleLinksWinners)}>
-        <div>
-          <Link to="/statistics">
-            <StatisticsTitle key={0} title={titleList[0].title} />
-          </Link>
-        </div>
-        <div>
-          <Link to="/winners">
-            <StatisticsTitle key={1} title={titleList[1].title} isActive />
-          </Link>
-        </div>
-        <div>
-          <Link to="/code">
-            <StatisticsTitle key={2} title={titleList[2].title} />
-          </Link>
-        </div>
-      </div>
 
-      <Winner winners={winners} winInfo={winInfo} />
-    </div>
-  );
-};
-export interface StatisticsNearPropsCode {
-  id: any;
-  winInfo: any;
-  landingUrl: string;
-}
-export const StatisticsCode: FC<StatisticsNearPropsCode> = (props: StatisticsNearPropsCode) => {
-  const { id, winInfo, landingUrl } = props;
-
-  return (
-    <div className={cn(styles.wrapper)}>
-      <div className={cn(styles.titleLinks)}>
-        <div>
-          <Link to="/statistics">
-            <StatisticsTitle key={0} title={titleList[0].title} />
-          </Link>
-        </div>
-        <div>
-          <Link to="/winners">
-            <StatisticsTitle key={1} title={titleList[1].title} />
-          </Link>
-        </div>
-        <div>
-          <Link to="/code">
-            <StatisticsTitle key={2} title={titleList[2].title} isActive />
-          </Link>
-        </div>
-      </div>
-      <Code winInfo={winInfo} id={id} landingUrl={landingUrl} />
-    </div>
-  );
-};

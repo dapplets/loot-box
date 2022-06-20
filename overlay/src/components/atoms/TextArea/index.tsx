@@ -21,9 +21,7 @@ export const TextArea: FC<TextAreaProps> = (props) => {
     onChange,
     onSubmit,
     placeholder,
-
     className,
-
     ...anotherProps
   } = props;
   const handleSubmit: ChangeEventHandler<HTMLTextAreaElement> = (event) => {

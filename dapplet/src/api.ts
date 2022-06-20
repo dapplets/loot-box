@@ -260,7 +260,8 @@ export class DappletApi implements IDappletApi {
       if (item.WinNear !== undefined) {
         winAmount = sum(winAmount, formatNearAmount(item.WinNear.total_amount));
       } else if (item.WinFt !== undefined) {
-        console.error('Total amount calculation is not implemented for FT.');
+        winAmount = sum(winAmount, formatNearAmount(item.WinFt.total_amount));
+        // console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
         winAmount = sum(winAmount, '1'); // ToDo: how to calculate statistics of NFT?

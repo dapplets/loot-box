@@ -7,17 +7,15 @@ import { CreatedBox } from '../atoms/CreatedBoxCard';
 import { Link } from 'react-router-dom';
 import { useToggle } from '../../hooks/useToggle';
 import { Preloader } from '../atoms/Preloader';
+import { getWin } from '../../utils/getWin';
 
-import { Lootbox } from '@loot-box/common/interfaces';
 export interface CreateNewBoxProps {
   children: ReactNode;
-  label: string;
-  imgVal: string;
-  winInfo: any;
+
 }
 
-export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) => {
-  const { label, imgVal, children, winInfo } = props;
+export const CreatedBoxList: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) => {
+  const {  children } = props;
 
   const [isShowDescription, onShowDescription] = useToggle(false);
 
@@ -35,61 +33,48 @@ export const CreateNewBox: FC<CreateNewBoxProps> = (props: CreateNewBoxProps) =>
     </div>
   );
 };
-export default CreateNewBox;
+export default CreatedBoxList;
 
 export interface ChildComponentProps {
-  number: number;
+ 
   label: string;
-  imgVal: string;
+  imgValue: string;
   onClick: () => void;
   id: string;
-  creationForm: Lootbox;
   status: string;
-  winInfo: any;
+  winnersLabelInfo: any;
   loader: boolean;
-  setWinInfo: (x: any) => void;
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
   const {
-    number,
+  
     label,
-    imgVal,
+    imgValue,
     onClick,
-    creationForm,
-    winInfo,
+    winnersLabelInfo,
     status,
     loader,
-    setWinInfo,
   } = props;
 
   const [winAmount, setWinAmount] = useState('');
-  const [load, setLoad] = useState(false);
+  const [isLoad, setLoad] = useState(false);
 
   useEffect(() => {
     setLoad(true);
-    if (winInfo.ftContentItems.length !== 0) {
-      winInfo.ftContentItems.map((x: any) => setWinAmount(`${x.tokenAmount} ${x.tokenTicker}`));
-    } else if (winInfo.nearContentItems.length !== 0) {
-      winInfo.nearContentItems.map((x: any) => setWinAmount(`${x.tokenAmount} NEAR`));
-    } else if (winInfo.nftContentItems.length !== 0) {
-      const winNft = String(winInfo.nftContentItems.length) + ` NFT`;
-      setWinAmount(winNft);
-    }
+    getWin(winnersLabelInfo,setWinAmount)
     setLoad(false);
   }, []);
 
-  
-
   return (
     <>
-      {load ? (
+      {isLoad ? (
         <Preloader />
       ) : (
         <CreatedBox
-          id={number}
+         
           label={label}
-          imageBox={imgVal}
+          imageBox={imgValue}
           status={status}
           onClick={onClick}
           WinInfo={winAmount}

@@ -10,7 +10,7 @@ import pig from '../../../icons/createNewBox/pig.png';
 
 import cn from 'classnames';
 import 'keen-slider/keen-slider.min.css';
-import { useKeenSlider, KeenSliderPlugin, KeenSliderInstance } from 'keen-slider/react';
+import { useKeenSlider} from 'keen-slider/react';
 import './Slider.module.scss';
 import styles from './Slider.module.scss';
 export interface ImageProps {

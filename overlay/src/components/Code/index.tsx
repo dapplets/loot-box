@@ -11,19 +11,19 @@ export interface CodeProps {
   onChange?: () => void;
   onSubmit?: () => void;
   id: any;
-  winInfo: any;
+  winnersLabelInfo: any;
   landingUrl: string;
 }
 
 export const Code: FC<CodeProps> = (props: CodeProps) => {
-  const { id, winInfo, landingUrl } = props;
+  const { id, winnersLabelInfo, landingUrl } = props;
 
   return (
     <div className={styles.wrapper}>
       <div className={cn(styles.code)}>
         <div className={styles.lootboxCode}>
           <Message
-            message={`We are holding a ${winInfo} #Giveaway. Click on the lootbox picture and get your prize!`}
+            message={`We are holding a ${winnersLabelInfo} #Giveaway. Click on the lootbox picture and get your prize!`}
             link={`${landingUrl}/${id}/`}
             instruction={`Don’t see the Box? Install this dapp: ${landingUrl}/how-to/`}
             project="The gift box is made with the LootBox Dapplet @lootboxdapp by @dappletsproject"

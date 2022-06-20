@@ -11,14 +11,14 @@ export interface CreatedBoxProps {
   label: string;
   imageBox: string;
   status: string;
-  id: number;
+ 
   onClick: () => void;
   WinInfo?: any;
   loader: boolean;
 }
 
 export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
-  const { label, imageBox, status, id, onClick, WinInfo, loader } = props;
+  const { label, imageBox, status, onClick, WinInfo, loader } = props;
 
   const visible = (hash: string): string => {
     const firstFourCharacters = hash.substring(0, 6);

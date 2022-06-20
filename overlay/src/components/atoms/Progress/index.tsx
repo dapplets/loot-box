@@ -27,7 +27,8 @@ export const Progress: FC<ProgressProps> = (props: ProgressProps) => {
             position: 'relative',
           }}
         >
-          <span className={cn(styles.labelStyles)}>
+          <span style={{position: 'relative',
+    top: '-1px'}} className={cn(styles.labelStyles)}>
             <img src={prog} alt="" />
           </span>
         </div>

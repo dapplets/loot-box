@@ -2,25 +2,15 @@ import React, { FC, useEffect, useMemo } from 'react';
 import styles from './Winner.module.scss';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
-
 import { StatisticsLink } from '../atoms/StatisticsLink';
 
 export interface WinnerProps {
   winners: any;
-  winInfo: any;
+  winnersLabelInfo: any;
 }
 export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
-  const { winners, winInfo } = props;
-
-  const newStr = winInfo.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
-  // useEffect(() => {
-  //   winners;
-  // }, [winners]);
-
-console.log(winners);
-
-
-
+  const { winners, winnersLabelInfo } = props;
+  const newStr = winnersLabelInfo.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
   return (
     <div className={styles.wrapper}>
       <div className={styles.blockInfo}>
@@ -56,7 +46,6 @@ console.log(winners);
       <div className={cn(styles.link)}>
         <Link to="/">
           <StatisticsLink
-        
           />
         </Link>
       </div>
