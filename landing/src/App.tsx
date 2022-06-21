@@ -25,6 +25,7 @@ import { Instruction } from './components/Instruction';
 import { getNetworkConfig } from '@loot-box/common/helpers';
 import { LootboxStat, Lootbox } from '@loot-box/common/interfaces';
 import { Instruction_Create } from './components/Instruction/create';
+import {ReactComponent as LogoWin} from './img/labelWin.svg'
 
 export interface AppProps {
   completed: number;
@@ -187,6 +188,11 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                 <a className={styles.authorTitleLink} target="_blank" href={ownerAddress}>
                   {owner}
                 </a>
+                <span className={styles.imgLabel}>
+                    <span className={styles.imgLabelSum}>{statCur?.totalAmount}</span>
+                    <span className={styles.imgLabelTicker}> {nameWin}</span>
+                   
+                  </span>
               </h1>
             ) : (
               <h1 className={styles.boxTitle}>
@@ -202,17 +208,14 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                     Dapplets Extension
                   </a>
                 </span>
+               
               </h1>
             )}
 
             <div className={styles.boxImg}>
               {!Number.isNaN(pictureId) ? (
                 <>
-                  <span className={styles.imgLabel}>
-                    <span className={styles.imgLabelSum}>{statCur?.totalAmount}</span>
-
-                    {nameWin}
-                  </span>
+                  
                   <img className={styles.mainImg} src={IMG[pictureId!]} />
                 </>
               ) : (
