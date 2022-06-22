@@ -111,8 +111,6 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
     setLoader(true);
     const init = async () => {
       await _api.getLootboxStat(lootboxId!).then((x) => {
-        console.log(x);
-        
         setStat(x);
         setLoader(false);
       });
@@ -190,6 +188,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                 </a>
                 <span className={styles.imgLabel}>
                     <span className={styles.imgLabelSum}>{statCur?.totalAmount}</span>
+                  
                     <span className={styles.imgLabelTicker}> {nameWin}</span>
                    
                   </span>
