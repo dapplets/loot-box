@@ -8,15 +8,35 @@
 
 4. Build the contract
 
-    `RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release`
+    `./build.sh`
 
-5. Deploy
+5. Login into CLI (testnet)
 
-    `near dev-deploy --wasmFile ./res/lootbox_near_contract.wasm`
+    `NEAR_ENV=mainnet near login`
 
-6. Initialize
+6. Deploy (testnet)
+
+    `./deploy.sh`
+
+7. Initialize (testnet)
 
     `near call app.ltbx.testnet new '' --accountId ltbx.testnet`
+    
+    or
+
+    `near deploy --wasmFile ./res/lootbox_near_contract.wasm --accountId=app.ltbx.testnet`
+
+8. Login into CLI (mainnet)
+
+    `NEAR_ENV=mainnet near login`
+
+9. Deploy (mainnet)
+
+    `NEAR_ENV=mainnet near deploy --wasmFile ./res/lootbox_near_contract.wasm --accountId=app.ltbx.near`
+
+10. Initialize (mainnet)
+
+    `NEAR_ENV=mainnet near call app.ltbx.near new '' --accountId ltbx.near`
 
 **Get more info at:**
 
