@@ -13,10 +13,11 @@ export interface ChildComponentProps {
   onNftUpdated: (x: NftContentItem) => void;
   nodeNftContract: any;
   nodeQuanity: any;
+  newContractAddress: any
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { onDeleteChild, nftItem, onNftUpdated, nodeNftContract, nodeQuanity } = props;
+  const { onDeleteChild, nftItem, onNftUpdated, nodeNftContract, nodeQuanity, newContractAddress} = props;
   const [id] = useState('radiogroup-' + Math.floor(Math.random() * 1_000_000));
 
   const changeHandler = (name: keyof NftContentItem, value: any) => {
@@ -39,11 +40,18 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
           id={`${id}-1`}
           value="Paras"
           name={id}
-          checked={nftItem.contractAddress === 'paras-token-v2.testnet'}
+          checked={newContractAddress === 'testnet'? nftItem.contractAddress === 'paras-token-v2.testnet':nftItem.contractAddress ===  'x.paras.near'}
           onChange={(e) => {
             // ToDo: how to make better?
             if (e.target.checked) {
-              changeHandler('contractAddress', 'paras-token-v2.testnet');
+             let newAddress = ''
+             if(newContractAddress === 'testnet' ){
+              newAddress = 'paras-token-v2.testnet'
+              changeHandler('contractAddress', newAddress);
+             }else{
+              changeHandler('contractAddress', 'x.paras.near');
+             }
+             
             }
           }}
         />
@@ -51,7 +59,7 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
           id={`${id}-3`}
           value="Custom NFT"
           name={id}
-          checked={nftItem.contractAddress !== 'paras-token-v2.testnet'}
+          checked={nftItem.contractAddress !== 'paras-token-v2.testnet' && nftItem.contractAddress !=='x.paras.near' }
           onChange={(e) => {
             if (e.target.checked) {
               changeHandler('contractAddress', '');

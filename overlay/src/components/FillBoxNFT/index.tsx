@@ -45,6 +45,8 @@ export const FillBox_Nft: FC<FillBoxProps_Nft> = (props: FillBoxProps_Nft) => {
   const getTransactionAndWarning = () => {
     setWarningTransaction(true);
   };
+  console.log(creationForm);
+  
 
   return (
     <div className={cn(styles.wrapper)}>

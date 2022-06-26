@@ -111,6 +111,8 @@ export default () => {
     });
     dappletApi.getNetworkConfig().then((config: any) => {
       setNetworkConfig(config);
+      // console.log(networkConfig,'networkConfig');
+      
     });
   }, [isFetching]);
 
@@ -292,6 +294,7 @@ export default () => {
               path="/settings_NFT"
               element={
                 <SettingsNFT
+                networkConfig={networkConfig}
                   creationForm={creationForm}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
                 />

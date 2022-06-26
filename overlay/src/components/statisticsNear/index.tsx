@@ -1,4 +1,4 @@
-import React, { FC, ReactChild, ReactNode } from 'react';
+import React, { FC, ReactChild, ReactNode, useState } from 'react';
 import styles from './StatisticsNear.module.scss';
 import cn from 'classnames';
 
@@ -26,22 +26,28 @@ export interface StatisticsNearPropsStat {
 }
 export  const StatisticsNear: FC<StatisticsNearPropsStat> = (props: StatisticsNearPropsStat) =>{
  const {children, } = props
+ const [selected, setSelected]= useState(0)
+ const handleClick=(key:any) =>{
+  setSelected(key)
+}
   return (
     <div className={cn(styles.wrapper)}>
     <div className={cn(styles.titleLinks)}>
+ 
+
       <div>
         <Link to="/statistics">
-          <StatisticsTitle key={0} title={titleList[0].title} isActive />
+          <StatisticsTitle key={0} title={titleList[0].title} isActive={selected===0}  onClick={()=>{handleClick(0)}} />
         </Link>
       </div>
       <div>
         <Link to="/winners">
-          <StatisticsTitle key={1} title={titleList[1].title} />
+          <StatisticsTitle key={1} title={titleList[1].title}  isActive={selected===1}  onClick={()=>{handleClick(1)}} />
         </Link>
       </div>
       <div>
         <Link to="/code">
-          <StatisticsTitle key={2} title={titleList[2].title} />
+          <StatisticsTitle key={2} title={titleList[2].title}  isActive={selected===2}  onClick={()=>{handleClick(2)}} />
         </Link>
       </div>
     </div>

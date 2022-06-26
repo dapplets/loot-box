@@ -19,6 +19,7 @@ export interface BoxSettingsProps {
   dataType?: string;
   creationForm: Lootbox;
   onCreationFormUpdate: (x: any) => void;
+  networkConfig: any
 }
 
 const DEFAULT_NFT_ITEM: NftContentItem = {
@@ -27,7 +28,8 @@ const DEFAULT_NFT_ITEM: NftContentItem = {
 };
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { creationForm, onCreationFormUpdate } = props;
+  const { creationForm, onCreationFormUpdate,networkConfig } = props;
+  const [newContractAddress, setNewContractAddress]= useState(null)
   const [link, onLink] = useState(true);
   const [value, setValue] = useState(creationForm.dropChance);
   const nodeNftContract = useRef<HTMLInputElement>();
@@ -37,6 +39,13 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const booleanNodeNftContract = nodeNftContract.current?.classList.contains('invalid');
   const booleanNodeQuanity = nodeQuanity.current?.classList.contains('invalid');
   const LinkBlock = useMemo(() => {
+    if(!networkConfig){
+      return
+    }else{
+       setNewContractAddress(networkConfig.networkId)
+       console.log(newContractAddress);
+       
+    }
     if (
       creationForm.nftContentItems.length !== 0 &&
       booleanNodeNftContract != true &&
@@ -65,7 +74,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
       nodeDropChance.current?.classList.add('invalid');
       
     }
-  }, [creationForm, link, nodeNftContract, nodeQuanity, DEFAULT_NFT_ITEM,value,nodeDropChance]);
+  }, [creationForm, link, nodeNftContract, nodeQuanity, DEFAULT_NFT_ITEM,value,nodeDropChance,newContractAddress]);
 
   useEffect(() => {
     creationForm.dropChance = value;
@@ -105,6 +114,8 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     const newForm = Object.assign({}, creationForm);
     creationForm.nftContentItems = [];
     newForm.nftContentItems = [DEFAULT_NFT_ITEM];
+  
+   
 
     creationForm.nearContentItems = [];
     creationForm.ftContentItems = [];
@@ -127,6 +138,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
           <div className={styles.Marketplace}>
             {creationForm.nftContentItems.map((x, i) => (
               <ChildComponent
+              newContractAddress={newContractAddress}
                 key={i}
                 nftItem={x}
                 onDeleteChild={
