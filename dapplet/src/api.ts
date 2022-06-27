@@ -12,8 +12,9 @@ import { sum, groupBy, sub, div, mul, toPrecision, zerofyEmptyString } from './h
 import { BN } from './bn.js';
 import * as format from './format';
 
-const { parseNearAmount, formatNearAmount } = Core.near.utils.format;
+const { parseNearAmount } = Core.near.utils.format;
 const { transactions } = Core.near;
+const { utils } = Core.ethers;
 
 const MAX_GAS_PER_TX = 300000000000000;
 
@@ -214,9 +215,9 @@ export class DappletApi implements IDappletApi {
 
     const result = {
       feeAmount: '0',
-      fillAmount: formatNearAmount(fillAmount),
-      gasAmount: formatNearAmount(MAX_GAS_PER_TX.toString()),
-      totalAmount: formatNearAmount(sum('0', fillAmount, MAX_GAS_PER_TX.toString())),
+      fillAmount: utils.formatUnits(fillAmount, 24),
+      gasAmount: utils.formatUnits(MAX_GAS_PER_TX.toString(), 24),
+      totalAmount: utils.formatUnits(sum('0', fillAmount, MAX_GAS_PER_TX.toString()), 24),
     };
 
     return result;
@@ -228,7 +229,7 @@ export class DappletApi implements IDappletApi {
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
     const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
 
-    const ft_token_contracts = [...lootbox.loot_items, ...claims].filter((x) => x['Ft'] || x['WinFt']).map(x => x.Ft.token_contract);
+    const ft_token_contracts = [...lootbox.loot_items, ...claims].filter((x) => x['Ft'] || x['WinFt']).map(x => (x.Ft || x.WinFt).token_contract);
     const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
 
     let remainedAmount = '0';
@@ -236,12 +237,12 @@ export class DappletApi implements IDappletApi {
     for (const item of lootbox.loot_items) {
       if (item.Near !== undefined) {
         winLabel = 'Near';
-        remainedAmount = sum(remainedAmount, formatNearAmount(item.Near.balance));
+        remainedAmount = sum(remainedAmount, utils.formatUnits(item.Near.balance, 24));
       } else if (item.Ft !== undefined) {
         winLabel = 'Token';
         const metadata = metadataArray.find(x => x.address === item.Ft.token_contract);
         if (!metadata) throw new Error("Lootbox: no metadata found.");
-        remainedAmount = sum(remainedAmount, formatNearAmount(item.Ft.balance, metadata.decimals));
+        remainedAmount = sum(remainedAmount, utils.formatUnits(item.Ft.balance, metadata.decimals));
       } else if (item.Nft !== undefined) {
         winLabel = 'NFT';
         // console.error('Total amount calculation is not implemented for NFT.');
@@ -255,9 +256,11 @@ export class DappletApi implements IDappletApi {
 
     for (const item of claims) {
       if (item.WinNear !== undefined) {
-        winAmount = sum(winAmount, formatNearAmount(item.WinNear.total_amount));
+        winAmount = sum(winAmount, utils.formatUnits(item.WinNear.total_amount, 24));
       } else if (item.WinFt !== undefined) {
-        winAmount = sum(winAmount, formatNearAmount(item.WinFt.total_amount));
+        const metadata = metadataArray.find(x => x.address === item.WinFt.token_contract);
+        if (!metadata) throw new Error("Lootbox: no metadata found.");
+        winAmount = sum(winAmount, utils.formatUnits(item.WinFt.total_amount, metadata.decimals));
         // console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
@@ -310,7 +313,7 @@ export class DappletApi implements IDappletApi {
         return {
           lootboxId: x.WinNear.lootbox_id,
           nearAccount: x.WinNear.claimer_id,
-          amount: toPrecision(formatNearAmount(x.WinNear.total_amount), 6),
+          amount: toPrecision(utils.formatUnits(x.WinNear.total_amount, 24), 6),
           txLink: null,
         };
       } else if (typeof x === 'object' && x.WinFt !== undefined) {
@@ -318,7 +321,7 @@ export class DappletApi implements IDappletApi {
         return {
           lootboxId: x.WinFt.lootbox_id,
           nearAccount: x.WinFt.claimer_id,
-          amount: toPrecision(format.formatNearAmount(x.WinFt.total_amount, metadata.decimals), 6), // ToDo: get metadata
+          amount: toPrecision(utils.formatUnits(x.WinFt.total_amount, metadata.decimals), 6), // ToDo: get metadata
           txLink: null,
         };
       } else if (typeof x === 'object' && x.WinNft !== undefined) {
@@ -417,9 +420,9 @@ export class DappletApi implements IDappletApi {
       nearContentItems: all_loot_items
         .filter((x) => x['Near'])
         .map((x) => ({
-          tokenAmount: formatNearAmount(x.Near.total_amount),
-          dropAmountFrom: formatNearAmount(x.Near.drop_amount_from),
-          dropAmountTo: formatNearAmount(x.Near.drop_amount_to),
+          tokenAmount: utils.formatUnits(x.Near.total_amount, 24),
+          dropAmountFrom: utils.formatUnits(x.Near.drop_amount_from, 24),
+          dropAmountTo: utils.formatUnits(x.Near.drop_amount_to, 24),
           dropType: x.Near.drop_amount_from === x.Near.drop_amount_to ? 'fixed' : 'variable',
         })),
       ftContentItems: all_loot_items
@@ -430,9 +433,9 @@ export class DappletApi implements IDappletApi {
 
           return ({
             contractAddress: x.Ft.token_contract,
-            tokenAmount: format.formatNearAmount(x.Ft.total_amount, metadata.decimals),
-            dropAmountFrom: format.formatNearAmount(x.Ft.drop_amount_from, metadata.decimals),
-            dropAmountTo: format.formatNearAmount(x.Ft.drop_amount_to, metadata.decimals),
+            tokenAmount: utils.formatUnits(x.Ft.total_amount, metadata.decimals),
+            dropAmountFrom: utils.formatUnits(x.Ft.drop_amount_from, metadata.decimals),
+            dropAmountTo: utils.formatUnits(x.Ft.drop_amount_to, metadata.decimals),
             dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
             tokenTicker: metadata.symbol
           });
@@ -498,7 +501,7 @@ export class DappletApi implements IDappletApi {
         status: 2,
         nearContentItems: [
           {
-            tokenAmount: formatNearAmount(claim_status.WinNear.total_amount.toString()),
+            tokenAmount: utils.formatUnits(claim_status.WinNear.total_amount.toString(), 24),
           },
         ],
         ftContentItems: [],
@@ -525,7 +528,7 @@ export class DappletApi implements IDappletApi {
         ftContentItems: [
           {
             contractAddress: claim_status.WinFt.token_contract,
-            tokenAmount: format.formatNearAmount(claim_status.WinFt.total_amount.toString(), metadata.decimals),
+            tokenAmount: utils.formatUnits(claim_status.WinFt.total_amount.toString(), metadata.decimals),
           },
         ],
         nftContentItems: [],

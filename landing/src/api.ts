@@ -6,10 +6,10 @@ import {
 } from '@loot-box/common/interfaces';
 import * as nearAPI from 'near-api-js';
 import * as format from './format';
+import { utils } from 'ethers';
 import { sum, groupBy, sub, div, mul, toPrecision, zerofyEmptyString } from './helpers';
 
 const { connect, keyStores, WalletConnection, Contract } = nearAPI;
-const { formatNearAmount, parseNearAmount } = nearAPI.utils.format;
 
 export class DappletApi implements IDappletApiForLanding {
   private _contract = this.getContract();
@@ -38,39 +38,40 @@ export class DappletApi implements IDappletApiForLanding {
     if (lootboxId === undefined) return null;
     const contract = await this._contract;
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
-    if (!lootbox) return null;
+    const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
 
-    const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
-    const ft_token_contracts = all_loot_items.filter((x) => x['Ft']).map(x => x.Ft.token_contract);
+    const ft_token_contracts = [...lootbox.loot_items, ...claims].filter((x) => x['Ft'] || x['WinFt']).map(x => (x.Ft || x.WinFt).token_contract);
     const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
-
-    let totalAmount = '0';
-    for (const item of all_loot_items) {
+    
+    let remainedAmount = '0';
+    let winLabel = '';
+    for (const item of lootbox.loot_items) {
       if (item.Near !== undefined) {
-        totalAmount = sum(totalAmount, formatNearAmount(item.Near.total_amount));
+        winLabel = 'Near';
+        remainedAmount = sum(remainedAmount, utils.formatUnits(item.Near.balance, 24));
       } else if (item.Ft !== undefined) {
-       
+        winLabel = 'Token';
         const metadata = metadataArray.find(x => x.address === item.Ft.token_contract);
         if (!metadata) throw new Error("Lootbox: no metadata found.");
-        totalAmount = sum(totalAmount, formatNearAmount(item.Ft.total_amount, metadata.decimals));
-       
+        remainedAmount = sum(remainedAmount, utils.formatUnits(item.Ft.balance, metadata.decimals));
       } else if (item.Nft !== undefined) {
+        winLabel = 'NFT';
         // console.error('Total amount calculation is not implemented for NFT.');
-        totalAmount = sum(totalAmount, '1'); // ToDo: how to calculate statistics of NFT?
+        remainedAmount = sum(remainedAmount, '1'); // ToDo: how to calculate statistics of NFT?
       } else {
         console.error('Unknown loot item');
       }
     }
 
-    const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
-
     let winAmount = '0';
 
     for (const item of claims) {
       if (item.WinNear !== undefined) {
-        winAmount = sum(winAmount, formatNearAmount(item.WinNear.total_amount));
+        winAmount = sum(winAmount, utils.formatUnits(item.WinNear.total_amount, 24));
       } else if (item.WinFt !== undefined) {
-        winAmount = sum(winAmount, formatNearAmount(item.WinFt.total_amount));
+        const metadata = metadataArray.find(x => x.address === item.WinFt.token_contract);
+        if (!metadata) throw new Error("Lootbox: no metadata found.");
+        winAmount = sum(winAmount, utils.formatUnits(item.WinFt.total_amount, metadata.decimals));
         // console.error('Total amount calculation is not implemented for FT.');
       } else if (item.WinNft !== undefined) {
         // console.error('Total amount calculation is not implemented for NFT.');
@@ -82,17 +83,21 @@ export class DappletApi implements IDappletApiForLanding {
       }
     }
 
+    const totalAmount = sum(remainedAmount, winAmount);
     const completedPercents = totalAmount === '0' ? '0' : mul(div(winAmount, totalAmount), '100');
     const remainingPercents = totalAmount === '0' ? '0' : sub('100', completedPercents);
 
     const result = {
       totalAmount: totalAmount,
       winAmount: winAmount,
-      currentBalance: sub(totalAmount, winAmount),
+      currentBalance: remainedAmount,
       totalViews: claims.length,
       completedPercents: toPrecision(completedPercents, 3),
       remainingPercents: toPrecision(remainingPercents, 3),
+      winLabel: winLabel,
     };
+    
+    console.log(result)
 
     return result;
   }
@@ -140,7 +145,7 @@ export class DappletApi implements IDappletApiForLanding {
         return {
           lootboxId: x.WinNear.lootbox_id,
           nearAccount: x.WinNear.claimer_id,
-          amount: toPrecision(formatNearAmount(x.WinNear.total_amount), 6),
+          amount: toPrecision(utils.formatUnits(x.WinNear.total_amount, 24), 6),
           txLink: null,
         };
       } else if (typeof x === 'object' && x.WinFt !== undefined) {
@@ -148,7 +153,7 @@ export class DappletApi implements IDappletApiForLanding {
         return {
           lootboxId: x.WinFt.lootbox_id,
           nearAccount: x.WinFt.claimer_id,
-          amount: toPrecision(format.formatNearAmount(x.WinFt.total_amount, metadata!.decimals), 6), // ToDo: get metadata
+          amount: toPrecision(utils.formatUnits(x.WinFt.total_amount, metadata!.decimals), 6), // ToDo: get metadata
           txLink: null,
         };
       } else if (typeof x === 'object' && x.WinNft !== undefined) {
@@ -215,12 +220,10 @@ export class DappletApi implements IDappletApiForLanding {
   }
 
   private async _convertLootboxFromContract(x: any):  Promise<Lootbox>  {
-    const all_loot_items = [...x.loot_items, ...x.distributed_items];
+    const all_loot_items = [...x.loot_items];
     const ft_token_contracts = all_loot_items.filter((x) => x['Ft']).map(x => x.Ft.token_contract);
     const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
-console.log(all_loot_items,'all_loot_items');
-console.log(ft_token_contracts,'ft_token_contracts');
-console.log(metadataArray,'metadataArray');
+    
     return {
       id: x.id,
       pictureId: x.picture_id,
@@ -230,9 +233,9 @@ console.log(metadataArray,'metadataArray');
       nearContentItems: all_loot_items
         .filter((x) => x['Near'])
         .map((x) => ({
-          tokenAmount: formatNearAmount(x.Near.total_amount),
-          dropAmountFrom: formatNearAmount(x.Near.drop_amount_from),
-          dropAmountTo: formatNearAmount(x.Near.drop_amount_to),
+          tokenAmount: utils.formatUnits(x.Near.total_amount, 24),
+          dropAmountFrom: utils.formatUnits(x.Near.drop_amount_from, 24),
+          dropAmountTo: utils.formatUnits(x.Near.drop_amount_to, 24),
           dropType: x.Near.drop_amount_from === x.Near.drop_amount_to ? 'fixed' : 'variable',
         })),
       ftContentItems: all_loot_items
@@ -243,9 +246,9 @@ console.log(metadataArray,'metadataArray');
 
           return ({
             contractAddress: x.Ft.token_contract,
-            tokenAmount: format.formatNearAmount(x.Ft.total_amount, metadata.decimals),
-            dropAmountFrom: format.formatNearAmount(x.Ft.drop_amount_from, metadata.decimals),
-            dropAmountTo: format.formatNearAmount(x.Ft.drop_amount_to, metadata.decimals),
+            tokenAmount: utils.formatUnits(x.Ft.total_amount, metadata.decimals),
+            dropAmountFrom: utils.formatUnits(x.Ft.drop_amount_from, metadata.decimals),
+            dropAmountTo: utils.formatUnits(x.Ft.drop_amount_to, metadata.decimals),
             dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
             tokenTicker: metadata.symbol
           });
