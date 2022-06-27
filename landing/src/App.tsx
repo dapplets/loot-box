@@ -188,7 +188,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                   {owner}
                 </a>
                 <span className={styles.imgLabel}>
-                    <span className={styles.imgLabelSum}>{toPrecision(statCur?.totalAmount,3)}</span>
+                    <span className={styles.imgLabelSum}>{toPrecision(statCur?.totalAmount!,3)}</span>
                   
                     <span className={styles.imgLabelTicker}> {nameWin}</span>
                    
@@ -239,7 +239,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                 <p className={cn(styles.textDescription, styles.textDescriptionWinner)}>
                   <span className={styles.nameOwner}>{owner}</span>&nbsp;is&nbsp;hosting a&nbsp;giveaway
                   on&nbsp;Twitter. Join now for a&nbsp;chance to&nbsp;win
-                  <span className={styles.totalSum}> {statCur?.totalAmount}</span>
+                  <span className={styles.totalSum}> {toPrecision(statCur?.totalAmount!,3)}</span>
                   <span className={styles.labelSum}> {nameWin}</span>
                 </p>
 
