@@ -31,7 +31,7 @@ export class DappletApi implements IDappletApiForLanding {
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
     if (!lootbox) return null;
 
-    return this._fillTokenTickers(this._convertLootboxFromContract(lootbox));
+    return this._fillTokenTickers(await this._convertLootboxFromContract(lootbox));
   }
 
   async getLootboxStat(lootboxId: string): Promise<LootboxStat | null> {
@@ -214,8 +214,13 @@ export class DappletApi implements IDappletApiForLanding {
     }
   }
 
-  private _convertLootboxFromContract(x: any): Lootbox {
+  private async _convertLootboxFromContract(x: any):  Promise<Lootbox>  {
     const all_loot_items = [...x.loot_items, ...x.distributed_items];
+    const ft_token_contracts = all_loot_items.filter((x) => x['Ft']).map(x => x.Ft.token_contract);
+    const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
+console.log(all_loot_items,'all_loot_items');
+console.log(ft_token_contracts,'ft_token_contracts');
+console.log(metadataArray,'metadataArray');
     return {
       id: x.id,
       pictureId: x.picture_id,
@@ -232,13 +237,19 @@ export class DappletApi implements IDappletApiForLanding {
         })),
       ftContentItems: all_loot_items
         .filter((x) => x['Ft'])
-        .map((x) => ({
-          contractAddress: x.Ft.token_contract,
-          tokenAmount: format.formatNearAmount(x.Ft.total_amount, 6),
-          dropAmountFrom: format.formatNearAmount(x.Ft.drop_amount_from, 6),
-          dropAmountTo: format.formatNearAmount(x.Ft.drop_amount_to, 6),
-          dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
-        })),
+        .map((x) => {
+          const metadata = metadataArray.find(y => y.address === x.Ft.token_contract);
+          if (!metadata) throw new Error("Lootbox: no metadata found.");
+
+          return ({
+            contractAddress: x.Ft.token_contract,
+            tokenAmount: format.formatNearAmount(x.Ft.total_amount, metadata.decimals),
+            dropAmountFrom: format.formatNearAmount(x.Ft.drop_amount_from, metadata.decimals),
+            dropAmountTo: format.formatNearAmount(x.Ft.drop_amount_to, metadata.decimals),
+            dropType: x.Ft.drop_amount_from === x.Ft.drop_amount_to ? 'fixed' : 'variable',
+            tokenTicker: metadata.symbol
+          });
+        }),
       nftContentItems: all_loot_items
         .filter((x) => x['Nft'])
         .map((x) => ({
