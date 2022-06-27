@@ -226,33 +226,30 @@ export class DappletApi implements IDappletApi {
     if (lootboxId === undefined) return null;
     const contract = await this._contract;
     const lootbox = await contract.get_lootbox_by_id({ lootbox_id: lootboxId.toString() });
+    const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
 
-    const all_loot_items = [...lootbox.loot_items, ...lootbox.distributed_items];
-
-    const ft_token_contracts = all_loot_items.filter((x) => x['Ft']).map(x => x.Ft.token_contract);
+    const ft_token_contracts = [...lootbox.loot_items, ...claims].filter((x) => x['Ft'] || x['WinFt']).map(x => x.Ft.token_contract);
     const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
 
-    let totalAmount = '0';
+    let remainedAmount = '0';
     let winLabel = '';
-    for (const item of all_loot_items) {
+    for (const item of lootbox.loot_items) {
       if (item.Near !== undefined) {
         winLabel = 'Near';
-        totalAmount = sum(totalAmount, formatNearAmount(item.Near.total_amount));
+        remainedAmount = sum(remainedAmount, formatNearAmount(item.Near.balance));
       } else if (item.Ft !== undefined) {
         winLabel = 'Token';
         const metadata = metadataArray.find(x => x.address === item.Ft.token_contract);
         if (!metadata) throw new Error("Lootbox: no metadata found.");
-        totalAmount = sum(totalAmount, formatNearAmount(item.Ft.total_amount, metadata.decimals));
+        remainedAmount = sum(remainedAmount, formatNearAmount(item.Ft.balance, metadata.decimals));
       } else if (item.Nft !== undefined) {
         winLabel = 'NFT';
         // console.error('Total amount calculation is not implemented for NFT.');
-        totalAmount = sum(totalAmount, '1'); // ToDo: how to calculate statistics of NFT?
+        remainedAmount = sum(remainedAmount, '1'); // ToDo: how to calculate statistics of NFT?
       } else {
         console.error('Unknown loot item');
       }
     }
-
-    const claims = await contract.get_claims_by_lootbox({ lootbox_id: lootboxId.toString() });
 
     let winAmount = '0';
 
@@ -272,13 +269,14 @@ export class DappletApi implements IDappletApi {
       }
     }
 
+    const totalAmount = sum(remainedAmount, winAmount);
     const completedPercents = totalAmount === '0' ? '0' : mul(div(winAmount, totalAmount), '100');
     const remainingPercents = totalAmount === '0' ? '0' : sub('100', completedPercents);
 
     const result = {
       totalAmount: totalAmount,
       winAmount: winAmount,
-      currentBalance: sub(totalAmount, winAmount),
+      currentBalance: remainedAmount,
       totalViews: claims.length,
       completedPercents: toPrecision(completedPercents, 3),
       remainingPercents: toPrecision(remainingPercents, 3),
@@ -406,7 +404,7 @@ export class DappletApi implements IDappletApi {
   private async _convertLootboxFromContract(x: any): Promise<Lootbox> {
     // _getFtMetadata
 
-    const all_loot_items = [...x.loot_items, ...x.distributed_items];
+    const all_loot_items = [...x.loot_items];
     const ft_token_contracts = all_loot_items.filter((x) => x['Ft']).map(x => x.Ft.token_contract);
     const metadataArray = await Promise.all(ft_token_contracts.map(x => this._getFtMetadata(x).then(y => ({ address: x, ...y }))));
 

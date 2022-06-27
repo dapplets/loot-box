@@ -31,7 +31,7 @@ trait FungibleToken {
 
 #[ext_contract(ext_self)]
 trait SelfContract {
-    fn callback_return_claim_result(&mut self, claim_result: ClaimResult) -> ClaimResult;
+    fn callback_return_claim_result(&mut self, claim_result: ClaimResult, loot_idx: U64) -> ClaimResult;
     fn callback_ft_storage_deposit(&mut self, claimer_id: AccountId, token_contract: AccountId, total_amount: U128) -> Promise;
 }
 
@@ -390,27 +390,22 @@ impl Contract {
             },
             None => {
                 // generate loot
-                let claim_result = self.internal_pull_random_loot(&mut _lootbox);
+                let (claim_result, loot_idx) = self.internal_pull_random_loot(&mut _lootbox);
 
                 match claim_result {
-                    ClaimResult::NotExists => {
-                        env::panic_str("Lootbox: unreachable code");
-                    },
-                    ClaimResult::NotOpened => {
-                        env::panic_str("Lootbox: unreachable code");
-                    },
                     ClaimResult::NotWin { lootbox_id, claimer_id } => {
                         Either::Left(self.not_win_and_claim(lootbox_id, claimer_id))
                     },
                     ClaimResult::WinNear { lootbox_id, claimer_id, total_amount } => {
-                        Either::Left(self.near_transfer_and_claim(lootbox_id, claimer_id, total_amount))
+                        Either::Left(self.near_transfer_and_claim(lootbox_id, claimer_id, total_amount, loot_idx))
                     },
                     ClaimResult::WinFt { lootbox_id, claimer_id, token_contract, total_amount } => {
-                        Either::Left(self.ft_transfer_and_claim(lootbox_id, claimer_id, token_contract, total_amount))
+                        Either::Left(self.ft_transfer_and_claim(lootbox_id, claimer_id, token_contract, total_amount, loot_idx))
                     },
                     ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id } => {
-                        Either::Left(self.nft_transfer_and_claim(lootbox_id, claimer_id, token_contract, token_id))
+                        Either::Left(self.nft_transfer_and_claim(lootbox_id, claimer_id, token_contract, token_id, loot_idx))
                     },
+                    _ => env::panic_str("Lootbox: unreachable code")
                 }
             }
         }
@@ -422,6 +417,7 @@ impl Contract {
         .then(
             ext_self::callback_return_claim_result(
                 ClaimResult::NotWin { lootbox_id, claimer_id },
+                0.into(),
                 env::current_account_id(),
                 NO_DEPOSIT,
                 GAS_FOR_NFT_CHECK_OWNERSHIP,
@@ -429,12 +425,13 @@ impl Contract {
         )
     }
 
-    fn near_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, total_amount: U128) -> Promise {
+    fn near_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, total_amount: U128, loot_idx: U64) -> Promise {
         Promise::new(claimer_id.clone())
         .transfer(total_amount.0)
         .then(
             ext_self::callback_return_claim_result(
                 ClaimResult::WinNear { lootbox_id, claimer_id, total_amount },
+                loot_idx,
                 env::current_account_id(),
                 NO_DEPOSIT,
                 GAS_FOR_NFT_CHECK_OWNERSHIP,
@@ -442,7 +439,7 @@ impl Contract {
         )
     }
 
-    fn ft_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, total_amount: U128) -> Promise {
+    fn ft_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, total_amount: U128, loot_idx: U64) -> Promise {
         ext_ft::storage_deposit(
             Some(claimer_id.to_string()),
             Some(true),
@@ -463,6 +460,7 @@ impl Contract {
             .then(
                 ext_self::callback_return_claim_result(
                     ClaimResult::WinFt { lootbox_id, claimer_id, token_contract, total_amount },
+                    loot_idx,
                     env::current_account_id(),
                     NO_DEPOSIT,
                     GAS_FOR_NFT_CHECK_OWNERSHIP,
@@ -487,7 +485,7 @@ impl Contract {
         )
     }
 
-    fn nft_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, token_id: String) -> Promise {
+    fn nft_transfer_and_claim(&mut self, lootbox_id: U64, claimer_id: AccountId, token_contract: AccountId, token_id: String, loot_idx: U64) -> Promise {
         ext_nft::nft_transfer(
             claimer_id.to_string(),
             token_id.clone(),
@@ -499,6 +497,7 @@ impl Contract {
         ).then(
             ext_self::callback_return_claim_result(
                 ClaimResult::WinNft { lootbox_id, claimer_id, token_contract, token_id },
+                loot_idx,
                 env::current_account_id(),
                 NO_DEPOSIT,
                 GAS_FOR_NFT_CHECK_OWNERSHIP,
@@ -507,18 +506,17 @@ impl Contract {
     }
 
     #[private]
-    pub fn callback_return_claim_result(&mut self, claim_result: ClaimResult) -> ClaimResult {
+    pub fn callback_return_claim_result(&mut self, claim_result: ClaimResult, loot_idx: U64) -> ClaimResult {
         if env::promise_results_count() == 1 && !is_promise_success() {
             env::panic_str("Lootbox: token transfering error");
         }
 
         let (lootbox_id, account_id) = match claim_result {
-            ClaimResult::NotExists => env::panic_str("Lootbox: unreachable code"),
-            ClaimResult::NotOpened => env::panic_str("Lootbox: unreachable code"),
             ClaimResult::NotWin { lootbox_id, ref claimer_id } => (lootbox_id.0, claimer_id),
             ClaimResult::WinNear { lootbox_id, ref claimer_id, total_amount: _ } => (lootbox_id.0, claimer_id),
             ClaimResult::WinFt { lootbox_id, ref claimer_id, token_contract: _, total_amount: _ } => (lootbox_id.0, claimer_id),
-            ClaimResult::WinNft { lootbox_id, ref claimer_id, token_contract: _, token_id: _ } => (lootbox_id.0, claimer_id)
+            ClaimResult::WinNft { lootbox_id, ref claimer_id, token_contract: _, token_id: _ } => (lootbox_id.0, claimer_id),
+            _ => env::panic_str("Lootbox: unreachable code")
         };
 
         let mut _lootbox = self.lootboxes_by_id.get(lootbox_id).unwrap_or_else(|| env::panic_str("No lootbox"));
@@ -532,6 +530,60 @@ impl Contract {
                 .unwrap(),
             )
         });
+
+        let loot_idx_usize = loot_idx.0 as usize;
+
+        match claim_result {
+            ClaimResult::NotWin { lootbox_id: _, claimer_id: _ } => { },
+            ClaimResult::WinNear { lootbox_id: _, claimer_id: _, total_amount: win_amount } => {
+                match &_lootbox.loot_items[loot_idx_usize] {
+                    LootItem::Near { total_amount, drop_amount_from, drop_amount_to, balance } => {
+                        let new_balance = balance.0 - win_amount.0;
+
+                        if new_balance == 0 {
+                            _lootbox.loot_items.remove(loot_idx_usize);
+                        } else {
+                            _lootbox.loot_items[loot_idx_usize] = LootItem::Near { 
+                                total_amount: *total_amount, 
+                                drop_amount_from: *drop_amount_from, 
+                                drop_amount_to: *drop_amount_to, 
+                                balance: new_balance.into()
+                            };
+                        }
+                    },
+                    _ => env::panic_str("Lootbox: unreachable code")
+                }
+            },
+            ClaimResult::WinFt { lootbox_id: _, claimer_id: _, token_contract: _, total_amount: win_amount } => {
+                match &_lootbox.loot_items[loot_idx_usize] {
+                    LootItem::Ft { token_contract, total_amount, drop_amount_from, drop_amount_to, balance } => {
+                        let new_balance = balance.0 - win_amount.0;
+
+                        if new_balance == 0 {
+                            _lootbox.loot_items.remove(loot_idx_usize);
+                        } else {
+                            _lootbox.loot_items[loot_idx_usize] = LootItem::Ft {
+                                token_contract: token_contract.clone(),
+                                total_amount: *total_amount,
+                                drop_amount_from: *drop_amount_from, 
+                                drop_amount_to: *drop_amount_to, 
+                                balance: new_balance.into()
+                            };
+                        }
+                    },
+                    _ => env::panic_str("Lootbox: unreachable code")
+                }
+            },
+            ClaimResult::WinNft { lootbox_id: _, claimer_id: _, token_contract: _, token_id: _ } => {
+                match &_lootbox.loot_items[loot_idx_usize] {
+                    LootItem::Nft { token_contract: _, token_id: _ } => {
+                        _lootbox.loot_items.remove(loot_idx_usize);
+                    },
+                    _ => env::panic_str("Lootbox: unreachable code")
+                }
+            },
+            _ => env::panic_str("Lootbox: unreachable code")
+        };
 
         // change lootbox status
         if _lootbox.loot_items.len() == 0 {
@@ -565,7 +617,9 @@ impl Contract {
         claim_result
     }
 
-    fn internal_pull_random_loot(&mut self, _lootbox: &mut Lootbox) -> ClaimResult {
+    // ToDo: reentrancy attack
+
+    fn internal_pull_random_loot(&mut self, _lootbox: &mut Lootbox) -> (ClaimResult, U64) {
         assert_ne!(_lootbox.loot_items.len(), 0, "Lootbox: items are over");
 
         let random = env::random_seed_array();
@@ -578,28 +632,12 @@ impl Contract {
 
         if random[0] <= _lootbox.drop_chance {
             let item = &_lootbox.loot_items[rand_idx];
-            match item {
-                LootItem::Near { total_amount, drop_amount_from, drop_amount_to, balance} => {
+            let claim_result = match item {
+                LootItem::Near { total_amount: _, drop_amount_from, drop_amount_to, balance} => {
                     let mut win_amount = random_2 % (drop_amount_to.0 - drop_amount_from.0 + 1) + drop_amount_from.0;
 
                     if win_amount > balance.0 {
                         win_amount = balance.0;
-                    }
-
-                    let new_balance = balance.0 - win_amount;
-
-                    let new_item = LootItem::Near { 
-                        total_amount: *total_amount, 
-                        drop_amount_from: *drop_amount_from, 
-                        drop_amount_to: *drop_amount_to, 
-                        balance: new_balance.into()
-                    };
-
-                    if new_balance == 0 {
-                        _lootbox.distributed_items.push(new_item);
-                        _lootbox.loot_items.remove(rand_idx);
-                    } else {
-                        _lootbox.loot_items[rand_idx] = new_item;
                     }
 
                     ClaimResult::WinNear { 
@@ -608,29 +646,11 @@ impl Contract {
                         total_amount: win_amount.into()
                     }
                 },
-                LootItem::Ft { token_contract, total_amount, drop_amount_from, drop_amount_to, balance } => {
+                LootItem::Ft { token_contract, total_amount: _, drop_amount_from, drop_amount_to, balance } => {
                     let mut win_amount = random_2 % (drop_amount_to.0 - drop_amount_from.0 + 1) + drop_amount_from.0;
 
                     if win_amount > balance.0 {
                         win_amount = balance.0;
-                    }
-
-                    let new_balance = balance.0 - win_amount;
-                    let token_contract = token_contract.clone();
-
-                    let new_item = LootItem::Ft {
-                        token_contract: token_contract.clone(),
-                        total_amount: *total_amount,
-                        drop_amount_from: *drop_amount_from, 
-                        drop_amount_to: *drop_amount_to, 
-                        balance: new_balance.into()
-                    };
-
-                    if new_balance == 0 {
-                        _lootbox.distributed_items.push(new_item);
-                        _lootbox.loot_items.remove(rand_idx);
-                    } else {
-                        _lootbox.loot_items[rand_idx] = new_item;
                     }
 
                     ClaimResult::WinFt {
@@ -641,30 +661,24 @@ impl Contract {
                     }
                 },
                 LootItem::Nft { token_contract, token_id } => {
-                    let new_item = LootItem::Nft { 
-                        token_contract: token_contract.clone(),
-                        token_id: token_id.clone()
-                    };
-
-                    _lootbox.distributed_items.push(new_item);
-
-                    let claim_result = ClaimResult::WinNft { 
+                    ClaimResult::WinNft { 
                         lootbox_id: _lootbox.id, 
                         claimer_id: env::predecessor_account_id(),
                         token_contract: token_contract.clone(),
                         token_id: token_id.clone()
-                    };
-
-                    _lootbox.loot_items.remove(rand_idx);
-
-                    claim_result
+                    }
                 }
-            }
+            };
+
+            (claim_result, (rand_idx as u64).into())
         } else {
-            ClaimResult::NotWin { 
-                lootbox_id: _lootbox.id, 
-                claimer_id: env::predecessor_account_id() 
-            }
+            (
+                ClaimResult::NotWin { 
+                    lootbox_id: _lootbox.id, 
+                    claimer_id: env::predecessor_account_id() 
+                },
+                0.into()
+            )
         }
     }
 }
