@@ -26,6 +26,7 @@ import { getNetworkConfig } from '@loot-box/common/helpers';
 import { LootboxStat, Lootbox } from '@loot-box/common/interfaces';
 import { Instruction_Create } from './components/Instruction/create';
 import {ReactComponent as LogoWin} from './img/labelWin.svg'
+import { toPrecision } from './helpers';
 
 export interface AppProps {
   completed: number;
@@ -187,7 +188,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                   {owner}
                 </a>
                 <span className={styles.imgLabel}>
-                    <span className={styles.imgLabelSum}>{statCur?.totalAmount}</span>
+                    <span className={styles.imgLabelSum}>{toPrecision(statCur?.totalAmount,3)}</span>
                   
                     <span className={styles.imgLabelTicker}> {nameWin}</span>
                    
