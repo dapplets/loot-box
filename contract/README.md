@@ -18,13 +18,13 @@
 
     `./deploy.sh`
 
-7. Initialize (testnet)
-
-    `near call app.ltbx.testnet new '' --accountId ltbx.testnet`
-    
     or
 
     `near deploy --wasmFile ./res/lootbox_near_contract.wasm --accountId=app.ltbx.testnet`
+
+7. Initialize (testnet)
+
+    `near call app.ltbx.testnet new '' --accountId ltbx.testnet`
 
 8. Login into CLI (mainnet)
 

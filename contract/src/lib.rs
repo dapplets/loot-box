@@ -472,9 +472,10 @@ impl Contract {
 
     #[private]
     pub fn callback_ft_storage_deposit(&mut self, claimer_id: AccountId, token_contract: AccountId, total_amount: U128) -> Promise {
-        if !is_promise_success() {
-            env::panic_str("Lootbox: FT storage deposit error");
-        }
+        // Ignore the error because a FT contract may not implement the Storage Management standard
+        // if !is_promise_success() {
+        //     env::panic_str("Lootbox: FT storage deposit error");
+        // }
 
         ext_ft::ft_transfer(
             claimer_id.to_string(),
