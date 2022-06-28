@@ -240,7 +240,7 @@ export const Claming: FC<InstructionProps> = (props) => {
       </div>}
      
       <div className={styles.description}>
-      To&nbsp;open a&nbsp;lootbox you need to&nbsp;click on&nbsp;the picture. It&nbsp;opens a&nbsp;NEAR wallet where a&nbsp;claiming transaction should be&nbsp;confirmed. Be&nbsp;aware that claiming a&nbsp;custom token or&nbsp;NFT requires an&nbsp;additional fee (about 0.05&nbsp;NEAR) for gas payment. 
+      To&nbsp;open a&nbsp;lootbox you need to&nbsp;click on&nbsp;the picture. It&nbsp;opens a&nbsp;NEAR wallet where a&nbsp;claiming transaction should be&nbsp;confirmed. Be&nbsp;aware that claiming a&nbsp;custom token or&nbsp;NFT requires an&nbsp;additional fee (about 0.005&nbsp;NEAR) for gas payment. 
 
       </div>
       <div className={styles.description}>
