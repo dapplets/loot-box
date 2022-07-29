@@ -83,7 +83,6 @@ export default class TwitterFeature {
       }
     };
 
-    // this.openOverlay();
     Core.onAction(() => this.openOverlay());
 
     const { box } = this.adapter.exports;
@@ -99,33 +98,30 @@ export default class TwitterFeature {
             replace: this._config.landingUrlReplace,
             position: 'bottom',
             text: '',
-            // label:'l',
             init: async (ctx, me) => {
-              const Tweet = ctx.text;
+              const Tweet = ctx.el.innerText;
 
               const tweetParse = getTweetParse(Tweet);
 
               const numIndex = getNumIndex(tweetParse);
-
               const wallet = await Core.wallet({
                 type: 'near',
                 network: this._config.networkId as any,
               });
 
               const lootboxId = await this._api.getLootboxById(numIndex);
-            
+
               if (lootboxId === null || lootboxId === undefined) {
                 return;
               } else if (lootboxId.status === 'dropped') {
-                me.hidden = false;
                 me.replace = `${this._config.landingUrlReplace}${numIndex}`;
                 me.img = BOX_EMPTY[lootboxId.pictureId];
                 me.text = 'This Lootbox is empty';
                 me.exec = null;
-              } else {
                 me.hidden = false;
-               
+              } else {
                 me.replace = `${this._config.landingUrlReplace}${numIndex}`;
+                me.hidden = false;
                 await this.getClaimStatus(me, numIndex, lootboxId);
               }
             },
@@ -143,26 +139,25 @@ export default class TwitterFeature {
     const wallet = await Core.wallet({ type: 'near', network: this._config.networkId as any });
     const getWin = (y: any) => {
       if (y.ftContentItems.length !== 0) {
-     const label =   y.ftContentItems.map((x: any) => (
-          `${x.tokenAmount} ${x.tokenTicker}`))
-          return label
+        const label = y.ftContentItems.map((x: any) => `${x.tokenAmount} ${x.tokenTicker}`);
+        return label;
       } else if (y.nearContentItems.length !== 0) {
-        const label =  y.nearContentItems.map((x: any) => `${x.tokenAmount} NEAR`)
-        return label
+        const label = y.nearContentItems.map((x: any) => `${x.tokenAmount} NEAR`);
+        return label;
       } else if (y.nftContentItems.length !== 0) {
         const winNft = String(y.nftContentItems.length) + ` NFT`;
-       return winNft
+        return winNft;
       }
     };
-   
+
     if (wallet.accountId) {
       const result = await this._api._getLootboxClaimStatus(numIndex, wallet.accountId);
       me.exec = null;
 
       if (result.status === 0) {
-        me.text = getWin(lootbox)
+        me.text = getWin(lootbox);
         me.img = BOX_DEFAULT[lootbox.pictureId];
-      
+
         me.exec = async () => {
           await this.getClaimLoot(me, numIndex, lootbox);
         };
