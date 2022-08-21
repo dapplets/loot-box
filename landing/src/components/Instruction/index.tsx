@@ -91,7 +91,7 @@ export const Installation: FC<InstructionProps> = (props) =>  {
             Download the&nbsp;
             <a
               target={'_blank'}
-              href="https://github.com/dapplets/dapplet-extension/releases/tag/v0.48.0"
+              href="https://github.com/dapplets/dapplet-extension/releases/tag/v0.50.0"
               className={styles.link}
             >
               Dapplet Browser Extension
