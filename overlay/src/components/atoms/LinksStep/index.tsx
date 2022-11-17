@@ -1,16 +1,16 @@
-import cn from 'classnames';
-import React, { FC } from 'react';
-import styles from './LinksStep.module.scss';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import styles from './LinksStep.module.scss'
 
 interface LinksStepProps {
-  step: 'next' | 'prev';
-  label: string;
-  className?: string;
-  disabled?: boolean;
+  step: 'next' | 'prev'
+  label: string
+  className?: string
+  disabled?: boolean
 }
 
 export const LinksStep: FC<LinksStepProps> = (props: LinksStepProps) => {
-  const { step, label, className, disabled } = props;
+  const { step, label, className, disabled } = props
   return (
     <button
       className={cn(
@@ -19,7 +19,7 @@ export const LinksStep: FC<LinksStepProps> = (props: LinksStepProps) => {
           [styles.next]: step === 'next',
           [styles.prev]: step === 'prev',
         },
-        className,
+        className
       )}
     >
       {label}
@@ -36,5 +36,5 @@ export const LinksStep: FC<LinksStepProps> = (props: LinksStepProps) => {
         </svg>
       </span>
     </button>
-  );
-};
+  )
+}

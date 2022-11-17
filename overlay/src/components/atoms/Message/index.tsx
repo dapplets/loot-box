@@ -1,18 +1,18 @@
-import React, { FC } from 'react';
-import cn from 'classnames';
-import styles from './Message.module.scss';
-import { LabelSettings } from '../LabelSettings';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import useCopied from '../../../hooks/useCopyed'
+import { LabelSettings } from '../LabelSettings'
+import styles from './Message.module.scss'
 
-import useCopied from '../../../hooks/useCopyed';
 export interface MessageProps {
-  message?: any;
-  link: string;
-  instruction?: string;
-  project?: string;
+  message?: any
+  link: string
+  instruction?: string
+  project?: string
 }
 
 export const Message: FC<MessageProps> = (props: MessageProps) => {
-  const { message, link, instruction, project } = props;
+  const { message, link, instruction, project } = props
   const [copied, copy, setCopied] = useCopied(
     `${message}
 
@@ -20,16 +20,16 @@ ${link}
 
 ${instruction}
 
-${project}`,
-  );
+${project}`
+  )
 
   const copyText = () => {
-    copy();
+    copy()
 
     setTimeout(() => {
-      setCopied(false);
-    }, 2000);
-  };
+      setCopied(false)
+    }, 2000)
+  }
   // useEffect(() => {}, [copyText]);
   return (
     <div className={cn(styles.wrapper)}>
@@ -58,5 +58,5 @@ ${project}`,
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

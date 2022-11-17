@@ -1,17 +1,17 @@
-import React, {  CSSProperties, ReactElement } from 'react';
-import styles from './StatisticsTitle.module.scss';
-import cn from 'classnames';
+import cn from 'classnames'
+import React, { CSSProperties, ReactElement } from 'react'
+import styles from './StatisticsTitle.module.scss'
 
 export interface StatisticsTitleProps {
-  title: string;
-  isActive?: boolean;
-  style?: CSSProperties;
-  className?: string;
-  onClick?: any;
+  title: string
+  isActive?: boolean
+  style?: CSSProperties
+  className?: string
+  onClick?: any
 }
 
 export const StatisticsTitle = (props: StatisticsTitleProps): ReactElement => {
-  const { title, isActive = false, style, className, onClick } = props;
+  const { title, isActive = false, style, className, onClick } = props
 
   return (
     <div className={cn(styles.wrapper, className)}>
@@ -23,5 +23,5 @@ export const StatisticsTitle = (props: StatisticsTitleProps): ReactElement => {
         {title}
       </h4>
     </div>
-  );
-};
+  )
+}

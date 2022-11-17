@@ -1,19 +1,19 @@
-import React, { FC } from 'react';
-import styles from './Profile.module.scss';
-import cn from 'classnames';
-import { Avatar } from '../Avatar';
-import Down from '../../../icons/createNewBox/down.svg';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import Down from '../../../icons/createNewBox/down.svg'
+import { Avatar } from '../Avatar'
+import styles from './Profile.module.scss'
 
 export interface ProfileProps {
-  avatar?: string;
-  hash: string;
-  isOpenProfile?: boolean;
-  openChange?: () => void;
-  onClick?: () => void;
-  mini?: boolean;
+  avatar?: string
+  hash: string
+  isOpenProfile?: boolean
+  openChange?: () => void
+  onClick?: () => void
+  mini?: boolean
 }
 export const Profile: FC<ProfileProps> = (props: ProfileProps) => {
-  const { avatar, hash, isOpenProfile = true, openChange, onClick, mini = false } = props;
+  const { avatar, hash, isOpenProfile = true, openChange, onClick, mini = false } = props
 
   return (
     <div className={styles.wrapper}>
@@ -34,5 +34,5 @@ export const Profile: FC<ProfileProps> = (props: ProfileProps) => {
         </ul>
       )}
     </div>
-  );
-};
+  )
+}

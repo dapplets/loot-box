@@ -1,24 +1,19 @@
-import React, { FC, DetailedHTMLProps, InputHTMLAttributes } from 'react';
-import styles from './DeployBox.module.scss';
-import cn from 'classnames';
-
-import { SettingTitle } from '../atoms/SettingTitle';
-
-import { Message } from '../atoms/Message';
-
-import { Link } from 'react-router-dom';
-
-
+import cn from 'classnames'
+import React, { DetailedHTMLProps, FC, InputHTMLAttributes } from 'react'
+import { Link } from 'react-router-dom'
+import { Message } from '../atoms/Message'
+import { SettingTitle } from '../atoms/SettingTitle'
+import styles from './DeployBox.module.scss'
 
 export interface DeployBoxProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  id: any;
-  winnersLabelInfo: string;
-  landingUrl: string;
+  id: any
+  winnersLabelInfo: string
+  landingUrl: string
 }
 
 export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
-  const { id, winnersLabelInfo, landingUrl } = props;
+  const { id, winnersLabelInfo, landingUrl } = props
 
   return (
     <div className={cn(styles.wrapper)}>
@@ -38,5 +33,5 @@ export const DeployBox: FC<DeployBoxProps> = (props: DeployBoxProps) => {
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}

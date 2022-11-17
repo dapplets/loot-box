@@ -1,35 +1,28 @@
-import React, { FC, DetailedHTMLProps, ChangeEventHandler } from 'react';
-import cn from 'classnames';
-import styles from './TextArea.module.scss';
+import cn from 'classnames'
+import React, { ChangeEventHandler, DetailedHTMLProps, FC } from 'react'
+import styles from './TextArea.module.scss'
 
 export interface TextAreaProps
   extends DetailedHTMLProps<
     React.TextareaHTMLAttributes<HTMLTextAreaElement>,
     HTMLTextAreaElement
   > {
-  onSubmit?: () => void;
-  value?: any;
-  placeholder?: string;
-  isButton?: true;
+  onSubmit?: () => void
+  value?: any
+  placeholder?: string
+  isButton?: true
 
-  className?: 'string';
+  className?: 'string'
 }
 
 export const TextArea: FC<TextAreaProps> = (props) => {
-  const {
-    value,
-    onChange,
-    onSubmit,
-    placeholder,
-    className,
-    ...anotherProps
-  } = props;
+  const { value, onChange, onSubmit, placeholder, className, ...anotherProps } = props
   const handleSubmit: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    event.preventDefault();
-    const { name, value } = event.currentTarget;
-  };
+    event.preventDefault()
+    const { name, value } = event.currentTarget
+  }
   return (
     <div className={cn(styles.inputPanel)}>
       <textarea
@@ -42,5 +35,5 @@ export const TextArea: FC<TextAreaProps> = (props) => {
         {...anotherProps}
       />
     </div>
-  );
-};
+  )
+}

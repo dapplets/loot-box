@@ -1,19 +1,19 @@
-import React, { FC } from 'react';
-import styles from './StatisticsLink.module.scss';
-import cn from 'classnames';
-import { LinksStep } from '../LinksStep';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import { LinksStep } from '../LinksStep'
+import styles from './StatisticsLink.module.scss'
 
 export interface StatisticsLinkProps {
-  label?: string;
-  className?: string;
+  label?: string
+  className?: string
 }
 export const StatisticsLink: FC<StatisticsLinkProps> = (props: StatisticsLinkProps) => {
-  const { label } = props;
+  const { label } = props
   return (
     <div className={cn(styles.wrapper)}>
       <LinksStep label="Back" step="prev" />
 
       <span className={cn(styles.linksNavigation)}>{label}</span>
     </div>
-  );
-};
+  )
+}

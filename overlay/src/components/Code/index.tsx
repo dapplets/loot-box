@@ -1,22 +1,20 @@
-import React, { FC,  } from 'react';
-import styles from './Code.module.scss';
-import cn from 'classnames';
-import { Link } from 'react-router-dom';
-
-import { StatisticsLink } from '../atoms/StatisticsLink';
-
-import { Message } from '../atoms/Message';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { Message } from '../atoms/Message'
+import { StatisticsLink } from '../atoms/StatisticsLink'
+import styles from './Code.module.scss'
 
 export interface CodeProps {
-  onChange?: () => void;
-  onSubmit?: () => void;
-  id: any;
-  winnersLabelInfo: any;
-  landingUrl: string;
+  onChange?: () => void
+  onSubmit?: () => void
+  id: any
+  winnersLabelInfo: any
+  landingUrl: string
 }
 
 export const Code: FC<CodeProps> = (props: CodeProps) => {
-  const { id, winnersLabelInfo, landingUrl } = props;
+  const { id, winnersLabelInfo, landingUrl } = props
 
   return (
     <div className={styles.wrapper}>
@@ -38,5 +36,5 @@ export const Code: FC<CodeProps> = (props: CodeProps) => {
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}

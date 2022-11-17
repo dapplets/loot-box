@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
-import cn from 'classnames';
-import styles from './ButtonPay.module.scss';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import styles from './ButtonPay.module.scss'
 
 export interface ButtonPayProps {
-  title: string;
-  styleBtn: 'default' | 'disable';
-  onClick?: () => void;
+  title: string
+  styleBtn: 'default' | 'disable'
+  onClick?: () => void
 }
 export const ButtonPay: FC<ButtonPayProps> = (props) => {
-  const { title, styleBtn, onClick } = props;
+  const { title, styleBtn, onClick } = props
   return (
     <button
       onClick={onClick}
@@ -20,5 +20,5 @@ export const ButtonPay: FC<ButtonPayProps> = (props) => {
     >
       {title}
     </button>
-  );
-};
+  )
+}

@@ -1,11 +1,10 @@
-@import '../../../styles/color.variables.scss';
-@import '../../../styles/null.scss';
-@import '../../../styles/fonts.scss';
+@import "../../../styles/color.variables";
+@import "../../../styles/null";
+@import "../../../styles/fonts";
 
 .inputInfo {
   height: 40px;
   padding: 10px 13px;
-
   color: $MainBlack;
   border: 1px solid $StrokeColor;
   border-radius: 5px;
@@ -14,6 +13,7 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 149%;
+
   &::placeholder {
     font-family: Roboto, sans-serif;
     font-weight: 400;
@@ -21,12 +21,14 @@
     line-height: 100%;
     color: $StrokeColor;
   }
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
+    appearance: none;
     margin: 0;
   }
 }
+
 .inputInfo:invalid:not(:focus),
 .inputInfo:invalid:not(:focus)::placeholder {
   border: 1px solid #ff6442;
@@ -40,24 +42,30 @@
 .small {
   max-width: 131px;
 }
+
 .small_medium {
   max-width: 196px;
   min-width: 193px;
 }
+
 .default {
   max-width: 211px;
 }
+
 .medium {
   max-width: 276px;
   min-width: 254px;
 }
+
 .medium_big {
   max-width: 300px;
   min-width: 280px;
 }
+
 .big {
   max-width: 356px;
 }
+
 .biggest {
   width: 100%;
 }
@@ -71,10 +79,11 @@
 .inputMore {
   width: 20px;
   height: 20px;
-  background: url('../../../icons/Input/more.svg') no-repeat;
+  background: url("../../../icons/Input/more.svg") no-repeat;
 }
+
 .inputLess {
   width: 20px;
   height: 20px;
-  background: url('../../../icons/Input/less.svg') no-repeat;
+  background: url("../../../icons/Input/less.svg") no-repeat;
 }

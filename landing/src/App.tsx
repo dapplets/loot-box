@@ -1,47 +1,41 @@
-import { DappletApi } from './api';
-import { Routes, Route, Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-import styles from './App.module.scss';
-import styled, { keyframes } from 'styled-components';
-import cn from 'classnames';
-
-import boxDef from './img/box.png';
-
-import blueBox from './img/boxes/blue_box.png';
-import redBox from './img/boxes/red_box.png';
-import safe from './img/boxes/safe.png';
-import box from './img/boxes/box.png';
-import bag from './img/boxes/bag.png';
-import pinata from './img/boxes/pinata.png';
-import pig from './img/boxes/pig.png';
-
-import { Preloader } from './components/Preloader/index';
-
-import { Header } from './components/Header/index';
-import { Footer } from './components/Footer/index';
-import { About } from './components/About';
-import { Instruction } from './components/Instruction';
-import { getNetworkConfig } from '@loot-box/common/helpers';
-import { LootboxStat, Lootbox } from '@loot-box/common/interfaces';
-import { Instruction_Create } from './components/Instruction/create';
-import {ReactComponent as LogoWin} from './img/labelWin.svg'
-import { toPrecision } from './helpers';
+import { getNetworkConfig } from '@loot-box/common/helpers'
+import { LootboxStat } from '@loot-box/common/interfaces'
+import cn from 'classnames'
+import React, { useEffect, useState } from 'react'
+import { Link, Route, Routes, useParams } from 'react-router-dom'
+import styled, { keyframes } from 'styled-components'
+import { DappletApi } from './api'
+import styles from './App.module.scss'
+import { About } from './components/About'
+import { Footer } from './components/Footer/index'
+import { Header } from './components/Header/index'
+import { Instruction } from './components/Instruction'
+import { Instruction_Create } from './components/Instruction/create'
+import { Preloader } from './components/Preloader/index'
+import { toPrecision } from './helpers'
+import boxDef from './img/box.png'
+import bag from './img/boxes/bag.png'
+import blueBox from './img/boxes/blue_box.png'
+import box from './img/boxes/box.png'
+import pig from './img/boxes/pig.png'
+import pinata from './img/boxes/pinata.png'
+import redBox from './img/boxes/red_box.png'
+import safe from './img/boxes/safe.png'
 
 export interface AppProps {
-  completed: number;
-  bgcolor: string;
+  completed: number
+  bgcolor: string
 }
-export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
+export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig]
 
-const _api = new DappletApi(getNetworkConfig(process.env.NETWORK as string));
+const _api = new DappletApi(getNetworkConfig(process.env.NETWORK as string))
 
 export default function App() {
-  const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
-  const { lootboxId } = useParams();
+  const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null)
+  const { lootboxId } = useParams()
   useEffect(() => {
-    _api.getLootboxById(lootboxId!).then((x) => setSelectedLootboxId(x?.id!));
-  }, [lootboxId, selectedLootboxId]);
+    _api.getLootboxById(lootboxId!).then((x) => setSelectedLootboxId(x?.id!))
+  }, [lootboxId, selectedLootboxId])
 
   return (
     <>
@@ -94,53 +88,49 @@ export default function App() {
         <Route path="/create" element={<Instruction_Create />} />
       </Routes>
     </>
-  );
+  )
 }
-let isMounted = false;
+let isMounted = false
 function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }) {
-  const { lootboxId } = useParams();
-  const [statCur, setStat] = useState<LootboxStat | null>(null);
-  const [loader, setLoader] = useState(false);
-  const [pictureId, setPictureId] = useState<number | null>(null);
-  const [owner, setOwner] = useState<string | undefined>('');
-  const [ownerAddress, setOwnerAddress] = useState<string | undefined>('');
-  const [nameWin, setNameWin] = useState<string | undefined>('');
+  const { lootboxId } = useParams()
+  const [statCur, setStat] = useState<LootboxStat | null>(null)
+  const [loader, setLoader] = useState(false)
+  const [pictureId, setPictureId] = useState<number | null>(null)
+  const [owner, setOwner] = useState<string | undefined>('')
+  const [ownerAddress, setOwnerAddress] = useState<string | undefined>('')
+  const [nameWin, setNameWin] = useState<string | undefined>('')
   const [ftMetadata, setFtMetadata] = useState<string | undefined>('')
 
   useEffect(() => {
-    isMounted = true;
-    setLoader(true);
+    isMounted = true
+    setLoader(true)
     const init = async () => {
       await _api.getLootboxStat(lootboxId!).then((x) => {
-        setStat(x);
-        setLoader(false);
-      });
-      await _api.getLootboxById(lootboxId!).then((x) => setPictureId(Number(x?.pictureId)));
+        setStat(x)
+        setLoader(false)
+      })
+      await _api.getLootboxById(lootboxId!).then((x) => setPictureId(Number(x?.pictureId)))
 
-      await _api.getLootboxById(lootboxId!).then((x) => setOwner(x?.ownerId));
+      await _api.getLootboxById(lootboxId!).then((x) => setOwner(x?.ownerId))
 
-      const resultAddress = getNetworkConfig(process.env.NETWORK as string).explorerUrl;
-      setOwnerAddress(`${resultAddress}/accounts/${owner}`);
+      const resultAddress = getNetworkConfig(process.env.NETWORK as string).explorerUrl
+      setOwnerAddress(`${resultAddress}/accounts/${owner}`)
 
       await _api.getLootboxById(lootboxId!).then((x) => {
         if (x?.ftContentItems.length) {
-         
           setNameWin(x.ftContentItems[0].tokenTicker)
         } else if (x?.nearContentItems.length) {
-          setNameWin('NEAR');
+          setNameWin('NEAR')
         } else if (x?.nftContentItems.length) {
-          setNameWin('NFT');
+          setNameWin('NFT')
         }
-      
-      });
-  
-    
-    };
-    init();
+      })
+    }
+    init()
     return () => {
-      isMounted = false;
-    };
-  }, [lootboxId, owner, nameWin]);
+      isMounted = false
+    }
+  }, [lootboxId, owner, nameWin])
   const pulse = keyframes`
     0% {
       transform: scaleX(0);
@@ -148,7 +138,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
     100% {
       transform: scaleX(1);
     }
-  `;
+  `
 
   const Bar = styled.div<{ completedPercents?: string | null }>`
     width: ${(props) =>
@@ -169,7 +159,7 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
     transform-origin: left top;
     transform: scaleX(0);
     animation: ${pulse} 2s forwards;
-  `;
+  `
 
   return (
     <div className={styles.boxBlockWrapper}>
@@ -188,11 +178,12 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                   {owner}
                 </a>
                 <span className={styles.imgLabel}>
-                    <span className={styles.imgLabelSum}>{toPrecision(statCur?.totalAmount!,3)}</span>
-                  
-                    <span className={styles.imgLabelTicker}> {nameWin}</span>
-                   
+                  <span className={styles.imgLabelSum}>
+                    {toPrecision(statCur?.totalAmount!, 3)}
                   </span>
+
+                  <span className={styles.imgLabelTicker}> {nameWin}</span>
+                </span>
               </h1>
             ) : (
               <h1 className={styles.boxTitle}>
@@ -208,14 +199,12 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
                     Dapplets Extension
                   </a>
                 </span>
-               
               </h1>
             )}
 
             <div className={styles.boxImg}>
               {!Number.isNaN(pictureId) ? (
                 <>
-                  
                   <img className={styles.mainImg} src={IMG[pictureId!]} />
                 </>
               ) : (
@@ -237,9 +226,9 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
             {!Number.isNaN(pictureId) ? (
               <div className={styles.description}>
                 <p className={cn(styles.textDescription, styles.textDescriptionWinner)}>
-                  <span className={styles.nameOwner}>{owner}</span>&nbsp;is&nbsp;hosting a&nbsp;giveaway
-                  on&nbsp;Twitter. Join now for a&nbsp;chance to&nbsp;win
-                  <span className={styles.totalSum}> {toPrecision(statCur?.totalAmount!,3)}</span>
+                  <span className={styles.nameOwner}>{owner}</span>&nbsp;is&nbsp;hosting
+                  a&nbsp;giveaway on&nbsp;Twitter. Join now for a&nbsp;chance to&nbsp;win
+                  <span className={styles.totalSum}> {toPrecision(statCur?.totalAmount!, 3)}</span>
                   <span className={styles.labelSum}> {nameWin}</span>
                 </p>
 
@@ -272,5 +261,5 @@ function LootboxPage({ selectedLootboxId }: { selectedLootboxId: string | null }
         )}
       </div>
     </div>
-  );
+  )
 }

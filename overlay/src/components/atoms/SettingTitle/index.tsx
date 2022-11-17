@@ -1,18 +1,18 @@
-import React, { CSSProperties, ReactElement } from 'react';
-import styles from './SettingTitle.module.scss';
-import cn from 'classnames';
+import cn from 'classnames'
+import React, { CSSProperties, ReactElement } from 'react'
+import styles from './SettingTitle.module.scss'
 
 export interface SettingTitleProps {
-  title: string;
-  isActive?: boolean;
-  style?: CSSProperties;
-  found?: number | null;
-  className?: string;
+  title: string
+  isActive?: boolean
+  style?: CSSProperties
+  found?: number | null
+  className?: string
 }
 
 export const SettingTitle = (props: SettingTitleProps): ReactElement => {
-  const { title, isActive = false, found = null, style, className } = props;
-  const isVisibleFound = found && found > 0;
+  const { title, isActive = false, found = null, style, className } = props
+  const isVisibleFound = found && found > 0
 
   return (
     <div className={cn(styles.wrapper, className)}>
@@ -21,5 +21,5 @@ export const SettingTitle = (props: SettingTitleProps): ReactElement => {
         {isVisibleFound ? <span className={styles.found}>{found}</span> : null}
       </h4>
     </div>
-  );
-};
+  )
+}

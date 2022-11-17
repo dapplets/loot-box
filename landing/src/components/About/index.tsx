@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
-import cn from 'classnames';
-import styles from './About.module.scss';
-import { Preloader } from '../Preloader';
-import { Link } from 'react-router-dom';
-import imgDef from '../../img/about/about.png';
-import how_1 from '../../img/about/how_1.png';
-import how_2 from '../../img/about/how_2.png';
-import how_3 from '../../img/about/how_3.png';
-import future from '../../img/about/future.png';
+import React, { useState } from 'react'
+import imgDef from '../../img/about/about.png'
+import future from '../../img/about/future.png'
+import how_1 from '../../img/about/how_1.png'
+import how_2 from '../../img/about/how_2.png'
+import how_3 from '../../img/about/how_3.png'
+import { Preloader } from '../Preloader'
+import styles from './About.module.scss'
 
 export interface AboutProps {
-  completed: number;
-  bgcolor: string;
+  completed: number
+  bgcolor: string
 }
 export function About(AboutProps: any) {
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(false)
   return (
     <div className={styles.BoxBlock}>
       {(loader && <Preloader />) || (
@@ -118,5 +116,5 @@ export function About(AboutProps: any) {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,14 +1,13 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
-import React, { FC } from 'react';
-import cn from 'classnames';
-import styles from './Button.module.scss';
+import cn from 'classnames'
+import React, { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react'
+import styles from './Button.module.scss'
 
 export interface ButtonProps
   extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
-  disabled?: boolean;
-  appearance: 'small' | 'big' | 'medium' | 'remove';
-  btnText: string;
-  isShowDescription?: boolean;
+  disabled?: boolean
+  appearance: 'small' | 'big' | 'medium' | 'remove'
+  btnText: string
+  isShowDescription?: boolean
 }
 export const Button: FC<ButtonProps> = (props: ButtonProps) => {
   const {
@@ -18,7 +17,7 @@ export const Button: FC<ButtonProps> = (props: ButtonProps) => {
     className,
     isShowDescription = false,
     ...anotherProps
-  } = props;
+  } = props
   return (
     <button
       className={cn(
@@ -29,12 +28,12 @@ export const Button: FC<ButtonProps> = (props: ButtonProps) => {
           [styles.medium]: appearance === 'medium',
           [styles.remove]: appearance === 'remove',
         },
-        className,
+        className
       )}
       {...anotherProps}
       disabled={disabled}
     >
       {btnText}
     </button>
-  );
-};
+  )
+}

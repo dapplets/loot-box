@@ -1,7 +1,7 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const WebpackAssetsManifest = require('webpack-assets-manifest');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const WebpackAssetsManifest = require('webpack-assets-manifest')
 
 module.exports = {
   mode: 'development',
@@ -25,7 +25,7 @@ module.exports = {
         ],
         include: [
           path.resolve(__dirname, 'src'),
-          path.resolve(__dirname, 'node_modules/@loot-box/common')
+          path.resolve(__dirname, 'node_modules/@loot-box/common'),
         ],
       },
       {
@@ -59,4 +59,4 @@ module.exports = {
     liveReload: false,
     open: false,
   },
-};
+}

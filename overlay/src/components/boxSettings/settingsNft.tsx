@@ -1,50 +1,48 @@
-import React, { ReactNode, FC, useEffect, useMemo, useState, useRef } from 'react';
-import styles from './BoxSettings.module.scss';
-import cn from 'classnames';
+import { Lootbox, NftContentItem } from '@loot-box/common/interfaces'
+import cn from 'classnames'
+import React, { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Button } from '../atoms/Button'
+import { DropChance } from '../atoms/DropChance'
+import { LabelSettings } from '../atoms/LabelSettings'
+import { LinksStep } from '../atoms/LinksStep'
+import styles from './BoxSettings.module.scss'
+import { ButtonsSetting } from './buttonsSetting'
+import { ChildComponent } from './childComponent'
+import './invalid.scss'
 
-import { LabelSettings } from '../atoms/LabelSettings';
-import { Button } from '../atoms/Button';
-import { LinksStep } from '../atoms/LinksStep';
-import { Link } from 'react-router-dom';
-import { DropChance } from '../atoms/DropChance';
-import { Lootbox, NftContentItem } from '@loot-box/common/interfaces';
-import { ChildComponent } from './childComponent';
-import './invalid.scss';
-
-import { ButtonsSetting } from './buttonsSetting';
 export interface BoxSettingsProps {
-  children?: ReactNode;
-  onChange?: () => void;
-  onSubmit?: () => void;
-  dataType?: string;
-  creationForm: Lootbox;
-  onCreationFormUpdate: (x: any) => void;
+  children?: ReactNode
+  onChange?: () => void
+  onSubmit?: () => void
+  dataType?: string
+  creationForm: Lootbox
+  onCreationFormUpdate: (x: any) => void
   networkConfig: any
 }
 
 const DEFAULT_NFT_ITEM: NftContentItem = {
   contractAddress: 'custom.near',
   tokenId: '',
-};
+}
 
 export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { creationForm, onCreationFormUpdate,networkConfig } = props;
-  const [newContractAddress, setNewContractAddress]= useState(null)
-  const [link, onLink] = useState(true);
-  const [value, setValue] = useState(creationForm.dropChance);
-  const nodeNftContract = useRef<HTMLInputElement>();
-  const nodeQuanity = useRef<HTMLInputElement>();
-  const nodeDropChance = useRef<HTMLInputElement>();
-  const newForm = Object.assign({}, creationForm);
-  const booleanNodeNftContract = nodeNftContract.current?.classList.contains('invalid');
-  const booleanNodeQuanity = nodeQuanity.current?.classList.contains('invalid');
+  const { creationForm, onCreationFormUpdate, networkConfig } = props
+  const [newContractAddress, setNewContractAddress] = useState(null)
+  const [link, onLink] = useState(true)
+  const [value, setValue] = useState(creationForm.dropChance)
+  const nodeNftContract = useRef<HTMLInputElement>()
+  const nodeQuanity = useRef<HTMLInputElement>()
+  const nodeDropChance = useRef<HTMLInputElement>()
+  const newForm = Object.assign({}, creationForm)
+  const booleanNodeNftContract = nodeNftContract.current?.classList.contains('invalid')
+  const booleanNodeQuanity = nodeQuanity.current?.classList.contains('invalid')
   const LinkBlock = useMemo(() => {
-    if(!networkConfig){
+    if (!networkConfig) {
       return
-    }else{
-       setNewContractAddress(networkConfig.networkId)
-       console.log(newContractAddress);
-       
+    } else {
+      setNewContractAddress(networkConfig.networkId)
+      console.log(newContractAddress)
     }
     if (
       creationForm.nftContentItems.length !== 0 &&
@@ -58,71 +56,74 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         creationForm.nftContentItems[0].contractAddress.length >= 1 &&
         creationForm.nftContentItems[0].contractAddress !== null
       ) {
-        onLink(false);
+        onLink(false)
       } else {
-        onLink(true);
+        onLink(true)
       }
     } else {
-      onLink(true);
+      onLink(true)
     }
-    if (
-      value <101
-    ) {
-      nodeDropChance.current?.classList.remove('invalid');
-    
+    if (value < 101) {
+      nodeDropChance.current?.classList.remove('invalid')
     } else {
-      nodeDropChance.current?.classList.add('invalid');
-      
+      nodeDropChance.current?.classList.add('invalid')
     }
-  }, [creationForm, link, nodeNftContract, nodeQuanity, DEFAULT_NFT_ITEM,value,nodeDropChance,newContractAddress]);
+  }, [
+    creationForm,
+    link,
+    nodeNftContract,
+    nodeQuanity,
+    DEFAULT_NFT_ITEM,
+    value,
+    nodeDropChance,
+    newContractAddress,
+  ])
 
   useEffect(() => {
-    creationForm.dropChance = value;
-    onCreationFormUpdate(creationForm);
-  });
+    creationForm.dropChance = value
+    onCreationFormUpdate(creationForm)
+  })
 
   const addButtonClickHandler = () => {
-    const newForm = Object.assign({}, creationForm);
-    newForm.nftContentItems.push(DEFAULT_NFT_ITEM);
-    onCreationFormUpdate(newForm);
-  };
+    const newForm = Object.assign({}, creationForm)
+    newForm.nftContentItems.push(DEFAULT_NFT_ITEM)
+    onCreationFormUpdate(newForm)
+  }
 
   const onDeleteChild = (id: number) => {
-    const newForm = Object.assign({}, creationForm);
-    newForm.nftContentItems.splice(id, 1);
-    onCreationFormUpdate(newForm);
-  };
+    const newForm = Object.assign({}, creationForm)
+    newForm.nftContentItems.splice(id, 1)
+    onCreationFormUpdate(newForm)
+  }
 
   const nftUpdatedHandler = (id: number, nft: NftContentItem) => {
-    const newForm = Object.assign({}, creationForm);
-    newForm.nftContentItems[id] = nft;
+    const newForm = Object.assign({}, creationForm)
+    newForm.nftContentItems[id] = nft
 
-    onCreationFormUpdate(newForm);
-  };
+    onCreationFormUpdate(newForm)
+  }
 
   const handleClick = () => {
     if (nodeNftContract && nodeNftContract.current && nodeQuanity && nodeQuanity.current) {
     }
-  };
+  }
 
   useEffect(() => {
     // ToDo: move to App.tsx
     // ToDo: how to get rid of object coping?
-    DEFAULT_NFT_ITEM.contractAddress = '';
-    DEFAULT_NFT_ITEM.tokenId = '';
+    DEFAULT_NFT_ITEM.contractAddress = ''
+    DEFAULT_NFT_ITEM.tokenId = ''
 
-    const newForm = Object.assign({}, creationForm);
-    creationForm.nftContentItems = [];
-    newForm.nftContentItems = [DEFAULT_NFT_ITEM];
-  
-   
+    const newForm = Object.assign({}, creationForm)
+    creationForm.nftContentItems = []
+    newForm.nftContentItems = [DEFAULT_NFT_ITEM]
 
-    creationForm.nearContentItems = [];
-    creationForm.ftContentItems = [];
-    newForm.dropChance = value;
-    onCreationFormUpdate(creationForm);
-    onCreationFormUpdate(newForm);
-  }, []);
+    creationForm.nearContentItems = []
+    creationForm.ftContentItems = []
+    newForm.dropChance = value
+    onCreationFormUpdate(creationForm)
+    onCreationFormUpdate(newForm)
+  }, [])
   return (
     <div className={cn(styles.wrapper)}>
       <div className={styles.div}>
@@ -130,7 +131,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
           <ButtonsSetting
             classNameNft={styles.BtnNft}
             onClick={() => {
-              creationForm.nftContentItems[0].tokenId = '';
+              creationForm.nftContentItems[0].tokenId = ''
             }}
           />
         </div>
@@ -138,7 +139,7 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
           <div className={styles.Marketplace}>
             {creationForm.nftContentItems.map((x, i) => (
               <ChildComponent
-              newContractAddress={newContractAddress}
+                newContractAddress={newContractAddress}
                 key={i}
                 nftItem={x}
                 onDeleteChild={
@@ -178,21 +179,22 @@ export const SettingsNFT: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
         <Link to="/select_box">
           <LinksStep step="prev" label="Back" />
         </Link>
-        {(link && <div></div>) || value <101 && nodeNftContract.current?.value
-        !=''&& nodeQuanity.current?.value
-        !=''&&(
-          <Link
-            to="/fill_your_box_nft"
-            onClick={() => {
-              handleClick();
-              creationForm.ftContentItems = [];
-              creationForm.nearContentItems = [];
-            }}
-          >
-            <LinksStep disabled={true} step="next" label="Next step" />
-          </Link>
-        )}
+        {(link && <div></div>) ||
+          (value < 101 &&
+            nodeNftContract.current?.value != '' &&
+            nodeQuanity.current?.value != '' && (
+              <Link
+                to="/fill_your_box_nft"
+                onClick={() => {
+                  handleClick()
+                  creationForm.ftContentItems = []
+                  creationForm.nearContentItems = []
+                }}
+              >
+                <LinksStep disabled={true} step="next" label="Next step" />
+              </Link>
+            ))}
       </div>
     </div>
-  );
-};
+  )
+}

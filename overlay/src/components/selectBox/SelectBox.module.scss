@@ -1,9 +1,9 @@
-@import '../../styles/color.variables.scss';
-@import '../../styles/null.scss';
-@import '../../styles/fonts.scss';
+@import "../../styles/color.variables";
+@import "../../styles/null";
+@import "../../styles/fonts";
 
 .wrapper {
-  padding: 60px 0px 0px 0px;
+  padding: 60px 0 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -13,32 +13,32 @@
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-  padding: 32px 0px 0px 0px;
+  padding: 32px 0 0;
 }
 
 .firstLine {
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px;
 }
 
 .selectedImage {
   width: 391px;
   height: 391px;
-
   border-radius: 10px;
   background: inherit;
 }
 
 .secondLine {
-  padding: 20px 0px 20px 0px;
+  padding: 20px 0;
 }
 
 .navigation {
   display: flex;
   justify-content: space-between;
-  padding: 24px 14px 22px 14px;
+  padding: 24px 14px 22px;
   position: relative;
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     background: $WebBG;
     width: 100%;

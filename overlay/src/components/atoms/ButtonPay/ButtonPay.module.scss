@@ -1,6 +1,6 @@
-@import '../../../styles/color.variables.scss';
-@import '../../../styles/null.scss';
-@import '../../../styles/fonts.scss';
+@import "../../../styles/color.variables";
+@import "../../../styles/null";
+@import "../../../styles/fonts";
 
 .ButtonPay {
   width: auto;
@@ -15,22 +15,23 @@
   text-align: center;
   text-transform: uppercase;
 }
+
 .default {
   &:hover {
     background: $PrimaryHover;
   }
+
   &:active {
     background: $PrimaryPressed;
   }
 }
 
 .disable {
-  padding: 10px 10px;
+  padding: 10px;
   border: 1px solid $Primary;
   background: transparent;
   border-radius: 4px;
   font-family: Roboto;
-
   font-weight: 400;
   font-size: 10px;
   line-height: 100%;
@@ -41,6 +42,7 @@
   &:hover {
     border: 1px solid $PrimaryHover;
   }
+
   &:active {
     border: 1px solid $PrimaryPressed;
   }

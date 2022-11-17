@@ -1,58 +1,57 @@
-import React, { useState, FC, useMemo, useEffect } from 'react';
+import cn from 'classnames'
+import 'keen-slider/keen-slider.min.css'
+import { useKeenSlider } from 'keen-slider/react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
+import bag from '../../../icons/createNewBox/bag.png'
+import blueBox from '../../../icons/createNewBox/blue_box.png'
+import box from '../../../icons/createNewBox/box.png'
+import pig from '../../../icons/createNewBox/pig.png'
+import pinata from '../../../icons/createNewBox/pinata.png'
+import redBox from '../../../icons/createNewBox/red_box.png'
+import safe from '../../../icons/createNewBox/safe.png'
+import './Slider.module.scss'
+import styles from './Slider.module.scss'
 
-import blueBox from '../../../icons/createNewBox/blue_box.png';
-import redBox from '../../../icons/createNewBox/red_box.png';
-import safe from '../../../icons/createNewBox/safe.png';
-import box from '../../../icons/createNewBox/box.png';
-import bag from '../../../icons/createNewBox/bag.png';
-import pinata from '../../../icons/createNewBox/pinata.png';
-import pig from '../../../icons/createNewBox/pig.png';
-
-import cn from 'classnames';
-import 'keen-slider/keen-slider.min.css';
-import { useKeenSlider} from 'keen-slider/react';
-import './Slider.module.scss';
-import styles from './Slider.module.scss';
 export interface ImageProps {
-  onClick: any;
-  item: string;
-  index: number;
-  clicked: number | null;
+  onClick: any
+  item: string
+  index: number
+  clicked: number | null
 }
 
 const Image = ({ onClick, item, index, clicked }: ImageProps) => {
   const imgClassName = useMemo(
     () => `keen-slider__slide number-slide1 ${index}  ${clicked === index && 'clicked'}`,
-    [clicked, index],
-  );
+    [clicked, index]
+  )
 
-  return <img onClick={() => onClick(index)} className={imgClassName} src={item} id={item} />;
-};
+  return <img onClick={() => onClick(index)} className={imgClassName} src={item} id={item} />
+}
 
 interface SliderProps {
-  id: number;
-  imgs: any;
-  onChange_IMG: () => void;
-  clicked: number | null;
-  setClicked: any;
+  id: number
+  imgs: any
+  onChange_IMG: () => void
+  clicked: number | null
+  setClicked: any
 
-  onCreationFormUpdate: (id: number) => void;
+  onCreationFormUpdate: (id: number) => void
 }
-export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig];
+export const IMG = [blueBox, redBox, safe, box, bag, pinata, pig]
 export const Imges: FC<SliderProps> = (props: SliderProps) => {
-  const { clicked, setClicked } = props;
-  const { id, imgs, onCreationFormUpdate } = props;
+  const { clicked, setClicked } = props
+  const { id, imgs, onCreationFormUpdate } = props
 
   const onSetId = useMemo(
     () => (index: number) => {
-      setClicked(index);
-      onCreationFormUpdate(index);
+      setClicked(index)
+      onCreationFormUpdate(index)
     },
-    [onCreationFormUpdate, setClicked],
-  );
+    [onCreationFormUpdate, setClicked]
+  )
 
-  useEffect(() => {}, [setClicked]);
-  useEffect(() => {}, [onCreationFormUpdate]);
+  useEffect(() => {}, [setClicked])
+  useEffect(() => {}, [onCreationFormUpdate])
 
   return (
     <>
@@ -60,8 +59,8 @@ export const Imges: FC<SliderProps> = (props: SliderProps) => {
         <Image
           key={item}
           onClick={(index: number) => {
-            setClicked(index);
-            onCreationFormUpdate(index);
+            setClicked(index)
+            onCreationFormUpdate(index)
           }}
           item={item}
           index={index}
@@ -69,14 +68,14 @@ export const Imges: FC<SliderProps> = (props: SliderProps) => {
         />
       ))}
     </>
-  );
-};
+  )
+}
 
 export const Slider: FC<SliderProps> = (props: SliderProps) => {
-  const { onChange_IMG, onCreationFormUpdate, id, clicked, setClicked } = props;
+  const { onChange_IMG, onCreationFormUpdate, id, clicked, setClicked } = props
 
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [loaded, setLoaded] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [loaded, setLoaded] = useState(false)
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: true,
@@ -86,12 +85,12 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
     },
 
     slideChanged(slider) {
-      setCurrentSlide(slider.track.details.rel);
+      setCurrentSlide(slider.track.details.rel)
     },
     created() {
-      setLoaded(true);
+      setLoaded(true)
     },
-  });
+  })
 
   return (
     <>
@@ -133,16 +132,16 @@ export const Slider: FC<SliderProps> = (props: SliderProps) => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
 function Arrow(props: {
-  disabled: boolean;
-  left?: boolean;
-  onClick: (e: any) => void;
-  style: React.CSSProperties;
+  disabled: boolean
+  left?: boolean
+  onClick: (e: any) => void
+  style: React.CSSProperties
 }) {
-  const disabeld = props.disabled ? ' arrow--disabled' : '';
+  const disabeld = props.disabled ? ' arrow--disabled' : ''
   return (
     <svg
       onClick={props.onClick}
@@ -166,5 +165,5 @@ function Arrow(props: {
         />
       )}
     </svg>
-  );
+  )
 }

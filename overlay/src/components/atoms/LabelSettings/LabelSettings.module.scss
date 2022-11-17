@@ -1,6 +1,6 @@
-@import '../../../styles/color.variables.scss';
-@import '../../../styles/null.scss';
-@import '../../../styles/fonts.scss';
+@import "../../../styles/color.variables";
+@import "../../../styles/null";
+@import "../../../styles/fonts";
 
 .label {
   font-family: Roboto, sans-serif;
@@ -9,8 +9,8 @@
   color: $MainGrey;
   font-size: 14px;
   line-height: 16px;
-  padding: 0px 4px 10px 0px;
-  margin: 0px 0px 0px 0px;
+  padding: 0 4px 10px 0;
+  margin: 0;
 }
 
 .spanLabel {
@@ -18,8 +18,9 @@
   border-radius: 50%;
   width: 14.17px;
   height: 14.17px;
-  background: url('../../../icons/Input/question.svg');
+  background: url("../../../icons/Input/question.svg");
 }
+
 span.supportHover::before {
   content: attr(data-title);
 }
@@ -36,7 +37,6 @@ span.supportHover::before {
   border: 1px solid #ccc;
   box-shadow: 5px 5px 0.5em -0.1em rgb(0 0 6 / 50%);
   text-align: left;
-  color: #000;
   font-family: Roboto, sans-serif;
   font-weight: 400;
   font-style: italic;
@@ -47,24 +47,23 @@ span.supportHover::before {
   cursor: default;
   padding: 5px;
   margin: -15px 0 0 10px;
-
   width: 200px;
   min-height: 50px;
   height: auto;
 }
+
 span.supportHover:hover::before,
 span.supportHover:focus::before {
   display: flex;
- 
   align-items: center;
 }
+
 .supportHover {
-  display: inline-block;
   position: relative;
   display: inline-block;
   border-radius: 50%;
   width: 14.17px;
   height: 14.17px;
-  background: url('../../../icons/Input/question.svg');
+  background: url("../../../icons/Input/question.svg");
   cursor: pointer;
 }

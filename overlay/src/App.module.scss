@@ -1,5 +1,6 @@
-@import './styles/color.variables.scss';
-@import './styles/null.scss';
+@import "./styles/color.variables";
+@import "./styles/null";
+
 .app {
   display: flex;
   flex-direction: column;
@@ -16,15 +17,15 @@
   justify-content: center;
   align-items: center;
 }
+
 .messageNewBoxTitle h6 {
   display: inline-block;
   width: 220px;
-  font-family: 'Roboto';
+  font-family: Roboto;
   font-style: normal;
   font-weight: 700;
   font-size: 22px;
   line-height: 26px;
   text-align: center;
-
   color: $ContentBlack;
 }

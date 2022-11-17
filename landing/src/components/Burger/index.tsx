@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-
-import styles from './Burger.module.scss';
-import logo from '../../img/header/Logo.svg';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import logo from '../../img/header/Logo.svg'
+import styles from './Burger.module.scss'
 
 export const Burger = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
-    setIsMenuOpen((isOpen) => !isOpen);
-  };
-  let classNameWrapper = '';
+    setIsMenuOpen((isOpen) => !isOpen)
+  }
+  let classNameWrapper = ''
   if (isMenuOpen) {
-    classNameWrapper += ' active';
+    classNameWrapper += ' active'
   }
 
   return (
@@ -141,5 +140,5 @@ export const Burger = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

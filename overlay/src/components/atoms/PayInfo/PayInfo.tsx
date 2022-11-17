@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
-import cn from 'classnames';
-import styles from './PayInfo.module.scss';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import styles from './PayInfo.module.scss'
 
 export interface PayInfoProps {
-  title: string;
-  value: string;
-  appearance?: 'text' | 'hash' | 'link';
-  className?: string;
-  size?: 'big' | 'default';
+  title: string
+  value: string
+  appearance?: 'text' | 'hash' | 'link'
+  className?: string
+  size?: 'big' | 'default'
 }
 
 export const PayInfo: FC<PayInfoProps> = ({
@@ -18,12 +18,12 @@ export const PayInfo: FC<PayInfoProps> = ({
   size = 'default',
 }: PayInfoProps) => {
   const visible = ({ value, appearance }: Pick<PayInfoProps, 'value' | 'appearance'>): string => {
-    if (appearance === 'text' || appearance === 'link') return value;
+    if (appearance === 'text' || appearance === 'link') return value
 
-    return value;
-  };
+    return value
+  }
 
-  const isLink = appearance === 'link';
+  const isLink = appearance === 'link'
 
   return (
     <div
@@ -33,7 +33,7 @@ export const PayInfo: FC<PayInfoProps> = ({
           [styles.small]: size === 'default',
           [styles.big]: size === 'big',
         },
-        className,
+        className
       )}
     >
       <h6 className={cn(styles.title)}>{title}:</h6>
@@ -45,5 +45,5 @@ export const PayInfo: FC<PayInfoProps> = ({
         <span className={styles.value}>{visible({ appearance, value })}</span>
       )}
     </div>
-  );
-};
+  )
+}
