@@ -1,18 +1,18 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
-import copyToClipboard from 'copy-to-clipboard';
+import copyToClipboard from 'copy-to-clipboard'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export default function useCopied(str: string): [boolean, () => void, (value: boolean) => void] {
-  const copyableString = useRef(str);
-  const [copied, setCopied] = useState(false);
+  const copyableString = useRef(str)
+  const [copied, setCopied] = useState(false)
 
   const copyAction = useCallback(() => {
-    const copiedString = copyToClipboard(copyableString.current);
-    setCopied(copiedString);
-  }, [copyableString]);
+    const copiedString = copyToClipboard(copyableString.current)
+    setCopied(copiedString)
+  }, [copyableString])
 
   useEffect(() => {
-    copyableString.current = str;
-  }, [str]);
+    copyableString.current = str
+  }, [str])
 
-  return [copied, copyAction, setCopied];
+  return [copied, copyAction, setCopied]
 }

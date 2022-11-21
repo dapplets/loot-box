@@ -1,53 +1,50 @@
-@import '../../styles/color.variables.scss';
-@import '../../styles/null.scss';
-@import '../../styles/fonts.scss';
+@import "../../styles/color.variables";
+@import "../../styles/null";
+@import "../../styles/fonts";
 
 .wrapper {
   display: flex;
   margin: 0 auto;
   max-width: 1310px;
-
   justify-content: center;
   align-items: center;
 
   @media (max-width: 1024px) {
     max-width: 1024px;
     margin: 0;
-    padding: 20px 0px;
+    padding: 20px 0;
   }
+
   @media (max-width: 600px) {
     width: 320px;
     margin: 0 auto;
-    padding: 10px 0px;
+    padding: 10px 0;
   }
 }
 
 .blockFooter {
   display: flex;
   width: 100%;
-
   justify-content: space-between;
 
   @media (max-width: 1024px) {
     width: 100%;
     margin: 0;
-    padding: 0px 5.2% 0px 5.2%;
+    padding: 0 5.2%;
   }
+
   @media (min-width: 320px) and (max-width: 600px) {
     width: 100%;
     flex-direction: column;
     align-items: center;
-    padding: 10px 0px 0px 0px;
+    padding: 10px 0 0;
   }
 }
 
 .copyBlock {
   display: flex;
-
   align-items: center;
-
-  padding: 0px 0px 0px 10px;
-
+  padding: 0 0 0 10px;
   font-family: Montserrat, sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -59,23 +56,23 @@
 .linkBlock {
   display: flex;
   align-items: center;
+
   @media (max-width: 600px) {
     padding-top: 10px;
   }
 }
+
 .list {
   display: flex;
   width: 220px;
-
   align-items: center;
   justify-content: space-between;
-
-  padding: 20px 10px 20px 0px;
+  padding: 20px 10px 20px 0;
 
   @media (max-width: 1024px) {
     max-width: 220px;
     flex: 1 1 auto;
-    padding: 0px 0px 0px 0px;
+    padding: 0;
   }
 }
 
@@ -85,9 +82,11 @@
 .link {
   cursor: pointer;
   position: relative;
+
   svg {
     width: 40px;
   }
+
   &:hover {
     svg {
       path {
@@ -95,6 +94,7 @@
       }
     }
   }
+
   &:active {
     svg {
       path {

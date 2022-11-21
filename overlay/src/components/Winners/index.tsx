@@ -1,16 +1,16 @@
-import React, { FC, useEffect, useMemo } from 'react';
-import styles from './Winner.module.scss';
-import cn from 'classnames';
-import { Link } from 'react-router-dom';
-import { StatisticsLink } from '../atoms/StatisticsLink';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { StatisticsLink } from '../atoms/StatisticsLink'
+import styles from './Winner.module.scss'
 
 export interface WinnerProps {
-  winners: any;
-  winnersLabelInfo: any;
+  winners: any
+  winnersLabelInfo: any
 }
 export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
-  const { winners, winnersLabelInfo } = props;
-  const newStr = winnersLabelInfo.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
+  const { winners, winnersLabelInfo } = props
+  const newStr = winnersLabelInfo.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '')
   return (
     <div className={styles.wrapper}>
       <div className={styles.blockInfo}>
@@ -45,10 +45,9 @@ export const Winner: FC<WinnerProps> = (props: WinnerProps) => {
       </div>
       <div className={cn(styles.link)}>
         <Link to="/">
-          <StatisticsLink
-          />
+          <StatisticsLink />
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,9 +1,9 @@
-import React from 'react';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import logo from '../../img/header/Logo.svg'
+import { Burger } from '../Burger'
+import styles from './Header.module.scss'
 
-import styles from './Header.module.scss';
-import { Link } from 'react-router-dom';
-import logo from '../../img/header/Logo.svg';
-import { Burger } from '../Burger';
 export const Header = () => {
   return (
     <div className={styles.wrapper}>
@@ -35,5 +35,5 @@ export const Header = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-@import '../../../styles/null.scss';
+@import "../../../styles/null";
 
 .wrapper__preloader {
   display: flex;
@@ -7,6 +7,5 @@
   align-items: center;
   width: 100%;
   height: 100vh;
-
-  padding: 0 0px;
+  padding: 0;
 }

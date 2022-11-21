@@ -1,6 +1,7 @@
-@import '../../../styles/color.variables.scss';
-@import '../../../styles/null.scss';
-@import '../../../styles/fonts.scss';
+@import "../../../styles/color.variables";
+@import "../../../styles/null";
+@import "../../../styles/fonts";
+
 .wrapper {
   width: 100%;
   display: flex;
@@ -8,7 +9,6 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-
   font-family: Roboto, sans-serif;
 }
 
@@ -19,21 +19,18 @@
 }
 
 .title {
-  font-family: 'Roboto';
-
+  font-family: Roboto;
   font-weight: 700;
   font-size: 22px;
   line-height: 26px;
-
   color: $MainBlack;
-
-  padding: 0px 0px 4px 0px;
+  padding: 0 0 4px;
   text-align: center;
 }
 
 .subtitle {
   display: block;
-  font-family: 'Roboto';
+  font-family: Roboto;
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
@@ -46,16 +43,16 @@
   // margin-top: 9px;
 
   text-align: center;
-
   color: $Primary;
-
   font-size: 14px;
   font-weight: 400;
   line-height: 100%;
   background: inherit;
+
   &:hover {
     color: $PrimaryHover;
   }
+
   &:active {
     color: $PrimaryPressed;
   }

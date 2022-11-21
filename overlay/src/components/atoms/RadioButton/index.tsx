@@ -1,17 +1,17 @@
-import React, { FC, DetailedHTMLProps, InputHTMLAttributes } from 'react';
-import cn from 'classnames';
-import styles from './RadioButton.module.scss';
+import cn from 'classnames'
+import React, { DetailedHTMLProps, FC, InputHTMLAttributes } from 'react'
+import styles from './RadioButton.module.scss'
 
 export interface RadioButtonProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  id: string;
-  value: string;
-  name: string;
-  radioHandler?: () => void;
-  isShow?: boolean;
+  id: string
+  value: string
+  name: string
+  radioHandler?: () => void
+  isShow?: boolean
 }
 export const RadioButton: FC<RadioButtonProps> = (props: RadioButtonProps) => {
-  const { id, value, name, radioHandler, isShow, ...otherProps } = props;
+  const { id, value, name, radioHandler, isShow, ...otherProps } = props
 
   return (
     <div className={cn(styles.form_radio)}>
@@ -20,5 +20,5 @@ export const RadioButton: FC<RadioButtonProps> = (props: RadioButtonProps) => {
         {value}
       </label>
     </div>
-  );
-};
+  )
+}

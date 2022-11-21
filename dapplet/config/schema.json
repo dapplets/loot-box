@@ -5,9 +5,7 @@
     "network": {
       "type": "string",
       "title": "Target network",
-      "enum": [
-        "mainnet"
-      ]
+      "enum": ["mainnet"]
     }
   }
 }

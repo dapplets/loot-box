@@ -1,12 +1,15 @@
-@import '../../../styles/color.variables.scss';
-@import '../../../styles/null.scss';
-@import '../../../styles/fonts.scss';
+@import "../../../styles/color.variables";
+@import "../../../styles/null";
+@import "../../../styles/fonts";
+
 .progress {
 }
+
 .progressLabel {
   display: flex;
   justify-content: space-between;
 }
+
 .progressPercent {
   font-family: Roboto, sans-serif;
   font-weight: 500;
@@ -15,11 +18,13 @@
   text-transform: uppercase;
   color: $Primary;
 }
+
 .wrapper {
   width: 400px;
   height: 10px;
   background: $StrokeColor;
   border-radius: 10px;
 }
+
 .labelStyles {
 }

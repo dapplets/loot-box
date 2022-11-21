@@ -1,34 +1,29 @@
-import React, { FC, useState } from 'react';
-import cn from 'classnames';
-import styles from './FillBox.module.scss';
-
-import { LabelSettings } from '../atoms/LabelSettings';
-
-import { PayInfo } from '../atoms/PayInfo/PayInfo';
-import { ButtonPay } from '../atoms/ButtonPay';
-
-import { SettingTitle } from '../atoms/SettingTitle';
-import { LinksStep } from '../atoms/LinksStep';
-
-import { Link } from 'react-router-dom';
-import { Lootbox } from '@loot-box/common/interfaces';
-import { useEffect } from 'react';
-import { Modal } from '../atoms/Modal';
+import { Lootbox } from '@loot-box/common/interfaces'
+import cn from 'classnames'
+import React, { FC, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { ButtonPay } from '../atoms/ButtonPay'
+import { LabelSettings } from '../atoms/LabelSettings'
+import { LinksStep } from '../atoms/LinksStep'
+import { Modal } from '../atoms/Modal'
+import { PayInfo } from '../atoms/PayInfo/PayInfo'
+import { SettingTitle } from '../atoms/SettingTitle'
+import styles from './FillBox.module.scss'
 
 export interface FillBoxProps {
-  imgValue: string;
-  onDoneClick: () => void;
-  creationForm: Lootbox;
-  onCreationFormUpdate: (x: any) => void;
-  winnersLabelInfo: string;
-  setWinInfo: (x: string) => void;
-  setMessageError: (x: any) => void;
-  messageError: boolean;
-  newMetadata: any;
-  nearAccount: string | undefined;
-  dropType: any;
-  setClearForm: (x: any) => void;
-  setMetadata:(x:any)=>void
+  imgValue: string
+  onDoneClick: () => void
+  creationForm: Lootbox
+  onCreationFormUpdate: (x: any) => void
+  winnersLabelInfo: string
+  setWinInfo: (x: string) => void
+  setMessageError: (x: any) => void
+  messageError: boolean
+  newMetadata: any
+  nearAccount: string | undefined
+  dropType: any
+  setClearForm: (x: any) => void
+  setMetadata: (x: any) => void
 }
 export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
   const {
@@ -44,36 +39,36 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
     dropType,
     setClearForm,
     setMetadata,
-  } = props;
+  } = props
 
-  const [winInfoToken, setWinInfoToken] = useState(winnersLabelInfo);
-  const [isNotAccount, setNotAccount] = useState(false);
-  const [isWarningTransaction, setWarningTransaction] = useState(false);
+  const [winInfoToken, setWinInfoToken] = useState(winnersLabelInfo)
+  const [isNotAccount, setNotAccount] = useState(false)
+  const [isWarningTransaction, setWarningTransaction] = useState(false)
   useEffect(() => {
     if (dropType === 0) {
-      const winAmount = creationForm.nearContentItems[0].tokenAmount;
-      const winAmountParse = winAmount + ` NEAR`;
-      setWinInfoToken(winAmountParse);
-      setWinInfo(winAmountParse);
+      const winAmount = creationForm.nearContentItems[0].tokenAmount
+      const winAmountParse = winAmount + ` NEAR`
+      setWinInfoToken(winAmountParse)
+      setWinInfo(winAmountParse)
     } else if (dropType === 1) {
-      const winAmountTicker = creationForm.ftContentItems[0].tokenAmount;
+      const winAmountTicker = creationForm.ftContentItems[0].tokenAmount
       const winAmountTickerParse = newMetadata
         ? `${winAmountTicker} ${newMetadata.symbol}`
-        : `${winAmountTicker} TOKEN`;
-      setWinInfoToken(winAmountTickerParse);
-      setWinInfo(winAmountTickerParse);
+        : `${winAmountTicker} TOKEN`
+      setWinInfoToken(winAmountTickerParse)
+      setWinInfo(winAmountTickerParse)
     }
-  }, [nearAccount, isNotAccount]);
+  }, [nearAccount, isNotAccount])
 
   const getTransactionAndWarning = () => {
     if (dropType === 1) {
-      setWarningTransaction(true);
+      setWarningTransaction(true)
     } else if (dropType === 0) {
-      creationForm.ftContentItems = [];
-      setClearForm(true);
-      onDoneClick();
+      creationForm.ftContentItems = []
+      setClearForm(true)
+      onDoneClick()
     }
-  };
+  }
   return (
     <div className={cn(styles.wrapper)}>
       <div className={styles.wrapperInfo}>
@@ -97,7 +92,7 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         <div className={cn(styles.payBtn)}>
           <ButtonPay
             onClick={() => {
-              nearAccount ? getTransactionAndWarning() : setNotAccount(true);
+              nearAccount ? getTransactionAndWarning() : setNotAccount(true)
             }}
             styleBtn="default"
             title={`PAY & CREATE`}
@@ -105,8 +100,8 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         </div>
       </div>
       <div className={cn(styles.navigation)}>
-        <Link to="/settings_token" onClick={()=>setMetadata(null)}>
-          <LinksStep step="prev" label="Back"  />
+        <Link to="/settings_token" onClick={() => setMetadata(null)}>
+          <LinksStep step="prev" label="Back" />
         </Link>
       </div>
       <Modal
@@ -125,16 +120,18 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
       />
       <Modal
         visible={isWarningTransaction}
-        title={'You will now need to sign several transactions: one to create your Lootbox and another to fill it with the tokens you selected. '}
+        title={
+          'You will now need to sign several transactions: one to create your Lootbox and another to fill it with the tokens you selected. '
+        }
         subtitle={'Transactions will open automatically, one after the other.'}
         className={styles.modalTitle}
         classNameSubtitle={styles.modalSubtitle}
         content={
           <ButtonPay
             onClick={() => {
-              creationForm.nearContentItems = [];
-              setClearForm(true);
-              nearAccount ? onDoneClick() : setNotAccount(true);
+              creationForm.nearContentItems = []
+              setClearForm(true)
+              nearAccount ? onDoneClick() : setNotAccount(true)
             }}
             styleBtn="default"
             title={`Proceed`}
@@ -144,5 +141,5 @@ export const FillBox: FC<FillBoxProps> = (props: FillBoxProps) => {
         onClose={() => setWarningTransaction(false)}
       />
     </div>
-  );
-};
+  )
+}

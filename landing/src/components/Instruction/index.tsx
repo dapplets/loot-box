@@ -1,60 +1,54 @@
-import React, { FC } from 'react';
-import cn from 'classnames';
-
-import styles from './Instruction.module.scss';
-
-import { Header } from '../Header';
-import { Footer } from '../Footer';
-
-import downloads from '../../img/instruction/downloads.png';
-import drag_drop from '../../img/instruction/drag_drop.png';
-
-import inst_1 from '../../img/instruction/instruction_1.png';
-import inst_2 from '../../img/instruction/instruction_2.png';
-import inst_3 from '../../img/instruction/instruction_3.png';
-import inst_4 from '../../img/instruction/instruction_4.png';
-import inst_5 from '../../img/instruction/instruction_5.png';
-import inst_6 from '../../img/instruction/instruction_6.png';
-import inst_7 from '../../img/instruction/instruction_7.png';
-import inst_8 from '../../img/instruction/instruction_8.png';
-import inst_8_1 from '../../img/instruction/instruction_8_1.png';
-import inst_9 from '../../img/instruction/instruction_9.png';
-import inst_10 from '../../img/instruction/instruction_10.png';
-import inst_10_1 from '../../img/instruction/instruction_10_1.png';
-import inst_11 from '../../img/instruction/instruction_11.png';
-import inst_12 from '../../img/instruction/instruction_12.png';
-import inst_13 from '../../img/instruction/instruction_13.png';
-import inst_13_1 from '../../img/instruction/instruction_13_1.png';
-import inst_14 from '../../img/instruction/instruction_14.png';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import downloads from '../../img/instruction/downloads.png'
+import drag_drop from '../../img/instruction/drag_drop.png'
+import inst_1 from '../../img/instruction/instruction_1.png'
+import inst_10 from '../../img/instruction/instruction_10.png'
+import inst_10_1 from '../../img/instruction/instruction_10_1.png'
+import inst_11 from '../../img/instruction/instruction_11.png'
+import inst_12 from '../../img/instruction/instruction_12.png'
+import inst_13 from '../../img/instruction/instruction_13.png'
+import inst_13_1 from '../../img/instruction/instruction_13_1.png'
+import inst_14 from '../../img/instruction/instruction_14.png'
+import inst_2 from '../../img/instruction/instruction_2.png'
+import inst_3 from '../../img/instruction/instruction_3.png'
+import inst_4 from '../../img/instruction/instruction_4.png'
+import inst_5 from '../../img/instruction/instruction_5.png'
+import inst_6 from '../../img/instruction/instruction_6.png'
+import inst_7 from '../../img/instruction/instruction_7.png'
+import inst_8 from '../../img/instruction/instruction_8.png'
+import inst_8_1 from '../../img/instruction/instruction_8_1.png'
+import inst_9 from '../../img/instruction/instruction_9.png'
+import load_unpuck from '../../img/instruction/load_unpuck.png'
 import login from '../../img/instruction/login.png'
-
-import m_inst_1 from '../../img/instruction/mobile/mobile_inst_1.svg';
-import m_inst_2 from '../../img/instruction/mobile/mobile_inst_2.svg';
-import m_inst_3 from '../../img/instruction/mobile/mobile_inst_3.svg';
-import m_inst_4 from '../../img/instruction/mobile/mobile_inst_4.svg';
-import m_inst_5 from '../../img/instruction/mobile/mobile_inst_5.svg';
-import m_inst_6 from '../../img/instruction/mobile/mobile_inst_6.svg';
-import m_inst_7 from '../../img/instruction/mobile/mobile_inst_7.svg';
-import m_inst_8 from '../../img/instruction/mobile/mobile_inst_8.svg';
-import m_inst_9 from '../../img/instruction/mobile/mobile_inst_9.svg';
-import m_inst_10 from '../../img/instruction/mobile/mobile_inst_10.svg';
-import m_inst_11 from '../../img/instruction/mobile/mobile_inst_11.svg';
-import m_inst_12 from '../../img/instruction/mobile/mobile_inst_12.svg';
-import m_inst_13 from '../../img/instruction/mobile/mobile_inst_13.svg';
-import m_inst_14 from '../../img/instruction/mobile/mobile_inst_14.svg';
-import m_inst_15 from '../../img/instruction/mobile/mobile_inst_15.svg';
-import m_inst_16 from '../../img/instruction/mobile/mobile_inst_16.svg';
 import m_login from '../../img/instruction/mobile/login.svg'
 import m_login_claim_3 from '../../img/instruction/mobile/login_claim_3.svg'
 import m_login_claim_4 from '../../img/instruction/mobile/login_claim_4.svg'
-
-import load_unpuck from '../../img/instruction/load_unpuck.png';
+import m_inst_1 from '../../img/instruction/mobile/mobile_inst_1.svg'
+import m_inst_10 from '../../img/instruction/mobile/mobile_inst_10.svg'
+import m_inst_11 from '../../img/instruction/mobile/mobile_inst_11.svg'
+import m_inst_12 from '../../img/instruction/mobile/mobile_inst_12.svg'
+import m_inst_13 from '../../img/instruction/mobile/mobile_inst_13.svg'
+import m_inst_14 from '../../img/instruction/mobile/mobile_inst_14.svg'
+import m_inst_15 from '../../img/instruction/mobile/mobile_inst_15.svg'
+import m_inst_16 from '../../img/instruction/mobile/mobile_inst_16.svg'
+import m_inst_2 from '../../img/instruction/mobile/mobile_inst_2.svg'
+import m_inst_3 from '../../img/instruction/mobile/mobile_inst_3.svg'
+import m_inst_4 from '../../img/instruction/mobile/mobile_inst_4.svg'
+import m_inst_5 from '../../img/instruction/mobile/mobile_inst_5.svg'
+import m_inst_6 from '../../img/instruction/mobile/mobile_inst_6.svg'
+import m_inst_7 from '../../img/instruction/mobile/mobile_inst_7.svg'
+import m_inst_8 from '../../img/instruction/mobile/mobile_inst_8.svg'
+import m_inst_9 from '../../img/instruction/mobile/mobile_inst_9.svg'
+import { Footer } from '../Footer'
+import { Header } from '../Header'
+import styles from './Instruction.module.scss'
 
 export interface InstructionProps {
-  completed?: number;
-  bgcolor?: string;
+  completed?: number
+  bgcolor?: string
   title?: string
-  isLogin?:boolean
+  isLogin?: boolean
 }
 
 export function Instruction(InstructionProps: any) {
@@ -64,23 +58,22 @@ export function Instruction(InstructionProps: any) {
         <Header />
       </header>
       <div className={styles.content}>
-        <Installation title='How to collect' />
+        <Installation title="How to collect" />
         <Activate isLogin={true} />
-        <Claming isLogin={true}  />
-      
+        <Claming isLogin={true} />
       </div>
       <footer className={styles.footer}>
         <Footer />
       </footer>
     </div>
-  );
+  )
 }
 
-export const Installation: FC<InstructionProps> = (props) =>  {
-  const {title}= props
+export const Installation: FC<InstructionProps> = (props) => {
+  const { title } = props
   return (
     <div className={styles.installation}>
-      <h2 className={styles.titleInstruction} >{title}</h2>
+      <h2 className={styles.titleInstruction}>{title}</h2>
       <h3 className={styles.titleWallet}>Install the Dapplets Extension</h3>
       <ol className={styles.list}>
         <li className={styles.item}>
@@ -146,11 +139,11 @@ export const Installation: FC<InstructionProps> = (props) =>  {
         <img src={m_inst_2} className={styles.mobileImg} />
       </div>
     </div>
-  );
+  )
 }
 
 export const Activate: FC<InstructionProps> = (props) => {
-  const {isLogin }=props
+  const { isLogin } = props
   return (
     <div className={styles.walletConnection}>
       <h3 className={styles.titleWallet}>Activate the Lootbox Dapplet</h3>
@@ -186,34 +179,48 @@ export const Activate: FC<InstructionProps> = (props) => {
         or&nbsp;open a&nbsp;lootbox. Click on the &laquo;log&nbsp;in&raquo; button, select
         a&nbsp;wallet for dapplet interaction and go&nbsp;to&nbsp;the next step.
       </div>
-      {isLogin? 
-       <div className={cn(styles.walletConnectionBlock,styles.block_1, styles.block_login, styles.blockImgActivate)}>
-        <span className={cn(styles.labelImg, styles.labelImgActivate,styles.labelImgActivateLogin )}></span>
-        <h3 className={cn(styles.dragDropTitle, styles.blockTitleImgActivate)}>
-        <span>
-        Login to &nbsp;
-            <span className={styles.highlightTitle}>your wallet</span> 
-            <br />
-          </span>
-          <span className={styles.labelTitle}>
-          Click on the Lootbox "Home" button. It will open the overlay panel with the login option on it.
-          </span>
-         
-          <span className={styles.labelTitleHighlight}>Please login into your&nbsp;<span className={styles.highlightTitle}>Near wallet</span>  for opening the Lootboxes.</span>
-        </h3>
-        <img src={login} className={styles.dragDropImg} />
-      </div>
-      : null }
-     {isLogin? <div className={styles.mobileBlock}>
-        <img src={m_login} className={styles.mobileImg} />
-      </div>:null}
-     
+      {isLogin ? (
+        <div
+          className={cn(
+            styles.walletConnectionBlock,
+            styles.block_1,
+            styles.block_login,
+            styles.blockImgActivate
+          )}
+        >
+          <span
+            className={cn(styles.labelImg, styles.labelImgActivate, styles.labelImgActivateLogin)}
+          ></span>
+          <h3 className={cn(styles.dragDropTitle, styles.blockTitleImgActivate)}>
+            <span>
+              Login to &nbsp;
+              <span className={styles.highlightTitle}>your wallet</span>
+              <br />
+            </span>
+            <span className={styles.labelTitle}>
+              Click on the Lootbox "Home" button. It will open the overlay panel with the login
+              option on it.
+            </span>
+
+            <span className={styles.labelTitleHighlight}>
+              Please login into your&nbsp;<span className={styles.highlightTitle}>Near wallet</span>{' '}
+              for opening the Lootboxes.
+            </span>
+          </h3>
+          <img src={login} className={styles.dragDropImg} />
+        </div>
+      ) : null}
+      {isLogin ? (
+        <div className={styles.mobileBlock}>
+          <img src={m_login} className={styles.mobileImg} />
+        </div>
+      ) : null}
     </div>
-  );
+  )
 }
 
 export const Claming: FC<InstructionProps> = (props) => {
-  const {isLogin }=props
+  const { isLogin } = props
   return (
     <div className={styles.walletConnection}>
       <h3 className={styles.titleWallet}>Lootbox claiming</h3>
@@ -221,9 +228,16 @@ export const Claming: FC<InstructionProps> = (props) => {
         Find a&nbsp;tweet with a&nbsp;lootbox giveaway created by&nbsp;this dapplet. You will see
         a&nbsp;lootbox picture after installating the dapplet.
       </div>
-      <div className={cn(styles.walletConnectionBlock, {[styles.block_2]:!isLogin}, styles.blockImgClaming,{
-          [styles.block_2_label]: isLogin
-      })}>
+      <div
+        className={cn(
+          styles.walletConnectionBlock,
+          { [styles.block_2]: !isLogin },
+          styles.blockImgClaming,
+          {
+            [styles.block_2_label]: isLogin,
+          }
+        )}
+      >
         <span className={cn(styles.labelImg, styles.labelImgClaming)}></span>
         <h3 className={cn(styles.dragDropTitle, styles.blockTitleImgClaming)}>
           <span>
@@ -233,37 +247,53 @@ export const Claming: FC<InstructionProps> = (props) => {
         </h3>
         <img src={inst_2} className={styles.dragDropImg} />
       </div>
-      {isLogin ?   <div className={styles.mobileBlock}>
-        <img src={m_login_claim_3} className={styles.mobileImg} />
-      </div> :  <div className={styles.mobileBlock}>
-        <img src={m_inst_4} className={styles.mobileImg} />
-      </div>}
-     
-      <div className={styles.description}>
-      To&nbsp;open a&nbsp;lootbox you need to&nbsp;click on&nbsp;the picture. It&nbsp;opens a&nbsp;NEAR wallet where a&nbsp;claiming transaction should be&nbsp;confirmed. Be&nbsp;aware that claiming a&nbsp;custom token or&nbsp;NFT requires an&nbsp;additional fee (about 0.005&nbsp;NEAR) for gas payment. 
+      {isLogin ? (
+        <div className={styles.mobileBlock}>
+          <img src={m_login_claim_3} className={styles.mobileImg} />
+        </div>
+      ) : (
+        <div className={styles.mobileBlock}>
+          <img src={m_inst_4} className={styles.mobileImg} />
+        </div>
+      )}
 
+      <div className={styles.description}>
+        To&nbsp;open a&nbsp;lootbox you need to&nbsp;click on&nbsp;the picture. It&nbsp;opens
+        a&nbsp;NEAR wallet where a&nbsp;claiming transaction should be&nbsp;confirmed. Be&nbsp;aware
+        that claiming a&nbsp;custom token or&nbsp;NFT requires an&nbsp;additional fee (about
+        0.005&nbsp;NEAR) for gas payment.
       </div>
       <div className={styles.description}>
-      After that the smart contract will return with a&nbsp;result. A&nbsp;lootbox can be&nbsp;full or&nbsp;empty, depending on&nbsp;the giveaway&rsquo;s settings.
-
+        After that the smart contract will return with a&nbsp;result. A&nbsp;lootbox can
+        be&nbsp;full or&nbsp;empty, depending on&nbsp;the giveaway&rsquo;s settings.
       </div>
-      <div className={cn(styles.walletConnectionBlock,{ [styles.block_3]:!isLogin}, styles.blockImgClaming,{
-        [styles.block_3_label]: isLogin
-      })}>
+      <div
+        className={cn(
+          styles.walletConnectionBlock,
+          { [styles.block_3]: !isLogin },
+          styles.blockImgClaming,
+          {
+            [styles.block_3_label]: isLogin,
+          }
+        )}
+      >
         <span className={cn(styles.labelImg, styles.labelImgClaming)}></span>
         <h3 className={cn(styles.dragDropTitle, styles.blockTitleImgClaming)}>
           Example of&nbsp;a&nbsp;<span className={styles.highlightTitle}>winning lootbox</span>
         </h3>
         <img src={inst_3} className={styles.dragDropImg} />
       </div>
-      {isLogin ?   <div className={styles.mobileBlock}>
-        <img src={m_login_claim_4} className={styles.mobileImg} />
-      </div> : <div className={styles.mobileBlock}>
-        <img src={m_inst_5} className={styles.mobileImg} />
-      </div>}
-     
+      {isLogin ? (
+        <div className={styles.mobileBlock}>
+          <img src={m_login_claim_4} className={styles.mobileImg} />
+        </div>
+      ) : (
+        <div className={styles.mobileBlock}>
+          <img src={m_inst_5} className={styles.mobileImg} />
+        </div>
+      )}
     </div>
-  );
+  )
 }
 
 export function Creation(InstructionProps: any) {
@@ -316,7 +346,7 @@ export function Creation(InstructionProps: any) {
         Consider each option.
       </div>
     </div>
-  );
+  )
 }
 
 export function NearToken(InstructionProps: any) {
@@ -355,7 +385,7 @@ export function NearToken(InstructionProps: any) {
         <img src={m_inst_8} className={styles.mobileImg} />
       </div>
     </div>
-  );
+  )
 }
 
 export function FungibleTokens(InstructionProps: any) {
@@ -417,7 +447,7 @@ export function FungibleTokens(InstructionProps: any) {
         at&nbsp;the least the other one will transfer the fungible token to&nbsp;the lootbox.
       </div>
     </div>
-  );
+  )
 }
 
 export function NonFungibleTokens(InstructionProps: any) {
@@ -433,7 +463,7 @@ export function NonFungibleTokens(InstructionProps: any) {
         className={cn(
           styles.walletConnectionBlock,
           styles.block_9,
-          styles.blockImgNonFungibleTokens,
+          styles.blockImgNonFungibleTokens
         )}
       >
         <span className={cn(styles.labelImg, styles.labelImgNonFungibleTokens)}></span>
@@ -468,7 +498,7 @@ export function NonFungibleTokens(InstructionProps: any) {
           styles.walletConnectionBlock,
           // styles.dragDrop,
           styles.block_10,
-          styles.blockImgNonFungibleTokens,
+          styles.blockImgNonFungibleTokens
         )}
       >
         <span className={cn(styles.labelImg, styles.labelImgNonFungibleTokens)}></span>
@@ -495,7 +525,7 @@ export function NonFungibleTokens(InstructionProps: any) {
         className={cn(
           styles.walletConnectionBlock,
           styles.block_11,
-          styles.blockImgNonFungibleTokens,
+          styles.blockImgNonFungibleTokens
         )}
       >
         <span className={cn(styles.labelImg, styles.labelImgNonFungibleTokens)}></span>
@@ -518,7 +548,7 @@ export function NonFungibleTokens(InstructionProps: any) {
         className={cn(
           styles.walletConnectionBlock,
           styles.block_12,
-          styles.blockImgNonFungibleTokens,
+          styles.blockImgNonFungibleTokens
         )}
       >
         <span className={cn(styles.labelImg, styles.labelImgNonFungibleTokens)}></span>
@@ -543,7 +573,7 @@ export function NonFungibleTokens(InstructionProps: any) {
         className={cn(
           styles.walletConnectionBlock,
           styles.block_13,
-          styles.blockImgNonFungibleTokens,
+          styles.blockImgNonFungibleTokens
         )}
       >
         <span className={cn(styles.labelImg, styles.labelImgNonFungibleTokens)}></span>
@@ -572,7 +602,7 @@ export function NonFungibleTokens(InstructionProps: any) {
         <img src={m_inst_15} className={styles.mobileImg} />
       </div>
     </div>
-  );
+  )
 }
 
 export function Status(InstructionProps: any) {
@@ -591,5 +621,5 @@ export function Status(InstructionProps: any) {
         <img src={m_inst_16} className={styles.mobileImg} />
       </div>
     </div>
-  );
+  )
 }

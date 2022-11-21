@@ -1,54 +1,48 @@
-import React, { useEffect, useState  } from 'react';
-import cn from 'classnames';
-import styles from './App.module.scss';
-
-import { useToggle } from './hooks/useToggle';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-
-import GeneralBridge from '@dapplets/dapplet-overlay-bridge';
+import {} from '@dapplets/dapplet-extension'
+import GeneralBridge from '@dapplets/dapplet-overlay-bridge'
 import {
+  BoxCreationPrice,
+  FtMetadata,
   IDappletApi,
   Lootbox,
   LootboxStat,
   LootboxWinner,
-  BoxCreationPrice,
-  FtMetadata,
-} from '@loot-box/common/interfaces';
-import {} from '@dapplets/dapplet-extension';
-import Avatar from './icons/Lootbox.png';
-
-import { StatisticsNear } from './components/statisticsNear';
-import { DeployBox } from './components/deployBox';
-import { Profile } from './components/atoms/Profile';
-import SelectBox, { IMG } from './components/selectBox';
-import { FillBox } from './components/fillBox';
-import { FillBox_Nft } from './components/FillBoxNFT';
-import { ChildComponent } from './components/createNewBox';
-import { LogInButton } from './components/atoms/LoginButtons';
-import CreatedBoxList from './components/createNewBox';
-
-import { SettingDef } from './components/boxSettings';
-import { SettingsToken } from './components/boxSettings/settingsToken';
-import { SettingsNFT } from './components/boxSettings/settingsNft';
-
-import { Preloader } from './components/atoms/Preloader';
-import { MessageMain } from './components/atoms/MessageMain';
-import useApi from './hooks/useApi';
-import { Statistics } from './components/Statistics';
-import { Winner } from './components/Winners';
-import { Code } from './components/Code';
-import {getWin} from './utils/getWin'
+} from '@loot-box/common/interfaces'
+import cn from 'classnames'
+import React, { useEffect, useState } from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom'
+import styles from './App.module.scss'
+import { LogInButton } from './components/atoms/LoginButtons'
+import { MessageMain } from './components/atoms/MessageMain'
+import { Preloader } from './components/atoms/Preloader'
+import { Profile } from './components/atoms/Profile'
+import { SettingDef } from './components/boxSettings'
+import { SettingsNFT } from './components/boxSettings/settingsNft'
+import { SettingsToken } from './components/boxSettings/settingsToken'
+import { Code } from './components/Code'
+import CreatedBoxList, { ChildComponent } from './components/createNewBox'
+import { DeployBox } from './components/deployBox'
+import { FillBox } from './components/fillBox'
+import { FillBox_Nft } from './components/FillBoxNFT'
+import SelectBox, { IMG } from './components/selectBox'
+import { Statistics } from './components/Statistics'
+import { StatisticsNear } from './components/statisticsNear'
+import { Winner } from './components/Winners'
+import useApi from './hooks/useApi'
+import { useToggle } from './hooks/useToggle'
+import Avatar from './icons/Lootbox.png'
+import { getWin } from './utils/getWin'
 
 interface ICtx {
-  authorFullname: string;
-  authorUsername?: string;
-  authorImg: string;
-  id: string;
-  text: string;
-  isOpen?: boolean;
+  authorFullname: string
+  authorUsername?: string
+  authorImg: string
+  id: string
+  text: string
+  isOpen?: boolean
 }
 
-const dappletApi = new GeneralBridge<IDappletApi>();
+const dappletApi = new GeneralBridge<IDappletApi>()
 
 const EMPTY_FORM: Lootbox = {
   dropChance: 20,
@@ -58,70 +52,69 @@ const EMPTY_FORM: Lootbox = {
   pictureId: 0,
   id: '0',
   status: 'created',
-};
+}
 
 export default () => {
-  const [parsedCtx, setParsedCtx] = useState<ICtx>();
-  const [nearAccount, setNearAccount] = useState<string>();
-  const [isOpenProfile, onOpenProfile] = useToggle(false);
-  const [valueLabel, setValueLabel] = useState('');
-  const [imgSelectBox, setImgSelectBox] = useState('');
-  const [lootboxes, setLootboxes] = useState<Lootbox[]>([]);
-  const [winners, setWinners] = useState<LootboxWinner[]>([]);
-  const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null);
-  const [statistics, setStatistics] = useState<LootboxStat | null>(null);
-  const [creationForm, setCreationForm] = useState<Lootbox>(EMPTY_FORM);
-  const [clickedBoxImg, setClickedBoxImg] = useState<number | null>(0);
-  const [priceCreationForm, setPriceCreationForm] = useState<BoxCreationPrice | null>(null);
-  const [isLoading, setLoading] = useState(false);
-  const [winnersLabelInfo, setWinnersLabelInfo] = useState('');
-  const [messageError, setMessageError] = useState(false);
-  const [ftMetadata, setFtMetadata] = useState(null);
-  const [newMetadata, setMetadata] = useState<FtMetadata | null>();
-  const [networkConfig, setNetworkConfig] = useState<any>({});
-  const [isFetching, setFetching] = useState(false);
-  const [currentLootboxes, setCurrentLootboxes] = useState(8);
-  const [totalCountPagination, setTotalCountPagination] = useState(0);
-  const [dropTypeCreationForm, setDropTypeCreationForm] = useState(null);
-  const [clearCreationForm, setClearCreationForm,] = useState(false);
-  const getLootboxStat = useApi(selectedLootboxId,dappletApi.getLootboxStat,setStatistics)
-  const getLootboxWinners = useApi(selectedLootboxId,dappletApi.getLootboxWinners,setWinners)
+  const [parsedCtx, setParsedCtx] = useState<ICtx>()
+  const [nearAccount, setNearAccount] = useState<string>()
+  const [isOpenProfile, onOpenProfile] = useToggle(false)
+  const [valueLabel, setValueLabel] = useState('')
+  const [imgSelectBox, setImgSelectBox] = useState('')
+  const [lootboxes, setLootboxes] = useState<Lootbox[]>([])
+  const [winners, setWinners] = useState<LootboxWinner[]>([])
+  const [selectedLootboxId, setSelectedLootboxId] = useState<string | null>(null)
+  const [statistics, setStatistics] = useState<LootboxStat | null>(null)
+  const [creationForm, setCreationForm] = useState<Lootbox>(EMPTY_FORM)
+  const [clickedBoxImg, setClickedBoxImg] = useState<number | null>(0)
+  const [priceCreationForm, setPriceCreationForm] = useState<BoxCreationPrice | null>(null)
+  const [isLoading, setLoading] = useState(false)
+  const [winnersLabelInfo, setWinnersLabelInfo] = useState('')
+  const [messageError, setMessageError] = useState(false)
+  const [ftMetadata, setFtMetadata] = useState(null)
+  const [newMetadata, setMetadata] = useState<FtMetadata | null>()
+  const [networkConfig, setNetworkConfig] = useState<any>({})
+  const [isFetching, setFetching] = useState(false)
+  const [currentLootboxes, setCurrentLootboxes] = useState(8)
+  const [totalCountPagination, setTotalCountPagination] = useState(0)
+  const [dropTypeCreationForm, setDropTypeCreationForm] = useState(null)
+  const [clearCreationForm, setClearCreationForm] = useState(false)
+  const getLootboxStat = useApi(selectedLootboxId, dappletApi.getLootboxStat, setStatistics)
+  const getLootboxWinners = useApi(selectedLootboxId, dappletApi.getLootboxWinners, setWinners)
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValueLabel(e.target.value);
-  };
+    setValueLabel(e.target.value)
+  }
 
   useEffect(() => {
-    dappletApi.on('data', (x: ICtx) => setParsedCtx(x));
+    dappletApi.on('data', (x: ICtx) => setParsedCtx(x))
     dappletApi.isWalletConnected().then(async (isWalletConnected) => {
-      let accountName: string | undefined;
+      let accountName: string | undefined
       if (isWalletConnected || isFetching) {
-        accountName = await dappletApi.getCurrentNearAccount();
+        accountName = await dappletApi.getCurrentNearAccount()
         await dappletApi
           .getBoxesByAccount(accountName, 0, 8 + currentLootboxes)
           .then((x) => {
-            setLootboxes(x);
+            setLootboxes(x)
 
-            setCurrentLootboxes((prevState) => prevState + 8);
-            setTotalCountPagination(x.length);
+            setCurrentLootboxes((prevState) => prevState + 8)
+            setTotalCountPagination(x.length)
           })
-          .finally(() => setFetching(false));
+          .finally(() => setFetching(false))
       }
-      setNearAccount(accountName);
-    });
+      setNearAccount(accountName)
+    })
     dappletApi.getNetworkConfig().then((config: any) => {
-      setNetworkConfig(config);
+      setNetworkConfig(config)
       // console.log(networkConfig,'networkConfig');
-      
-    });
-  }, [isFetching]);
+    })
+  }, [isFetching])
 
   useEffect(() => {
-    document.addEventListener('scroll', scrollHandler);
+    document.addEventListener('scroll', scrollHandler)
     return function () {
-      document.removeEventListener('scroll', scrollHandler);
-    };
-  }, []);
+      document.removeEventListener('scroll', scrollHandler)
+    }
+  }, [])
 
   const scrollHandler = (e: any) => {
     if (
@@ -130,63 +123,63 @@ export default () => {
         100 &&
       lootboxes.length === totalCountPagination
     ) {
-      setFetching(true);
+      setFetching(true)
     } else {
-      setFetching(false);
+      setFetching(false)
     }
-  };
-  let navigate = useNavigate();
+  }
+  let navigate = useNavigate()
   const navigationDeploy = () => {
-    navigate('/deploy_your_box');
-  };
+    navigate('/deploy_your_box')
+  }
 
   const doneClickHandler = async () => {
-    if (!nearAccount) throw new Error('Not logged in.');
-    setLoading(true);
+    if (!nearAccount) throw new Error('Not logged in.')
+    setLoading(true)
     try {
-      const id = await dappletApi.createNewBox(creationForm);
-      setSelectedLootboxId(id);
+      const id = await dappletApi.createNewBox(creationForm)
+      setSelectedLootboxId(id)
       await dappletApi.getBoxesByAccount(nearAccount).then((x) => {
-        setLootboxes(x);
-      });
-      navigationDeploy();
+        setLootboxes(x)
+      })
+      navigationDeploy()
     } catch (error) {
-      console.log(error);
-      setMessageError(true);
+      console.log(error)
+      setMessageError(true)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    if (ftMetadata === null) return;
+    if (ftMetadata === null) return
     Promise.all([dappletApi.getFtMetadata(ftMetadata)])
       .then(([x]) => {
-        setMetadata(x);
+        setMetadata(x)
       })
       .catch((e) => {
-        console.log(e);
-      });
-  }, [ftMetadata]);
+        console.log(e)
+      })
+  }, [ftMetadata])
 
   const handleLogIn = async () => {
-    const isWalletConnected = await dappletApi.isWalletConnected();
+    const isWalletConnected = await dappletApi.isWalletConnected()
     if (isWalletConnected) {
-      await dappletApi.disconnectWallet();
+      await dappletApi.disconnectWallet()
     }
-    setNearAccount(undefined);
-  };
+    setNearAccount(undefined)
+  }
 
   const handleLogInBtn = async () => {
-    const isWalletConnected = await dappletApi.isWalletConnected();
-    let accountName: string;
+    const isWalletConnected = await dappletApi.isWalletConnected()
+    let accountName: string
     if (!isWalletConnected) {
-      accountName = await dappletApi.connectWallet();
+      accountName = await dappletApi.connectWallet()
     } else {
-      accountName = await dappletApi.getCurrentNearAccount();
+      accountName = await dappletApi.getCurrentNearAccount()
     }
-    setNearAccount(accountName);
-  };
+    setNearAccount(accountName)
+  }
 
   return (
     <>
@@ -214,14 +207,14 @@ export default () => {
               path="/"
               element={
                 (isLoading && <Preloader />) || (
-                  <CreatedBoxList >
+                  <CreatedBoxList>
                     {lootboxes.length !== 0 ? (
                       lootboxes.map((item, index) => (
                         <ChildComponent
                           onClick={() => {
-                            getWin(item,setWinnersLabelInfo);
-                            setLootboxes(lootboxes);
-                            setSelectedLootboxId(item.id!);
+                            getWin(item, setWinnersLabelInfo)
+                            setLootboxes(lootboxes)
+                            setSelectedLootboxId(item.id!)
                           }}
                           imgValue={IMG[item.pictureId]}
                           label={String(item.id!)}
@@ -230,7 +223,6 @@ export default () => {
                           status={item.status!}
                           winnersLabelInfo={item}
                           loader={isLoading}
-                         
                         />
                       ))
                     ) : (
@@ -240,7 +232,6 @@ export default () => {
                           title="Welcome to the Lootbox Dapplet"
                           subtitle={
                             'Get started by creating a lootbox! All of your lootboxes will be displayed on this page. Learn more about lootboxes at '
-                           
                           }
                           link={networkConfig.landingUrl}
                           linkText={networkConfig.landingUrl}
@@ -258,7 +249,7 @@ export default () => {
                   setClicked={setClickedBoxImg}
                   imgId={clickedBoxImg}
                   onChange_IMG={(x: string) => {
-                    setImgSelectBox(x);
+                    setImgSelectBox(x)
                   }}
                   creationFormId={creationForm.pictureId}
                   onCreationFormUpdate={(id: number) =>
@@ -270,13 +261,7 @@ export default () => {
                 />
               }
             />
-            <Route
-              path="/box_settings_value"
-              element={
-                <SettingDef
-                />
-              }
-            />
+            <Route path="/box_settings_value" element={<SettingDef />} />
             <Route
               path="/settings_token"
               element={
@@ -294,7 +279,7 @@ export default () => {
               path="/settings_NFT"
               element={
                 <SettingsNFT
-                networkConfig={networkConfig}
+                  networkConfig={networkConfig}
                   creationForm={creationForm}
                   onCreationFormUpdate={(x) => setCreationForm(x)}
                 />
@@ -343,7 +328,7 @@ export default () => {
               element={
                 (isLoading && <Preloader />) || (
                   <DeployBox
-                  winnersLabelInfo={winnersLabelInfo}
+                    winnersLabelInfo={winnersLabelInfo}
                     id={selectedLootboxId}
                     onChange={onChange}
                     landingUrl={networkConfig.landingUrl}
@@ -354,14 +339,21 @@ export default () => {
             <Route
               path="/statistics"
               element={
-                (isLoading && <Preloader />) || <StatisticsNear ><Statistics statistics={statistics} winnersLabelInfo={winnersLabelInfo} /></StatisticsNear>
+                (isLoading && <Preloader />) || (
+                  <StatisticsNear>
+                    <Statistics statistics={statistics} winnersLabelInfo={winnersLabelInfo} />
+                  </StatisticsNear>
+                )
               }
             />
             <Route
               path="/winners"
               element={
                 (isLoading && <Preloader />) || (
-                  <StatisticsNear > <Winner winners={winners}  winnersLabelInfo={winnersLabelInfo} /></StatisticsNear>
+                  <StatisticsNear>
+                    {' '}
+                    <Winner winners={winners} winnersLabelInfo={winnersLabelInfo} />
+                  </StatisticsNear>
                 )
               }
             />
@@ -369,10 +361,14 @@ export default () => {
               path="/code"
               element={
                 (isLoading && <Preloader />) || (
-                  <StatisticsNear > <Code 
-                    id={selectedLootboxId}
-                    winnersLabelInfo={winnersLabelInfo}
-                    landingUrl={networkConfig.landingUrl}/></StatisticsNear>
+                  <StatisticsNear>
+                    {' '}
+                    <Code
+                      id={selectedLootboxId}
+                      winnersLabelInfo={winnersLabelInfo}
+                      landingUrl={networkConfig.landingUrl}
+                    />
+                  </StatisticsNear>
                 )
               }
             />
@@ -380,5 +376,5 @@ export default () => {
         </div>
       )}
     </>
-  );
-};
+  )
+}

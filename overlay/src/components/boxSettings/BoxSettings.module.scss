@@ -1,27 +1,30 @@
-@import '../../styles/color.variables.scss';
-@import '../../styles/null.scss';
-@import '../../styles/fonts.scss';
+@import "../../styles/color.variables";
+@import "../../styles/null";
+@import "../../styles/fonts";
 
 .wrapper {
-  padding: 60px 0px 0px 0px;
-
+  padding: 60px 0 0;
   display: flex;
   flex: 1 0 auto;
   justify-content: start;
   flex-direction: column;
+
   ::-webkit-scrollbar {
     width: 0 !important;
   }
 }
+
 .wrapperBtn {
   display: flex;
   flex: 1 0 auto;
   justify-content: start;
   flex-direction: column;
+
   ::-webkit-scrollbar {
     width: 0 !important;
   }
 }
+
 .div {
   display: flex;
   width: 100%;
@@ -30,11 +33,12 @@
   align-items: start;
   height: auto;
 }
+
 .loot {
   display: flex;
   width: 100%;
   flex-direction: column;
-  padding: 37px 0px 21px 0px;
+  padding: 37px 0 21px;
 }
 
 .buttons {
@@ -56,7 +60,7 @@
   width: 100%;
   flex-direction: column;
   position: relative;
-  padding: 0px 0px 0px 0px;
+  padding: 0;
 }
 
 .tokenInput {
@@ -64,21 +68,22 @@
   justify-content: space-between;
   width: 100%;
   align-items: center;
-
-  padding: 0px 0px 0px 0px;
+  padding: 0;
 }
 
 .inputDropAmount {
   display: flex;
   position: relative;
-  padding: 9px 0px 0px 0px;
+  padding: 9px 0 0;
   justify-content: space-between;
 }
+
 .LabelSettings {
-  padding: 38px 0px 0px 0px;
+  padding: 38px 0 0;
   position: relative;
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 65%;
     left: 0;
@@ -93,8 +98,8 @@
   width: 153px;
   justify-content: space-between;
   align-items: center;
-  margin: 0px 0px 0px 0px;
-  padding: 0px 0px 18px 0px;
+  margin: 0;
+  padding: 0 0 18px;
 }
 
 .dropAmountInput {
@@ -102,23 +107,23 @@
   width: 100%;
   position: relative;
   justify-content: space-between;
-  padding: 0px 0px 0px 0px;
+  padding: 0;
 }
 
 .dropChance {
   display: flex;
   flex-direction: column;
-
-  padding: 17px 0px 20px 0px;
+  padding: 17px 0 20px;
 }
 
 .navigation {
   display: flex;
   justify-content: space-between;
-  padding: 24px 14px 20px 14px;
+  padding: 24px 14px 20px;
   position: relative;
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     background: $WebBG;
     width: 100%;
@@ -131,10 +136,12 @@
 .btnToken {
   background: $Primary;
   color: #fff;
+
   &:hover {
     background: $PrimaryHover !important;
     color: #fff !important;
   }
+
   &:active {
     background: $PrimaryPressed !important;
     color: #fff !important;
@@ -144,18 +151,22 @@
 .divBtn {
   width: 100%;
 }
+
 .BtnNft {
   background: $Primary;
   color: #fff;
+
   &:hover {
     background: $PrimaryHover !important;
     color: #fff !important;
   }
+
   &:active {
     background: $PrimaryPressed !important;
     color: #fff !important;
   }
 }
+
 .wrapper_nft {
   display: flex;
   flex-direction: column;
@@ -182,7 +193,7 @@
 }
 
 .addNFT {
-  padding: 0px 0px 38px 0px;
+  padding: 0 0 38px;
 }
 
 .inputCustomNFT {
@@ -193,12 +204,12 @@
 .dropChance_nft {
   display: flex;
   width: 100%;
-
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px;
   flex-direction: column;
   position: relative;
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 115%;
     left: 0;
@@ -212,14 +223,16 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+
   .addNFT {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 0px 0px 0px 0px;
+    padding: 0;
   }
+
   .radiobtnMarketplace {
-    padding: 0px 0px 14px 0px;
+    padding: 0 0 14px;
   }
 
   .inputCustomNFT {
@@ -230,15 +243,17 @@
 }
 
 .addNFTBtn {
-  padding: 9px 0px 39px 0px;
+  padding: 9px 0 39px;
 }
 
 .remove {
-  padding: 9px 0px 19px 0px;
+  padding: 9px 0 19px;
 }
+
 .btnLink {
   display: inline-block;
   width: 49%;
+
   button {
     width: 100%;
   }
@@ -247,6 +262,7 @@
 .inputInfo:invalid {
   background: red !important;
 }
+
 .btnToken {
   background: #d9304f;
   color: #fff;

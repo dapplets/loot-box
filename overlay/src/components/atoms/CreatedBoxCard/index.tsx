@@ -1,33 +1,29 @@
-import React, { FC } from 'react';
-import cn from 'classnames';
-import styles from './CreatedBoxCard.module.scss';
-import { Link } from 'react-router-dom';
-
-import { Preloader } from '../Preloader';
-
-import useCopied from '../../../hooks/useCopyed';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { Preloader } from '../Preloader'
+import styles from './CreatedBoxCard.module.scss'
 
 export interface CreatedBoxProps {
-  label: string;
-  imageBox: string;
-  status: string;
- 
-  onClick: () => void;
-  WinInfo?: any;
-  loader: boolean;
+  label: string
+  imageBox: string
+  status: string
+
+  onClick: () => void
+  WinInfo?: any
+  loader: boolean
 }
 
 export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
-  const { label, imageBox, status, onClick, WinInfo, loader } = props;
+  const { label, imageBox, status, onClick, WinInfo, loader } = props
 
   const visible = (hash: string): string => {
-    const firstFourCharacters = hash.substring(0, 6);
-    const lastFourCharacters = hash.substring(hash.length - 1, hash.length - 5);
+    const firstFourCharacters = hash.substring(0, 6)
+    const lastFourCharacters = hash.substring(hash.length - 1, hash.length - 5)
 
-    return `${firstFourCharacters}...${lastFourCharacters}`;
-  };
+    return `${firstFourCharacters}...${lastFourCharacters}`
+  }
 
- 
   return (
     <>
       {loader ? (
@@ -49,5 +45,5 @@ export const CreatedBox: FC<CreatedBoxProps> = (props: CreatedBoxProps) => {
         </div>
       )}
     </>
-  );
-};
+  )
+}

@@ -1,30 +1,31 @@
-import React, { FC, useState } from 'react';
-import styles from './BoxSettings.module.scss';
+import { NftContentItem } from '@loot-box/common/interfaces'
+import React, { FC, useState } from 'react'
+import { Button } from '../atoms/Button'
+import { InputPanel } from '../atoms/Input'
+import { LabelSettings } from '../atoms/LabelSettings'
+import { RadioButton } from '../atoms/RadioButton'
+import styles from './BoxSettings.module.scss'
+import './invalid.scss'
 
-import { LabelSettings } from '../atoms/LabelSettings';
-import { Button } from '../atoms/Button';
-import { InputPanel } from '../atoms/Input';
-import { RadioButton } from '../atoms/RadioButton';
-import { NftContentItem } from '@loot-box/common/interfaces';
-import './invalid.scss';
 export interface ChildComponentProps {
-  onDeleteChild?: () => void;
-  nftItem: NftContentItem;
-  onNftUpdated: (x: NftContentItem) => void;
-  nodeNftContract: any;
-  nodeQuanity: any;
+  onDeleteChild?: () => void
+  nftItem: NftContentItem
+  onNftUpdated: (x: NftContentItem) => void
+  nodeNftContract: any
+  nodeQuanity: any
   newContractAddress: any
 }
 
 export const ChildComponent: FC<ChildComponentProps> = (props: ChildComponentProps) => {
-  const { onDeleteChild, nftItem, onNftUpdated, nodeNftContract, nodeQuanity, newContractAddress} = props;
-  const [id] = useState('radiogroup-' + Math.floor(Math.random() * 1_000_000));
+  const { onDeleteChild, nftItem, onNftUpdated, nodeNftContract, nodeQuanity, newContractAddress } =
+    props
+  const [id] = useState('radiogroup-' + Math.floor(Math.random() * 1_000_000))
 
   const changeHandler = (name: keyof NftContentItem, value: any) => {
-    const newNft = Object.assign({}, nftItem);
-    (newNft as any)[name] = value;
-    onNftUpdated(newNft);
-  };
+    const newNft = Object.assign({}, nftItem)
+    ;(newNft as any)[name] = value
+    onNftUpdated(newNft)
+  }
 
   return (
     <div className={styles.addNftBlock}>
@@ -40,18 +41,21 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
           id={`${id}-1`}
           value="Paras"
           name={id}
-          checked={newContractAddress === 'testnet'? nftItem.contractAddress === 'paras-token-v2.testnet':nftItem.contractAddress ===  'x.paras.near'}
+          checked={
+            newContractAddress === 'testnet'
+              ? nftItem.contractAddress === 'paras-token-v2.testnet'
+              : nftItem.contractAddress === 'x.paras.near'
+          }
           onChange={(e) => {
             // ToDo: how to make better?
             if (e.target.checked) {
-             let newAddress = ''
-             if(newContractAddress === 'testnet' ){
-              newAddress = 'paras-token-v2.testnet'
-              changeHandler('contractAddress', newAddress);
-             }else{
-              changeHandler('contractAddress', 'x.paras.near');
-             }
-             
+              let newAddress = ''
+              if (newContractAddress === 'testnet') {
+                newAddress = 'paras-token-v2.testnet'
+                changeHandler('contractAddress', newAddress)
+              } else {
+                changeHandler('contractAddress', 'x.paras.near')
+              }
             }
           }}
         />
@@ -59,10 +63,13 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
           id={`${id}-3`}
           value="Custom NFT"
           name={id}
-          checked={nftItem.contractAddress !== 'paras-token-v2.testnet' && nftItem.contractAddress !=='x.paras.near' }
+          checked={
+            nftItem.contractAddress !== 'paras-token-v2.testnet' &&
+            nftItem.contractAddress !== 'x.paras.near'
+          }
           onChange={(e) => {
             if (e.target.checked) {
-              changeHandler('contractAddress', '');
+              changeHandler('contractAddress', '')
             }
           }}
         />
@@ -76,7 +83,7 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
               placeholder="Contract Address"
               value={nftItem.contractAddress ?? ''}
               onChange={(e) => {
-                changeHandler('contractAddress', e.target.value);
+                changeHandler('contractAddress', e.target.value)
               }}
             />
           </div>
@@ -85,7 +92,7 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
             appearance="small_mini"
             placeholder="Token ID"
             onChange={(e) => {
-              changeHandler('tokenId', e.target.value);
+              changeHandler('tokenId', e.target.value)
             }}
             innerRef={nodeNftContract}
           />
@@ -103,5 +110,5 @@ Token ID - insert the marketplace NFT ID or NFT contract address."
         )}
       </div>
     </div>
-  );
-};
+  )
+}

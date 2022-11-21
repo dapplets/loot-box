@@ -1,14 +1,14 @@
-import React, { ReactElement, ReactNode } from 'react';
-import styles from './Message.module.scss';
-import cn from 'classnames';
+import cn from 'classnames'
+import React, { ReactElement, ReactNode } from 'react'
+import styles from './Message.module.scss'
 
 export interface MessageProps {
-  title: string;
-  subtitle?: string;
-  link?: string;
-  linkText?: string;
-  children?: ReactNode;
-  className?: string;
+  title: string
+  subtitle?: string
+  link?: string
+  linkText?: string
+  children?: ReactNode
+  className?: string
 }
 
 export const MessageMain = ({
@@ -30,5 +30,5 @@ export const MessageMain = ({
         </a>
       )}
     </div>
-  );
-};
+  )
+}

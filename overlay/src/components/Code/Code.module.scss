@@ -1,6 +1,6 @@
-@import '../../styles/color.variables.scss';
-@import '../../styles/null.scss';
-@import '../../styles/fonts.scss';
+@import "../../styles/color.variables";
+@import "../../styles/null";
+@import "../../styles/fonts";
 
 .wrapper {
   display: flex;
@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px;
 }
 
 .boxName {
@@ -20,10 +20,10 @@
   width: 100%;
   flex-direction: column;
   position: relative;
+  padding: 0 0 46px;
 
-  padding: 0px 0px 46px 0px;
   &::before {
-    content: '';
+    content: "";
     height: 3px;
     width: 100%;
     top: 95px;
@@ -35,12 +35,12 @@
 }
 
 .boxMessage {
-  padding: 0px 0px 50px 0px;
+  padding: 0 0 50px;
 }
 
 .lootboxCode {
 }
 
 .link {
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px;
 }

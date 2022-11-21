@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
-import styles from './Progress.module.scss';
-import cn from 'classnames';
-import prog from '../../../icons/progress/progress.svg';
-import { LabelSettings } from '../LabelSettings';
+import cn from 'classnames'
+import React, { FC } from 'react'
+import prog from '../../../icons/progress/progress.svg'
+import { LabelSettings } from '../LabelSettings'
+import styles from './Progress.module.scss'
 export interface ProgressProps {
-  completed: number;
-  bgcolor: string;
+  completed: number
+  bgcolor: string
 }
 export const Progress: FC<ProgressProps> = (props: ProgressProps) => {
-  const { completed, bgcolor } = props;
+  const { completed, bgcolor } = props
 
   return (
     <div className={cn(styles.progress)}>
@@ -27,12 +27,11 @@ export const Progress: FC<ProgressProps> = (props: ProgressProps) => {
             position: 'relative',
           }}
         >
-          <span style={{position: 'relative',
-    top: '-1px'}} className={cn(styles.labelStyles)}>
+          <span style={{ position: 'relative', top: '-1px' }} className={cn(styles.labelStyles)}>
             <img src={prog} alt="" />
           </span>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

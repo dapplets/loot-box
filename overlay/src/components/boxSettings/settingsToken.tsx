@@ -1,39 +1,37 @@
-import React, { ReactNode, FC, useState, useEffect, useRef } from 'react';
-import styles from './BoxSettings.module.scss';
-import cn from 'classnames';
-import { LabelSettings } from '../atoms/LabelSettings';
-import { LinksStep } from '../atoms/LinksStep';
-import { Link } from 'react-router-dom';
-import { InputPanel } from '../atoms/Input';
-import { RadioButton } from '../atoms/RadioButton';
-import { DropChance } from '../atoms/DropChance';
-import { Lootbox } from '@loot-box/common/interfaces';
-import { NearContentItem, FtContentItem } from '@loot-box/common/interfaces';
-import { ButtonsSetting } from './buttonsSetting';
-import './invalid.scss';
-import useClass from '../../hooks/useClass';
-import { Check } from '../../utils/check';
-
-import BigNumber from 'bignumber.js';
+import { FtContentItem, Lootbox, NearContentItem } from '@loot-box/common/interfaces'
+import BigNumber from 'bignumber.js'
+import cn from 'classnames'
+import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import useClass from '../../hooks/useClass'
+import { Check } from '../../utils/check'
+import { DropChance } from '../atoms/DropChance'
+import { InputPanel } from '../atoms/Input'
+import { LabelSettings } from '../atoms/LabelSettings'
+import { LinksStep } from '../atoms/LinksStep'
+import { RadioButton } from '../atoms/RadioButton'
+import styles from './BoxSettings.module.scss'
+import { ButtonsSetting } from './buttonsSetting'
+import './invalid.scss'
 
 export interface BoxSettingsProps {
-  children?: ReactNode;
-  onChange?: () => void;
-  onSubmit?: () => void;
-  dataType?: string;
-  creationForm: Lootbox;
-  onCreationFormUpdate: (x: any) => void;
-  setFtMetadata: (x: any) => void;
-  newMetadata: any;
-  setDropType: (x: any) => void;
-  setMetadata: (x: any) => void;
+  children?: ReactNode
+  onChange?: () => void
+  onSubmit?: () => void
+  dataType?: string
+  creationForm: Lootbox
+  onCreationFormUpdate: (x: any) => void
+  setFtMetadata: (x: any) => void
+  newMetadata: any
+  setDropType: (x: any) => void
+  setMetadata: (x: any) => void
 }
 const DEFAULT_NEAR_ITEM: NearContentItem = {
   tokenAmount: '',
   dropType: 'fixed',
   dropAmountFrom: '',
   dropAmountTo: '',
-};
+}
 
 enum DropType {
   Variable = 0,
@@ -54,7 +52,7 @@ const DEFAULT_FT_ITEM: FtContentItem = {
   dropType: 'fixed',
   dropAmountFrom: '',
   dropAmountTo: '',
-};
+}
 export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
   const {
     creationForm,
@@ -62,90 +60,109 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
     setFtMetadata,
     newMetadata,
     setDropType,
-    setMetadata
-  } = props;
-  const [value, setValue] = useState(20);
-  const [link, onLink] = useState(true);
+    setMetadata,
+  } = props
+  const [value, setValue] = useState(20)
+  const [link, onLink] = useState(true)
 
-  const nodeTokenAmount = useRef<HTMLInputElement>();
-  const nodeTokenContract = useRef<HTMLInputElement>();
-  const nodeTokenTicer = useRef<HTMLInputElement>();
-  const nodeFrom = useRef<HTMLInputElement>();
-  const nodeTo = useRef<HTMLInputElement>();
-  const nodeDropAmount = useRef<HTMLInputElement>();
-  const nodeDropChance = useRef<HTMLInputElement>();
+  const nodeTokenAmount = useRef<HTMLInputElement>()
+  const nodeTokenContract = useRef<HTMLInputElement>()
+  const nodeTokenTicer = useRef<HTMLInputElement>()
+  const nodeFrom = useRef<HTMLInputElement>()
+  const nodeTo = useRef<HTMLInputElement>()
+  const nodeDropAmount = useRef<HTMLInputElement>()
+  const nodeDropChance = useRef<HTMLInputElement>()
 
-  const newForm = Object.assign({}, creationForm);
-  const [activeDropType, setActiveDropType] = useState(DropType.Fixed);
-  const [activeDropTypeFt, setActiveDropTypeFt] = useState(DropTypeFt.Fixed);
-  const [activeTokenType, setActiveTokenType] = useState(TokenType.Near);
-  const [isLoader, setLoader] = useState(false);
+  const newForm = Object.assign({}, creationForm)
+  const [activeDropType, setActiveDropType] = useState(DropType.Fixed)
+  const [activeDropTypeFt, setActiveDropTypeFt] = useState(DropTypeFt.Fixed)
+  const [activeTokenType, setActiveTokenType] = useState(TokenType.Near)
+  const [isLoader, setLoader] = useState(false)
 
-  const booleanNodeTokenAmount = nodeTokenAmount.current?.classList.contains('invalid');
-  nodeTokenContract;
-  const booleanNodeTokenContract = nodeTokenContract.current?.classList.contains('invalid');
-  const booleanNodeTokenTicer = nodeTokenTicer.current?.classList.contains('invalid');
-  const booleanNodeFrom = nodeFrom.current?.classList.contains('invalid');
-  const booleanNodeTo = nodeTo.current?.classList.contains('invalid');
-  const booleanNodeDropAmount = nodeDropAmount.current?.classList.contains('invalid');
- const check = Check(creationForm.nearContentItems[0],BigNumber)
- const checkFT = Check(creationForm.ftContentItems[0],BigNumber)
+  const booleanNodeTokenAmount = nodeTokenAmount.current?.classList.contains('invalid')
+  nodeTokenContract
+  const booleanNodeTokenContract = nodeTokenContract.current?.classList.contains('invalid')
+  const booleanNodeTokenTicer = nodeTokenTicer.current?.classList.contains('invalid')
+  const booleanNodeFrom = nodeFrom.current?.classList.contains('invalid')
+  const booleanNodeTo = nodeTo.current?.classList.contains('invalid')
+  const booleanNodeDropAmount = nodeDropAmount.current?.classList.contains('invalid')
+  const check = Check(creationForm.nearContentItems[0], BigNumber)
+  const checkFT = Check(creationForm.ftContentItems[0], BigNumber)
 
   useEffect(() => {
-    creationForm.dropChance = value;
-    onCreationFormUpdate(creationForm);
-  });
+    creationForm.dropChance = value
+    onCreationFormUpdate(creationForm)
+  })
 
   const changeHandler = (name: keyof NearContentItem, value: any) => {
-    const newForm = Object.assign({}, creationForm);
-    newForm.nearContentItems[0][name] = value;
-    onCreationFormUpdate(newForm);
-  };
+    const newForm = Object.assign({}, creationForm)
+    newForm.nearContentItems[0][name] = value
+    onCreationFormUpdate(newForm)
+  }
 
   const changeHandlerFT = (name: keyof FtContentItem, value: any) => {
-    newForm.ftContentItems[0][name] = value;
-    onCreationFormUpdate(newForm);
-  };
+    newForm.ftContentItems[0][name] = value
+    onCreationFormUpdate(newForm)
+  }
 
   const handleClick = () => {
     if (nodeTokenAmount && nodeTokenAmount.current) {
-      nodeTokenAmount.current.value = '';
+      nodeTokenAmount.current.value = ''
     }
-  };
+  }
 
   const func = (e: React.FormEvent<HTMLInputElement>) => {
     if (e.currentTarget.value.indexOf('.') !== -1) {
       e.currentTarget.value = e.currentTarget.value.substring(
         0,
-        e.currentTarget.value.indexOf('.') + 7,
-      );
+        e.currentTarget.value.indexOf('.') + 7
+      )
     }
-  };
-  const ClassRef = useClass(activeTokenType,creationForm,activeDropType,DropType,nodeFrom,nodeTo,nodeTokenAmount,onLink,activeDropTypeFt,DropTypeFt,check, link,nodeDropAmount,checkFT,nodeTokenContract,value,nodeDropChance,setDropType,booleanNodeTokenAmount, booleanNodeTokenContract, booleanNodeTokenTicer,
+  }
+  const ClassRef = useClass(
+    activeTokenType,
+    creationForm,
+    activeDropType,
+    DropType,
+    nodeFrom,
+    nodeTo,
+    nodeTokenAmount,
+    onLink,
+    activeDropTypeFt,
+    DropTypeFt,
+    check,
+    link,
+    nodeDropAmount,
+    checkFT,
+    nodeTokenContract,
+    value,
+    nodeDropChance,
+    setDropType,
+    booleanNodeTokenAmount,
+    booleanNodeTokenContract,
+    booleanNodeTokenTicer,
     booleanNodeFrom,
     booleanNodeTo,
-    booleanNodeDropAmount)
-   
+    booleanNodeDropAmount
+  )
 
   useEffect(() => {
-    DEFAULT_NEAR_ITEM.dropAmountFrom = '';
-    DEFAULT_NEAR_ITEM.dropAmountTo = '';
-    DEFAULT_NEAR_ITEM.tokenAmount = '';
+    DEFAULT_NEAR_ITEM.dropAmountFrom = ''
+    DEFAULT_NEAR_ITEM.dropAmountTo = ''
+    DEFAULT_NEAR_ITEM.tokenAmount = ''
 
-    DEFAULT_FT_ITEM.contractAddress = '';
-    DEFAULT_FT_ITEM.dropAmountFrom = '';
-    DEFAULT_FT_ITEM.dropAmountTo = '';
-    DEFAULT_FT_ITEM.tokenAmount = '';
+    DEFAULT_FT_ITEM.contractAddress = ''
+    DEFAULT_FT_ITEM.dropAmountFrom = ''
+    DEFAULT_FT_ITEM.dropAmountTo = ''
+    DEFAULT_FT_ITEM.tokenAmount = ''
 
-    newForm.nearContentItems = [DEFAULT_NEAR_ITEM];
-    creationForm.nftContentItems = [];
-    newForm.ftContentItems = [DEFAULT_FT_ITEM];
-    onCreationFormUpdate(creationForm);
+    newForm.nearContentItems = [DEFAULT_NEAR_ITEM]
+    creationForm.nftContentItems = []
+    newForm.ftContentItems = [DEFAULT_FT_ITEM]
+    onCreationFormUpdate(creationForm)
 
-    onCreationFormUpdate(newForm);
-  
-    
-  }, []);
+    onCreationFormUpdate(newForm)
+  }, [])
 
   return (
     <>
@@ -174,9 +191,9 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     onInput={(e) => func(e)}
                     onChange={(e) => {
                       if (activeTokenType === TokenType.Near) {
-                        changeHandler.call(null, 'tokenAmount', e.target.value);
+                        changeHandler.call(null, 'tokenAmount', e.target.value)
                       } else {
-                        changeHandlerFT.call(null, 'tokenAmount', e.target.value);
+                        changeHandlerFT.call(null, 'tokenAmount', e.target.value)
                       }
                     }}
                   />
@@ -187,10 +204,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     id="1_amount"
                     checked={activeTokenType === TokenType.Near}
                     onChange={(e) => {
-                      setMetadata(null);
+                      setMetadata(null)
                       if (e.target.checked !== undefined) {
-                        setActiveTokenType(TokenType.Near);
-                        handleClick();
+                        setActiveTokenType(TokenType.Near)
+                        handleClick()
                       }
                     }}
                   />
@@ -202,8 +219,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                     checked={activeTokenType === TokenType.Custom}
                     onChange={(e) => {
                       if (e.target.checked !== undefined) {
-                        setActiveTokenType(TokenType.Custom);
-                        handleClick();
+                        setActiveTokenType(TokenType.Custom)
+                        handleClick()
                       }
                     }}
                   />
@@ -229,10 +246,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       checked={activeDropType === DropType.Fixed}
                       onChange={(e) => {
                         if (e.target.checked !== undefined) {
-                          creationForm.nearContentItems[0].dropAmountFrom = '';
-                          creationForm.nearContentItems[0].dropAmountTo = '';
-                          changeHandler.call(null, 'dropType', 'fixed');
-                          setActiveDropType(DropType.Fixed);
+                          creationForm.nearContentItems[0].dropAmountFrom = ''
+                          creationForm.nearContentItems[0].dropAmountTo = ''
+                          changeHandler.call(null, 'dropType', 'fixed')
+                          setActiveDropType(DropType.Fixed)
                         }
                       }}
                     />
@@ -244,10 +261,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       checked={activeDropType === DropType.Variable}
                       onChange={(e) => {
                         if (e.target.checked !== undefined) {
-                          creationForm.nearContentItems[0].dropAmountFrom = '';
-                          creationForm.nearContentItems[0].dropAmountTo = '';
-                          changeHandler.call(null, 'dropType', 'variable');
-                          setActiveDropType(DropType.Variable);
+                          creationForm.nearContentItems[0].dropAmountFrom = ''
+                          creationForm.nearContentItems[0].dropAmountTo = ''
+                          changeHandler.call(null, 'dropType', 'variable')
+                          setActiveDropType(DropType.Variable)
                         }
                       }}
                     />
@@ -260,8 +277,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       innerRef={nodeDropAmount}
                       onInput={(e) => func(e)}
                       onChange={(e) => {
-                        changeHandler.call(null, 'dropAmountTo', e.target.value);
-                        changeHandler.call(null, 'dropAmountFrom', e.target.value);
+                        changeHandler.call(null, 'dropAmountTo', e.target.value)
+                        changeHandler.call(null, 'dropAmountFrom', e.target.value)
                       }}
                     />
                   )}
@@ -274,7 +291,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         innerRef={nodeFrom}
                         onInput={(e) => func(e)}
                         onChange={(e) => {
-                          changeHandler.call(null, 'dropAmountFrom', e.target.value);
+                          changeHandler.call(null, 'dropAmountFrom', e.target.value)
                         }}
                       />
                       <InputPanel
@@ -284,8 +301,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         innerRef={nodeTo}
                         onInput={(e) => func(e)}
                         onChange={(e) => {
-                          changeHandler.call(null, 'dropAmountTo', e.target.value);
-                         
+                          changeHandler.call(null, 'dropAmountTo', e.target.value)
                         }}
                       />
                     </div>
@@ -301,8 +317,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       placeholder="Token contract"
                       innerRef={nodeTokenContract}
                       onChange={(e) => {
-                        changeHandlerFT.call(null, 'contractAddress', e.target.value);
-                        setFtMetadata(e.target.value);
+                        changeHandlerFT.call(null, 'contractAddress', e.target.value)
+                        setFtMetadata(e.target.value)
                       }}
                     />
                     <InputPanel
@@ -332,10 +348,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       checked={activeDropTypeFt === DropTypeFt.Fixed}
                       onChange={(e) => {
                         if (e.target.checked !== undefined) {
-                          creationForm.ftContentItems[0].dropAmountFrom = '';
-                          creationForm.ftContentItems[0].dropAmountTo = '';
-                          changeHandlerFT.call(null, 'dropType', 'fixed');
-                          setActiveDropTypeFt(DropTypeFt.Fixed);
+                          creationForm.ftContentItems[0].dropAmountFrom = ''
+                          creationForm.ftContentItems[0].dropAmountTo = ''
+                          changeHandlerFT.call(null, 'dropType', 'fixed')
+                          setActiveDropTypeFt(DropTypeFt.Fixed)
                         }
                       }}
                     />
@@ -347,10 +363,10 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       checked={activeDropTypeFt === DropTypeFt.Variable}
                       onChange={(e) => {
                         if (e.target.checked !== undefined) {
-                          creationForm.ftContentItems[0].dropAmountFrom = '';
-                          creationForm.ftContentItems[0].dropAmountTo = '';
-                          changeHandlerFT.call(null, 'dropType', 'variable');
-                          setActiveDropTypeFt(DropTypeFt.Variable);
+                          creationForm.ftContentItems[0].dropAmountFrom = ''
+                          creationForm.ftContentItems[0].dropAmountTo = ''
+                          changeHandlerFT.call(null, 'dropType', 'variable')
+                          setActiveDropTypeFt(DropTypeFt.Variable)
                         }
                       }}
                     />
@@ -363,8 +379,8 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                       innerRef={nodeDropAmount}
                       onInput={(e) => func(e)}
                       onChange={(e) => {
-                        changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
-                        changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
+                        changeHandlerFT.call(null, 'dropAmountTo', e.target.value)
+                        changeHandlerFT.call(null, 'dropAmountFrom', e.target.value)
                       }}
                     />
                   )}
@@ -377,7 +393,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         innerRef={nodeFrom}
                         onInput={(e) => func(e)}
                         onChange={(e) => {
-                          changeHandlerFT.call(null, 'dropAmountFrom', e.target.value);
+                          changeHandlerFT.call(null, 'dropAmountFrom', e.target.value)
                         }}
                       />
                       <InputPanel
@@ -387,7 +403,7 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                         innerRef={nodeTo}
                         onInput={(e) => func(e)}
                         onChange={(e) => {
-                          changeHandlerFT.call(null, 'dropAmountTo', e.target.value);
+                          changeHandlerFT.call(null, 'dropAmountTo', e.target.value)
                         }}
                       />
                     </div>
@@ -415,12 +431,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
             </div>
           </div>
           <div className={cn(styles.navigation)}>
-            <Link to="/select_box" onClick={()=>{
-              handleClick();
-              creationForm.nearContentItems = [];
-              creationForm.nftContentItems = [];
-              creationForm.ftContentItems = [];
-              }}>
+            <Link
+              to="/select_box"
+              onClick={() => {
+                handleClick()
+                creationForm.nearContentItems = []
+                creationForm.nftContentItems = []
+                creationForm.ftContentItems = []
+              }}
+            >
               <LinksStep step="prev" label="Back" />
             </Link>
             {(link && <div></div>) ||
@@ -428,15 +447,15 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
                 <Link
                   to="/fill_your_box"
                   onClick={() => {
-                    handleClick();
+                    handleClick()
                     if (activeTokenType === TokenType.Custom) {
-                      creationForm.nearContentItems = [];
-                      creationForm.nftContentItems = [];
+                      creationForm.nearContentItems = []
+                      creationForm.nftContentItems = []
                     } else {
-                      creationForm.ftContentItems = [];
-                      creationForm.nftContentItems = [];
+                      creationForm.ftContentItems = []
+                      creationForm.nftContentItems = []
                     }
-                    onLink(false);
+                    onLink(false)
                   }}
                 >
                   <LinksStep step="next" label="Next step" />
@@ -446,5 +465,5 @@ export const SettingsToken: FC<BoxSettingsProps> = (props: BoxSettingsProps) => 
         </div>
       )}
     </>
-  );
-};
+  )
+}

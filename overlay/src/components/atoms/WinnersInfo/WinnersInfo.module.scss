@@ -1,6 +1,6 @@
-@import '../../../styles/color.variables.scss';
-@import '../../../styles/null.scss';
-@import '../../../styles/fonts.scss';
+@import "../../../styles/color.variables";
+@import "../../../styles/null";
+@import "../../../styles/fonts";
 
 .wrapperLink {
   display: flex;
@@ -19,7 +19,6 @@
 .value {
   cursor: pointer;
   position: relative;
-
   padding-left: 5px;
   align-items: center;
   font-family: Roboto;

@@ -1,14 +1,13 @@
-import React, {  FC } from 'react';
-import { InputHTMLAttributes, DetailedHTMLProps } from 'react';
-import cn from 'classnames';
-import styles from './Input.module.scss';
+import cn from 'classnames'
+import React, { DetailedHTMLProps, FC, InputHTMLAttributes } from 'react'
+import styles from './Input.module.scss'
 
 export interface InputProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  onSubmit?: () => void;
-  value?: string | number | string[];
-  placeholder?: string;
-  isButton?: true;
+  onSubmit?: () => void
+  value?: string | number | string[]
+  placeholder?: string
+  isButton?: true
   appearance:
     | 'small_mini'
     | 'small'
@@ -17,11 +16,11 @@ export interface InputProps
     | 'medium'
     | 'medium_big'
     | 'big'
-    | 'biggest';
-  className?: string;
-  type: string;
-  pattern?: string;
-  innerRef?: any;
+    | 'biggest'
+  className?: string
+  type: string
+  pattern?: string
+  innerRef?: any
 }
 
 export const InputPanel: FC<InputProps> = (props) => {
@@ -36,7 +35,7 @@ export const InputPanel: FC<InputProps> = (props) => {
     pattern,
     innerRef,
     ...anotherProps
-  } = props;
+  } = props
 
   return (
     <div className={cn(styles.inputPanel)}>
@@ -58,11 +57,11 @@ export const InputPanel: FC<InputProps> = (props) => {
             [styles.big]: appearance === 'big',
             [styles.biggest]: appearance === 'biggest',
           },
-          className,
+          className
         )}
         onChange={onChange}
         {...anotherProps}
       />
     </div>
-  );
-};
+  )
+}

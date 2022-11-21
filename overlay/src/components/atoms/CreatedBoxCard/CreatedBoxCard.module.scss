@@ -1,15 +1,14 @@
-@import '../../../styles/color.variables.scss';
-@import '../../../styles/null.scss';
-@import '../../../styles/fonts.scss';
+@import "../../../styles/color.variables";
+@import "../../../styles/null";
+@import "../../../styles/fonts";
 
 .wrapper {
   width: 100%;
-
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 4px rgb(0 0 0 / 15%);
 }
 
 .img {
@@ -17,21 +16,20 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 14px;
-
   position: relative;
+
   img {
     width: 163px;
     height: 163px;
   }
 }
+
 .winInfo {
   position: absolute;
   top: 70%;
   left: 12%;
-
   display: inline-block;
   width: 140px;
-
   text-align: center;
   padding: 5px 15px;
   background: #fff;
@@ -54,20 +52,21 @@
   left: 0;
   height: 23px;
   background: $PureWhite;
-  border-radius: 0px 0px 10px 10px;
+  border-radius: 0 0 10px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 12px;
+  padding: 0 12px;
 }
+
 .Blocklink {
   display: flex;
   align-items: center;
 }
+
 .label {
   display: inline-block;
   max-width: 50px;
-
   align-items: center;
   font-family: Roboto, sans-serif;
   text-transform: uppercase;
@@ -84,24 +83,27 @@
   width: 10px;
   height: 10px;
   position: relative;
+
   span {
-    margin: 0px 0px 0px 4px;
+    margin: 0 0 0 4px;
     display: block;
     width: 10px;
     height: 10px;
-    background: url('../../../icons/createNewBox/copy.svg') no-repeat;
+    background: url("../../../icons/createNewBox/copy.svg") no-repeat;
   }
 }
+
 .linkGood {
   cursor: pointer;
   display: block;
   width: 10px;
   height: 10px;
   position: relative;
+
   span {
-    margin: 0px 0px 0px 4px;
+    margin: 0 0 0 4px;
     display: block;
-    background: $Primary url('../../../icons/message/yesMini.svg') center no-repeat;
+    background: $Primary url("../../../icons/message/yesMini.svg") center no-repeat;
     width: 10px;
     height: 10px;
     border-radius: 2.5px;
@@ -115,8 +117,9 @@
   color: $Primary;
   position: relative;
   cursor: pointer;
+
   &::before {
-    content: '';
+    content: "";
     width: 8px;
     height: 8px;
     top: 25%;

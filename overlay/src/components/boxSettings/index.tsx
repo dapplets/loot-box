@@ -1,12 +1,12 @@
-import React, { ReactNode, FC } from 'react';
-import styles from './BoxSettings.module.scss';
-import cn from 'classnames';
-import { ButtonsSetting } from './buttonsSetting';
+import cn from 'classnames'
+import React, { FC, ReactNode } from 'react'
+import styles from './BoxSettings.module.scss'
+import { ButtonsSetting } from './buttonsSetting'
 
 export interface BoxSettingsProps {
-  children?: ReactNode;
-  onChange?: () => void;
-  onSubmit?: () => void;
+  children?: ReactNode
+  onChange?: () => void
+  onSubmit?: () => void
   dataType?: string
 }
 
@@ -15,5 +15,5 @@ export const SettingDef: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
     <div className={cn(styles.wrapper)}>
       <ButtonsSetting />
     </div>
-  );
-};
+  )
+}

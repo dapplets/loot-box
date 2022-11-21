@@ -1,22 +1,22 @@
-import React, { ReactNode, FC } from 'react';
-import styles from './BoxSettings.module.scss';
-import cn from 'classnames';
-import { SettingTitle } from '../atoms/SettingTitle';
-import { LabelSettings } from '../atoms/LabelSettings';
-import { Button } from '../atoms/Button';
-import { Link } from 'react-router-dom';
+import cn from 'classnames'
+import React, { FC, ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { Button } from '../atoms/Button'
+import { LabelSettings } from '../atoms/LabelSettings'
+import { SettingTitle } from '../atoms/SettingTitle'
+import styles from './BoxSettings.module.scss'
 
 export interface BoxSettingsProps {
-  children?: ReactNode;
-  onChange?: () => void;
-  onSubmit?: () => void;
-  dataType?: string;
-  classNameNft?: string;
-  classNameToken?: string;
-  onClick?: any;
+  children?: ReactNode
+  onChange?: () => void
+  onSubmit?: () => void
+  dataType?: string
+  classNameNft?: string
+  classNameToken?: string
+  onClick?: any
 }
 export const ButtonsSetting: FC<BoxSettingsProps> = (props: BoxSettingsProps) => {
-  const { classNameNft, classNameToken, onClick } = props;
+  const { classNameNft, classNameToken, onClick } = props
 
   return (
     <div className={cn(styles.wrapperBtn)}>
@@ -47,5 +47,5 @@ export const ButtonsSetting: FC<BoxSettingsProps> = (props: BoxSettingsProps) =>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

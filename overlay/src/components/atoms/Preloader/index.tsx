@@ -1,13 +1,13 @@
-import React, { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
-import './Preloader.scss';
+import { gsap } from 'gsap'
+import React, { useEffect, useRef } from 'react'
+import './Preloader.scss'
 
 export const Preloader = () => {
-  const el = useRef();
+  const el = useRef()
   useEffect(() => {
     gsap.set('svg', {
       visibility: 'visible',
-    });
+    })
     gsap.set('.dot', {
       transformOrigin: '50% 50%',
       attr: {
@@ -15,7 +15,7 @@ export const Preloader = () => {
         cy: 440,
         r: 'random(4, 20)',
       },
-    });
+    })
     gsap.set('.outsideDot', {
       transformOrigin: '50% 50%',
       attr: {
@@ -23,8 +23,8 @@ export const Preloader = () => {
         cy: 420,
         r: 'random(3, 19)',
       },
-    });
-    let tl1 = gsap.timeline();
+    })
+    let tl1 = gsap.timeline()
     tl1
       .to('.dots1 .dot', {
         duration: 'random(2,8)',
@@ -37,8 +37,8 @@ export const Preloader = () => {
         },
         ease: 'linear',
       })
-      .seek(100);
-    let tl2 = gsap.timeline();
+      .seek(100)
+    let tl2 = gsap.timeline()
     tl2
       .to('.dots2 .dot', {
         duration: 'random(2,5)',
@@ -51,8 +51,8 @@ export const Preloader = () => {
         },
         ease: 'sine.in',
       })
-      .seek(100);
-    let tl3 = gsap.timeline();
+      .seek(100)
+    let tl3 = gsap.timeline()
     tl3
       .to('.dots3 .dot', {
         duration: 'random(6,12)',
@@ -65,8 +65,8 @@ export const Preloader = () => {
         },
         ease: 'sine.in',
       })
-      .seek(100);
-    let tl4 = gsap.timeline();
+      .seek(100)
+    let tl4 = gsap.timeline()
     tl4
       .to('.dots4 .dot', {
         duration: 'random(3,9)',
@@ -79,8 +79,8 @@ export const Preloader = () => {
         },
         ease: 'sine.in',
       })
-      .seek(100);
-    let tl5 = gsap.timeline();
+      .seek(100)
+    let tl5 = gsap.timeline()
     tl5
       .to('.dots5 .outsideDot', {
         duration: 'random(3,9)',
@@ -94,7 +94,7 @@ export const Preloader = () => {
         },
         ease: 'power2.in',
       })
-      .seek(100);
+      .seek(100)
 
     gsap
       .to('.outline', {
@@ -107,8 +107,8 @@ export const Preloader = () => {
           repeat: -1,
         },
       })
-      .seek(200);
-  });
+      .seek(200)
+  })
 
   return (
     <div className="wrapper__preloader">
@@ -312,5 +312,5 @@ export const Preloader = () => {
         </g>
       </svg>
     </div>
-  );
-};
+  )
+}

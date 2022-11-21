@@ -1,23 +1,23 @@
-import React, { FC, DetailedHTMLProps, InputHTMLAttributes, useMemo } from 'react';
-import styles from './DropChance.module.scss';
-import cn from 'classnames';
-import less from '../../../icons/Input/less.svg';
-import more from '../../../icons/Input/more.svg';
+import cn from 'classnames'
+import React, { DetailedHTMLProps, FC, InputHTMLAttributes, useMemo } from 'react'
+import less from '../../../icons/Input/less.svg'
+import more from '../../../icons/Input/more.svg'
+import styles from './DropChance.module.scss'
 
 export interface DropChanceProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  prop?: string;
-  className?: string;
-  onSubmit?: () => void;
-  placeholder?: string;
-  type: string;
-  maxValueDropChance: string | number;
-  minValueDropChance: string | number;
-  valueDropChance: any;
-  onValueDropChance: any;
-  valueButtonDropChance: any;
-  setValueButtonDropChance: any;
-  innerRef?: any;
+  prop?: string
+  className?: string
+  onSubmit?: () => void
+  placeholder?: string
+  type: string
+  maxValueDropChance: string | number
+  minValueDropChance: string | number
+  valueDropChance: any
+  onValueDropChance: any
+  valueButtonDropChance: any
+  setValueButtonDropChance: any
+  innerRef?: any
 }
 
 export const DropChance: FC<DropChanceProps> = (props) => {
@@ -29,49 +29,47 @@ export const DropChance: FC<DropChanceProps> = (props) => {
     valueButtonDropChance,
     setValueButtonDropChance,
     type,
-    innerRef
-  } = props;
+    innerRef,
+  } = props
 
   const valueToShow = useMemo(
     () => () => {
-      valueDropChance;
+      valueDropChance
     },
-    [valueDropChance],
-  );
+    [valueDropChance]
+  )
 
   return (
     <div className={cn(styles.inputPanel)}>
       <input
-          ref={innerRef}
+        ref={innerRef}
         type={type}
         value={valueDropChance}
         onFocus={() => {
-          onValueDropChance(valueDropChance);
+          onValueDropChance(valueDropChance)
         }}
         onChange={(e: any) => {
-          const { data, inputType } = e.nativeEvent;
+          const { data, inputType } = e.nativeEvent
 
           switch (inputType) {
             case 'insertText':
               if (isNaN(+data) === false && data !== ' ') {
-                const newValue = valueDropChance === '0' ? data : valueDropChance + data;
-                onValueDropChance(newValue);
+                const newValue = valueDropChance === '0' ? data : valueDropChance + data
+                onValueDropChance(newValue)
               }
-              break;
+              break
             case 'deleteContentBackward':
-              const newValue = valueDropChance.slice(0, -1);
+              const newValue = valueDropChance.slice(0, -1)
 
-              onValueDropChance(newValue);
-              break;
+              onValueDropChance(newValue)
+              break
 
             default:
-              break;
+              break
           }
-
-         
         }}
         onBlur={() => {
-          valueDropChance === '0' ? onValueDropChance('20') : onValueDropChance(valueDropChance);
+          valueDropChance === '0' ? onValueDropChance('20') : onValueDropChance(valueDropChance)
         }}
         max={maxValueDropChance}
         min={minValueDropChance}
@@ -90,7 +88,7 @@ export const DropChance: FC<DropChanceProps> = (props) => {
         <button
           onClick={() =>
             setValueButtonDropChance(
-              valueButtonDropChance + 1 > 100 ? 100 : valueButtonDropChance + 1,
+              valueButtonDropChance + 1 > 100 ? 100 : valueButtonDropChance + 1
             )
           }
           type="button"
@@ -99,5 +97,5 @@ export const DropChance: FC<DropChanceProps> = (props) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

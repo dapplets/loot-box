@@ -1,14 +1,14 @@
 export type NetworkConfig = {
-  networkId: 'mainnet' | 'testnet';
-  landingUrl: string;
-  landingUrlRegexp: any;
-  landingUrlReplace: string;
-  contractAddress: string;
-  nodeUrl: string;
-  walletUrl: string;
-  helperUrl: string;
-  explorerUrl: string;
-};
+  networkId: 'mainnet' | 'testnet'
+  landingUrl: string
+  landingUrlRegexp: RegExp
+  landingUrlReplace: string
+  contractAddress: string
+  nodeUrl: string
+  walletUrl: string
+  helperUrl: string
+  explorerUrl: string
+}
 
 export function getNetworkConfig(networkId: string): NetworkConfig {
   if (networkId === 'mainnet') {
@@ -22,7 +22,7 @@ export function getNetworkConfig(networkId: string): NetworkConfig {
       walletUrl: 'https://wallet.mainnet.near.org',
       helperUrl: 'https://helper.mainnet.near.org',
       explorerUrl: 'https://explorer.mainnet.near.org',
-    };
+    }
   } else if (networkId === 'testnet') {
     return {
       networkId,
@@ -34,10 +34,10 @@ export function getNetworkConfig(networkId: string): NetworkConfig {
       walletUrl: 'https://wallet.testnet.near.org',
       helperUrl: 'https://helper.testnet.near.org',
       explorerUrl: 'https://explorer.testnet.near.org',
-    };
+    }
   } else {
     throw new Error(
-      'Only "mainnet" and "testnet" networks are supported. Change the network parameter in the dapplet settings.',
-    );
+      'Only "mainnet" and "testnet" networks are supported. Change the network parameter in the dapplet settings.'
+    )
   }
 }

@@ -2,37 +2,37 @@
 
 1. Set up the [prerequisites](https://github.com/near/near-sdk-rs#pre-requisites)
 2. Begin writing your smart contract in `src/lib.rs`
-3. Test the contract 
+3. Test the contract
 
-    `cargo test -- --nocapture`
+   `cargo test -- --nocapture`
 
 4. Build the contract
 
-    `./build.sh`
+   `./build.sh`
 
 5. Login into CLI (testnet)
 
-    `NEAR_ENV=mainnet near login`
+   `NEAR_ENV=mainnet near login`
 
 6. Deploy (testnet)
 
-    `./deploy.sh`
+   `./deploy.sh`
 
-    or
+   or
 
-    `near deploy --wasmFile ./res/lootbox_near_contract.wasm --accountId=app.ltbx.testnet`
+   `near deploy --wasmFile ./res/lootbox_near_contract.wasm --accountId=app.ltbx.testnet`
 
 7. Initialize (testnet)
 
-    `near call app.ltbx.testnet new '' --accountId ltbx.testnet`
+   `near call app.ltbx.testnet new '' --accountId ltbx.testnet`
 
 8. Login into CLI (mainnet)
 
-    `NEAR_ENV=mainnet near login`
+   `NEAR_ENV=mainnet near login`
 
 9. Deploy (mainnet)
 
-    `NEAR_ENV=mainnet near deploy --wasmFile ./res/lootbox_near_contract.wasm --accountId=app.ltbx.near`
+   `NEAR_ENV=mainnet near deploy --wasmFile ./res/lootbox_near_contract.wasm --accountId=app.ltbx.near`
 
 10. Initialize (mainnet)
 
@@ -40,5 +40,5 @@
 
 **Get more info at:**
 
-* [Rust Smart Contract Quick Start](https://docs.near.org/docs/develop/contracts/rust/intro)
-* [Rust SDK Book](https://www.near-sdk.io/)
+- [Rust Smart Contract Quick Start](https://docs.near.org/docs/develop/contracts/rust/intro)
+- [Rust SDK Book](https://www.near-sdk.io/)

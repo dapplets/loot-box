@@ -1,30 +1,27 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
-import styles from './Statistics.module.scss';
-import cn from 'classnames';
-import { Link } from 'react-router-dom';
-
-import { LabelSettings } from '../atoms/LabelSettings';
-import { Progress } from '../atoms/Progress';
-import { StatisticsInfo } from '../atoms/StatisticsInfo';
-import { ChartProgress } from '../atoms/CircleChart';
-import { StatisticsLink } from '../atoms/StatisticsLink';
-
-
+import cn from 'classnames'
+import React, { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { ChartProgress } from '../atoms/CircleChart'
+import { LabelSettings } from '../atoms/LabelSettings'
+import { Progress } from '../atoms/Progress'
+import { StatisticsInfo } from '../atoms/StatisticsInfo'
+import { StatisticsLink } from '../atoms/StatisticsLink'
+import styles from './Statistics.module.scss'
 
 export interface StatisticsProps {
-  statistics: any;
-  winnersLabelInfo: any;
+  statistics: any
+  winnersLabelInfo: any
 }
 export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
-  const { statistics, winnersLabelInfo } = props;
+  const { statistics, winnersLabelInfo } = props
   if (statistics === null || statistics === undefined) {
-    return <div>Loading</div>;
+    return <div>Loading</div>
   }
 
   const newWinInfo = (str: string) => {
-    const newStr = str.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '');
-    return newStr;
-  };
+    const newStr = str.replace(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g, '')
+    return newStr
+  }
 
   const options = {
     chart: {
@@ -43,17 +40,12 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
       },
     },
 
- 
     labels: [`${newWinInfo(winnersLabelInfo)}`],
-  };
-
-  
-  
+  }
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.wrapperStatistics}>
-  
         <Progress completed={statistics.completedPercents} bgcolor="#F26680" />
         <div className={cn(styles.Chart)}>
           <div className={cn(styles.ChartAmount)}>
@@ -83,11 +75,9 @@ export const Statistics: FC<StatisticsProps> = (props: StatisticsProps) => {
 
       <div className={cn(styles.link)}>
         <Link to="/">
-          <StatisticsLink
-   
-          />
+          <StatisticsLink />
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}

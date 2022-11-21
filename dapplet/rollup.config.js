@@ -1,18 +1,18 @@
-import image from '@rollup/plugin-image';
-import serve from 'rollup-plugin-serve';
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import json from '@rollup/plugin-json';
-import fs from 'fs';
-import typescript from 'rollup-plugin-typescript';
+import commonjs from '@rollup/plugin-commonjs'
+import image from '@rollup/plugin-image'
+import json from '@rollup/plugin-json'
+import resolve from '@rollup/plugin-node-resolve'
+import fs from 'fs'
+import serve from 'rollup-plugin-serve'
+import typescript from 'rollup-plugin-typescript'
 
 const showAddress = () => ({
   load: () =>
     console.log(
       '\x1b[35m%s\x1b[0m',
-      `Current registry address: https://localhost:3001/dapplet.json`,
+      `Current registry address: https://localhost:3001/dapplet.json`
     ),
-});
+})
 
 export default [
   {
@@ -43,4 +43,4 @@ export default [
       showAddress(),
     ],
   },
-];
+]
